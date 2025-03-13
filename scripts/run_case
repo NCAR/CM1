@@ -1,0 +1,146 @@
+#!/bin/csh
+
+# Script to prepare a run directory for a specific CM1 simulation case.
+# This script sets up the appropriate directory structure, copies configuration files,
+# and modifies the namelist.input file. Optionally, it can overwrite existing run directories.
+
+# Requirements:
+# - Environment variable `SCRATCH` must be set to a valid path.
+# - CM1 repository should be available at $SCRATCH/cm1.
+# - Configuration files for the specified case should exist under $CM1/run/config_files/.
+
+# Usage:
+#   run_case <case> [-f]
+#     <case>: Name of the simulation case (e.g., "dunion_MT").
+#     -f    : (Optional) Force overwrite of existing run directories.
+
+# Path to the CM1 repository
+setenv CM1 $SCRATCH/cm1  # Assumes $SCRATCH is already set.
+
+# Check if at least one argument is provided
+if ($#argv < 1) then
+    echo "Error: No argument provided."
+    echo "Usage: $0 <case> [-f]"
+    exit 1
+endif
+
+# Initialize variables
+set case = ""   # Simulation case name (to be provided as the first argument)
+set force = 0   # Force overwrite flag (0 = no, 1 = yes)
+
+# Parse command-line arguments
+foreach arg ($argv)
+    switch ($arg)
+        case "-f":
+            # If '-f' is provided, set force flag to 1
+            set force = 1
+            breaksw
+        default:
+            # Assign the first non-flag argument to the `case` variable
+            if ("$case" == "") then
+                set case = $arg
+            else
+                # If multiple non-flag arguments are provided, exit with an error
+                echo "Error: Unrecognized argument or duplicate case value: $arg"
+                echo "Usage: $0 <case> [-f]"
+                exit 1
+            endif
+    endsw
+end
+
+# Check if the specified case exists in the CM1 configuration files directory
+if (! -d $CM1/run/config_files/$case) then
+    echo "Error: $case case not found"
+    echo "Available cases in $CM1/run/config_files:"
+    ls $CM1/run/config_files  # List available cases
+    exit 1
+endif
+
+# Define the run directory path
+set rundir = $CM1/run_$case  # Run directory name is based on the case
+
+# Check if the run directory already exists
+if (-e $rundir) then
+    if ($force) then
+        # If force flag is set, delete the existing directory
+        rm -Rfv $rundir
+    else
+        # If force flag is not set, exit with an error
+        echo "Error: $rundir run dir exists already. Use -f to clobber."
+        exit 1
+    endif
+endif
+
+# Create the new run directory
+mkdir -p $rundir
+
+# Change to the newly created run directory
+cd $rundir
+
+# Copy all files from the case configuration directory to the run directory
+cp -v $CM1/run/config_files/$case/* .
+
+# Put longwave and shortwave radiation data in run directory
+cp -v $CM1/run/RRTMG_LW_DATA $CM1/run/RRTMG_SW_DATA .
+
+# Modify specific parameters in the namelist.input file
+# On macOS, sed -i requires an empty string or a backup suffix.
+# - Set `output_format` to 2 (NetCDF)
+sed -i '' "/output_format/s/=[^,]*/= 2/" namelist.input
+# - Set `output_filetype` to 1 (Single file)
+sed -i '' "/output_filetype/s/=[^,]*/= 1/" namelist.input
+
+# Copy CM1 executable
+cp -v $CM1/run/cm1.exe .
+
+set log=cm1.print.out
+which qsub >& /dev/null
+if ($status != 0) then
+   cm1.exe |& tee $log
+else
+   set pbsjob=pbs.job
+
+   cat<<END>$pbsjob
+# job name:
+#PBS -N $case
+#PBS -A $PBS_ACCOUNT
+
+
+# below here, "select" is the number of 128-CPU nodes to use.
+# note: this example uses 512 (=4*128) CPUs:
+# (do not change settings for "ncpus" or "mpiprocs" or "ompthreads")
+# For more info, see: https://arc.ucar.edu/knowledge_base/74317833
+#
+#PBS -l select=1:ncpus=128:mpiprocs=128:ompthreads=1
+
+
+# maximum wall-clock time (hh:mm:ss)
+#PBS -l walltime=02:00:00 
+
+
+# queue:
+#PBS -q main@desched1
+
+
+#-------------------------------------------
+# command-line stuff below this line
+# (probably should not change)
+
+# temp directory:
+export TMPDIR=$SCRATCH/temp
+mkdir -p $TMPDIR
+
+# These seem to work well for CM1 runs
+export PALS_PPN=128
+export PALS_DEPTH=1
+export PALS_CPU_BIND=depth
+
+# run CM1
+mpiexec --cpu-bind depth ./cm1.exe >& $log
+END
+
+   qsub $pbsjob
+endif
+
+# End of script
+

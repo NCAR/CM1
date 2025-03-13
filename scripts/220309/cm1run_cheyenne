@@ -1,0 +1,34 @@
+#!/bin/tcsh
+
+#
+#  Example submission script for CM1 (using MPI) on NCAR's cheyenne
+#
+#  note:
+#  In namelist.input, "nodex * nodey" must equal "select * ncpus"
+#  For the example below, the namelist.input settings were nodex = 12 and nodey = 12.
+#
+
+# job name:
+#PBS -N cm1run
+
+# project code:
+#PBS -A Pxxxxxxxx
+
+# "select" is the number of 36-processor nodes to use.
+# (do not change settings for "ncpus" of "mpiprocs")
+# note: this example uses 144 (=4*36) processors:
+#PBS -l select=4:ncpus=36:mpiprocs=36
+
+# maximum wall-clock time (hh:mm:ss)
+#PBS -l walltime=12:00:00
+
+# queue:
+#PBS -q regular
+
+# place stdout and stderr in same file:
+#PBS -j oe
+
+
+setenv MPI_DSM_DISTRIBUTE yes
+mpiexec_mpt ./cm1.exe >&! cm1.print.out
+

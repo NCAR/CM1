@@ -1,0 +1,24 @@
+#!/bin/csh
+
+#
+# Example of MPI run on NCAR's yellowstone
+#
+# Note:
+# In namelist.input, nodex * nodey must equal the number entered in
+# the BSUB -n line.  For the example below, I used nodex = 8 and nodey = 8.
+#
+
+#BSUB -P PXXXXXXXX             # project code
+#BSUB -W 6:00                  # wall-clock time (hrs:mins)
+#BSUB -x                       # exclusive use of node
+#BSUB -n 64                    # number of tasks in job
+#BSUB -R "span[ptile=16]"      # run 16 MPI tasks per node
+#BSUB -J cm1run                # job name
+#BSUB -o cm1run.out            # output file name
+#BSUB -e cm1run.err            # error file name
+#BSUB -q regular               # queue
+
+
+mpirun.lsf ./cm1.exe >&! cm1.print.out
+
+

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cm1"
+authors = [{name= "George Bryan", email = "gbryan@ucar.edu"}]
+maintainers = [{name= "David Ahijevych", email = "ahijevyc@ucar.edu"}]
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+version = "21.1"
+dependencies = [
+    "cftime",
+    "dask",
+    "f90nml",
+    "h5netcdf",
+    "ipython",
+    "ipykernel",
+    "metpy",
+    "pandas",
+    "s3fs",
+    "scikit-learn",
+    "xarray",
+]
+classifiers = [
+               "Intended Audience :: Science/Research",
+               "License :: OSI Approved :: MIT License",
+               ]
+keywords = ["weather", "meteorology", "model"]

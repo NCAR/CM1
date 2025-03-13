@@ -1,0 +1,367 @@
+
+Brief User's Guide to namelist.input file (located in "run" directory)
+
+Bryan Cloud Model, Version 1, Release 10
+3 May 2006
+
+-------------------------------------------------------------------------
+  param1 section -- enter REAL values
+
+ dx - Horizontal grid spacing in x direction (m).
+
+ dy - Horizontal grid spacing in y direction (m).
+
+ dz - Vertical grid spacing (m).
+
+    NOTE:
+       The variables dx,dy,dz are only used when stretch=0.  When stretch=1,
+       these variables should be set to an approximately average value 
+       (to minimize truncation errors).  See README.stretch for more
+       information.
+
+ dtl - Large time step (s).
+
+       For psolver = 2,3,4, or 5, this time step is limited by the fastest 
+       nonacoustic speed.  For thunderstorm simulations, this is usually 
+       the maximum vertical velocity.  Otherwise, this would be the 
+       propagation speed of gravity waves.  The following usually works well:
+           dtl = min(dx,dy,dz)/67  (rounded to an appropriate value, of course)
+
+       For psolver=1, this time step is limited by the propagation speed of
+       sound waves.  dtl of about min(dx,dy,dz)/700 is recommended.
+
+ timax - Maximum forecast time (s).
+
+ tapfrq - Frequency of three-dimensional model output (s).
+          Output is in cm1out files.
+
+ rstfrq - Frequency to save model restart files (s).  Set to a negative
+          number if restart files are not desired.
+
+-------------------------------------------------------------------------
+  param2 section -- enter INTEGER values
+     (value in CAPS is recommended, where applicable)
+
+ statfrq - Frequency for calculating some interesting output.
+           Output is in stats.dat file.
+           Set as number of time steps.  (e.g., 1 = every model
+           time step, 5 = every fifth time step)
+
+ irst - Is this a restart?  (0=no, 1=yes)
+
+ iconly - Setup initial conditions only?
+              1 = creates initial conditions, but does not run model.
+              0 = creates initial conditions, and proceeds with integration.
+
+ hadvorder - Order of horizontal advection scheme. 5=fifth order, 6=sixth order
+ vadvorder - Order of vertical advection scheme.   5=fifth order, 6=sixth order
+
+           Fifth order scheme has implicit diffusion.  If fifth order
+           scheme is used, idiff can be set to 0 (i.e., no additional
+           artifical diffusion is typically necessary).
+
+           Sixth order scheme requires additional artifical diffusion
+           for stability (i.e., idiff=1 is recommended).  User should
+           use difforder=6 and value of kdiff6 between about 0.02-0.24
+
+ pdscheme - Scheme to ensure positive definiteness of moisture:
+             0 = set negative values back to zero (default)
+                 (not mass conserving)
+             1 = simple, nearly mass-conserving scheme 
+                 (new ... relatively untested.  Use with caution.)
+
+ advweno - Advect scalars (except pressure) with WENO scheme?
+            (0=no, 1=yes)
+
+ idiff - Include additional artificial diffusion?  (0=no, 1=yes)
+
+           For idiff=1, diffusion of all variables.
+           For idiff=2, diffusion only applied to winds.
+
+         User must also set difforder and kdiff2 or kdiff6.
+
+ vdiff - When idiff=1, apply artificial diffusion in vertical direction?
+
+           (0=no, 1=YES)
+
+ mdiff - When idiff=1, apply monotonic version of artificial diffusion?
+
+           (0=no, 1=YES)
+
+ difforder - Order of diffusion scheme.  2=second order, 6=sixth order.
+
+           Second order diffusion is not generally recommended.  It is
+           only used for certain idealized cases.  kdiff2 must be set
+           appropriately when difforder=2.
+
+           Sixth order diffusion is recommended for general use when
+           diffusion of small scales (2-6 delta) is needed.  User must
+           also set kdiff6 when difforder=6.
+
+ imoist - Include moisture?  (0=no, 1=yes)
+
+ iturb - Include subgrid turbulence scheme?  (0=no, 1=TKE, 2=Smagorinsky)
+
+ dns - Run model in Direct Numerical Simulation mode.
+        (iturb must be = 0)
+       For this option, the user must set the six parameters in param7 below.
+
+ smix - Use new conserved-variable saturated mixing scheme?
+
+        (0=NO, 1=yes)
+
+ irdamp - Use upper-level Rayleigh damping zone?  (0=no,  1=YES)
+          (User must set rdalpha and zd below)
+
+ psolver - Option for  pressure solver.
+
+       1 = truly compressible:  no acoustic damping, no small time steps,
+                                no implicit numerics
+       2 = Klemp-Wilhelmson time-splitting, fully explicit:  uses K-W split
+                              time steps for acoustic modes, with explicit
+                              treatment of acoustic terms in both vertical
+                              and horizontal directions.
+       3 = Klemp-Wilhelmson time-splitting, vertically implicit:  uses K-W
+                              split time steps for acoustic modes, with a
+                              vetically implicit solver, and horizontally
+                              explicit calculations (as in MM5, ARPS, WRF).
+       4 = Anelastic solver:  Uses the anelastic mass continuity equation.
+                              Pressure is retrieved diagnostically.
+       5 = Incomprssible solver:  Uses the incompressible mass continuity 
+                              equation.  Pressure is retrieved diagnostically.
+
+       NOTE:  psolver = 4 and 5 are only recommended for simulations
+       without moisture (for now).
+
+ nsound - Number of small (acoustic) time steps per large time step.
+
+       Only used for psolver = 2 and 3.
+
+       NOTE!  nsound must be an EVEN integer (exactly) for the
+       split time steps to work properly.  There is no check for
+       this ... so please remember.  Typically, nsound of
+       4,6,8,10,12 is appropriate.  For nsound less than 4,
+       you should probably use psolver=1 instead.  A value of
+       nsound greater than 12 is not recommended.
+
+       Also keep in mind the small time step (dts=dtl/nsound) that
+       is required for stability.
+
+         For psolver=2, dts should be about min(dx,dy,dz)/700.
+         For psolver=3, dts should be about min(dx,dy)/700.
+
+ ptype - Explicit moisture scheme.
+             1 = Kessler scheme (water only)
+             2 = Goddard version of Lin et al. scheme (includes ice)
+
+ ihail - Use hail or graupel for large ice category when ptype=2.
+
+             1 = hail
+             0 = graupel
+
+ iautoc - Include autoconversion of qc to qr when ptype = 2?  (0=no, 1=yes)
+
+ idrag - Simple surface drag parameterization (0=no, 1=yes)
+
+ isfcflx - Simple surface fluxes of heat and moisture (0=no, 1=yes)
+
+ icor - Include Coriolis force?  (0=no,  1=yes)
+        (If user chooses 1, then fcor must be set below)
+        f-plane is assumed.
+
+ neweqts - Use new equations (from Bryan and Fritsch 2002) ?
+                0 = no, use traditional (approximate) equation set
+                1 = yes (original formulation)
+                2 - yes, but apply condensation adjustment on RK steps
+
+           (note:  switch is irrelevent if imoist = 0, i.e. the
+            equations are equivalent in a dry environment)
+
+ wbc - West lateral boundary condition.
+
+ ebc - East lateral boundary condition.
+
+ sbc - South lateral boundary condition.
+
+ nbc - North lateral boundary condition.
+
+                        where:  1 = periodic
+                                2 = open-radiative
+                                3 = rigid walls
+
+ irbc - For bc=2, this is the type of radiative scheme to use:
+                    1 = Klemp-Wilhelmson (1978) on large steps
+                    2 = Klemp-Wilhelmson (1978) on small steps
+                    4 = Durran-Klemp (1983) formulation
+
+ roflux - Restrict outward flux?  (0=no, 1=yes)
+
+       When this option is activated, the total outward mass flux at open
+       boundary conditions is not allowed to exceed total inward mass flux.
+       This is a requirement for the anelastic solver.  For the compressible
+       solvers, this scheme helps prevent runaway outward mass flux that can
+       cause domain-total mass loss and pressure falls.
+
+ isnd - Base-state sounding:  1 = Dry adiabatic
+                              2 = Dry isothermal
+                              3 = Dry, constant dT/dz
+                              4 = Saturated neutrally stable
+                              5 = Weisman-Klemp analytic sounding
+                              6 = Sounding for tropical cyclone
+                              7 = External file
+                              8 = Dry, constant d(theta)/dz
+                              9 = Dry, constant Brunt-Vaisala frequency
+                             10 = Saturated, constant Brunt-Vaisala frequency
+
+ iwnd - Base-state wind profile:  0 = zero winds
+                                  1 = RKW-type profile
+                                  2 = Weisman-Klemp supercell
+                                  3 = multicell
+                                  4 = Weisman-Klemp multicell
+
+ itern - Initial topography specifications.  User must set zs array in
+         param.F:   1 = bell-shaped hill
+                    2 = Schaer test case
+                    3 = (case from T. Lane and J. Doyle)
+                    4 = specified in external GrADS file
+
+ iinit - 3D initialization option:  1 = warm bubble
+                                    2 = cold pool
+                                    3 = line of warm bubbles
+                                    4 = initialization for moist benchmark
+                                    5 = cold blob
+
+ ibalance - Specified balance assumption for initial 3D pressure field
+
+          0 = no balance (initial pressure perturbation is zero everywhere)
+          1 = hydrostatic balance (appropriate for small aspect ratios)
+          2 = anelastic balance (initial pressure perturbation is the 
+              buoyancy pressure perturbation field for an anelastic 
+              atmosphere).  (required for iinit = 6, the TC init scheme)
+
+ iorigin - Specifies location of the origin in horizontal space
+
+          1 = At the bottom-left corner of the domain
+              (x goes from 0 km to nx*dx km)
+              (y goes from 0 km to ny*dy km)
+          2 = At the center of the domain
+              (x goes from -nx*dx/2 km to +nx*dx/2 km)
+              (y goes from -ny*dy/2 km to +ny*dy/2 km)
+
+ imove - Move domain at constant speed (0=no, 1=yes)
+
+           For imove=1, user must set umove and vmove.
+
+ iptra - Integrate passive fluid tracer? (0=no, 1=yes)
+
+           User must initialize "pta" array in init3d.F.
+
+ npt - Total number of passive fluid tracers.
+
+ iprcl - Integrate passive parcels? (0=no, 1=yes)
+
+           User must initialize "pdata" array in init3d.F.
+
+ nparcels - Total number of parcels.
+
+-------------------------------------------------------------------------
+  param3 section -- enter REAL values
+
+ kdiff2 - Diffusion coefficient for difforder=2.  Specified in m^2/s.
+
+ kdiff6 - Diffusion coefficient for difforder=6.  Specified as a 
+          fraction of one-dimensional stability.  A value between
+          0.02-0.12 is recommended.
+
+ fcor - Coriolis parameter (1/s).
+
+ kdiv - Coefficient for divergence damper.  Value of ~0.1 is recommended.
+
+        This is only used when psolver=2,3.  The divergence damper is
+        an artificial term designed to diffuse acoustic waves.
+
+ rdalpha - Inverse e-folding time for upper-level Rayleigh damping layer
+           (1/s).  Value of about 1/300 is recommended.
+
+ zd - Height above which Rayleigh damping is applied (m).
+
+ umove - Constant speed for domain translation in x-direction (m/s)
+
+ vmove - Constant speed for domain translation in y-direction (m/s)
+
+-------------------------------------------------------------------------
+  param6 section -- Horizontally stretched (x) grid options.
+
+          See README.stretch for more information.
+
+ stretch_x - Use horizontally stretched grid in x?  (0=no, 1=yes)
+
+ dx_inner - Smallest grid spacing, in middle of domain (m).
+
+ dx_outer - Largest grid spacing, at edge of domain (m).
+
+ nos_x_len - Length of the no-stretching (i.e., middle) part of domain (m).
+
+ tot_x_len - Total length of the domain (m).
+
+-------------------------------------------------------------------------
+  param7 section -- Horizontally stretched (y) grid options.
+
+          See README.stretch for more information.
+
+ stretch_y - Use horizontally stretched grid in y?  (0=no, 1=yes)
+
+ dy_inner - Smallest grid spacing, in middle of domain (m).
+
+ dy_outer - Largest grid spacing, at edge of domain (m).
+
+ nos_y_len - Length of the no-stretching (i.e., middle) part of domain (m).
+
+ tot_y_len - Total length of the domain (m).
+
+-------------------------------------------------------------------------
+  param8 section -- Vertically stretched grid options.
+
+          See README.stretch for more information.
+
+ stretch_z - Use vertically stretched grid spacing?  (0=no, 1=yes)
+
+ ztop - Total depth of the domain (i.e., the height of the top of the
+        domain) (m).
+
+ str_bot - Level where stretching begins (m).
+
+ str_top - Level where stretching ends (m).
+
+ dz_bot - Grid spacing at (and below) str_bot (m).
+
+ dz_top - Grid spacing at (and above) str_top (m).
+
+-------------------------------------------------------------------------
+  param7  section -- Options relating to dns
+
+ bc_wind - top/bottom boundary condition for horizontal winds
+
+             1 = free slip
+             2 = no slip
+
+ bc_temp - top/bottom boundary condition for potential temperature
+
+             1 = constant theta is specified at boundaries
+             2 = constant flux is specified at boundaries
+
+ ptc_top - potential temperature closure for top of model
+
+        if bc_temp = 1, this is theta at the top boundary (K)
+        if bc_temp = 2, this is the flux at the top boundary (K m/s)
+
+ ptc_bot - potential temperature closure for bottom of model
+
+        if bc_temp = 1, this is theta at the bottom boundary (K)
+        if bc_temp = 2, this is the flux at the bottom boundary (K m/s)
+
+ viscosity - value for kinematic viscosity (m^2/s)
+
+ pr_num - value for Prandtl number (unitless)
+
+

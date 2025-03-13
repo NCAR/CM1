@@ -1,0 +1,10 @@
+#!/bin/csh
+
+#  These options are for a linux machine using the Portland Group compiler
+
+set FCFLAGS = "-O4"
+set CDFINC = "/usr/local/netcdf/include"
+set CDFLIB = "/usr/local/netcdf/lib"
+
+pgf90 -o combine.exe ${FCFLAGS} -I/${CDFINC} combine.F ${CDFLIB}/libnetcdf.a
+

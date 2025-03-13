@@ -1,0 +1,27 @@
+#!/bin/tcsh
+
+#
+#  Example submission script for CM1 (using a single processor) 
+#  on NCAR's cheyenne
+#
+
+# job name:
+#PBS -N cm1run
+
+# project code:
+#PBS -A Pxxxxxxxx
+
+# place stdout and stderr in same file:
+#PBS -j oe
+
+# queue:
+#PBS -q share
+
+# maximum wall-clock time (hh:mm:ss):
+#PBS -l walltime=06:00:00
+
+# for single processor job:
+#PBS -l select=1:ncpus=1:ompthreads=1
+
+./cm1.exe >&! cm1.print.out
+
