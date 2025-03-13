@@ -1,0 +1,15 @@
+#!/bin/csh
+#
+# Example of single processor run on NCAR's bluefire
+
+#BSUB -n 1                              # number of tasks
+#BSUB -J cm1run                         # job name
+#BSUB -o cm1run.out                     # ouput filename
+#BSUB -e cm1run.err                     # error filename
+#BSUB -q share                          # queue
+#BSUB -W 6:00                           # wallclock limit (hh:ss)
+#BSUB -P 64000461                       # project number
+
+ldedit -btextpsize=64K -bdatapsize=64K -bstackpsize=64K cm1.exe
+./cm1.exe >&! cm1.print.out
+

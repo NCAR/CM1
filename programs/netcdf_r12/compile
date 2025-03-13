@@ -1,0 +1,9 @@
+#!/bin/csh
+
+#  These options are for a linux machine using the Portland Group compiler
+
+set FCFLAGS = "-O3 -extend_source"
+set CDFINC = "/usr/local/netcdf3-32/include"
+set CDFLIB = "/usr/local/netcdf3-32/lib"
+
+ifort -o combine_v2.exe ${FCFLAGS} -I/${CDFINC} combine_v2.F90 ${CDFLIB}/libnetcdf.a

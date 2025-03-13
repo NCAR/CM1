@@ -1,0 +1,17 @@
+#!/bin/csh
+
+#
+# Example of single processor run using NCAR's caldera
+#
+
+#BSUB -P PXXXXXXXX           # project code
+#BSUB -W 06:00               # wall-clock time (hrs:mins)
+#BSUB -n 1                   # number of tasks in job
+#BSUB -J cm1run              # job name
+#BSUB -o cm1run.out          # output file name
+#BSUB -e cm1run.err          # error file name
+#BSUB -q caldera             # queue
+
+
+./cm1.exe >&! cm1.print.out
+

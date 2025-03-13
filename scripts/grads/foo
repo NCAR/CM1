@@ -1,0 +1,1255 @@
+5c5
+< * Last modified:  3 March 2009
+---
+> * Last modified:  2 October 2009
+117a118
+> say result
+143,145c144,147
+< * Bob Hart 
+< * Penn State University / Dept of Meteorology
+< * Last Update:  August 28, 2002
+---
+> * Bob Hart  (rhart@fsu.edu)
+> * Florida State University / Dept of Meteorology
+> * Last Update:  August 29, 2009  ** IMPORTANT UPDATE **
+> * http://moe.met.fsu.edu/~rhart/software.php
+148a151,172
+> * 08/29/09 - Fixed a rare bug related to plotting the wind profile 
+> *
+> * 08/08/09 - Changed defines such that no adjustment is needed for projected data (e.g. lcc).
+> *
+> * 08/08/09 - Fixed typo in CAPE/CIN calculation.
+> *
+> * 08/07/09 - Changed math_int to math_nint in a few places to correct the 
+> *            rounding for isotherm drawing.   Also fixed DrawPrcl=0 with DrawPmax=1
+> *            interaction problem.   Also fixed mb to Pa conversion for MAscentI.
+> *
+> * 08/07/09 - Considerably improved/enhanced CAPE/CIN calculation by converting
+> *            G. Bryan's (NCAR) Fortran90 CAPE/CIN calculation to GrADS.
+> *            Sincere gratitude to G. Bryan for permission.   ** Users
+> *            are strongly encouraged to update to this version of plotskew
+> *            based upon the improvement in this routine.   Note additional
+> *            options for user regarding CAPE/CIN calculation:  MAscentT and MAscentI.
+> * 
+> * 08/05/09 - Finally converted all hack-coded math functions (abs/int/pow)
+> *            to the intrinsic math_* equivalents.  Results in improved speed, but
+> *            now requires GrADS v1.8 or higher.  Users should not be using anything
+> *            less than 1.9 anyway by now...      
+> *
+199d222
+< * 
+203c226
+< *            http://www.ems.psu.edu/~hart/skew.html
+---
+> *            http://moe.met.fsu.edu/~rhart/software/skew.html
+206c229
+< * <hart@ems.psu.edu>
+---
+> * <rhart@fsu.edu>
+209,211c232,235
+< * fine tune the script from the horrible mess from which it began.
+< * In particular, thanks go out to Steve Lord (NCEP), Mike Fiorino (ECMWF),
+< * George Bryan (PSU), Davide Sacchetti (CMIRL), and Enrico Minguzzi (CMIRL).
+---
+> * fine tune the script from the horrible mess from which it began back in 1996.
+> * In particular, thanks go out to George Bryan (NCAR), Paul Markowski (PSU), 
+> * Steve Lord (NCEP), Mike Fiorino (NOAA/ESRL), Davide Sacchetti (CMIRL), and 
+> * Enrico Minguzzi (CMIRL).
+212a237,238
+> * PLEASE NOTE THAT THIS CODE COMES WITH NO WARRANTY.
+> *
+271c297
+< * Another good set of defining points suggested by George Bryan (PSU)
+---
+> * Another good set of defining points suggested by George Bryan (NCAR)
+314a341,347
+> * MAscentT = Type of moist adiabatic ascent for CAPE calculation
+> *            1 = pseudoadiabatic, liquid only [default]
+> *            2 = reversible, liquid only
+> *            3 = pseudoadiabatic, with ice
+> *            4 = reversible, with ice
+> * MAscentI = Value of pressure increment (in mb) for CAPE calculation
+> *            Smaller=more accurate, but slower.  Default=10 for speed.
+330c363
+< DrawThtw= 0
+---
+> DrawThtw= 1
+336,337c369,370
+< DrawPrcl= 0
+< DrawPMax= 0
+---
+> DrawPrcl= 1
+> DrawPMax= 1
+338a372,373
+> MAscentT= 1
+> MAscentI= 10
+471a507
+> * SVectCol= Color of storm motion vector arrow in hodograph 
+482c518,519
+< HodoCol = 1
+---
+> HodoCol = 3
+> SVectCol= 2
+632,637c669,674
+< _C4= 0.43884187/pow(10,8) 
+< _C5=-0.29883885/pow(10,10)
+< _C6= 0.21874425/pow(10,12)
+< _C7=-0.17892321/pow(10,14)
+< _C8= 0.11112018/pow(10,16)          
+< _C9=-0.30994571/pow(10,19)
+---
+> _C4= 0.43884187/math_pow(10,8) 
+> _C5=-0.29883885/math_pow(10,10)
+> _C6= 0.21874425/math_pow(10,12)
+> _C7=-0.17892321/math_pow(10,14)
+> _C8= 0.11112018/math_pow(10,16)          
+> _C9=-0.30994571/math_pow(10,19)
+645c682
+<     _powpres.subscr=pow(zz,0.286)
+---
+>     _powpres.subscr=math_pow(zz,0.286)
+703,705c740,742
+< _m1=(T1+T2-2*T3)/(2*log10(P2/P3))
+< _m2=(T2-T3-_m1*log10(P2/P3))/50
+< _m3=(T1-_m1*log10(P1))
+---
+> _m1=(T1+T2-2*T3)/(2*math_log10(P2/P3))
+> _m2=(T2-T3-_m1*math_log10(P2/P3))/50
+> _m3=(T1-_m1*math_log10(P1))
+749a787
+> "set grads off"
+788,789c826,828
+<       lpp.zz=log(pp.zz)
+<       "d "sndtemp
+---
+>       lpp.zz=math_log(pp.zz)
+>       "define dd="sndtemp
+>       "d dd"
+817,819c856,858
+<    maxht=int(highz/1000)
+<    if (int(sfcz/1000) = sfcz/1000)
+<       minht=int(sfcz/1000)
+---
+>    maxht=math_int(highz/1000)
+>    if (math_int(sfcz/1000) = sfcz/1000)
+>       minht=math_int(sfcz/1000)
+821c860
+<       minht=1+int(sfcz/1000)
+---
+>       minht=1+math_int(sfcz/1000)
+872,875c911,914
+<    minht=30.735*(1-pow(_pmax/1013.26,0.287))
+<    minht=int(minht+0.5)
+<    maxht=30.735*(1-pow(_pmin/1013.26,0.287))
+<    maxht=int(maxht)
+---
+>    minht=30.735*(1-math_pow(_pmax/1013.26,0.287))
+>    minht=math_int(minht+0.5)
+>    maxht=30.735*(1-math_pow(_pmin/1013.26,0.287))
+>    maxht=math_int(maxht)
+879c918
+<       plev=1013.26*pow((1-zcount/30.735),3.4843)
+---
+>       plev=1013.26*math_pow((1-zcount/30.735),3.4843)
+913,914c952,953
+<    maxtline=tempint*int(maxtline/tempint)
+<    mintline=tempint*int(mintline/tempint)
+---
+>    maxtline=tempint*math_nint(maxtline/tempint)
+>    mintline=tempint*math_nint(mintline/tempint)
+964c1003
+<    maxtheta=thetaint*int(maxtheta/thetaint)
+---
+>    maxtheta=thetaint*math_int(maxtheta/thetaint)
+967c1006
+<    mintheta=thetaint*int(mintheta/thetaint)
+---
+>    mintheta=thetaint*math_int(mintheta/thetaint)
+996c1035
+<        BotCoef=log(mloop*_pmax/3801.66)
+---
+>        BotCoef=math_log(mloop*_pmax/3801.66)
+1002c1041
+<        TopCoef=log(mloop*MixStop/3801.66)
+---
+>        TopCoef=math_log(mloop*MixStop/3801.66)
+1129c1168,1169
+<    "d "sndtemp
+---
+>    "define dd="sndtemp
+>    "d dd"
+1132c1172,1173
+<    "d "snddewp
+---
+>    "define dd="snddewp
+>    "d dd"
+1188c1229,1230
+<        "d "sndtemp
+---
+>        "define dd="sndtemp
+>        "d dd"
+1191c1233,1234
+<        "d "snddewp
+---
+>        "define dd="snddewp
+>        "d dd"
+1194c1237
+<        If (abs(tt) < 130 & abs(dd) < 130) 
+---
+>        If (math_abs(tt) < 130 & math_abs(dd) < 130) 
+1212,1215c1255,1256
+<    If (SfcPlev != PMaxThee) 
+<       TLclMax=Templcl(TMaxThee,DMaxThee)
+<       PLclMax=Preslcl(TMaxThee,DMaxThee,PMaxThee)
+<    Endif
+---
+>    TLclMax=Templcl(TMaxThee,DMaxThee)
+>    PLclMax=Preslcl(TMaxThee,DMaxThee,PMaxThee)
+1217a1259
+> 
+1223c1265
+< If (DrawPMax = 1 & SfcPlev != PMaxThee)
+---
+> If (DrawPMax = 1)
+1280c1322
+<    rec=CAPE(TLcl,PLcl,100,sndtemp,snddewp)
+---
+>    rec=GHBCAPE(sndtemp,snddewp,MAscentI*100,1,200,MAscentT)
+1288c1330
+<       rec=CAPE(TLclMax,PLclMax,100,sndtemp,snddewp)
+---
+>       rec=GHBCAPE(sndtemp,snddewp,MAscentI*100,2,200,MAscentT)
+1309c1351
+<          Text2YC=tyloc-3.25
+---
+>          Text2YC=tyloc-3.45
+1315c1357
+<          Text3YC=tyloc-4.40
+---
+>          Text3YC=tyloc-4.60
+1322c1364
+<          Text1YC=tyloc-3.00
+---
+>          Text1YC=tyloc-2.75
+1343c1385
+<    "draw string "Text1XC+0.25 " " Text1YC+0.10" " int(K)      
+---
+>    "draw string "Text1XC+0.25 " " Text1YC+0.10" " math_int(K)      
+1345c1387
+<    "draw string "Text1XC+0.25 " " Text1YC-0.10 " " int(tt)
+---
+>    "draw string "Text1XC+0.25 " " Text1YC-0.10 " " math_int(tt)
+1347c1389
+<    "draw string "Text1XC+0.25 " " Text1YC-0.25 " " int(pw*100)/100
+---
+>    "draw string "Text1XC+0.25 " " Text1YC-0.25 " " math_int(pw*100)/100
+1349c1391
+<    "draw recf  "Text2XC-0.75 " " Text2YC-0.60 " " Text2XC+0.75 " " Text2YC+0.60
+---
+>    "draw recf  "Text2XC-0.75 " " Text2YC-0.60 " " Text2XC+0.75 " " Text2YC+0.85
+1351,1352c1393,1396
+<    "draw rec  "Text2XC-0.75 " " Text2YC-0.60 " " Text2XC+0.75 " " Text2YC+0.60
+<    "draw string "Text2XC-0.35 " " Text2YC+0.50 " Surface"
+---
+>    "draw rec  "Text2XC-0.75 " " Text2YC-0.60 " " Text2XC+0.75 " " Text2YC+0.85
+>    "draw string "Text2XC-0.45 " " Text2YC+0.70 " Lowest level"
+>    "draw string "Text2XC-0.70 " " Text2YC+0.45 "  Press(mb)" 
+>    "draw string "Text2XC+0.25 " " Text2YC+0.45 " " math_int(SfcPlev)
+1354c1398
+<    "draw string "Text2XC+0.25 " " Text2YC+0.30 " " int(Sfctemp*10)/10
+---
+>    "draw string "Text2XC+0.25 " " Text2YC+0.30 " " math_int(Sfctemp*10)/10
+1356c1400
+<    "draw string "Text2XC+0.25 " " Text2YC+0.15 " " int(Sfcdewp*10)/10
+---
+>    "draw string "Text2XC+0.25 " " Text2YC+0.15 " " math_int(Sfcdewp*10)/10
+1358,1364c1402,1408
+<    "draw string "Text2XC+0.25 " " Text2YC " " int(SfcThee) 
+<    "draw string "Text2XC-0.70 " " Text2YC-0.15 "  LI"
+<    "draw string "Text2XC+0.25 " " Text2YC-0.15 " " round(SLI)
+<    "draw string "Text2XC-0.70 " " Text2YC-0.30 "  CAPE(J)"
+<    "draw string "Text2XC+0.25 " " Text2YC-0.30 " " int(Pos)   
+<    "draw string "Text2XC-0.70 " " Text2YC-0.45 "  CIN(J)"
+<    "draw string "Text2XC+0.25 " " Text2YC-0.45 " " int(CIN)      
+---
+>    "draw string "Text2XC+0.25 " " Text2YC " " math_int(SfcThee) 
+>    "draw string "Text2XC-0.70 " " Text2YC-0.15 "  LI (`3.`0C)"
+>    "draw string "Text2XC+0.25 " " Text2YC-0.15 " " math_nint(SLI)
+>    "draw string "Text2XC-0.70 " " Text2YC-0.30 "  CAPE(Jkg`a-1`n)"
+>    "draw string "Text2XC+0.25 " " Text2YC-0.30 " " math_int(Pos)   
+>    "draw string "Text2XC-0.70 " " Text2YC-0.45 "  CIN(Jkg`a-1`n)"
+>    "draw string "Text2XC+0.25 " " Text2YC-0.45 " " math_int(CIN)      
+1371c1415
+<    "draw string "Text3XC+0.25 " " Text3YC+0.20 " " int(PMaxThee)
+---
+>    "draw string "Text3XC+0.25 " " Text3YC+0.20 " " math_int(PMaxThee)
+1373,1379c1417,1423
+<    "draw string "Text3XC+0.25 " " Text3YC+0.05 " " int(MaxThee)
+<    "draw string "Text3XC-0.70 " " Text3YC-0.10 " LI" 
+<    "draw string "Text3XC+0.25 " " Text3YC-0.10 " "round(LIMax)
+<    "draw string "Text3XC-0.70 " " Text3YC-0.25 " CAPE(J)" 
+<    "draw string "Text3XC+0.25 " " Text3YC-0.25 " "int(PosMax) 
+<    "draw string "Text3XC-0.70 " " Text3YC-0.40 " CIN(J)"
+<    "draw string "Text3XC+0.25 " " Text3YC-0.40 " " int(CINMax) 
+---
+>    "draw string "Text3XC+0.25 " " Text3YC+0.05 " " math_int(MaxThee)
+>    "draw string "Text3XC-0.70 " " Text3YC-0.10 " LI (`3.`0C)" 
+>    "draw string "Text3XC+0.25 " " Text3YC-0.10 " "math_nint(LIMax)
+>    "draw string "Text3XC-0.70 " " Text3YC-0.25 " CAPE(Jkg`a-1`n)" 
+>    "draw string "Text3XC+0.25 " " Text3YC-0.25 " "math_int(PosMax) 
+>    "draw string "Text3XC-0.70 " " Text3YC-0.40 " CIN(Jkg`a-1`n)"
+>    "draw string "Text3XC+0.25 " " Text3YC-0.40 " " math_int(CINMax) 
+1457c1501,1502
+<       "d "sndspd
+---
+>       "define dd="sndspd
+>       "d dd"
+1460c1505
+<       if (wspd < 0 | pres > _pmax) 
+---
+>       if (math_abs(wspd) > 500 | pres > _pmax) 
+1467c1512,1514
+<       "d "sndspd"(z="zz")"
+---
+>       "set z "zz
+>       "define dd="sndspd
+>       "d dd"
+1479c1526,1527
+<       "d "snddir"(z="zz")"
+---
+>       "define dd="snddir
+>       "d dd"
+1486c1534
+<       if (wspd > 0) 
+---
+>       if (math_abs(wspd) < 500) 
+1501,1502c1549,1550
+<         dx=cos((180-wdir)*_dtr)
+<         dy=sin((180-wdir)*_dtr)
+---
+>         dx=math_cos((180-wdir)*_dtr)
+>         dy=math_sin((180-wdir)*_dtr)
+1580c1628
+<    "set line "HodoCol" 1 6"
+---
+>    "set line 1 1 6"
+1589c1637
+<      uwnd=-i*HodRing*cos(45*_dtr)
+---
+>      uwnd=-i*HodRing*math_cos(45*_dtr)
+1624c1672,1673
+<       "d "sndspd
+---
+>       "define dd="sndspd
+>       "d dd"
+1627c1676,1677
+<       "d "snddir
+---
+>       "define dd="snddir
+>       "d dd"
+1721c1771
+<    "set line 1 1 4"
+---
+>    "set line 2 1 4"
+1733c1783
+<    "set line 1 1 3"
+---
+>    "set line "SVectCol" 1 3"
+1778c1828
+<          Text4YC=tyloc-5.45
+---
+>          Text4YC=tyloc-5.65
+1794c1844
+<    "draw string "Text4XC+0.25 " " Text4YC+0.20 " "int(helic)
+---
+>    "draw string "Text4XC+0.25 " " Text4YC+0.20 " "math_int(helic)
+1796c1846
+<    "draw string "Text4XC+0.25 " " Text4YC+0.05 " " int(SRhelic)
+---
+>    "draw string "Text4XC+0.25 " " Text4YC+0.05 " " math_int(SRhelic)
+1798c1848
+<    "draw string "Text4XC+0.25 " " Text4YC-0.20 " " int(StormDir)"`3.`0"
+---
+>    "draw string "Text4XC+0.25 " " Text4YC-0.20 " " math_int(StormDir)"`3.`0"
+1800c1850
+<    "draw string "Text4XC+0.25 " " Text4YC-0.35 " " int(_mtk*StormSpd)
+---
+>    "draw string "Text4XC+0.25 " " Text4YC-0.35 " " math_int(_mtk*StormSpd)
+1861c1911
+< Partb=log(tempk/dewpk)/800
+---
+> Partb=math_log(tempk/dewpk)/800
+1875,1876c1925,1926
+< theta=tempk*pow(1000/pres,0.286)
+< plcl=1000*pow(Tlclk/theta,3.48)
+---
+> theta=tempk*math_pow(1000/pres,0.286)
+> plcl=1000*math_pow(Tlclk/theta,3.48)
+1926c1976
+< round=int(startp/10)*10
+---
+> round=math_int(startp/10)*10
+1928c1978
+< powstart=pow(startp,-0.286)
+---
+> powstart=math_pow(startp,-0.286)
+1952,1998d2001
+< **************************************************************************
+< function CAPE(startt,startp,endp,sndtemp,snddewp)
+< 
+< *---------------------------------------------------------------------
+< * Returns all postive area and convective inhibition above LCL.
+< * Parcel is lifted from LCL at startt,startp and is halted
+< * at endp.   Integration method used is trapezoid method.
+< *---------------------------------------------------------------------
+< 
+< pres=startp
+< PclTemp=startt
+< PclTempV=virtual2(PclTemp+273.15,PclTemp+273.15,pres)-273.15
+< delp=10
+< Pos=0
+< Neg=0
+< Neg2=0
+< 
+< count=0
+< While (pres >= endp)
+<    EnvTemp=interp(sndtemp,pres)
+<    EnvDewp=interp(snddewp,pres)
+<    EnvTempV=virtual2(EnvTemp+273.15,EnvDewp+273.15,pres)-273.15
+<    DelT=PclTempV-EnvTempV
+<    If (abs(EnvTempV) < 130 & abs(PclTempV) < 130)
+<      count=count+1
+<      If (count > 1) 
+<        Val=DelT/pres+Prev 
+<        If (Val > 0)
+<           Pos=Pos+Val
+<           Neg2=0
+<        Else
+<           Neg=Neg+abs(Val)
+<           Neg2=Neg2+abs(Val)
+<        Endif
+<      Endif
+<      Prev=DelT/pres
+<    Endif
+<    pres=pres-delp
+<    PclTemp=PclTemp-100*delp*gammaw(PclTemp,pres,100)
+<    PclTempV=virtual2(PclTemp+273.15,PclTemp+273.15,pres)-273.15
+< Endwhile
+< 
+< Pos=0.5*Pos*287*delp
+< CIN=0.5*(Neg-Neg2)*287*delp
+< 
+< return(Pos" "CIN)
+< 
+2047,2048c2050,2051
+< logpp=log(pres)
+< logppm=log(pres-delp)
+---
+> logpp=math_log(pres)
+> logppm=math_log(pres-delp)
+2064c2067
+<    logppm=log(pres-delp)
+---
+>    logppm=math_log(pres-delp)
+2111c2114
+< return(6.1078/pow(pol,8))
+---
+> return(6.1078/math_pow(pol,8))
+2121c2124
+< es=6.112*exp(17.67*temp/(temp+243.5))
+---
+> es=6.112*math_exp(17.67*temp/(temp+243.5))
+2147c2150
+<    A=2.53*pow(10,9)
+---
+>    A=2.53*math_pow(10,9)
+2150c2153
+<    A=3.41*pow(10,10)
+---
+>    A=3.41*math_pow(10,10)
+2154c2157
+< w=A*0.622*exp(-B/dewpk)/pres
+---
+> w=A*0.622*math_exp(-B/dewpk)/pres
+2182c2185,2186
+<   "d "array"(lev="PAbove")"
+---
+>   "define dd="array"(lev="PAbove")"
+>   "d dd"
+2187c2191,2192
+<   "d "array"(lev="PBelow")"
+---
+>   "define dd="array"(lev="PBelow")"
+>   "d dd"
+2193c2198
+<   If (abs(VAbove) > 130 & zlev > 1 & zlev < _zmaxfile)
+---
+>   If (math_abs(VAbove) > 130 & zlev > 1 & zlev < _zmaxfile)
+2195c2200
+<      While (abs(VAbove) > 130 & zz < _zmaxfile)
+---
+>      While (math_abs(VAbove) > 130 & zz < _zmaxfile)
+2199c2204,2205
+<        "d "array"(lev="PAbove")"
+---
+>        "define dd="array"(lev="PAbove")"
+>        "d dd"
+2205c2211
+<   If (abs(VBelow) > 130 & zlev > 1 & zlev < _zmaxfile)
+---
+>   If (math_abs(VBelow) > 130 & zlev > 1 & zlev < _zmaxfile)
+2207c2213
+<       While (abs(VBelow) > 130 & zz > 1) 
+---
+>       While (math_abs(VBelow) > 130 & zz > 1) 
+2211c2217,2218
+<         "d "array"(lev="PBelow")"
+---
+>         "define dd="array"(lev="PBelow")"
+>         "d dd"
+2217,2218c2224,2225
+<   If (abs(VAbove) < 130 & abs(VBelow) < 130)
+<      Vest=VBelow+log(PBelow/pres)*(VAbove-VBelow)/log(PBelow/PAbove)
+---
+>   If (math_abs(VAbove) < 130 & math_abs(VBelow) < 130)
+>      Vest=VBelow+math_log(PBelow/pres)*(VAbove-VBelow)/math_log(PBelow/PAbove)
+2237c2244
+<    xwind=wspd*cos((270-wdir)*_dtr)
+---
+>    xwind=wspd*math_cos((270-wdir)*_dtr)
+2252c2259
+<    ywind=wspd*sin((270-wdir)*_dtr)
+---
+>    ywind=wspd*math_sin((270-wdir)*_dtr)
+2301c2308
+< xloc=(temp-_m1*log10(pres)-_m3)/_m2
+---
+> xloc=(temp-_m1*math_log10(pres)-_m3)/_m2
+2312c2319
+< tempval=_m1*log10(pres)+_m2*xloc+_m3
+---
+> tempval=_m1*math_log10(pres)+_m2*xloc+_m3
+2323c2330
+< theta=(temp+273.15)*pow(1000/pres,0.286)-273.15
+---
+> theta=(temp+273.15)*math_pow(1000/pres,0.286)-273.15
+2344c2351
+< theta=(temp+273.15)*pow(1000/pres,exponent)-273.15
+---
+> theta=(temp+273.15)*math_pow(1000/pres,exponent)-273.15
+2361c2368
+< thetae=theta*exp((3.376/TLcl-0.00254)*mix*(1.0+0.00081*mix))
+---
+> thetae=theta*math_exp((3.376/TLcl-0.00254)*mix*(1.0+0.00081*mix))
+2365c2372
+< **************************************************************************
+---
+> *************************************************************************
+2366a2374
+> function GHBCAPE(sndtemp,snddewp,pinc,source,ml_depth,adiabat)
+2368c2376,2436
+< function int(i0)
+---
+> *-----------------------------------------------------------------------
+> *
+> *  GHBcape - A GrADS routine converted from a Fortran90 subroutine to 
+> *            calculate Convective Available Potential Energy (CAPE) and
+> *            Convective Inhibition (CIN) from a sounding.
+> *
+> *  Version 1.02                           Fortran Last modified:  10 October 2008
+> *                                         GrADS version Last modified:  7 August 2009
+> *
+> *  Fortran Author:  George H. Bryan
+> *           Mesoscale and Microscale Meteorology Division
+> *           National Center for Atmospheric Research
+> *           Boulder, Colorado, USA
+> *           gbryan@ucar.edu
+> *
+> *  GrADS conversion:  Robert E. Hart
+> *           Florida State University
+> *           Department of Meteorology
+> *           rhart@fsu.edu
+> *
+> *  For original Fortran, please see http://www.mmm.ucar.edu/people/bryan/Code/getcape.F
+> *
+> *  Disclaimer:  This code is made available WITHOUT WARRANTY.
+> *
+> *  References:  Bolton (1980, MWR, p. 1046) (constants and definitions)
+> *               Bryan and Fritsch (2004, MWR, p. 2421) (ice processes)
+> *
+> *-----------------------------------------------------------------------
+> *
+> *  Options passed into function:
+> *
+> *   sndtemp            ! Array of sounding temp values in C
+> *
+> *   snddewp            ! Array of sounding dewp values in C
+> *
+> *   pinc               ! Pressure increment (Pa)
+> *                      ! (smaller number yields more accurate
+> *                      !  results,larger number makes code
+> *                      !  go faster)
+> *
+> *   source             ! Source parcel:
+> *                      ! 1 = surface
+> *                      ! 2 = most unstable (max theta-e)
+> *                      ! 3 = mixed-layer (specify ml_depth)
+> *
+> *   ml_depth           ! depth (m) of mixed layer
+> *                      ! for source=3
+> *
+> *   adiabat            ! Formulation of moist adiabat:
+> *                      ! 1 = pseudoadiabatic, liquid only
+> *                      ! 2 = reversible, liquid only
+> *                      ! 3 = pseudoadiabatic, with ice
+> *                      ! 4 = reversible, with ice
+> *
+> *-----------------------------------------------------------------------
+> *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> *-----------------------------------------------------------------------
+> *            No need to modify anything below here:
+> *-----------------------------------------------------------------------
+> *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> *-----------------------------------------------------------------------
+2370,2378c2438,2599
+< *--------------------------
+< * Return integer of i0
+< *--------------------------
+<   i=0
+<   while(i<12)
+<     i=i+1
+<     if(substr(i0,i,1)='.')
+<       i0=substr(i0,1,i-1)
+<       break
+---
+>    say "Start calculating CAPE & CIN."
+> 
+> * Get max k with legit temp data 
+> 
+>    "q file"
+>    rec=sublin(result,5)
+>    nk1=subwrd(rec,9)
+> 
+>    "set gxout value"
+>    "set grads off"
+>  
+>    found=0
+>    m=0
+>    k=nk1
+>    while (k >= 1 & found = 0)
+>       "set z "k
+>       "define dd="sndtemp
+>       "d dd"
+>       temp=subwrd(result,4)
+>       if (math_abs(temp) < 130) 
+>            found=1
+>            nk=k
+>       endif
+>       k=k-1
+>    endwhile
+> 
+> 
+> * Create script arrays of variables matching expectations of original Fortran
+> * Allow for missing data by:
+> * Data is only included at a level if 
+> *     - Temperature and dewpoint exist with a pressure at or above 500mb
+> *     - Temperature data exists with a pressure below 500mb 
+> * 
+> * If only temperature data exists at pressures below 500mb, insert Td=T-50C
+> 
+>     k=1
+>     m=0
+>     while (k <= nk)
+>       "set z "k
+>       pres=subwrd(result,4)
+>       "define dd="sndtemp
+>       "d dd"
+>       temp=subwrd(result,4)
+>       "define dd="snddewp
+>       "d dd"
+>       dewp=subwrd(result,4)
+>       if (math_abs(temp) < 130 ) 
+>          if (math_abs(dewp) < 130) 
+>              m=m+1
+>              pin.m=pres
+>              tin.m=temp
+>              tdin.m=dewp
+>          endif
+>          if (math_abs(dewp) > 130 & pres <= 500) 
+>              m=m+1
+>              pin.m=pres
+>              tin.m=temp
+>              tdin.m=tin.m-50
+>          endif
+>       endif
+>       k=k+1
+>     endwhile
+> 
+>     nk=m
+> 
+> * Conversion of George Bryan's Fortran begins here
+> *-----------------------------------------------------------------------
+> 
+>     g     = 9.81
+>     p00   = 100000
+>     cp    = 1005.7
+>     rd    = 287.04
+>     rv    = 461.5
+>     xlv   = 2501000
+>     xls   = 2836017
+>     t0    = 273.15
+> *-----------------------------------------------------------------------
+> 
+>     g     = 9.81
+>     p00   = 100000
+>     cp    = 1005.7
+>     rd    = 287.04
+>     rv    = 461.5
+>     xlv   = 2501000
+>     xls   = 2836017
+>     t0    = 273.15
+>     cpv   = 1875
+>     cpl   = 4190
+>     cpi   = 2118.636
+>     lv1   = xlv+(cpl-cpv)*t0
+>     lv2   = cpl-cpv
+>     ls1   = xls+(cpi-cpv)*t0
+>     ls2   = cpi-cpv
+> 
+>     rp00  = 1/p00
+>     eps   = rd/rv
+>     reps  = rv/rd
+>     rddcp = rd/cp
+>     cpdrd = cp/rd
+>     cpdg  = cp/g
+> 
+>     converge = 0.0002
+> 
+>     debug_level =  0
+> 
+> *-----------------------------------------------------------------------
+> 
+> *---- convert p,t,td to mks units; get pi,q,th,thv ----!
+> 
+>     k=1
+>     while (k <= nk)
+>         p.k = 100.0*pin.k
+>         t.k = 273.15+tin.k
+>        td.k = 273.15+tdin.k
+>        pi.k = math_pow(p.k*rp00,rddcp)
+>         q.k = GHBgetqvs(p.k,td.k)
+>        th.k = t.k/pi.k
+>       thv.k = th.k*(1+reps*q.k)/(1.0+q.k)
+>       k=k+1
+>     endwhile
+> 
+> *---- get height using the hydrostatic equation ----!
+>     say "   Calculating height of levels"
+> 
+>     z.1 = 0
+>     k=2
+>     while (k <= nk)
+>       km=k-1
+>       dz = -cpdg*0.5*(thv.k+thv.km)*(pi.k-pi.km)
+>       z.k = z.km + dz
+>       k=k+1
+>     endwhile
+> 
+> *---- find source parcel ----!
+> 
+>   say "   Finding/calculating source parcel"
+> 
+>   if (source = 1)
+> *     use surface parcel
+>     kmax = 1
+>   endif
+> 
+>   if (source = 2) 
+> *     use most unstable parcel (max theta-e)
+>     if (p.1 < 50000) 
+> *     first report is above 500mb... just use the first level reported
+>       kmax = 1
+>       maxthe = GHBgetthe(p.1,t.1,td.1,q.1)
+>     else
+> *     find max theta-e below 500mb
+>       maxthe = 0.0
+>       k=1
+>       while (k<=nk)
+>         if(p.k >= 50000)
+>           the = GHBgetthe(p.k,t.k,td.k,q.k)
+>           if (the > maxthe )
+>             maxthe = the
+>             kmax = k
+>           endif
+>         endif
+>         k=k+1
+>       endwhile
+2380,2381c2601,2604
+<   endwhile
+< return(i0)
+---
+>     if(debug_level >= 100) 
+>           say '  kmax,maxthe = ' kmax' 'maxthe
+>     endif
+>    endif
+2383c2606,2610
+< *************************************************************************
+---
+>    if  (source = 3) 
+> *     use mixed layer
+>     if ( z.2-z.1 > ml_depth )
+> *     the second level is above the mixed-layer depth:  just use the
+> *     lowest level
+2385c2612,2631
+< function abs(i)
+---
+>       avgth = th.1 
+>       avgqv = q.1 
+>       kmax = 1
+>     else 
+>        if( z.nk < ml_depth )
+> *     the top-most level is within the mixed layer:  just use the
+> *     upper-most level
+>           avgth = th.nk
+>           avgqv = q.nk
+>           kmax = nk
+>        else
+> *     calculate the mixed-layer properties:
+>           avgth = 0.0
+>           avgqv = 0.0
+>           k = 2
+>           if(debug_level >= 100) 
+>               say '  ml_depth = 'ml_depth
+>               say '  k,z,th,q:'
+>               say 1" "z.1" "th.1" "q.1
+>           endif
+2387,2389c2633,2641
+< *----------------------------
+< * return absolute value of i
+< *----------------------------
+---
+>           while (z.k <= ml_depth & k<=nk)
+>                if(debug_level >= 100)  
+>                   say k" "z.k" "th.k" "q.k
+>                endif
+>                km=k-1
+>                avgth = avgth + 0.5*(z.k-z.km)*(th.k+th.km)
+>                avgqv = avgqv + 0.5*(z.k-z.km)*(q.k+q.km)
+>                k = k + 1
+>           endwhile
+2391,2394c2643,2685
+<   if (i < 0) 
+<      absval=-i
+<   else 
+<      absval=i
+---
+>           km=k-1
+>           th2 = th.km+(th.k-th.km)*(ml_depth-z.km)/(z.k-z.km)
+>           qv2 = q.km+(q.k - q.km)*(ml_depth-z.km)/(z.k-z.km)
+> 
+>           if(debug_level >= 100) 
+>               say 999" "ml_depth" "th2" "qv2
+>           endif
+> 
+>           avgth = avgth + 0.5*(ml_depth-z.km)*(th2+th.km)
+>           avgqv = avgqv + 0.5*(ml_depth-z.km)*(qv2+q.km)
+> 
+>           if(debug_level >= 100) 
+>             say k" "z.k" "th.k" "q.k
+>           endif
+>           avgth = avgth/ml_depth
+>           avgqv = avgqv/ml_depth
+> 
+>           kmax = 1
+>         endif
+>       endif
+>      else
+>          if (source != 1 & source != 2 & source != 3) 
+>             say 
+>             say '  Unknown value for source'
+>             say
+>             say ' source = ' source
+>             say 
+>             "quit"
+>          endif
+>      endif
+> 
+> *---- define parcel properties at initial location ----!
+>     narea = 0.0
+> 
+>   if( source = 1 | source = 2) 
+>     k    = kmax
+>     th2  = th.kmax
+>     pi2  = pi.kmax
+>     p2   = p.kmax
+>     t2   = t.kmax
+>     thv2 = thv.kmax
+>     qv2  = q.kmax
+>     b2   = 0.0
+2395a2687,2696
+>   if( source = 3 )
+>     k    = kmax
+>     th2  = avgth
+>     qv2  = avgqv
+>     thv2 = th2*(1.0+reps*qv2)/(1.0+qv2)
+>     pi2  = pi.kmax
+>     p2   = p.kmax
+>     t2   = th2*pi2
+>     b2   = g*( thv2-thv.kmax )/thv.kmax
+>   endif
+2397c2698,2700
+< return(absval)
+---
+>     ql2 = 0.0
+>     qi2 = 0.0
+>     qt  = qv2
+2399c2702,2704
+< *************************************************************************
+---
+>     cape = 0.0
+>     cin  = 0.0
+>     lfc  = 0.0
+2401c2706,2712
+< function log(i)
+---
+>     doit = 1     
+>     cloud = 0      
+>     if(adiabat = 1 | adiabat = 2)
+>       ice = 0 
+>     else
+>       ice = 1
+>     endif
+2403,2405d2713
+< *---------------------------
+< * return natural log of i
+< *---------------------------
+2407,2411c2715,2718
+< "set gxout stat"
+< "d log("i")"
+< rec=sublin(result,8)
+< val=subwrd(rec,4)
+< return(val)
+---
+>      the = GHBgetthe(p2,t2,t2,qv2)
+>      if(debug_level >= 100) 
+>         say '  the = 'the
+>      endif
+2413c2720,2721
+< *************************************************************************
+---
+> *---- begin ascent of parcel ----!
+>     say "   Begin ascent of parcel"
+2415c2723,2726
+< function log10(i)
+---
+>       if(debug_level >= 100)
+>         say '  Start loop:'
+>         say '  p2,th2,qv2 = 'p2" "th2" "qv2
+>       endif
+2417,2419c2728,2748
+< *--------------------------
+< * return log base 10 of i
+< *--------------------------
+---
+>     while( doit = 1  &  k < nk )
+>         k = k+1
+>         km=k-1
+>        b1 =  b2
+>        dp = p.km-p.k 
+>        if( dp < pinc )
+>         nloop = 1
+>       else
+>         nloop = 1 + math_int( dp/pinc )
+>         dp = dp/nloop
+>       endif
+>       n=1
+>       while (n<=nloop)
+>          p1 =  p2
+>          t1 =  t2
+>         pi1 = pi2
+>         th1 = th2
+>         qv1 = qv2
+>         ql1 = ql2
+>         qi1 = qi2
+>         thv1 = thv2
+2421,2425c2750,2751
+< "set gxout stat"
+< "d log10("i")"
+< rec=sublin(result,8)
+< val=subwrd(rec,4)
+< return(val)
+---
+>         p2 = p2 - dp
+>         pi2 = math_pow(p2*rp00,rddcp)
+2427c2753,2755
+< *************************************************************************
+---
+>         thlast = th1
+>         i = 0
+>         not_converged = 1
+2429c2757,2775
+< function pow(i,j)
+---
+>        while( not_converged = 1)
+>           i = i + 1
+>           t2 = thlast*pi2
+>           if (ice = 1)
+>             val1=GHBmin((t2-233.15)/(273.15-233.15),1.0)
+>             fliq = GHBmax(val1,0.0)
+>             fice = 1.0-fliq
+>           else
+>             fliq = 1.0
+>             fice = 0.0
+>           endif
+>           val1=GHBgetqvs(p2,t2)
+>           val2=GHBgetqvi(p2,t2)
+>           val3=fliq*val1+fice*val2
+>           qv2 = GHBmin(qt,val3)
+>           val4=fice*(qt-qv2)
+>           qi2 = GHBmax( val4 , 0 )
+>           val5=qt-qv2-qi2
+>           ql2 = GHBmax(val5 , 0 )
+2431,2433c2777,2780
+< *-------------------------------
+< * return power of i raised to j
+< *-------------------------------
+---
+>           tbar  = 0.5*(t1+t2)
+>           qvbar = 0.5*(qv1+qv2)
+>           qlbar = 0.5*(ql1+ql2)
+>           qibar = 0.5*(qi1+qi2)
+2435,2439c2782,2784
+< "set gxout stat"
+< "d pow("i","j")"
+< rec=sublin(result,8)
+< val=subwrd(rec,4)
+< return(val)
+---
+>           lhv = lv1-lv2*tbar
+>           lhs = ls1-ls2*tbar
+>           lhf = lhs-lhv
+2441d2785
+< ************************************************************************
+2443c2787,2806
+< function cos(i)
+---
+>           rm=rd+rv*qvbar
+>           cpm=cp+cpv*qvbar+cpl*qlbar+cpi*qibar
+>           th2=th1*math_exp(lhv*(ql2-ql1)/(cpm*tbar)+lhs*(qi2-qi1)/(cpm*tbar)+(rm/cpm-rd/cp)*math_log(p2/p1) )
+>           if(i > 90) 
+>              say i" "th2" "thlast" "th2-thlast
+>           endif
+>           if(i >  100)
+>             say 
+>             say '  Error:  lack of convergence'
+>             say 
+>             say '  ... stopping iteration '
+>             say 
+>             "quit"
+>           endif
+>           if( math_abs(th2-thlast) > converge )
+>             thlast=thlast+0.3*(th2-thlast)
+>           else
+>             not_converged = 0
+>           endif
+>         endwhile
+2445,2447c2808,2809
+< *-----------------------------------------
+< * return cosine of i, where i is in radians
+< *------------------------------------------
+---
+> *       Latest pressure increment is complete.  Calculate some
+> *       important stuff:
+2449,2453c2811,2826
+< "set gxout stat"
+< "d cos("i")"
+< rec=sublin(result,8)
+< val=subwrd(rec,4)
+< return(val)
+---
+>         if (ql2 >= 1.0e-10) 
+>             cloud=1
+>         endif
+>         
+>         if (adiabat = 1 | adiabat = 3) 
+>              qt=qv2
+>              ql2=0
+>              qi2=0
+>         endif
+>         if (adiabat <= 0 | adiabat >= 5) 
+>              say 
+>              say "Undefined adiabat."
+>              say
+>              "quit"
+>         endif
+>         n=n+1
+2455c2828
+< ************************************************************************
+---
+>         endwhile
+2457c2830,2833
+< function sin(i)
+---
+>         km=k-1
+>         thv2 = th2*(1.0+reps*qv2)/(1.0+qv2+ql2+qi2)
+>         b2 = g*( thv2-thv.k )/thv.k
+>         dz = -cpdg*0.5*(thv.k+thv.km)*(pi.k-pi.km)
+2459,2461c2835
+< *------------------------------------------
+< * return sine of i, where i is in radians
+< *------------------------------------------
+---
+>         the = GHBgetthe(p2,t2,t2,qv2)
+2463,2467c2837
+< "set gxout stat"
+< "d sin("i")"
+< rec=sublin(result,8)
+< val=subwrd(rec,4)
+< return(val)
+---
+> *     Get contributions to CAPE and CIN:
+2469d2838
+< ************************************************************************
+2471c2840,2881
+< function exp(i)
+---
+>       chk=0
+>       if( b2 >= 0 & b1 < 0) 
+>         chk=1
+>         ps = p.km+(p.k-p.km)*(0-b1)/(b2-b1)
+>         frac = b2/(b2-b1)
+>         parea =  0.5*b2*dz*frac
+>         narea = narea-0.5*b1*dz*(1.0-frac)
+>         if(debug_level >= 200)
+>           say '      b1,b2 = 'b1" "b2
+>           say '      p1,ps,p2 = 'p.km" "ps" "p.k
+>           say '      frac = 'frac
+>           say '      parea = 'parea
+>           say '      narea = 'narea
+>         endif
+>         cin  = cin  + narea
+>         narea = 0.0
+>       endif
+>       if (chk = 0 & b2 < 0 &  b1 > 0) 
+>           chk=2
+>           km=k-1
+>           ps = p.km+(p.k-p.km)*(0.0-b1)/(b2-b1)
+>           frac = b1/(b1-b2)
+>           parea =  0.5*b1*dz*frac
+>           narea = -0.5*b2*dz*(1.0-frac)
+>           if(debug_level >= 200)
+>               say '      b1,b2 = 'b1' 'b2
+>               say '      p1,ps,p2 = 'p.km' 'ps' 'p.k
+>               say '      frac = 'frac
+>               say '      parea = 'parea
+>               say '      narea = 'narea
+>            endif
+>        endif
+>       if (chk = 0 &  b2 < 0)
+>         chk=3
+>         parea =  0.0
+>         narea = narea-0.5*dz*(b1+b2)
+>       endif
+>       if (chk = 0) 
+>         parea =  0.5*dz*(b1+b2)
+>         narea =  0.0
+>       endif
+>       cape = cape + GHBmax(0,parea)
+2473,2475c2883,2886
+< *------------------------------------------
+< * return exponential of i
+< *------------------------------------------
+---
+>       if( p.k <= 10000 & b2 < 0)
+>         doit = 0
+>       endif
+> endwhile
+2477,2480c2888,2928
+< "set gxout stat"
+< "d exp("i")"
+< rec=sublin(result,8)
+< val=subwrd(rec,4)
+---
+> *---- All done ----!
+> 
+> say "Done calculating CAPE & CIN."
+> 
+> return(cape" "cin)
+> 
+> *-----------------------------------------------------------------------
+> *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> *-----------------------------------------------------------------------
+> 
+> function GHBmax(val1,val2)
+> 
+> if (val1 > val2) 
+>     maxval=val1
+> else
+>     maxval=val2
+> endif
+> return(maxval)
+> 
+> *-----------------------------------------------------------------------
+> *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> *-----------------------------------------------------------------------
+> 
+> function GHBmin(val1,val2)
+> 
+> if (val1 < val2) 
+>     minval=val1
+> else
+>     minval=val2
+> endif
+> return(minval)
+> 
+> *-----------------------------------------------------------------------
+> *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> *-----------------------------------------------------------------------
+> 
+> function GHBgetqvs(p,t)
+> 
+> eps=287.04/461.5
+> es = 611.2*math_exp(17.67*(t-273.15)/(t-29.65))
+> val = eps*es/(p-es)
+2483,2484c2931,2933
+< ***********************************************************************
+< function round(i)
+---
+> *-----------------------------------------------------------------------
+> *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> *-----------------------------------------------------------------------
+2486,2489c2935,2951
+< rr=abs(1.0*i)
+< rr=int(rr+0.5)
+< if (i < 0)
+<    rr=-1*rr      
+---
+> function GHBgetqvi(p,t)
+> 
+> eps=287.04/461.5
+> es = 611.2*math_exp(21.8745584*(t-273.15)/(t-7.66))
+> val = eps*es/(p-es)
+> return(val)
+> 
+> *-----------------------------------------------------------------------
+> *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> *-----------------------------------------------------------------------
+> 
+> function GHBgetthe(p,t,td,q)
+> 
+> if( td-t >= -0.1 )
+>       tlcl = t
+> else
+>       tlcl = 56.0 + 1/(1/(td-56.0) + 0.00125*math_log(t/td))
+2491c2953,2961
+< return(rr)
+---
+> 
+> tthe=t*math_pow(100000.0/p,(0.2854*(1.0-0.28*q)))*math_exp(((3376.0/tlcl)-2.54)*q*(1.0+0.81*q))
+> 
+> return(tthe)
+> 
+> 
+> *-----------------------------------------------------------------------
+> *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> *-----------------------------------------------------------------------

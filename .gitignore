@@ -1,0 +1,13 @@
+*.pyc
+*.ipynb_checkpoints
+*.egg-info
+.vscode/launch.json
+build/
+cm1.exe
+run/*.ctl
+run/*.dat
+run/onefile.F
+run_*/
+src/*.f90
+src/*.o
+src/*.mod

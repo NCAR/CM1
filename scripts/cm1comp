@@ -1,0 +1,17 @@
+#!/bin/csh
+
+#
+# Example of script to compile CM1 using NCAR's caldera
+#  (make sure this script is in the "src" directory)
+#
+
+#BSUB -P PXXXXXXXX           # project code
+#BSUB -W 00:30               # wall-clock time (hrs:mins)
+#BSUB -n 1                   # number of tasks in job
+#BSUB -J cm1comp             # job name
+#BSUB -o cm1comp.out         # output file name
+#BSUB -e cm1comp.err         # error file name
+#BSUB -q caldera             # queue
+
+gmake
+

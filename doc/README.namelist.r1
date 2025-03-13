@@ -1,0 +1,143 @@
+
+User's Guide to namelist.input file (located in "run" directory)
+
+Bryan Cloud Model, Version 1, Release 1
+
+-------------------------------------------------------------------------
+  param1 section -- enter REAL values
+
+ dx - Horizontal grid spacing (m).
+
+ dz - Vertical grid spacing (m).
+
+ dtl - Large time step (s).
+
+       For kwss=1, this time step is limited by the fastest nonacoustic 
+       speed.  For thunderstorm simulations, this is usually the maximum 
+       vertical velocity.  Otherwise, this would be the propagation speed
+       of gravity waves.
+       The following usually works well:
+           dtl = min(dx,dz)/67  (rounded to an appropriate value, of course)
+
+       For kwss=0, this time step is limited by the propagation speed of
+       sound waves.  dtl of about min(dx,dz)/700 is recommended.
+
+ dts - Small (acoustic) time step (s).
+
+       Only used for kwss=1.  (Ignored if kwss=0.)
+
+         For implsound=0, set to be about min(dx,dz)/700.
+         For implsound=1, set to be about dx/700.
+
+       NOTE!  dtl/dts must be an EVEN integer (exactly) for the
+       split time steps to work properly.  There is no check for
+       this ... so please remember.  Typically, dtl/dts of 
+       4,6,8,10,12 is appropriate.  For dtl/dts less than 4,
+       you should probably use kwss=0 instead.  A value of
+       dtl/dts greater than 12 is not recommended.
+
+ timax - Maximum forecast time (s).
+
+ tapfrq - Frequency of three-dimensional model output (s).
+          Output is in cm1out files.
+
+ rstfrq - Frequency to save model restart files (s).  (restarts not available)
+
+-------------------------------------------------------------------------
+  param2 section -- enter INTEGER values
+     (value in CAPS is recommended, where applicable)
+
+ statfrq - Frequency for calculating some interesting output.
+           Output is in stats.dat file.
+           Set as number of time steps.  (e.g., 1 = every model
+           time step, 5 = every fifth time step)
+
+ irst - Is this a restart?  (restarts not available)
+
+ iconly - Setup initial conditions only?
+              1 = creates initial conditions, but does not run model.
+              0 = creates initial conditions, and proceeds with integration.
+
+ imoist - Include moisture?  (0=no, 1=yes)
+
+ itke - Include subgrid turbulence (TKE) scheme?  (0=no,  1=YES)
+        (If user chooses 0, then kmix must be set below)
+
+ smix - Use new conserved-variable saturated mixing scheme?  (not available)
+
+ irdamp - Use upper-level Rayleigh damping zone?  (0=no,  1=YES)
+          (User must set rdalpha and zd below)
+
+ implsound - Use vertical implicit scheme for acoustic modes?
+                 (Only used if kwss = 1)
+              1 = vertical implicit sound (only horizontal terms are explicit,
+                  as in MM5, ARPS, WRF)
+              2 = explicit treament of acoustic terms in both vertical 
+                  and horizontal directions
+
+ kwss - Use Klemp-Wilhelmson split time steps?  (0=no,  1=YES)
+         (User must set both dtl -and- dts if kwss=1,
+          but only dtl if kwss=0)
+
+ ptype - Explicit moisture scheme.
+             1 = Kessler scheme (water only)
+             2 = Goddard version of Lin et al. scheme (includes ice)
+
+ idrag - (currently defunct option)
+
+ isfcflx - (currently defunct option)
+
+ icor - Include Coriolis force?  (0=no,  1=yes)
+        (If user chooses 0, then fcor must be set below)
+        f-plane is assumed.
+
+ neweqts - Use new equations (from Bryan and Fritsch 2002) ?
+               (1 = YES,  0 = no)
+
+ ewbc - East-west lateral boundary condition.
+
+ nsbc - North-south lateral boundary condition.
+
+            For ewbc and nsbc:  1 = periodic
+                                2 = open-radiative
+                                3 = rigid walls
+
+ irbc - For ewbc=2 and/or nsbc=2, this is the type of radiative scheme
+        to use:     1 = Klemp-Wilhelmson on large steps
+                    2 = Klemp-Wilhelmson on small steps
+                    (no other options available at this time)
+
+ isnd - Base-state sounding:  1 = Weisman-Klemp
+                              2 = isentropic (for density current tests)
+                              3 = isentropic (for warm bubble tests)
+                              4 = moist benchmark
+                              5 = defunct
+                              6 = read from file
+
+ iwnd - Base-state wind profile:  0 = zero winds
+                                  1 = RKW-type profile
+                                  2 = Weisman-Klemp supercell
+                                  3 = multicell
+                                  4 = Weisman-Klemp multicell
+
+-------------------------------------------------------------------------
+  param3 section -- enter REAL values
+
+ kmix - Mixing coefficient when itke=0 (m**2/s)
+        (This mixing is 2nd order diffusion in all 3 directions.)
+
+ fcor - Coriolis parameter (1/s).
+
+ kdiv - Coefficient for divergence damper.  Value between 0.02-0.06 is
+        recommended.
+
+        This is only used when kwss=1.  The divergence damper is
+        an artificial term designed to attenuate acoustic waves.
+
+ rdalpha - Inverse folding time for upper-level Rayleigh damping layer
+           (1/s).  Value of about 1/300 is recommended.
+
+ zd - Height above which Rayleigh damping is applied (m).
+
+
+
