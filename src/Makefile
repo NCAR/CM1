@@ -1,5 +1,55 @@
+#-----------------------------------------------------------------------------
+#
+#  To compile the CM1 codes with this Makefile, use the following command:
+#
+#        make [argu_list]
+#
+#  where the optional argument list includes:
+#  - USE_OPENMP: turn on OpenMP (default=false)
+#  - USE_MPI: turn on MPI (default=false)
+#  - USE_DOUBLE: turn on double precision calculation (for PGI/NVHPC only, default=false)
+#  - USE_OPENACC: turn on OpenACC (for PGI/NVHPC only, default=false)
+#  - USE_NETCDF: turn on netCDF output (default=false)
+#  - DEBUG: turn on DEBUG mode (default=false)
+#
+#  Some example usages are:
+#    make USE_OPENMP=true                 # shared memory only
+#    make USE_OPENMP=true USE_MPI=true    # shared + distributed memory
+#    make USE_OPENACC=true USE_MPI=true   # distributed memory + GPU offloading
+#
+#  Note that the logical values set to the argument variables are case insensitive.
+#
+#  If the "FC" env variable is not set on your system, you could also specify it through:
+#    make FC=ifort                        # use Intel compiler
+#
+#-----------------------------------------------------------------------------
 
-#SHELL = /bin/csh
+#-----------------------------------------------------------------------------
+#
+#  Change all boolean variables to lowercase
+#
+#-----------------------------------------------------------------------------
+USE_OPENMP_L  = $(shell echo $(USE_OPENMP) | tr A-Z a-z)
+USE_MPI_L     = $(shell echo $(USE_MPI) | tr A-Z a-z)
+USE_DOUBLE_L  = $(shell echo $(USE_DOUBLE) | tr A-Z a-z)
+USE_OPENACC_L = $(shell echo $(USE_OPENACC) | tr A-Z a-z)
+USE_NETCDF_L  = $(shell echo $(USE_NETCDF) | tr A-Z a-z)
+DEBUG_L       = $(shell echo $(DEBUG) | tr A-Z a-z)
+USE_CUDAMEM_L = $(shell echo $(USE_CUDAMEM) | tr A-Z a-z)
+GPU_TYPE_L    = $(shell echo $(GPU_TYPE) | tr A-Z a-z)
+
+#-----------------------------------------------------------------------------
+#  initialize some options as empty
+#-----------------------------------------------------------------------------
+DM            =
+OMP           =
+DP            =
+OPTS          =
+CPP           =
+OUTPUTINC     =
+OUTPUTLIB     =
+OUTPUTOPT     =
+LINKOPTS      =
 
 #-----------------------------------------------------------------------------
 #                      NETCDF SECTION
@@ -7,97 +57,161 @@
 #   (also, make sure the paths to netcdf files are correct for your machine)
 #              (NOTE: Don't change lines 3 and 4!)
 #  Note:  you may need to remove -DNCFPLUS if you use an old version of netcdf
-#
-OUTPUTINC = -I$(NETCDF)/include
-OUTPUTLIB = -L$(NETCDF)/lib
-OUTPUTOPT = -DNETCDF -DNCFPLUS
-LINKOPTS  = -lnetcdf -lnetcdff
+#-----------------------------------------------------------------------------
+ifeq (${USE_NETCDF_L},true)
+    OUTPUTINC    += -I$(NETCDFBASE)/include
+    OUTPUTLIB    += -L$(NETCDFBASE)/lib
+    OUTPUTOPT    += -DNETCDF -DNCFPLUS
+    LINKOPTS     += -lnetcdf -lnetcdff
+endif
+
+#-----------------------------------------------------------------------------
+#                    HARDWARE SECTION
+#  Do not comment/uncomment the options below manually.
+#  Specify the boolean variables above to switch configurations.
+#  If a compiler flag is missing, issue a PR in CM1 Repo.
 #-----------------------------------------------------------------------------
 
+#-----------------------------------------------------------------------------
+#  NVHPC compiler
+#-----------------------------------------------------------------------------
+ifeq (${FC},nvfortran)
+    OPTS         += -Mfree -Ktrap=none -Mautoinline -Minline=reshape -Kieee -Mnofma
+    CPP          += cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+    ifeq (${DEBUG_L},true)
+         OPTS    += -g -O0
+         DM      += -D_B4B
+    else
+         OPTS    += -g -O2
+    endif
+    ifeq (${USE_DOUBLE_L},true)
+         OPTS    += -r8
+         DP      += -DDP
+    endif
+    ifeq (${USE_OPENMP_L},true)
+         OPTS    += -mp
+         OMP     += -DOPENMP
+    endif
+    ifeq (${USE_OPENACC_L},true)
+        ifeq (${DEBUG_L},true)
+            ifeq (${GPU_TYPE_L},a100)
+                OPTS += -acc -gpu=cc80,lineinfo,nofma,autocompare,math_uniform
+            else
+                OPTS += -acc -gpu=cc70,lineinfo,nofma,autocompare,math_uniform
+            endif
+        else
+            # Potentially interesting non-default compiler flags:: 
+            #     -Minfo=accel    Provides verbose output for accelerator compilation phase
+            #     -Mpcast         Enables the use of PCAST functionality
+            ifeq (${GPU_TYPE_L},a100)
+                OPTS += -acc -gpu=cc80,lineinfo,nofma,math_uniform -Minfo=accel -cudalib=cutensor 
+            else
+                OPTS += -acc -gpu=cc70,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
+            endif
+        endif
+        DM       += -D_OPENACC
+    endif
+    ifeq (${USE_CUDAMEM_L},true)
+        DM       += -D_CUDAMEM
+    endif
+endif
 
 #-----------------------------------------------------------------------------
-#                     HARDWARE SECTION
-#-- Choose the appropriate architecture, and uncomment all lines 
-#-- in that section.  See "README.compile" for more information.
+#  PGI compiler
 #-----------------------------------------------------------------------------
-#  single processor, Intel compiler 
-#      (default for NCAR's casper)
-#FC   = ifort
-#OPTS = -O3 -ip -assume byterecl -fp-model precise -ftz -no-fma
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+ifeq (${FC},pgf90)
+    OPTS         += -Mfree -Ktrap=none -Mautoinline -Minline=reshape -Kieee -Mnofma
+    CPP          += cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+    ifeq (${DEBUG_L},true)
+         OPTS    += -g -O0
+         DM      += -D_B4B
+    else
+         OPTS    += -O2
+    endif
+    ifeq (${USE_DOUBLE_L},true)
+         OPTS    += -r8
+         DP      += -DDP
+    endif
+    ifeq (${USE_OPENMP_L},true)
+         OPTS    += -mp
+         OMP     += -DOPENMP
+    endif
+    ifeq (${USE_OPENACC_L},true)
+        ifeq (${DEBUG_L},true)
+            OPTS += -acc -gpu=cc70,lineinfo,nofma,autocompare,math_uniform
+        else
+            OPTS += -acc -gpu=cc70,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
+        endif
+        DM       += -D_OPENACC
+    endif
+endif
+
 #-----------------------------------------------------------------------------
-#  multiple processors, distributed memory (MPI), Intel compiler 
-#      (default for NCAR's derecho)
-FC   = mpif90
-OPTS = -O3 -assume byterecl -fp-model precise -ftz -no-fma
-CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-DM   = -DMPI
+#  Untested settings for the following compilers
 #-----------------------------------------------------------------------------
-#  multiple processors, shared memory (OpenMP), Intel compiler 
-#      (can be used for NCAR's derecho)
-#FC   = mpif90
-#OPTS = -O3 -ip -assume byterecl -fp-model precise -ftz -no-fma -qopenmp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#OMP  = -DOPENMP
+
 #-----------------------------------------------------------------------------
-#  multiple processors, hybrid distributed (MPI) and shared memory (OpenMP), Intel compiler 
-#      (can be used for NCAR's derecho)
-#FC   = mpif90
-#OPTS = -O3 -ip -assume byterecl -fp-model precise -ftz -no-fma -qopenmp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#DM   = -DMPI -DOPENMP
+#  Intel compiler
 #-----------------------------------------------------------------------------
-#  single processor, NVIDIA (formerly Portland Group) compiler
-#FC   = nvfortran
-#OPTS = -Mfree -O2 -Ktrap=none -Mautoinline -Minline=reshape
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+ifeq (${FC},ifort)
+    # replace -xHost with -march=core-avx2 to make sure the same code builds on
+    # both Intel and AMD CPUs 
+    OPTS         += -O1 -assume byterecl -fp-model precise -ftz -no-fma -diag-disable=10448
+    CPP          += cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+    ifeq (${USE_OPENMP_L},true)
+        OPTS     += -qopenmp
+        OMP      += -DOPENMP
+    endif
+endif
+
 #-----------------------------------------------------------------------------
-#  multiple processors, distributed memory (MPI), NVIDIA (formerly Portland Group) compiler
-#FC   = mpif90
-#OPTS = -Mfree -O2 -Ktrap=none -Mautoinline -Minline=reshape
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#DM   = -DMPI
+#  GNU compiler
 #-----------------------------------------------------------------------------
-#  multiple processors, shared memory (OpenMP), NVIDIA (formerly Portland Group) compiler
-#FC   = nvfortran
-#OPTS = -Mfree -O2 -Ktrap=none -Mautoinline -Minline=reshape -mp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#OMP  = -DOPENMP
+ifeq (${FC},gfortran)
+    OPTS         += -ffree-form -ffree-line-length-none -O2 -finline-functions
+    CPP          += cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+    ifeq (${USE_OPENMP_L},true)
+        OPTS     += -fopenmp
+        OMP      += -DOPENMP
+    endif
+endif
+
 #-----------------------------------------------------------------------------
-#  single processor, GNU compiler
-#FC   = gfortran
-#OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+#  Cray compiler
 #-----------------------------------------------------------------------------
-#  multiple processors, distributed memory (MPI), GNU compiler
-#FC = mpif90
-#OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions -fallow-argument-mismatch
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#DM = -DMPI
+ifeq (${FC},ftn)
+    OPTS         += -O2 -Ovector2 -Oscalar2 -Othread2
+    #LINKOPTS     += -lfast_mv
+    CPP          += cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+    ifeq (${USE_OPENMP_L},true)
+        OPTS     += -h omp
+        OMP      += -DOPENMP
+    else
+        OPTS     += -h noomp
+    endif
+    ifeq (${USE_OPENACC_L},true)
+        OPTS     += -h acc
+        DM       += -D_OPENACC
+    endif
+
+endif
+
 #-----------------------------------------------------------------------------
-#  multiple processors, shared memory (OpenMP), GNU compiler
-#FC   = gfortran
-#OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions -fopenmp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#OMP  = -DOPENMP
+#  Distributed memory (MPI)
 #-----------------------------------------------------------------------------
-#  single processor, Cray fortran compiler
-#FC   = ftn
-#OPTS = -O2 -h noomp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#-----------------------------------------------------------------------------
-#  multiple processors, distributed memory (MPI), Cray fortran compiler
-#FC   = mpif90
-#OPTS = -O2 -h noomp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#DM   = -DMPI
-#-----------------------------------------------------------------------------
-#  multiple processors, shared memory (OpenMP), Cray fortran compiler
-#FC   = ftn
-#OPTS = -O2 -h omp
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#DM   = -DMPI
-#OMP  = -DOPENMP
+ifeq (${USE_MPI_L},true)
+    DM           += -DMPI
+    override FC  = mpif90
+endif
+
+$(info $$DEBUG_L is [${DEBUG_L}])
+$(info $$USE_MPI_L is [${USE_MPI_L}])
+$(info $$FC is [${FC}])
+$(info $$OPTS is [${OPTS}])
+$(info $$CPP is [${CPP}])
+$(info $$OMP is [${OMP}])
+$(info $$DM is [${DM}])
+
 #-----------------------------------------------------------------------------
 #-- You shouldn't need to change anything below here
 #-----------------------------------------------------------------------------
@@ -194,9 +308,18 @@ SRC   = constants.F \
 	cu_ntiedtke.F \
 	mmm_physics_wrapper.F
 
-OBJS = $(addsuffix .o, $(basename $(SRC)))
+#SRC_NVTX = nvtx_mod.F
+SRC_NVTX = 
 
-FFLAGS  =  $(OPTS)
+OBJS = $(addsuffix .o, $(basename $(SRC)))
+OBJS_OPENACC = $(addsuffix .o, $(basename $(SRC_NVTX)))
+
+FFLAGS = $(OPTS)
+ifeq (${USE_OPENACC_L},true)
+ifeq (${USE_CUDAMEM_L},true)
+FFLAGS = $(OPTS) -L/glade/u/apps/opt/nvhpc/22.2/Linux_x86_64/22.2/cuda/11.6/lib64 -lcudart
+endif
+endif
 AR      = ar cru
 
 .SUFFIXES:
@@ -204,14 +327,17 @@ AR      = ar cru
 
 all : cm1
 
+#			$(FC) $(OBJS) $(FFLAGS) $(OUTPUTINC) $(OUTPUTLIB) $(LINKOPTS) -o ../run/cm1.exe
 cm1:			$(OBJS)
-			$(FC) $(OBJS) $(FFLAGS) $(OUTPUTINC) $(OUTPUTLIB) $(LINKOPTS) -o ../run/cm1.exe
+			$(FC) $(LINKOPTS) $(FFLAGS) $(OBJS) $(OUTPUTINC) $(OUTPUTLIB) -o ../run/cm1.exe
 			$(AR) onefile.F $(SRC)
 			mv onefile.F ../run
 
-.F.o:
-			$(CPP) $(DM) $(DP) $(ADV) $(OUTPUTOPT) $*.F > $*.f90
-			$(FC) $(FFLAGS) $(OUTPUTINC) -c $*.f90
+%.f90: %.F
+			$(CPP) $(DM) $(DP) $(ADV) $(OUTPUTOPT) $< > $@
+
+$(OBJS): %.o: %.f90
+			$(FC) $(FFLAGS) $(OUTPUTINC) -c $<
 
 code:
 			$(AR) onefile.F $(SRC)
