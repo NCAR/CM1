@@ -124,7 +124,7 @@
 !              revision in background diffusion (kzo), jan 2016
 !              ==> kzo = 0.1 for momentum and = 0.01 for mass to account for
 !                  internal wave mixing of large et al. (1994), songyou hong, feb 2016
-!              ==> alleviate superious excessive mixing when delz is large
+!              ==> alleviate spurious excessive mixing when delz is large
 !              add multilayer urban canopy models of BEP and BEP+BEM, jan 2021
 !
 !     references:
