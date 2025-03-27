@@ -1,0 +1,192 @@
+# ------------------------------------
+# -------- Project Information -------
+# ------------------------------------
+site_name: CM1 Documentation
+site_description: CM1 Docs website
+repo_url: https://github.com/NCAR/CM1/
+site_url: https://cm1.readthedocs.io/en/latest/
+site_author: David Ahijevych (MMM)
+edit_uri: edit/main/docs/
+
+# directories to watch for automatic rebuilding when running "mkdocs serve"
+watch:
+  - mkdocs.yml
+  - docs/
+
+# ------------------------------------
+# -------- validation config ---------
+# ------------------------------------
+validation:
+  nav:
+    not_found: warn             # check if stubs exist or not!
+    omitted_files: warn         # check for files that exist without any links to them in nav
+    absolute_links : warn       # check for absolute links -- pointers to outside htmls in nav
+
+  links:
+    not_found: warn           # check for broken links inside mds. (to be activated later!)
+    absolute_links : warn     # check for absolute links -- pointers to outside htmls in files (to be activated later!)
+    unrecognized_links: warn  # unrecognized relative links (to be activated later!)
+
+# ------------------------------------
+# ----------- content ----------------
+# ------------------------------------
+nav:
+  - About:
+    - about.md
+    - Parallelization:
+      - Background: README.parallel.md
+      - Performance: pp.md
+      - NCSA presentation, Dec 2009: cm1_parallelization.pdf
+    - Governing equations: cm1_equations.pdf
+    - Acknowledgments: ACKNOWLEDGMENTS.md
+    - FAQ: faq.md
+
+  - New Users:
+    - Brief Users' Guide: users_guide.md
+    - namelist.input Guide: README.namelist.md
+    - Soundings for idealized simulations:
+      - soundings.md
+
+  - Utilities:
+    - scripts.md
+    - GrADS:
+      - grads.md
+    - Combine output: utils.md
+
+  - Other information:
+    - NSSL microphysics: README.NSSLmp.md
+    - Two-dimensional: README.2D.md
+    - Axisymmetric: README.axisymm.md
+    - Compile: README.compile.md
+    - Using parcels: README.parcel.md
+    - Restarts: README.restart.md
+    - Grid stretching: README.stretch.md
+    - Terrain: README.terrain.md
+    - Journals: cm1journals.md
+    - known_bugs.md
+    - known_problems.md
+    - yellowstone.md
+
+  - Research Results: research_results.md
+
+  - Honors and awards: honors_and_awards.md
+
+# ------------------------------------
+# -- configuration - themes
+# (note theme.yml should be a symbolic link to one of several options'
+# ------------------------------------
+INHERIT: theme.yml
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
+
+copyright: '&copy; 2025 UCAR, Licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons CC-BY-SA 4.0</a>.'
+
+# ------------------------------------
+# -- configuration - extensions
+# ------------------------------------
+markdown_extensions:
+  - meta
+  - attr_list
+  - footnotes
+  - admonition
+  - md_in_html
+  - def_list
+  - toc:
+      permalink: true
+      title: "Page Outline"
+
+  # https://squidfunk.github.io/mkdocs-material/reference/code-blocks/
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+     url_download: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - codehilite:
+      guess_lang: true
+
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols:
+      fractions: false
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# ------------------------------------
+# -- configuration - extensions
+# ------------------------------------
+plugins:
+  - search:
+      enabled: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: true
+      skip_classes:
+        - custom-skip-class-name
+      auto_caption: false
+      caption_position: bottom
+  - minify:
+      minify_html: true
+  - open-in-new-tab
+  - redirects:
+      redirect_maps:
+        'nhug/index.md': 'https://nhug.readthedocs.io/en/latest/'
+
+# ------------------------------------
+# -- configuration - extras
+# ------------------------------------
+extra:
+  analytics:
+    provider: google
+    property: G-RZLJ37D0K6
+  social:
+    - icon: material/home-circle
+      link: https://arc.ucar.edu/
+    - icon: fontawesome/brands/github
+      link: https://github.com/NCAR

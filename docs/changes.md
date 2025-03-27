@@ -15,4 +15,4 @@
 *   [CHANGES.r16](https://www2.mmm.ucar.edu/people/bryan/cm1/CHANGES.r16)
 *   [CHANGES.r17](https://www2.mmm.ucar.edu/people/bryan/cm1/CHANGES.r17)
 *   [CHANGES.r18](https://www2.mmm.ucar.edu/people/bryan/cm1/CHANGES.r18)
-*   [CHANGES](CHANGES)
+*   [CHANGES](CHANGES/README.md)
