@@ -21,10 +21,10 @@ build:
 
       # the above may generate a dirty git cache for some committed symbolic links - ignore. ref:
       # https://docs.readthedocs.io/en/stable/build-customization.html#avoid-having-a-dirty-git-index
-      - git update-index --assume-unchanged theme.yml
-    post_build:
-      - cp docs/googlebb095fa38c4e87cf.html $READTHEDOCS_OUTPUT/html/
-      - ls -lR $READTHEDOCS_OUTPUT/html/
+      # - git update-index --assume-unchanged theme.yml
+    #post_build:
+    #  - cp docs/googlebb095fa38c4e87cf.html $READTHEDOCS_OUTPUT/html/
+    #  - ls -lR $READTHEDOCS_OUTPUT/html/
 
 conda:
   environment: conda.yaml

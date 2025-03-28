@@ -18,7 +18,3 @@
   <li><a href="dbz.gs">dbz.gs</a>:  calculates reflectivity
   <li><a href="cref.gs">cref.gs</a>:  calculates composite reflectivity
 </ul>
-<p>
-See also:  <a href="http://www.iges.org/grads/gadoc/library.html">GrADS Script Library</a>
-
-_Last updated:  2 October 2009_

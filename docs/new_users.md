@@ -2,6 +2,6 @@
 
 - [A brief summary of how to run cm1](users_guide.md)
 - [README.namelist](README.namelist.md) -- explains the various settings in the namelist.input file.
-- [Pre-configured namelist.input files](run/config_files/README.md)
+- Pre-configured namelist.input files in `run/config_files`
 - [Soundings for idealized simulations](soundings.md)
 - [Sample submission scripts for NCAR's supercomputers](scripts.md)

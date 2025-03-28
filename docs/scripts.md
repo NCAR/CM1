@@ -1,8 +1,8 @@
 ### Sample submission scripts for NCAR's <a href="https://arc.ucar.edu/knowledge_base/74317833">derecho</a>:
 
-- `cm1run_derecho`:  multiple CPUs using MPI (distributed memory) (derecho)
+- `utils/cm1run_derecho`:  multiple CPUs using MPI (distributed memory) (derecho)
 
-- `run_case`: Script to run a specific CM1 simulation case.
+- `utils/run_case`: Script to run a specific CM1 simulation case.
 
 ```csh
 Usage:

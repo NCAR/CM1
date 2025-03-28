@@ -7,14 +7,6 @@
 
 * [Here is a sample submission script for NCAR's derecho supercomputer](utils/cm1run_derecho)  **(Last updated:  24 March 2024)**
 
-## What is CM1?
-
-_In scientific terms_:  CM1 is a three-dimensional, non-hydrostatic, non-linear, time-dependent numerical model designed for idealized studies of atmospheric phenomena.
-
-_In non-scientific terms_:  CM1 is a computer program used for atmospheric research.  It is designed for studies of relatively small-scale processes in the Earth's atmosphere, such as thunderstorms.  
-
-For more information, please read these [answers to frequently asked questions](docs/faq.md) about CM1.
-
 ### [Download](docs/releases.md)
 
   (Most recent version:  `cm1r21.1` available since 24 March 2024)
@@ -30,7 +22,6 @@ For more information, please read these [answers to frequently asked questions](
 ### Other Information about CM1
 
 - [CHANGES in release 21.1](docs/CHANGES) -- new features, modifications, and code fixes as of 24 March 2024
-  - [History of all CHANGES](docs/changes.md) (from `r2` to present)
 - [Known problems and fixes](docs/known_problems.md) (last updated:  5 January 2012)
 - [Instructions for adding a new microphysics scheme to CM1](docs/new_microphysics.pdf) (pdf)
 - [Some useful GrADS scripts](docs/grads.md)
