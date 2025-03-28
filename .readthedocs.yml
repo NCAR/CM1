@@ -27,7 +27,7 @@ build:
       - ls -lR $READTHEDOCS_OUTPUT/html/
 
 conda:
-  environment: conda.yaml
+  environment: cm1/environment.yml
 
 mkdocs:
   configuration: mkdocs.yml
