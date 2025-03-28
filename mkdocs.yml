@@ -36,13 +36,16 @@ nav:
     - Parallelization:
       - Background: README.parallel.md
       - Performance: pp.md
-      - NCSA presentation, Dec 2009: cm1_parallelization.pdf
+      - NCSA presentation, Dec 2009 (pdf): cm1_parallelization.pdf
     - Governing equations: cm1_equations.pdf
     - Acknowledgments: ACKNOWLEDGMENTS.md
     - FAQ: faq.md
+    - Changes: changes.md
 
   - New Users:
+    - new_users.md
     - Brief Users' Guide: users_guide.md
+    - Compilation: README.compile.md
     - namelist.input Guide: README.namelist.md
     - Soundings for idealized simulations:
       - soundings.md
@@ -57,17 +60,17 @@ nav:
     - NSSL microphysics: README.NSSLmp.md
     - Two-dimensional: README.2D.md
     - Axisymmetric: README.axisymm.md
-    - Compile: README.compile.md
     - Using parcels: README.parcel.md
     - Restarts: README.restart.md
     - Grid stretching: README.stretch.md
     - Terrain: README.terrain.md
-    - Journals: cm1journals.md
     - known_bugs.md
     - known_problems.md
     - yellowstone.md
 
-  - Research Results: research_results.md
+  - Research Results:
+    - Journals: cm1journals.md
+    - Publications: research_results.md
 
   - Honors and awards: honors_and_awards.md
 
