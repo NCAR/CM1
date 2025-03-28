@@ -22,7 +22,6 @@
 ### Other Information about CM1
 
 - [CHANGES in release 21.1](docs/CHANGES) -- new features, modifications, and code fixes as of 24 March 2024
-  - [History of all CHANGES](docs/changes.md) (from `r2` to present)
 - [Known problems and fixes](docs/known_problems.md) (last updated:  5 January 2012)
 - [Instructions for adding a new microphysics scheme to CM1](docs/new_microphysics.pdf) (pdf)
 - [Some useful GrADS scripts](docs/grads.md)
