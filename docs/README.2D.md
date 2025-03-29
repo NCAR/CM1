@@ -27,8 +27,3 @@ OpenMP (i.e., shared memory parallelization) will work fine for 2D simulations.
 MPI (i.e., distributed memory parallelization) is currently not working 
 correctly for 2d simulations in cm1.  A note of caution, though:  the model 
 will actually run in 2D with MPI, but the results are meaningless.
-
-------------------------------------------------------------------------
-
-Questions, comments, suggestions:  send email to gbryan@ucar.edu
-
