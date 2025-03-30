@@ -31,6 +31,7 @@ validation:
 # ----------- content ----------------
 # ------------------------------------
 nav:
+  - Home: index.md
   - About:
     - about.md
     - Parallelization:
@@ -54,19 +55,17 @@ nav:
       - soundings.md
 
   - Utilities:
-    - scripts.md
-    - GrADS:
-      - grads.md
-    - Combining output: utils.md
-    - Links: links.md
+    - utilities.md
+    - Sample submission script (derecho): cm1run_derecho.md
+    - Combine output: combine_output.md
+    - GrADS: grads.md
 
   - Other information:
     - Axisymmetric: README.axisymm.md
     - Two-dimensional: README.2D.md
     - Grid stretching: README.stretch.md
-    - known_bugs.md
-    - known_problems.md
-    - adding a new microphysics scheme (pdf): https://github.com/NCAR/CM1/blob/main/docs/new_microphysics.pdf
+    - Earlier issues: known_problems.md
+    - Add a new microphysics scheme (pdf): https://github.com/NCAR/CM1/blob/main/docs/new_microphysics.pdf
     - NSSL microphysics: README.NSSLmp.md
     - Using parcels: README.parcel.md
     - Restarts: README.restart.md
