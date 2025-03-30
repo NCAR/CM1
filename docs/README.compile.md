@@ -43,8 +43,3 @@ How to compile cm1:
 
 5) to cleanup the src directory, type "make clean".  You should also do this 
    when changing compiler flags.
-
-
-Questions, comments, suggestions:  send email to gbryan@ucar.edu
-
-

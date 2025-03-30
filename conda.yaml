@@ -1,0 +1,25 @@
+# create a minimal 'mkdocs' conda env, with a pinned python version
+# and all pip dependencies taken from 'requirements.txt'
+
+name: mkdocs
+dependencies:
+  - make
+  - python=3.9
+  - pip
+  - pip:
+    - jinja2>=3.0
+    - markdown>=3.2
+    - mkdocs>=1.4.2
+    - mkdocs-material-extensions>=1.1
+    - pygments>=2.14
+    - pymdown-extensions>=9.9.1
+    - colorama>=0.4
+    - regex>=2022.4.24
+    - requests>=2.26
+    - mkdocs-material>=9.5.3
+    - mkdocs-minify-plugin
+    - mkdocs-git-revision-date-plugin
+    - mkdocs-git-revision-date-localized-plugin
+    - mkdocs-glightbox
+    - mkdocs-open-in-new-tab
+    - mkdocs-redirects
