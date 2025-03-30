@@ -25,27 +25,13 @@
 
 - [CHANGES in release 21.1](docs/CHANGES) -- new features, modifications, and code fixes as of 24 March 2024
 - [Known problems and fixes](docs/known_problems.md) (last updated:  5 January 2012)
-- [Instructions for adding a new microphysics scheme to CM1](docs/new_microphysics.pdf) (pdf)
 - [Some useful GrADS scripts](docs/grads.md)
 - [Some useful utilties for MPI users](docs/utils.md)
 
-#### Testing and evaluation of CM1
 
-Reports on some basic tests of the accuracy and capability of CM1.  (Note:  all of these tests have been completed, but haven't been formally documented.)
+#### [Testing and Evaluation](docs/testing_and_evaluation.md)
 
-- [Gravity current](https://www2.mmm.ucar.edu/people/bryan/cm1/test_gravity_current)
-- [Inertia-gravity waves](https://www2.mmm.ucar.edu/people/bryan/cm1/test_inertia_gravity_waves)
-- Two-dimensional mountain waves
-- Potential flow over a mountain in dry and moist environments
-- Bryan-Fritsch moist benchmark
-- Large eddy simulation of the convective boundary layer
-- A comparison of axisymmetric and three-dimensional simulations of a tropical cyclone
-
-#### Links
-
-- [Grid Analysis and Display System (GrADS)](http://cola.gmu.edu/grads)
-- [NetCDF](http://www.unidata.ucar.edu/software/netcdf)
-- [Visualization and Analysis Platform for Ocean, Atmosphere, and Solar Researchers (VAPOR)](http://www.vapor.ucar.edu)
+#### [Links](docs/links.md)
 
 Send comments and/or questions about this page to:
 

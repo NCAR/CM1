@@ -57,7 +57,8 @@ nav:
     - scripts.md
     - GrADS:
       - grads.md
-    - Combine output: utils.md
+    - Combining output: utils.md
+    - Links: links.md
 
   - Other information:
     - Axisymmetric: README.axisymm.md
@@ -65,6 +66,7 @@ nav:
     - Grid stretching: README.stretch.md
     - known_bugs.md
     - known_problems.md
+    - adding a new microphysics scheme (pdf): https://github.com/NCAR/CM1/blob/main/docs/new_microphysics.pdf
     - NSSL microphysics: README.NSSLmp.md
     - Using parcels: README.parcel.md
     - Restarts: README.restart.md
@@ -73,6 +75,7 @@ nav:
   - Research Results:
     - Journals: cm1journals.md
     - Publications: research_results.md
+    - Testing and Evaluation: testing_and_evaluation.md
 
   - Honors and awards: honors_and_awards.md
 
