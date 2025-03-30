@@ -1,5 +1,7 @@
 <img src="https://www2.mmm.ucar.edu/people/bryan/cm1/NSF-NCAR_Lockup-UCAR-Dark_102523.png" width="30%"/>
 
+[![Documentation Status](https://readthedocs.org/projects/cm1/badge/?version=latest)](https://cm1.readthedocs.io/en/latest/?badge=latest)
+
 ## New announcements:
 * January 2025: Slides from a presentation at NCAR HPC Users Group: [CM1 Description, Recent Developments, and Future Directions](https://www2.mmm.ucar.edu/people/bryan/cm1/CM1_NHUG_Slides_Jan2025.pdf)
 
