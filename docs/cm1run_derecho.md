@@ -1,3 +1,4 @@
+```bash
 #!/bin/bash
 
 #
@@ -65,4 +66,4 @@ export PALS_CPU_BIND=depth
 
 # run CM1
 mpiexec --cpu-bind depth ./cm1.exe >& cm1.print.out
-
+```
