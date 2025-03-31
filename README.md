@@ -9,19 +9,17 @@
 
 * [Here is a sample submission script for NCAR's derecho supercomputer](utils/cm1run_derecho)  **(Last updated:  24 March 2024)**
 
-### [Download](docs/releases.md)
-
-  (Most recent version:  `cm1r21.1` available since 24 March 2024)
-
 ### [About CM1](docs/about.md)
+
+### [Download](docs/releases.md)
 
 ### [New Users](docs/new_users.md)
 
 ### [Support Forum](https://forum.mmm.ucar.edu/#cm1-cloud-model-1.137)
 
-### [Research Results](docs/research_results.md)
+#### [Research Results](docs/research_results.md)
 
-### [Honors and Awards](docs/honors_and_awards.md)
+#### [Honors and Awards](docs/honors_and_awards.md)
 
 #### [Testing and Evaluation](docs/testing_and_evaluation.md)
 
