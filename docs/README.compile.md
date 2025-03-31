@@ -1,10 +1,8 @@
 ## Brief User's Guide for compiling CM1.
 
-------------------------------------------------------------------------
-
 ### How to compile cm1:
 
-1) cd into the "src" directory  (type:  "cd src")
+1) cd into the "src" directory  (type: `cd src`)
 
 2) To compile the CM1 codes with this Makefile, use the following command:
 
@@ -23,6 +21,7 @@
     make USE_OPENMP=true                 # shared memory only
     make USE_OPENMP=true USE_MPI=true    # shared + distributed memory
     make USE_OPENACC=true USE_MPI=true   # distributed memory + GPU offloading
+                                         # works for derecho
 
   Note that the logical values set to the argument variables are case insensitive.
 
