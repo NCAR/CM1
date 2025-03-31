@@ -17,6 +17,8 @@
 
 ### [New Users](docs/new_users.md)
 
+### [Support Forum](https://forum.mmm.ucar.edu/#cm1-cloud-model-1.137)
+
 ### [Research Results](docs/research_results.md)
 
 ### [Honors and Awards](docs/honors_and_awards.md)
