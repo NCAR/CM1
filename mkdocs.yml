@@ -37,7 +37,7 @@ nav:
     - Parallelization:
       - Background: README.parallel.md
       - Performance: pp.md
-      - NCSA presentation, Dec \2009 (pdf): cm1_parallelization.pdf
+      - NCSA presentation, Dec 2009 (pdf): cm1_parallelization.pdf
     - Governing equations: cm1_equations.pdf
     - FAQ: faq.md
     - Changes:
