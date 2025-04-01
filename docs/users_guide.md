@@ -24,10 +24,8 @@ Valid for `cm1r18` and later versions
 6.  **Choose arguments for `make`** based on operating system and parallelization method appropriate for your hardware. See [`README.compile.md`](README.compile.md). 
 7.  **Compile the code:** Type `make [argu_list]` within the "src" directory. On some machines, you may need to use "gmake" instead.
 
-> For example, to compile on NCAR's [derecho](https://www.cisl.ucar.edu/capabilities/derecho) (compile with 4 parallel threads, use shared + distributed memory + netCDF)
-```
-make -j4 USE_OPENMP=true USE_MPI=true USE_NETCDF=true
-```
+For example, to compile on NCAR's [derecho](https://www.cisl.ucar.edu/capabilities/derecho) (compile with 4 parallel threads, use shared + distributed memory + netCDF)
+`make -j4 USE_OPENMP=true USE_MPI=true USE_NETCDF=true`
 
 
 8.  **Edit `namelist.input`:** If the code compiled without error, cd into the "run" directory and edit "namelist.input". See [`README.namelist`](README.namelist.md) for guidance. Here, you set the domain dimensions, as well as the number of processors (using "nodex" and "nodey"). See the README files in the main directory for more information.
