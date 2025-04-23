@@ -27,7 +27,6 @@ def main() -> None:
     """
 
     args = parse_args()
-
     ofile = get_ofile(args)
     if os.path.exists(ofile):
         logging.warning(f"read {ofile}")

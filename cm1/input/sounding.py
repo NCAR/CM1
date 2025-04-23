@@ -117,7 +117,7 @@ def get_ofile(args: argparse.Namespace) -> Path:
     """
     ofile = (
         TMPDIR
-        / f"{pd.to_datetime(args.time).strftime('%Y%m%d_%H%M%S')}.{args.lat:~}.{args.lon:~}.nc"
+        / f"{pd.to_datetime(args.time).strftime('%Y%m%d_%H%M%S')}.{args.lat:~}.{args.lon:~}"
     )
     return ofile
 

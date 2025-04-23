@@ -222,7 +222,7 @@ def skewt(
 
     # Get parcel potential temperature and mixing ratio from
     # "surface_potential_temperature" and/or "surface_mixing_ratio" DataArray.
-    # Otherwise, assume the value(s) of the level with the highest pressure.
+    # Otherwise, assume the value(s) at the level with the highest pressure.
     parcel_level = ds.level.sel(level=ds.P.compute().idxmax())
     if "surface_potential_temperature" in ds:
         T_parcel = mpcalc.temperature_from_potential_temperature(
@@ -236,7 +236,7 @@ def skewt(
         T_parcel = ds.T.sel(level=parcel_level)
         logging.warning(
             f"got T_parcel {T_parcel.item():~.2f} from "
-            f"highest pressure level {parcel_level.item()}"
+            f"level with highest pressure {parcel_level.item()}"
         )
     if "surface_mixing_ratio" in ds:
         parcel_mixing_ratio = ds.surface_mixing_ratio
@@ -251,7 +251,7 @@ def skewt(
         )
         logging.warning(
             f"got parcel_mixing_ratio {parcel_mixing_ratio.item().to('g/kg'):~.3f} "
-            f"from highest pressure level {parcel_level.item()}"
+            f"level with highest pressure {parcel_level.item()}"
         )
     Td_parcel = mpcalc.dewpoint(mpcalc.vapor_pressure(ds.SP, parcel_mixing_ratio))
     logging.warning(
