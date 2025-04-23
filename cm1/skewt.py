@@ -15,7 +15,7 @@ import pandas as pd
 
 import cm1.input.era5
 from cm1.input.sounding import get_ofile
-from cm1.utils import CAMPAIGNDIR, parse_args, skewt
+from cm1.utils import parse_args, skewt
 
 
 def main() -> None:
@@ -33,14 +33,13 @@ def main() -> None:
         with open(ofile, "rb") as file:
             ds = pickle.load(file)
     else:
-        if not os.path.exists("/"+CAMPAIGNDIR):
+        if not os.path.exists("/glade/campaign"):
             ds = cm1.input.era5.aws(
                 pd.to_datetime(args.time)
             )
         else:
             ds = cm1.input.era5.model_level(
                 pd.to_datetime(args.time),
-                glade=args.glade,
             )
     with open(ofile, "wb") as file:
         pickle.dump(ds, file)

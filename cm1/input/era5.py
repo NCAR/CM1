@@ -14,12 +14,11 @@ from metpy.units import units
 from pint import Quantity
 from sklearn.neighbors import BallTree
 
-from cm1.utils import CAMPAIGNDIR, TMPDIR, mean_lat_lon
+from cm1.utils import TMPDIR, mean_lat_lon
 
 
 def load_from_campaign(
     time: pd.Timestamp,
-    glade: Path,
     rdaindex: str,
     level_type: str,
     varnames: list,
@@ -34,8 +33,6 @@ def load_from_campaign(
     ----------
     time : pd.Timestamp
         Desired timestamp for data retrieval.
-    glade : Path
-        Base path to the glade directory.
     level_type : str
         Type of ERA5 data (e.g., 'e5.oper.an.pl', 'e5.oper.an.sfc').
     varnames : list
@@ -50,14 +47,13 @@ def load_from_campaign(
     xarray.Dataset
         Dataset containing ERA5 data for the specified time and configuration.
     """
-    rdapath = Path(glade) / CAMPAIGNDIR
 
     # model level invariant files don't have no year_month_dir.
     year_month_dir = (
         "" if rdaindex == "d633006" and level_type == "e5.oper.invariant" else time.strftime("%Y%m")
     )
     local_files = [
-        rdapath
+        Path("/glade/campaign/collections/rda/data")
         / rdaindex
         / level_type
         / year_month_dir
@@ -266,7 +262,6 @@ def quantify_invariant(invariant: xarray.Dataset) -> xarray.Dataset:
 
 def model_level(
     time: pd.Timestamp,
-    glade: Path = Path("/"),
 ) -> xarray.Dataset:
     """
     Load native model levels ERA5 dataset for specified time
@@ -283,7 +278,6 @@ def model_level(
         Dataset containing ERA5 data for the specified time.
     """
     # get from campaign storage
-    rdapath = Path(glade) / CAMPAIGNDIR
     rdaindex = "d633006"
 
     start_hour = time.floor("6h")
@@ -292,7 +286,6 @@ def model_level(
 
     ds = load_from_campaign(
         time,
-        glade,
         rdaindex,
         "e5.oper.an.ml",
         [
@@ -318,11 +311,10 @@ def model_level(
     # rdahelp says /gpfs/csfs1/collections/rda/decsdata/ds630.0/P/e5.oper.invariant/201601/
     # has same resolution as the invariant surface geopotential you refer to in d633006.
 
+    invariant_path = Path("/glade/campaign/collections/rda/decsdata/COLD_STORAGE/d630000/P/e5.oper.invariant/201601")
     invariant = (
         xarray.open_mfdataset(
-            Path("/gpfs/csfs1/collections/rda/decsdata/COLD_STORAGE/d630000/P/e5.oper.invariant/201601").glob(
-                "*.nc"
-            ),
+            invariant_path.glob("*.nc"),
             drop_variables=["utc_date", "time"],
         )
     )
@@ -353,7 +345,6 @@ def model_level(
 
 def pressure_level(
     time: pd.Timestamp,
-    glade: Path = Path("/"),
 ) -> xarray.Dataset:
     """
     Load ERA5 dataset for specified time and configuration.
@@ -363,8 +354,6 @@ def pressure_level(
     ----------
     time : pd.Timestamp
         Desired timestamp for data retrieval.
-    glade : Path, optional
-        Base path to the glade directory (default is Path("/")).
 
     Returns
     -------
@@ -378,7 +367,6 @@ def pressure_level(
 
     ds_pl = load_from_campaign(
         time,
-        glade,
         rdaindex,
         "e5.oper.an.pl",
         [
@@ -403,7 +391,6 @@ def pressure_level(
 
     ds_sfc = load_from_campaign(
         time,
-        glade,
         rdaindex,
         "e5.oper.an.sfc",
         [
@@ -429,7 +416,6 @@ def pressure_level(
     invariant = (
         load_from_campaign(
             pd.to_datetime("19790101"),
-            glade,
             rdaindex,
             "e5.oper.invariant",
             INVARIANT_VARNAMES,
