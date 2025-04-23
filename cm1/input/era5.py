@@ -320,7 +320,7 @@ def model_level(
 
     invariant = (
         xarray.open_mfdataset(
-            Path("/gpfs/csfs1/collections/rda/decsdata/ds630.0/P/e5.oper.invariant/201601").glob(
+            Path("/gpfs/csfs1/collections/rda/decsdata/COLD_STORAGE/d630000/P/e5.oper.invariant/201601").glob(
                 "*.nc"
             ),
             drop_variables=["utc_date", "time"],
