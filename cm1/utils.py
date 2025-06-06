@@ -421,8 +421,26 @@ def skewt(
 
     logging.info("Create hodograph")
     ax_hod = inset_axes(skew.ax, "40%", "40%", loc=1)
-    h = Hodograph(ax_hod, component_range=30.0)
+    # Initialize Hodograph without a fixed component range to allow for dynamic axes
+    h = Hodograph(ax_hod)
     h.add_grid(increment=10, linewidth=0.75)
+
+    # Calculate the data range for u and v winds to center the plot
+    u_min, u_max = u.min(), u.max()
+    v_min, v_max = v.min(), v.max()
+
+    # Determine the center of the wind data
+    u_center = (u_min + u_max) / 2
+    v_center = (v_min + v_max) / 2
+
+    # To make the plot square, find the largest range (u or v) and apply it to both axes
+    max_range = max(u_max - u_min, v_max - v_min).to(plot_barbs_units).m
+    # Add 10% padding around the maximum range
+    plot_radius = (max_range / 2) * 1.1
+
+    # Set the x and y limits of the hodograph axes, centered on the data
+    ax_hod.set_xlim(u_center.m - plot_radius, u_center.m + plot_radius)
+    ax_hod.set_ylim(v_center.m - plot_radius, v_center.m + plot_radius)
     # ax_hod.set_xlabel("")
     ax_hod.set_ylabel("")
     ax_hod.xaxis.label.set_fontsize("xx-small")

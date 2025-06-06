@@ -259,15 +259,15 @@ def main() -> None:
         with open(ofile, "rb") as file:
             ds = pickle.load(file)
     else:
-        ds = cm1.input.era5.model_level(
-            valid_time,
-            glade=args.glade,
-        )
-        with open(ofile, "wb") as file:
-            logging.warning(f"pickle dump {ofile}")
-            pickle.dump(ds, file)
+        if os.path.exists("/glade/campaign"):
+            ds = era5_model_level(valid_time, args.lat, args.lon)
+        else:
+            logging.warning("No campaign storage. Get pressure level data from AWS")
+            ds = era5_aws(valid_time, args.lat, args.lon)
 
-    ds = era5_model_level(valid_time, args.lat, args.lon)
+    with open(ofile, "wb") as file:
+        logging.warning(f"pickle dump {ofile}")
+        pickle.dump(ds, file)
 
     print(to_txt(ds))
 

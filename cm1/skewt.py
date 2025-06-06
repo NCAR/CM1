@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 import cm1.input.era5
-from cm1.input.sounding import get_ofile
+from cm1.input.sounding import era5_aws, get_ofile
 from cm1.utils import parse_args, skewt
 
 
@@ -27,30 +27,26 @@ def main() -> None:
     """
 
     args = parse_args()
+    valid_time = pd.to_datetime(args.time)
     ofile = get_ofile(args)
     if os.path.exists(ofile):
         logging.warning(f"read {ofile}")
         with open(ofile, "rb") as file:
             ds = pickle.load(file)
     else:
-        if not os.path.exists("/glade/campaign"):
-            ds = cm1.input.era5.aws(
-                pd.to_datetime(args.time)
+        if os.path.exists("/glade/campaign"):
+            ds = cm1.input.sounding.era5_model_level(
+                valid_time,
+                args.lat,
+                args.lon,
             )
         else:
-            ds = cm1.input.era5.model_level(
-                pd.to_datetime(args.time),
-            )
+            logging.warning("No campaign storage. Get pressure level data from AWS")
+            ds = era5_aws(valid_time, args.lat, args.lon)
+
     with open(ofile, "wb") as file:
         pickle.dump(ds, file)
 
-    logging.warning(f"select {args}")
-
-    ds = ds.sel(
-        longitude=args.lon,
-        latitude=args.lat,
-        method="nearest",
-    )
     skewt(ds)
     plt.show()
 
