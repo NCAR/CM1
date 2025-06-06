@@ -83,19 +83,13 @@
 
 !-----------------
 
-      doitw = .false.
-      doite = .false.
-
-      IF(wbc.eq.2 .and. ibw.eq.1) doitw = .true.
-      IF(ebc.eq.2 .and. ibe.eq.1) doite = .true.
+      doitw = wbc.eq.2 .and. ibw.eq.1
+      doite = ebc.eq.2 .and. ibe.eq.1
 
 !-----------------
 
-      doits = .false.
-      doitn = .false.
-
-      IF(sbc.eq.2 .and. ibs.eq.1) doits = .true.
-      IF(nbc.eq.2 .and. ibn.eq.1) doitn = .true.
+      doits = sbc.eq.2 .and. ibs.eq.1
+      doitn = nbc.eq.2 .and. ibn.eq.1
 
 !-----------------
 
@@ -2835,19 +2829,13 @@
 
 !-----------------
 
-      doitw = .false.
-      doite = .false.
-
-      IF(wbc.eq.2 .and. ibw.eq.1) doitw = .true.
-      IF(ebc.eq.2 .and. ibe.eq.1) doite = .true.
+      doitw = wbc.eq.2 .and. ibw.eq.1
+      doite = ebc.eq.2 .and. ibe.eq.1
 
 !-----------------
 
-      doits = .false.
-      doitn = .false.
-
-      IF(sbc.eq.2 .and. ibs.eq.1) doits = .true.
-      IF(nbc.eq.2 .and. ibn.eq.1) doitn = .true.
+      doits = sbc.eq.2 .and. ibs.eq.1
+      doitn = nbc.eq.2 .and. ibn.eq.1
 
 !----------------------------------------------------------------
 
