@@ -1,11 +1,11 @@
-  MODULE poiss_module
+  module poiss_module
 
   implicit none
 
   private
   public :: poiss
 
-  CONTAINS
+  contains
 
       subroutine poiss(uh,vh,mh,rmh,mf,rmf,pi0,thv0,rho0,rf0,   &
                        dum1,dum2,dum3,def,divx,ppi,uten,vten,wten,  &
@@ -36,7 +36,7 @@
       real, dimension(nk) :: r1,deft2
       complex :: temc
 
-      IF(axisymm.eq.1)THEN
+      if(axisymm.eq.1)then
         if(myid.eq.0)then
           print *
           print *,'  The anelastic/incompressible solver cannot be '
@@ -46,7 +46,7 @@
           print *
         endif
         call stopcm1
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !!!
@@ -59,7 +59,7 @@
 !!! fourier transform the total forcing, then forward part of tridiagonal solver:
 !!!
 
-      DO k=1,nk
+      do k=1,nk
 
         tem = 1.0/dttmp
 
@@ -115,7 +115,7 @@
 
         trans=fft(rhs)
 
-        IF( k.eq.1 )THEN
+        if( k.eq.1 )then
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,tem)
@@ -127,7 +127,7 @@
           enddo
           enddo
 
-        ELSEIF( k.lt.nk )THEN
+        elseif( k.lt.nk )then
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,temc)
@@ -139,7 +139,7 @@
           enddo
           enddo
 
-        ELSE
+        else
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,temc)
@@ -152,16 +152,16 @@
           enddo
           enddo
 
-        ENDIF
+        endif
 
         deft2(k) = real(trans(1,1))
 
-      ENDDO
+      enddo
 
 !-----------------------------------------------------------------------
 !!! backward part of tridiagonal solver:
 
-      DO k=(nk-1),1,-1
+      do k=(nk-1),1,-1
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j)
@@ -171,7 +171,7 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
       r1(1) = 0.0
       pdt(1,1,1) = 0.0
@@ -190,7 +190,7 @@
 !!! reverse fourier transform:
 !!!
 
-      DO k=1,nk
+      do k=1,nk
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j)
@@ -210,7 +210,7 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
       if(timestats.ge.1) time_poiss=time_poiss+mytime()
 
@@ -220,4 +220,4 @@
       end subroutine poiss
 
 
-  END MODULE poiss_module
+  end module poiss_module

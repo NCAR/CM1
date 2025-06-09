@@ -1,8 +1,8 @@
-  MODULE bc_module
+  module bc_module
 
   implicit none
 
-  CONTAINS
+  contains
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -776,7 +776,7 @@
 !-----------------------------------------------------------------------
 !  north boundary condition
 
-      IF(axisymm.eq.1)THEN
+      if(axisymm.eq.1)then
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
         do k=1,nk
@@ -784,7 +784,7 @@
           v(i,2,k)=v(i,1,k)
         enddo
         enddo
-      ENDIF
+      endif
 
 #ifndef MPI
       if(nbc.eq.1)then
@@ -872,7 +872,7 @@
         enddo
       endif
 
-      IF(axisymm.eq.1)THEN
+      if(axisymm.eq.1)then
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
         do k=1,nk
@@ -882,7 +882,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  east boundary condition
@@ -1123,7 +1123,7 @@
 !-----------------------------------------------------------------------
 !  top/bottom boundary condition
 
-    IF(flag.eq.1)THEN
+    if(flag.eq.1)then
 
       !$omp parallel do default(shared)  &
       !$omp private(i,j)
@@ -1134,7 +1134,7 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
@@ -2407,7 +2407,7 @@
       integer :: i,j,k
       real :: r1,r2
 
-          IF(.not.terrain_flag)THEN
+          if(.not.terrain_flag)then
             ! no terrain:
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
@@ -2418,7 +2418,7 @@
                            +uten(1,j,k) )
             enddo
             enddo
-          ELSE
+          else
             ! with terrain:
             ! dum1 stores u at w points:
 !$omp parallel do default(shared)   &
@@ -2452,7 +2452,7 @@
                                                        )+uten(1,j,k) )
             enddo
             enddo
-          ENDIF  ! end check for terrain
+          endif  ! end check for terrain
 
       if(timestats.ge.1) time_bc=time_bc+mytime()
 
@@ -2482,7 +2482,7 @@
       integer :: i,j,k
       real :: r1,r2
 
-          IF(.not.terrain_flag)THEN
+          if(.not.terrain_flag)then
             ! no terrain:
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
@@ -2493,7 +2493,7 @@
                            +uten(ni+1,j,k) )
             enddo
             enddo
-          ELSE
+          else
             ! with terrain:
             ! dum1 stores u at w points:
 !$omp parallel do default(shared)   &
@@ -2527,7 +2527,7 @@
                                                              )+uten(ni+1,j,k) )
             enddo
             enddo
-          ENDIF  ! end check for terrain
+          endif  ! end check for terrain
 
       if(timestats.ge.1) time_bc=time_bc+mytime()
 
@@ -2557,7 +2557,7 @@
       integer :: i,j,k
       real :: r1,r2
 
-          IF(.not.terrain_flag)THEN
+          if(.not.terrain_flag)then
             ! no terrain:
 !$omp parallel do default(shared)   &
 !$omp private(i,k)
@@ -2568,7 +2568,7 @@
                         +vten(i,1,k) )
             enddo
             enddo
-          ELSE
+          else
             ! with terrain:
             ! dum1 stores v at w points:
 !$omp parallel do default(shared)   &
@@ -2602,7 +2602,7 @@
                                                        )+vten(i,1,k) )
             enddo
             enddo
-          ENDIF  ! end check for terrain
+          endif  ! end check for terrain
 
       if(timestats.ge.1) time_bc=time_bc+mytime()
 
@@ -2632,7 +2632,7 @@
       integer :: i,j,k
       real :: r1,r2
 
-          IF(.not.terrain_flag)THEN
+          if(.not.terrain_flag)then
             ! no terrain:
 !$omp parallel do default(shared)   &
 !$omp private(i,k)
@@ -2643,7 +2643,7 @@
                            +vten(i,nj+1,k) )
             enddo
             enddo
-          ELSE
+          else
             ! with terrain:
             ! dum1 stores v at w points:
 !$omp parallel do default(shared)   &
@@ -2677,11 +2677,11 @@
                                                              )+vten(i,nj+1,k) )
             enddo
             enddo
-          ENDIF  ! end check for terrain
+          endif  ! end check for terrain
 
       if(timestats.ge.1) time_bc=time_bc+mytime()
 
       end subroutine ssopenbcn
 
 
-  END MODULE bc_module
+  end module bc_module

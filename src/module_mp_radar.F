@@ -20,50 +20,50 @@
 !.. calculations based on 50 individual size bins of the distributions.
 !+---+-----------------------------------------------------------------+
 
-MODULE module_mp_radar
+module module_mp_radar
 
-      USE module_wrf_error
+      use module_wrf_error
 
-      PUBLIC :: rayleigh_soak_wetgraupel
-      PUBLIC :: radar_init
-      PRIVATE :: m_complex_water_ray
-      PRIVATE :: m_complex_ice_maetzler
-      PRIVATE :: m_complex_maxwellgarnett
-      PRIVATE :: get_m_mix_nested
-      PRIVATE :: get_m_mix
-      PRIVATE :: WGAMMA
-      PRIVATE :: GAMMLN
+      public :: rayleigh_soak_wetgraupel
+      public :: radar_init
+      private :: m_complex_water_ray
+      private :: m_complex_ice_maetzler
+      private :: m_complex_maxwellgarnett
+      private :: get_m_mix_nested
+      private :: get_m_mix
+      private :: WGAMMA
+      private :: GAMMLN
 
 
-      INTEGER, PARAMETER, PUBLIC:: nrbins = 50
-      DOUBLE PRECISION, DIMENSION(nrbins+1), PUBLIC:: xxDx
-      DOUBLE PRECISION, DIMENSION(nrbins), PUBLIC:: xxDs,xdts,xxDg,xdtg
-      DOUBLE PRECISION, PARAMETER, PUBLIC:: lamda_radar = 0.10           ! in meters
-      DOUBLE PRECISION, PUBLIC:: K_w, PI5, lamda4
-      COMPLEX*16, PUBLIC:: m_w_0, m_i_0
-      DOUBLE PRECISION, DIMENSION(nrbins+1), PUBLIC:: simpson
-      DOUBLE PRECISION, DIMENSION(3), PARAMETER, PUBLIC:: basis =       &
+      integer, parameter, public:: nrbins = 50
+      double precision, dimension(nrbins+1), public:: xxDx
+      double precision, dimension(nrbins), public:: xxDs,xdts,xxDg,xdtg
+      double precision, parameter, public:: lamda_radar = 0.10           ! in meters
+      double precision, public:: K_w, PI5, lamda4
+      complex*16, public:: m_w_0, m_i_0
+      double precision, dimension(nrbins+1), public:: simpson
+      double precision, dimension(3), parameter, public:: basis =       &
                            (/1.d0/3.d0, 4.d0/3.d0, 1.d0/3.d0/)
-      REAL, DIMENSION(4), PUBLIC:: xcre, xcse, xcge, xcrg, xcsg, xcgg
-      REAL, PUBLIC:: xam_r, xbm_r, xmu_r, xobmr
-      REAL, PUBLIC:: xam_s, xbm_s, xmu_s, xoams, xobms, xocms
-      REAL, PUBLIC:: xam_g, xbm_g, xmu_g, xoamg, xobmg, xocmg
-      REAL, PUBLIC:: xorg2, xosg2, xogg2
+      real, dimension(4), public:: xcre, xcse, xcge, xcrg, xcsg, xcgg
+      real, public:: xam_r, xbm_r, xmu_r, xobmr
+      real, public:: xam_s, xbm_s, xmu_s, xoams, xobms, xocms
+      real, public:: xam_g, xbm_g, xmu_g, xoamg, xobmg, xocmg
+      real, public:: xorg2, xosg2, xogg2
 
-      INTEGER, PARAMETER, PUBLIC:: slen = 20
-      CHARACTER(len=slen), PUBLIC::                                     &
+      integer, parameter, public:: slen = 20
+      character(len=slen), public::                                     &
               mixingrulestring_s, matrixstring_s, inclusionstring_s,    &
               hoststring_s, hostmatrixstring_s, hostinclusionstring_s,  &
               mixingrulestring_g, matrixstring_g, inclusionstring_g,    &
               hoststring_g, hostmatrixstring_g, hostinclusionstring_g
 
 !..Single melting snow/graupel particle 90% meltwater on external sfc
-      DOUBLE PRECISION, PARAMETER:: melt_outside_s = 0.9d0
-      DOUBLE PRECISION, PARAMETER:: melt_outside_g = 0.9d0
+      double precision, parameter:: melt_outside_s = 0.9d0
+      double precision, parameter:: melt_outside_g = 0.9d0
 
-      CHARACTER*256:: radar_debug
+      character*256:: radar_debug
 
-CONTAINS
+contains
 
 !+---+-----------------------------------------------------------------+
 !+---+-----------------------------------------------------------------+
@@ -71,8 +71,8 @@ CONTAINS
 
       subroutine radar_init
 
-      IMPLICIT NONE
-      INTEGER:: n
+      implicit none
+      integer:: n
       PI5 = 3.14159*3.14159*3.14159*3.14159*3.14159
       lamda4 = lamda_radar*lamda_radar*lamda_radar*lamda_radar
       m_w_0 = m_complex_water_ray (lamda_radar, 0.0d0)
@@ -188,19 +188,19 @@ CONTAINS
 !+---+-----------------------------------------------------------------+
 !+---+-----------------------------------------------------------------+
 
-      COMPLEX*16 FUNCTION m_complex_water_ray(lambda,T)
+      complex*16 function m_complex_water_ray(lambda,T)
 
 !      Complex refractive Index of Water as function of Temperature T
 !      [deg C] and radar wavelength lambda [m]; valid for
 !      lambda in [0.001,1.0] m; T in [-10.0,30.0] deg C
 !      after Ray (1972)
 
-      IMPLICIT NONE
-      DOUBLE PRECISION, INTENT(IN):: T,lambda
-      DOUBLE PRECISION:: epsinf,epss,epsr,epsi
-      DOUBLE PRECISION:: alpha,lambdas,sigma,nenner
-      COMPLEX*16, PARAMETER:: i = (0d0,1d0)
-      DOUBLE PRECISION, PARAMETER:: PIx=3.1415926535897932384626434d0
+      implicit none
+      double precision, intent(in):: T,lambda
+      double precision:: epsinf,epss,epsr,epsi
+      double precision:: alpha,lambdas,sigma,nenner
+      complex*16, parameter:: i = (0d0,1d0)
+      double precision, parameter:: PIx=3.1415926535897932384626434d0
 
       epsinf  = 5.27137d0 + 0.02164740d0 * T - 0.00131198d0 * T*T
       epss    = 78.54d+0 * (1.0 - 4.579d-3 * (T - 25.0)                 &
@@ -219,11 +219,11 @@ CONTAINS
       
       m_complex_water_ray = SQRT(CMPLX(epsr,-epsi))
       
-      END FUNCTION m_complex_water_ray
+      end function m_complex_water_ray
 
 !+---+-----------------------------------------------------------------+
       
-      COMPLEX*16 FUNCTION m_complex_ice_maetzler(lambda,T)
+      complex*16 function m_complex_ice_maetzler(lambda,T)
       
 !      complex refractive index of ice as function of Temperature T
 !      [deg C] and radar wavelength lambda [m]; valid for
@@ -237,9 +237,9 @@ CONTAINS
 !      TK = temperature (K), range 20 to 273.15
 !      f = frequency in GHz, range 0.01 to 3000
          
-      IMPLICIT NONE
-      DOUBLE PRECISION, INTENT(IN):: T,lambda
-      DOUBLE PRECISION:: f,c,TK,B1,B2,b,deltabeta,betam,beta,theta,alfa
+      implicit none
+      double precision, intent(in):: T,lambda
+      double precision:: f,c,TK,B1,B2,b,deltabeta,betam,beta,theta,alfa
 
       c = 2.99d8
       TK = T + 273.16
@@ -258,7 +258,7 @@ CONTAINS
                              + CMPLX(0.0d0, (alfa/f + beta*f)) 
       m_complex_ice_maetzler = SQRT(CONJG(m_complex_ice_maetzler))
       
-      END FUNCTION m_complex_ice_maetzler
+      end function m_complex_ice_maetzler
 
 !+---+-----------------------------------------------------------------+
 
@@ -267,21 +267,21 @@ CONTAINS
                      mixingrule,matrix,inclusion,                       &
                      host,hostmatrix,hostinclusion)
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION, INTENT(in):: x_g, a_geo, b_geo, fmelt, lambda,  &
+      double precision, intent(in):: x_g, a_geo, b_geo, fmelt, lambda,  &
                                      meltratio_outside
-      DOUBLE PRECISION, INTENT(out):: C_back
-      COMPLEX*16, INTENT(in):: m_w, m_i
-      CHARACTER(len=*), INTENT(in):: mixingrule, matrix, inclusion,     &
+      double precision, intent(out):: C_back
+      complex*16, intent(in):: m_w, m_i
+      character(len=*), intent(in):: mixingrule, matrix, inclusion,     &
                                      host, hostmatrix, hostinclusion
 
-      COMPLEX*16:: m_core, m_air
-      DOUBLE PRECISION:: D_large, D_g, rhog, x_w, xw_a, fm, fmgrenz,    &
+      complex*16:: m_core, m_air
+      double precision:: D_large, D_g, rhog, x_w, xw_a, fm, fmgrenz,    &
                          volg, vg, volair, volice, volwater,            &
                          meltratio_outside_grenz, mra
-      INTEGER:: error
-      DOUBLE PRECISION, PARAMETER:: PIx=3.1415926535897932384626434d0
+      integer:: error
+      double precision, parameter:: PIx=3.1415926535897932384626434d0
 
 !     refractive index of air:
       m_air = (1.0d0,0.0d0)
@@ -363,17 +363,17 @@ CONTAINS
                      volice, volwater, mixingrule, host, matrix,        &
                      inclusion, hostmatrix, hostinclusion, cumulerror)
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION, INTENT(in):: volice, volair, volwater
-      COMPLEX*16, INTENT(in):: m_a, m_i, m_w
-      CHARACTER(len=*), INTENT(in):: mixingrule, host, matrix,          &
+      double precision, intent(in):: volice, volair, volwater
+      complex*16, intent(in):: m_a, m_i, m_w
+      character(len=*), intent(in):: mixingrule, host, matrix,          &
                      inclusion, hostmatrix, hostinclusion
-      INTEGER, INTENT(out):: cumulerror
+      integer, intent(out):: cumulerror
 
-      DOUBLE PRECISION:: vol1, vol2
-      COMPLEX*16:: mtmp
-      INTEGER:: error
+      double precision:: vol1, vol2
+      complex*16:: mtmp
+      integer:: error
 
       !..Folded: ( (m1 + m2) + m3), where m1,m2,m3 could each be
       !.. air, ice, or water
@@ -385,7 +385,7 @@ CONTAINS
 
        if (matrix .eq. 'air') then
         write(radar_debug,*) 'GET_M_MIX_NESTED: bad matrix: ', matrix
-        CALL wrf_debug(150, radar_debug)
+        call wrf_debug(150, radar_debug)
         cumulerror = cumulerror + 1
        else
         vol1 = volice / MAX(volice+volwater,1d-10)
@@ -407,7 +407,7 @@ CONTAINS
         else
          write(radar_debug,*) 'GET_M_MIX_NESTED: bad hostmatrix: ',        &
                            hostmatrix
-         CALL wrf_debug(150, radar_debug)
+         call wrf_debug(150, radar_debug)
          cumulerror = cumulerror + 1
         endif
        endif
@@ -416,7 +416,7 @@ CONTAINS
 
        if (matrix .eq. 'ice') then
         write(radar_debug,*) 'GET_M_MIX_NESTED: bad matrix: ', matrix
-        CALL wrf_debug(150, radar_debug)
+        call wrf_debug(150, radar_debug)
         cumulerror = cumulerror + 1
        else
         vol1 = volair / MAX(volair+volwater,1d-10)
@@ -438,7 +438,7 @@ CONTAINS
         else
          write(radar_debug,*) 'GET_M_MIX_NESTED: bad hostmatrix: ',        &
                            hostmatrix
-         CALL wrf_debug(150, radar_debug)
+         call wrf_debug(150, radar_debug)
          cumulerror = cumulerror + 1
         endif
        endif
@@ -447,7 +447,7 @@ CONTAINS
 
        if (matrix .eq. 'water') then
         write(radar_debug,*) 'GET_M_MIX_NESTED: bad matrix: ', matrix
-        CALL wrf_debug(150, radar_debug)
+        call wrf_debug(150, radar_debug)
         cumulerror = cumulerror + 1
        else
         vol1 = volair / MAX(volice+volair,1d-10)
@@ -469,7 +469,7 @@ CONTAINS
         else
          write(radar_debug,*) 'GET_M_MIX_NESTED: bad hostmatrix: ',         &
                            hostmatrix
-         CALL wrf_debug(150, radar_debug)
+         call wrf_debug(150, radar_debug)
          cumulerror = cumulerror + 1
         endif
        endif
@@ -483,13 +483,13 @@ CONTAINS
         
       else
        write(radar_debug,*) 'GET_M_MIX_NESTED: unknown matrix: ', host
-       CALL wrf_debug(150, radar_debug)
+       call wrf_debug(150, radar_debug)
        cumulerror = cumulerror + 1
       endif
 
-      IF (cumulerror .ne. 0) THEN
+      if (cumulerror .ne. 0) then
        write(radar_debug,*) 'GET_M_MIX_NESTED: error encountered'
-       CALL wrf_debug(150, radar_debug)
+       call wrf_debug(150, radar_debug)
        get_m_mix_nested = CMPLX(1.0d0,0.0d0)    
       endif
 
@@ -497,15 +497,15 @@ CONTAINS
 
 !+---+-----------------------------------------------------------------+
 
-      COMPLEX*16 FUNCTION get_m_mix (m_a, m_i, m_w, volair, volice,     &
+      complex*16 function get_m_mix (m_a, m_i, m_w, volair, volice,     &
                      volwater, mixingrule, matrix, inclusion, error)
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION, INTENT(in):: volice, volair, volwater
-      COMPLEX*16, INTENT(in):: m_a, m_i, m_w
-      CHARACTER(len=*), INTENT(in):: mixingrule, matrix, inclusion
-      INTEGER, INTENT(out):: error
+      double precision, intent(in):: volice, volair, volwater
+      complex*16, intent(in):: m_a, m_i, m_w
+      character(len=*), intent(in):: mixingrule, matrix, inclusion
+      integer, intent(out):: error
 
       error = 0
       get_m_mix = CMPLX(1.0d0,0.0d0)
@@ -522,43 +522,43 @@ CONTAINS
                            m_a, m_w, m_i, inclusion, error)
        else
         write(radar_debug,*) 'GET_M_MIX: unknown matrix: ', matrix
-        CALL wrf_debug(150, radar_debug)
+        call wrf_debug(150, radar_debug)
         error = 1
        endif
 
       else
        write(radar_debug,*) 'GET_M_MIX: unknown mixingrule: ', mixingrule
-       CALL wrf_debug(150, radar_debug)
+       call wrf_debug(150, radar_debug)
        error = 2
       endif
 
       if (error .ne. 0) then
        write(radar_debug,*) 'GET_M_MIX: error encountered'
-       CALL wrf_debug(150, radar_debug)
+       call wrf_debug(150, radar_debug)
       endif
 
-      END FUNCTION get_m_mix
+      end function get_m_mix
 
 !+---+-----------------------------------------------------------------+
 
-      COMPLEX*16 FUNCTION m_complex_maxwellgarnett(vol1, vol2, vol3,    &
+      complex*16 function m_complex_maxwellgarnett(vol1, vol2, vol3,    &
                      m1, m2, m3, inclusion, error)
 
-      IMPLICIT NONE
+      implicit none
 
-      COMPLEX*16 :: m1, m2, m3
-      DOUBLE PRECISION :: vol1, vol2, vol3
-      CHARACTER(len=*) :: inclusion
+      complex*16 :: m1, m2, m3
+      double precision :: vol1, vol2, vol3
+      character(len=*) :: inclusion
 
-      COMPLEX*16 :: beta2, beta3, m1t, m2t, m3t
-      INTEGER, INTENT(out) :: error
+      complex*16 :: beta2, beta3, m1t, m2t, m3t
+      integer, intent(out) :: error
 
       error = 0
 
       if (DABS(vol1+vol2+vol3-1.0d0) .gt. 1d-6) then
        write(radar_debug,*) 'M_COMPLEX_MAXWELLGARNETT: sum of the ',       &
               'partial volume fractions is not 1...ERROR'
-       CALL wrf_debug(150, radar_debug)
+       call wrf_debug(150, radar_debug)
        m_complex_maxwellgarnett=CMPLX(-999.99d0,-999.99d0)
        error = 1
        return
@@ -577,7 +577,7 @@ CONTAINS
       else
        write(radar_debug,*) 'M_COMPLEX_MAXWELLGARNETT: ',                  &
                          'unknown inclusion: ', inclusion
-       CALL wrf_debug(150, radar_debug)
+       call wrf_debug(150, radar_debug)
        m_complex_maxwellgarnett=DCMPLX(-999.99d0,-999.99d0)
        error = 1
        return
@@ -587,43 +587,43 @@ CONTAINS
        SQRT(((1.0d0-vol2-vol3)*m1t + vol2*beta2*m2t + vol3*beta3*m3t) / &
        (1.0d0-vol2-vol3+vol2*beta2+vol3*beta3))
 
-      END FUNCTION m_complex_maxwellgarnett
+      end function m_complex_maxwellgarnett
 
 !+---+-----------------------------------------------------------------+
-      REAL FUNCTION GAMMLN(XX)
+      real function GAMMLN(XX)
 !     --- RETURNS THE VALUE LN(GAMMA(XX)) FOR XX > 0.
-      IMPLICIT NONE
-      REAL, INTENT(IN):: XX
-      DOUBLE PRECISION, PARAMETER:: STP = 2.5066282746310005D0
-      DOUBLE PRECISION, DIMENSION(6), PARAMETER:: &
+      implicit none
+      real, intent(in):: XX
+      double precision, parameter:: STP = 2.5066282746310005D0
+      double precision, dimension(6), parameter:: &
                COF = (/76.18009172947146D0, -86.50532032941677D0, &
                        24.01409824083091D0, -1.231739572450155D0, &
                       .1208650973866179D-2, -.5395239384953D-5/)
-      DOUBLE PRECISION:: SER,TMP,X,Y
-      INTEGER:: J
+      double precision:: SER,TMP,X,Y
+      integer:: J
 
       X=XX
       Y=X
       TMP=X+5.5D0
       TMP=(X+0.5D0)*LOG(TMP)-TMP
       SER=1.000000000190015D0
-      DO 11 J=1,6
+      do 11 J=1,6
         Y=Y+1.D0
         SER=SER+COF(J)/Y
-11    CONTINUE
+11    continue
       GAMMLN=TMP+LOG(STP*SER/X)
-      END FUNCTION GAMMLN
+      end function GAMMLN
 !  (C) Copr. 1986-92 Numerical Recipes Software 2.02
 !+---+-----------------------------------------------------------------+
-      REAL FUNCTION WGAMMA(y)
+      real function WGAMMA(y)
 
-      IMPLICIT NONE
-      REAL, INTENT(IN):: y
+      implicit none
+      real, intent(in):: y
 
       WGAMMA = EXP(GAMMLN(y))
 
-      END FUNCTION WGAMMA
+      end function WGAMMA
 
 !+---+-----------------------------------------------------------------+
-END MODULE module_mp_radar
+end module module_mp_radar
 !+---+-----------------------------------------------------------------+

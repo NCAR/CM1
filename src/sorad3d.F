@@ -1,4 +1,4 @@
-  MODULE sorad3d_module
+  module sorad3d_module
 
   implicit none
 
@@ -17,11 +17,11 @@
 !  integer   nm,nt,na
 !  parameter (nm=11,nt=9,na=11)
 
-  REAL :: caib(11,9,11),caif(9,11)
+  real :: caib(11,9,11),caif(9,11)
 
 !!!  COMMON /radtab004/ caib,caif
 
-  DATA ((caib(1,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(1,i,j),j=1,11),i=1,9)/                                    &
       0.,0.084,0.170,0.258,0.349,0.442,0.540,0.643,0.752,0.870,1.,      &
       0.,0.076,0.153,0.233,0.315,0.401,0.492,0.589,0.698,0.826,1.,      &
       0.,0.069,0.139,0.210,0.283,0.359,0.438,0.523,0.619,0.741,1.,      &
@@ -31,7 +31,7 @@
       0.,0.061,0.122,0.183,0.244,0.307,0.370,0.444,0.577,0.752,1.,      &
       0.,0.060,0.121,0.182,0.243,0.304,0.368,0.457,0.574,0.732,1.,      &
       0.,0.060,0.120,0.181,0.242,0.302,0.367,0.451,0.551,0.690,1./
-  DATA ((caib(2,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(2,i,j),j=1,11),i=1,9)/                                    &
       0.,0.094,0.190,0.286,0.384,0.482,0.583,0.684,0.788,0.893,1.,      &
       0.,0.090,0.180,0.274,0.368,0.466,0.566,0.668,0.774,0.885,1.,      &
       0.,0.082,0.167,0.254,0.343,0.436,0.533,0.636,0.746,0.866,1.,      &
@@ -41,7 +41,7 @@
       0.,0.063,0.126,0.190,0.256,0.323,0.394,0.480,0.604,0.772,1.,      &
       0.,0.062,0.124,0.186,0.249,0.314,0.385,0.475,0.594,0.749,1.,      &
       0.,0.061,0.122,0.183,0.245,0.309,0.378,0.462,0.564,0.704,1./
-  DATA ((caib(3,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(3,i,j),j=1,11),i=1,9)/                                    &
       0.,0.097,0.194,0.292,0.392,0.491,0.591,0.692,0.794,0.897,1.,      &
       0.,0.094,0.189,0.286,0.383,0.482,0.582,0.684,0.788,0.893,1.,      &
       0.,0.090,0.180,0.274,0.368,0.466,0.566,0.668,0.775,0.885,1.,      &
@@ -51,7 +51,7 @@
       0.,0.066,0.132,0.200,0.270,0.344,0.424,0.518,0.638,0.794,1.,      &
       0.,0.063,0.127,0.192,0.259,0.329,0.406,0.499,0.616,0.769,1.,      &
       0.,0.062,0.124,0.187,0.251,0.318,0.391,0.477,0.580,0.721,1./
-  DATA ((caib(4,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(4,i,j),j=1,11),i=1,9)/                                    &
       0.,0.098,0.196,0.295,0.394,0.494,0.594,0.695,0.796,0.898,1.,      &
       0.,0.096,0.193,0.290,0.389,0.488,0.589,0.690,0.792,0.896,1.,      &
       0.,0.093,0.187,0.282,0.379,0.478,0.578,0.680,0.784,0.891,1.,      &
@@ -61,7 +61,7 @@
       0.,0.068,0.138,0.210,0.285,0.365,0.452,0.550,0.668,0.814,1.,      &
       0.,0.065,0.131,0.199,0.269,0.344,0.426,0.522,0.638,0.786,1.,      &
       0.,0.063,0.126,0.191,0.257,0.327,0.404,0.491,0.596,0.737,1./
-  DATA ((caib(5,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(5,i,j),j=1,11),i=1,9)/                                    &
       0.,0.098,0.197,0.296,0.396,0.496,0.596,0.696,0.797,0.898,1.,      &
       0.,0.097,0.195,0.293,0.392,0.492,0.592,0.693,0.794,0.897,1.,      &
       0.,0.095,0.190,0.287,0.385,0.484,0.584,0.686,0.789,0.894,1.,      &
@@ -71,7 +71,7 @@
       0.,0.071,0.145,0.220,0.300,0.384,0.476,0.578,0.694,0.832,1.,      &
       0.,0.067,0.135,0.206,0.280,0.358,0.444,0.542,0.658,0.802,1.,      &
       0.,0.064,0.129,0.195,0.264,0.337,0.416,0.504,0.610,0.751,1./
-  DATA ((caib(6,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(6,i,j),j=1,11),i=1,9)/                                    &
       0.,0.099,0.198,0.298,0.397,0.497,0.597,0.698,0.798,0.899,1.,      &
       0.,0.098,0.196,0.295,0.394,0.494,0.594,0.695,0.796,0.898,1.,      &
       0.,0.096,0.193,0.290,0.389,0.488,0.588,0.690,0.792,0.896,1.,      &
@@ -81,7 +81,7 @@
       0.,0.074,0.151,0.231,0.314,0.402,0.497,0.600,0.716,0.846,1.,      &
       0.,0.069,0.140,0.214,0.291,0.372,0.462,0.561,0.675,0.815,1.,      &
       0.,0.065,0.132,0.200,0.271,0.346,0.427,0.517,0.624,0.764,1./
-  DATA ((caib(7,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(7,i,j),j=1,11),i=1,9)/                                    &
       0.,0.099,0.199,0.298,0.398,0.498,0.598,0.698,0.798,0.899,1.,      &
       0.,0.098,0.197,0.296,0.396,0.496,0.596,0.696,0.797,0.898,1.,      &
       0.,0.097,0.195,0.293,0.392,0.492,0.592,0.693,0.794,0.897,1.,      &
@@ -91,7 +91,7 @@
       0.,0.078,0.158,0.241,0.328,0.419,0.516,0.620,0.733,0.858,1.,      &
       0.,0.072,0.145,0.222,0.302,0.386,0.478,0.578,0.692,0.827,1.,      &
       0.,0.067,0.135,0.206,0.278,0.355,0.438,0.530,0.637,0.775,1./
-  DATA ((caib(8,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(8,i,j),j=1,11),i=1,9)/                                    &
       0.,0.100,0.199,0.299,0.399,0.498,0.599,0.699,0.799,0.900,1.,      &
       0.,0.099,0.198,0.298,0.397,0.497,0.597,0.698,0.798,0.899,1.,      &
       0.,0.098,0.196,0.295,0.395,0.494,0.594,0.695,0.796,0.898,1.,      &
@@ -101,7 +101,7 @@
       0.,0.082,0.165,0.252,0.341,0.434,0.532,0.636,0.747,0.867,1.,      &
       0.,0.074,0.151,0.230,0.313,0.400,0.492,0.593,0.706,0.837,1.,      &
       0.,0.069,0.139,0.211,0.286,0.364,0.448,0.541,0.649,0.786,1./
-  DATA ((caib(9,i,j),j=1,11),i=1,9)/                                    &
+  data ((caib(9,i,j),j=1,11),i=1,9)/                                    &
       0.,0.100,0.200,0.299,0.399,0.499,0.599,0.700,0.800,0.900,1.,      &
       0.,0.100,0.199,0.299,0.399,0.498,0.599,0.699,0.799,0.900,1.,      &
       0.,0.099,0.198,0.298,0.397,0.497,0.597,0.698,0.798,0.899,1.,      &
@@ -111,7 +111,7 @@
       0.,0.086,0.173,0.262,0.354,0.449,0.547,0.650,0.759,0.875,1.,      &
       0.,0.078,0.157,0.239,0.324,0.412,0.506,0.607,0.719,0.846,1.,      &
       0.,0.071,0.143,0.217,0.293,0.373,0.459,0.552,0.660,0.796,1./
-  DATA ((caib(10,i,j),j=1,11),i=1,9)/                                   &
+  data ((caib(10,i,j),j=1,11),i=1,9)/                                   &
       0.,0.100,0.200,0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.,      &
       0.,0.100,0.200,0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.,      &
       0.,0.100,0.200,0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.,      &
@@ -121,7 +121,7 @@
       0.,0.090,0.181,0.273,0.366,0.462,0.560,0.662,0.769,0.881,1.,      &
       0.,0.082,0.164,0.248,0.335,0.424,0.519,0.620,0.730,0.854,1.,      &
       0.,0.073,0.147,0.223,0.301,0.382,0.468,0.563,0.671,0.805,1./
-  DATA ((caib(11,i,j),j=1,11),i=1,9)/                                   &
+  data ((caib(11,i,j),j=1,11),i=1,9)/                                   &
       0.,0.100,0.200,0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.,      &
       0.,0.100,0.200,0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.,      &
       0.,0.100,0.200,0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.,      &
@@ -132,7 +132,7 @@
       0.,0.086,0.171,0.257,0.345,0.436,0.531,0.632,0.740,0.861,1.,      &
       0.,0.076,0.152,0.229,0.308,0.390,0.478,0.573,0.681,0.813,1./
 !
-  DATA ((caif(i,j),j=1,11),i=1,9)/                                      &
+  data ((caif(i,j),j=1,11),i=1,9)/                                      &
       0.,0.099,0.198,0.298,0.397,0.497,0.597,0.698,0.798,0.899,1.,      &
       0.,0.098,0.196,0.295,0.395,0.495,0.595,0.695,0.796,0.898,1.,      &
       0.,0.096,0.193,0.291,0.390,0.489,0.589,0.690,0.793,0.896,1.,      &
@@ -150,11 +150,11 @@
 !
 !-----------------------------------------------------------------------
 !
-  REAL :: cah(22,19)
+  real :: cah(22,19)
 
 !!!  COMMON /radtab005/ cah
 
-  DATA ((cah(i,j),i=1,22),j= 1, 5)/                                     &
+  data ((cah(i,j),i=1,22),j= 1, 5)/                                     &
       0.9923, 0.9922, 0.9921, 0.9920, 0.9916, 0.9910, 0.9899, 0.9882,   &
       0.9856, 0.9818, 0.9761, 0.9678, 0.9558, 0.9395, 0.9188, 0.8945,   &
       0.8675, 0.8376, 0.8029, 0.7621, 0.7154, 0.6647, 0.9876, 0.9876,   &
@@ -170,7 +170,7 @@
       0.9510, 0.9477, 0.9428, 0.9355, 0.9250, 0.9106, 0.8921, 0.8700,   &
       0.8452, 0.8171, 0.7839, 0.7443, 0.6986, 0.6486/
 
-  DATA ((cah(i,j),i=1,22),j= 6,10)/                                     &
+  data ((cah(i,j),i=1,22),j= 6,10)/                                     &
       0.9377, 0.9377, 0.9376, 0.9375, 0.9372, 0.9367, 0.9359, 0.9345,   &
       0.9324, 0.9294, 0.9248, 0.9181, 0.9083, 0.8948, 0.8774, 0.8565,   &
       0.8328, 0.8055, 0.7731, 0.7342, 0.6890, 0.6395, 0.9126, 0.9126,   &
@@ -186,7 +186,7 @@
       0.7969, 0.7955, 0.7933, 0.7899, 0.7846, 0.7769, 0.7664, 0.7528,   &
       0.7357, 0.7141, 0.6866, 0.6520, 0.6108, 0.5646/
 
-  DATA ((cah(i,j),i=1,22),j=11,15)/                                     &
+  data ((cah(i,j),i=1,22),j=11,15)/                                     &
       0.7515, 0.7515, 0.7515, 0.7515, 0.7514, 0.7513, 0.7511, 0.7507,   &
       0.7501, 0.7491, 0.7476, 0.7450, 0.7409, 0.7347, 0.7261, 0.7144,   &
       0.6992, 0.6793, 0.6533, 0.6203, 0.5805, 0.5357, 0.7020, 0.7020,   &
@@ -202,7 +202,7 @@
       0.5514, 0.5511, 0.5505, 0.5493, 0.5473, 0.5441, 0.5393, 0.5322,   &
       0.5220, 0.5076, 0.4878, 0.4617, 0.4297, 0.3929/
 
-  DATA ((cah(i,j),i=1,22),j=16,19)/                                     &
+  data ((cah(i,j),i=1,22),j=16,19)/                                     &
       0.5031, 0.5031, 0.5031, 0.5031, 0.5031, 0.5030, 0.5030, 0.5029,   &
       0.5028, 0.5025, 0.5019, 0.5008, 0.4990, 0.4960, 0.4916, 0.4850,   &
       0.4757, 0.4624, 0.4441, 0.4201, 0.3904, 0.3564, 0.4565, 0.4565,   &
@@ -217,7 +217,7 @@
 !
 !-----------------------------------------------------------------------
 
-  CONTAINS
+  contains
 !
 !
 !##################################################################
@@ -236,7 +236,7 @@
 !##################################################################
 !
 
-SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
+subroutine sorad(idim,jdim,m,n,np,                                      &
            pl,ta,wa,oa,co2,                                             &
            taucldi,taucldl,reffi,reffl,fcld,ict,icb,                    &
            taual,rsirbm,rsirdf,rsuvbm,rsuvdf,cosz,                      &
@@ -385,39 +385,39 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 !-----------------------------------------------------------------------
 !
   use radlib3d_module, only : expmn
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: idim,jdim             ! ARPS nx, ny. NX is used in this
+  integer :: idim,jdim             ! ARPS nx, ny. NX is used in this
                                    ! subroutine for other purpose
 
-  INTEGER :: m,n,np
-  INTEGER :: ict,icb
+  integer :: m,n,np
+  integer :: ict,icb
 
-  REAL :: pl(idim,jdim,np+1)       ! pressure at scalar points (layers)
-  REAL :: ta(idim,jdim,np)
-  REAL :: wa(idim,jdim,np)
-  REAL :: oa(idim,jdim,np)
-  REAL :: taucldi(idim,jdim,np)
-  REAL :: taucldl(idim,jdim,np)
-  REAL :: reffi(idim,jdim,np)
-  REAL :: reffl(idim,jdim,np)
-  REAL :: fcld(idim,jdim,np)
-  REAL :: taual(idim,jdim,np)
-  REAL :: rsirbm(idim,jdim)
-  REAL :: rsirdf(idim,jdim)
-  REAL :: rsuvbm(idim,jdim)
-  REAL :: rsuvdf(idim,jdim)
-  REAL :: cosz(idim,jdim)
-  REAL :: co2
+  real :: pl(idim,jdim,np+1)       ! pressure at scalar points (layers)
+  real :: ta(idim,jdim,np)
+  real :: wa(idim,jdim,np)
+  real :: oa(idim,jdim,np)
+  real :: taucldi(idim,jdim,np)
+  real :: taucldl(idim,jdim,np)
+  real :: reffi(idim,jdim,np)
+  real :: reffl(idim,jdim,np)
+  real :: fcld(idim,jdim,np)
+  real :: taual(idim,jdim,np)
+  real :: rsirbm(idim,jdim)
+  real :: rsirdf(idim,jdim)
+  real :: rsuvbm(idim,jdim)
+  real :: rsuvdf(idim,jdim)
+  real :: cosz(idim,jdim)
+  real :: co2
 
-  REAL :: flx(idim,jdim,np+1)
-  REAL :: flc(idim,jdim,np+1)
-  REAL :: fdirir(idim,jdim)
-  REAL :: fdifir(idim,jdim)
-  REAL :: fdirpar(idim,jdim)
-  REAL :: fdifpar(idim,jdim)
-  REAL :: fdiruv(idim,jdim) ! MS add
-  REAL :: fdifuv(idim,jdim) ! MS add
+  real :: flx(idim,jdim,np+1)
+  real :: flc(idim,jdim,np+1)
+  real :: fdirir(idim,jdim)
+  real :: fdifir(idim,jdim)
+  real :: fdirpar(idim,jdim)
+  real :: fdifpar(idim,jdim)
+  real :: fdiruv(idim,jdim) ! MS add
+  real :: fdifuv(idim,jdim) ! MS add
 !
 !-----------------------------------------------------------------------
 !
@@ -425,65 +425,65 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 !
 !-----------------------------------------------------------------------
 !
-  REAL :: sdf(m,n)
-  REAL :: sclr(m,n)
-  REAL :: csm(m,n)
-  REAL :: cc(m,n,3)
+  real :: sdf(m,n)
+  real :: sclr(m,n)
+  real :: csm(m,n)
+  real :: cc(m,n,3)
 
-  REAL :: tauclb(m,n,np)
-  REAL :: tauclf(m,n,np)
-  REAL :: dp(m,n,np)
-  REAL :: wh(m,n,np)
-  REAL :: oh(m,n,np)
-  REAL :: scal(m,n,np)
-  REAL :: swh(m,n,np+1)
-  REAL :: so2(m,n,np+1)
-  REAL :: df(m,n,np+1)
+  real :: tauclb(m,n,np)
+  real :: tauclf(m,n,np)
+  real :: dp(m,n,np)
+  real :: wh(m,n,np)
+  real :: oh(m,n,np)
+  real :: scal(m,n,np)
+  real :: swh(m,n,np+1)
+  real :: so2(m,n,np+1)
+  real :: df(m,n,np+1)
 
 !-----temporary arrays used in subroutine cldflx
 
-  REAL :: tem2d1 (m,n)
-  REAL :: tem2d2 (m,n)
-  REAL :: tem2d3 (m,n)
-  REAL :: tem2d4 (m,n)
-  REAL :: tem2d5 (m,n)
-  REAL :: tem2d6 (m,n)
-  REAL :: tem2d7 (m,n)
-  REAL :: tem2d8 (m,n)
-  REAL :: tem2d9 (m,n)
-  REAL :: tem2d10(m,n)
-  REAL :: tem2d11(m,n)
-  REAL :: tem2d12(m,n)
-  REAL :: tem2d13(m,n)
-  REAL :: tem2d14(m,n)
-  REAL :: tem2d15(m,n)
-  REAL :: tem2d16(m,n)
-  REAL :: tem2d17(m,n)
-  REAL :: tem2d18(m,n)
-  REAL :: tem2d19(m,n)
+  real :: tem2d1 (m,n)
+  real :: tem2d2 (m,n)
+  real :: tem2d3 (m,n)
+  real :: tem2d4 (m,n)
+  real :: tem2d5 (m,n)
+  real :: tem2d6 (m,n)
+  real :: tem2d7 (m,n)
+  real :: tem2d8 (m,n)
+  real :: tem2d9 (m,n)
+  real :: tem2d10(m,n)
+  real :: tem2d11(m,n)
+  real :: tem2d12(m,n)
+  real :: tem2d13(m,n)
+  real :: tem2d14(m,n)
+  real :: tem2d15(m,n)
+  real :: tem2d16(m,n)
+  real :: tem2d17(m,n)
+  real :: tem2d18(m,n)
+  real :: tem2d19(m,n)
 
-  REAL :: tem3d1(m,n,np)
-  REAL :: tem3d2(m,n,np)
-  REAL :: tem3d3(m,n,np+1)
-  REAL :: tem3d4(m,n,np+1)
-  REAL :: tem3d5(m,n,np+1)
+  real :: tem3d1(m,n,np)
+  real :: tem3d2(m,n,np)
+  real :: tem3d3(m,n,np+1)
+  real :: tem3d4(m,n,np+1)
+  real :: tem3d5(m,n,np+1)
 
-  REAL :: tem4d1(m,n,np+1,2)
-  REAL :: tem4d2(m,n,np+1,2)
-  REAL :: tem4d3(m,n,np+1,2)
-  REAL :: tem4d4(m,n,np+1,2)
-  REAL :: tem4d5(m,n,np+1,2)
+  real :: tem4d1(m,n,np+1,2)
+  real :: tem4d2(m,n,np+1,2)
+  real :: tem4d3(m,n,np+1,2)
+  real :: tem4d4(m,n,np+1,2)
+  real :: tem4d5(m,n,np+1,2)
 
-  REAL :: tem5d1(m,n,np+1,2,2)
-  REAL :: tem5d2(m,n,np+1,2,2)
-  REAL :: tem5d3(m,n,np+1,2,2)
-  REAL :: tem5d4(m,n,np+1,2,2)
-  REAL :: tem5d5(m,n,np+1,2,2)
+  real :: tem5d1(m,n,np+1,2,2)
+  real :: tem5d2(m,n,np+1,2,2)
+  real :: tem5d3(m,n,np+1,2,2)
+  real :: tem5d4(m,n,np+1,2,2)
+  real :: tem5d5(m,n,np+1,2,2)
 
 !-----temporary variables
 
-  INTEGER :: i,j,k
-  REAL :: x
+  integer :: i,j,k
+  real :: x
 !
 !-----------------------------------------------------------------------
 !
@@ -499,8 +499,8 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
-  DO j=1,n
-    DO i=1,m
+  do j=1,n
+    do i=1,m
 
       swh(i,j,1)=0.
       so2(i,j,1)=0.
@@ -510,13 +510,13 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 
       csm(i,j)=35./SQRT(1224.*cosz(i,j)*cosz(i,j)+1.)
 
-    END DO
-  END DO
+    end do
+  end do
 
 
-  DO k=1,np
-    DO j=1,n
-      DO i=1,m
+  do k=1,np
+    do j=1,n
+      do i=1,m
 
 !-----compute layer thickness and pressure-scaling function.
 !  indices for the surface level and surface layer
@@ -535,9 +535,9 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 
         oh(i,j,k)=1.02*oa(i,j,k)*dp(i,j,k)*466.7
 
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
 
 !-----scale cloud optical thickness in each layer from taucld (with
@@ -545,26 +545,26 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 !  tauclb is the scaled optical thickness for beam radiation and
 !  tauclf is for diffuse radiation.
 
-  CALL cldscale(idim,jdim,                                              &
+  call cldscale(idim,jdim,                                              &
                 m,n,np,cosz,fcld,taucldi,taucldl,ict,icb,               &
                 cc,tauclb,tauclf)
 
 !-----initialize fluxes for all-sky (flx), clear-sky (flc), and
 !  flux reduction (df)
 
-  DO k=1,np+1
-    DO j=1,n
-      DO i=1,m
+  do k=1,np+1
+    do j=1,n
+      do i=1,m
         flx(i,j,k)=0.
         flc(i,j,k)=0.
         df(i,j,k)=0.
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
 !-----compute solar ir fluxes
 
-  CALL solir (idim,jdim,                                                &
+  call solir (idim,jdim,                                                &
               m,n,np,wh,taucldi,taucldl,tauclb,tauclf,                  &
               reffi,reffl,ict,icb,                                      &
               fcld,cc,taual,csm,rsirbm,rsirdf,                          &
@@ -586,7 +586,7 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 
 !-----compute and update uv and par fluxes
 
-  CALL soluv (idim,jdim,                                                &
+  call soluv (idim,jdim,                                                &
               m,n,np,oh,dp,taucldi,taucldl,tauclb,tauclf,               &
               reffi,reffl,ict,icb,                                      &
               fcld,cc,taual,csm,rsuvbm,rsuvdf,                          &
@@ -610,26 +610,26 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 
 !-----compute scaled amount of o2 (so2), unit is (cm-atm)stp.
 
-  DO k=1,np
-    DO j=1,n
-      DO i=1,m
+  do k=1,np
+    do j=1,n
+      do i=1,m
         so2(i,j,k+1)=so2(i,j,k)+165.22*scal(i,j,k)
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
 !-----compute flux reduction due to oxygen following
 !   chou (J. climate, 1990). The fraction 0.0287 is the
 !   extraterrestrial solar flux in the o2 bands.
 
-  DO k=2,np+1
-    DO j=1,n
-      DO i=1,m
+  do k=2,np+1
+    do j=1,n
+      do i=1,m
         x=so2(i,j,k)*csm(i,j)
         df(i,j,k)=df(i,j,k)+0.0287*(1.-expmn(-0.00027*SQRT(x)))
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
 !  write (6,'(a/a3,3a15)')
 !    : 'Flux reduction due to oxygen, i=j=3',
@@ -641,65 +641,65 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 
 !-----compute scaled amounts for co2 (so2). unit is (cm-atm)stp.
 
-  DO k=1,np
-    DO j=1,n
-      DO i=1,m
+  do k=1,np
+    do j=1,n
+      do i=1,m
         so2(i,j,k+1)=so2(i,j,k)+co2*789.*scal(i,j,k)
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
 !-----compute and update flux reduction due to co2 following
 !  chou (J. Climate, 1990)
 
-  CALL flxco2(m,n,np,so2,swh,csm,df)
+  call flxco2(m,n,np,so2,swh,csm,df)
 
 !-----adjust for the effect of o2 cnd co2 on clear-sky fluxes.
 
-  DO k=2,np+1
-    DO j=1,n
-      DO i=1,m
+  do k=2,np+1
+    do j=1,n
+      do i=1,m
         flc(i,j,k)=flc(i,j,k)-df(i,j,k)
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
 !-----adjust for the all-sky fluxes due to o2 and co2.  It is
 !  assumed that o2 and co2 have no effects on solar radiation
 !  below clouds. clouds are assumed randomly overlapped.
 
-  DO j=1,n
-    DO i=1,m
+  do j=1,n
+    do i=1,m
       sdf(i,j)=0.0
       sclr(i,j)=1.0
-    END DO
-  END DO
+    end do
+  end do
 
-  DO k=1,np
-    DO j=1,n
-      DO i=1,m
+  do k=1,np
+    do j=1,n
+      do i=1,m
 
 !-----sclr is the fraction of clear sky.
 !  sdf is the flux reduction below clouds.
 
-        IF(fcld(i,j,k) > 0.01) THEN
+        if(fcld(i,j,k) > 0.01) then
           sdf(i,j)=sdf(i,j)+df(i,j,k)*sclr(i,j)*fcld(i,j,k)
           sclr(i,j)=sclr(i,j)*(1.-fcld(i,j,k))
-        END IF
+        end if
         flx(i,j,k+1)=flx(i,j,k+1)-sdf(i,j)-df(i,j,k+1)*sclr(i,j)
 
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
 !-----adjust for the direct downward ir flux.
-  DO j=1,n
-    DO i=1,m
+  do j=1,n
+    do i=1,m
 !!!      fdirir(i,j)=fdirir(i,j)-sdf(i,j)-df(i,j,np+1)*sclr(i,j)
       ! MS - this line was altered to keep it consistent with the net flux calculation
       fdirir(i,j)=fdirir(i,j)-( sdf(i,j) + df(i,j,np+1)*sclr(i,j) )/(1. - rsirbm(i,j))
-    END DO
-  END DO
+    end do
+  end do
 
 !  write (6,'(a3,2a15)') 'k','flx','flc'
 !  DO k=1,np
@@ -712,8 +712,8 @@ SUBROUTINE sorad(idim,jdim,m,n,np,                                      &
 !  write (6,'(4e15.8)')
 !    :  fdirir(1,1),fdifir(1,1),fdirpar(1,1),fdifpar(1,1)
 
-  RETURN
-END SUBROUTINE sorad
+  return
+end subroutine sorad
 !
 !
 !##################################################################
@@ -732,7 +732,7 @@ END SUBROUTINE sorad
 !##################################################################
 !
 
-SUBROUTINE solir(idim,jdim,                                             &
+subroutine solir(idim,jdim,                                             &
            m,n,np,wh,taucldi,taucldl,tauclb,tauclf,reffi,reffl,         &
            ict,icb,fcld,cc,taual,csm,rsirbm,rsirdf,                     &
            flx,flc,fdirir,fdifir,                                       &
@@ -839,93 +839,93 @@ SUBROUTINE solir(idim,jdim,                                             &
 !-----------------------------------------------------------------------
 !
   use radlib3d_module, only : expmn,deledd,sagpol
-  IMPLICIT NONE
+  implicit none
 
 !-----input parameters
 
-  INTEGER :: idim,jdim
-  INTEGER :: m,n,np,ict,icb
+  integer :: idim,jdim
+  integer :: m,n,np,ict,icb
 
-  REAL :: taucldi(idim,jdim,np)
-  REAL :: taucldl(idim,jdim,np)
-  REAL :: reffi(idim,jdim,np)
-  REAL :: reffl(idim,jdim,np)
-  REAL :: fcld(idim,jdim,np)
-  REAL :: rsirbm(idim,jdim)
-  REAL :: rsirdf(idim,jdim)
-  REAL :: taual(idim,jdim,np)
+  real :: taucldi(idim,jdim,np)
+  real :: taucldl(idim,jdim,np)
+  real :: reffi(idim,jdim,np)
+  real :: reffl(idim,jdim,np)
+  real :: fcld(idim,jdim,np)
+  real :: rsirbm(idim,jdim)
+  real :: rsirdf(idim,jdim)
+  real :: taual(idim,jdim,np)
 
-  REAL :: tauclb(m,n,np)
-  REAL :: tauclf(m,n,np)
-  REAL :: cc(m,n,3)
-  REAL :: wh(m,n,np)
-  REAL :: csm(m,n)
+  real :: tauclb(m,n,np)
+  real :: tauclf(m,n,np)
+  real :: cc(m,n,3)
+  real :: wh(m,n,np)
+  real :: csm(m,n)
 
 !-----output (updated) parameters
 
-  REAL :: flx(idim,jdim,np+1)
-  REAL :: flc(idim,jdim,np+1)
-  REAL :: fdirir(idim,jdim)
-  REAL :: fdifir(idim,jdim)
+  real :: flx(idim,jdim,np+1)
+  real :: flc(idim,jdim,np+1)
+  real :: fdirir(idim,jdim)
+  real :: fdifir(idim,jdim)
 
 !-----static parameters
 
-  INTEGER :: nk,nband
-  PARAMETER (nk=10,nband=3)
-  REAL :: xk(nk),hk(nband,nk),ssaal(nband),asyal(nband)
-  REAL :: aia(nband,3),awa(nband,3),aig(nband,3),awg(nband,3)
+  integer :: nk,nband
+  parameter (nk=10,nband=3)
+  real :: xk(nk),hk(nband,nk),ssaal(nband),asyal(nband)
+  real :: aia(nband,3),awa(nband,3),aig(nband,3),awg(nband,3)
 
 !-----temporary array
 
-  REAL :: fsdir(m,n)
-  REAL :: fsdif(m,n)
+  real :: fsdir(m,n)
+  real :: fsdif(m,n)
 
-  REAL :: ssaclt(m,n)
-  REAL :: asyclt(m,n)
-  REAL :: rr1t(m,n)
-  REAL :: tt1t(m,n)
-  REAL :: td1t(m,n)
-  REAL :: rs1t(m,n)
-  REAL :: ts1t(m,n)
-  REAL :: rr2t(m,n)
-  REAL :: tt2t(m,n)
-  REAL :: td2t(m,n)
-  REAL :: rs2t(m,n)
-  REAL :: ts2t(m,n)
+  real :: ssaclt(m,n)
+  real :: asyclt(m,n)
+  real :: rr1t(m,n)
+  real :: tt1t(m,n)
+  real :: td1t(m,n)
+  real :: rs1t(m,n)
+  real :: ts1t(m,n)
+  real :: rr2t(m,n)
+  real :: tt2t(m,n)
+  real :: td2t(m,n)
+  real :: rs2t(m,n)
+  real :: ts2t(m,n)
 
-  REAL :: ssacl(m,n,np)
-  REAL :: asycl(m,n,np)
-  REAL :: fall(m,n,np+1)
-  REAL :: fclr(m,n,np+1)
+  real :: ssacl(m,n,np)
+  real :: asycl(m,n,np)
+  real :: fall(m,n,np+1)
+  real :: fclr(m,n,np+1)
 
-  REAL :: rr(m,n,np+1,2)
-  REAL :: tt(m,n,np+1,2)
-  REAL :: td(m,n,np+1,2)
-  REAL :: rs(m,n,np+1,2)
-  REAL :: ts(m,n,np+1,2)
+  real :: rr(m,n,np+1,2)
+  real :: tt(m,n,np+1,2)
+  real :: td(m,n,np+1,2)
+  real :: rs(m,n,np+1,2)
+  real :: ts(m,n,np+1,2)
 
 !-----temporary arrays used in subroutine cldflx
 
-  REAL :: tem2d1(m,n)
-  REAL :: tem2d2(m,n)
-  REAL :: tem2d3(m,n)
-  REAL :: tem2d4(m,n)
-  REAL :: tem2d5(m,n)
+  real :: tem2d1(m,n)
+  real :: tem2d2(m,n)
+  real :: tem2d3(m,n)
+  real :: tem2d4(m,n)
+  real :: tem2d5(m,n)
 
-  REAL :: tem3d (m,n,np+1)
+  real :: tem3d (m,n,np+1)
 
-  REAL :: tem5d1(m,n,np+1,2,2)
-  REAL :: tem5d2(m,n,np+1,2,2)
-  REAL :: tem5d3(m,n,np+1,2,2)
-  REAL :: tem5d4(m,n,np+1,2,2)
-  REAL :: tem5d5(m,n,np+1,2,2)
+  real :: tem5d1(m,n,np+1,2,2)
+  real :: tem5d2(m,n,np+1,2,2)
+  real :: tem5d3(m,n,np+1,2,2)
+  real :: tem5d4(m,n,np+1,2,2)
+  real :: tem5d5(m,n,np+1,2,2)
 
 !-----temporary variables
 
-  INTEGER :: ib,ik,i,j,k
+  integer :: ib,ik,i,j,k
 
-  REAL :: tauwv,tausto,ssatau,asysto,tauto,ssato,asyto
-  REAL :: taux,reff1,reff2,w1,w2,g1,g2
+  real :: tauwv,tausto,ssatau,asysto,tauto,ssato,asyto
+  real :: taux,reff1,reff2,w1,w2,g1,g2
 
 !-----function
 
@@ -934,14 +934,14 @@ SUBROUTINE solir(idim,jdim,                                             &
 !-----water vapor absorption coefficient for 10 k-intervals.
 !  unit: cm^2/gm
 
-  DATA xk/                                                              &
+  data xk/                                                              &
       0.0010, 0.0133, 0.0422, 0.1334, 0.4217,                           &
       1.334,  5.623,  31.62,  177.8,  1000.0/
 
 !-----water vapor k-distribution function,
 !  the sum of hk is 0.52926. unit: fraction
 
-  DATA hk/                                                              &
+  data hk/                                                              &
       .01074,.08236,.20673,  .00360,.01157,.03497,                      &
       .00411,.01133,.03011,  .00421,.01143,.02260,                      &
       .00389,.01240,.01336,  .00326,.01258,.00696,                      &
@@ -951,15 +951,15 @@ SUBROUTINE solir(idim,jdim,                                             &
 !-----aerosol single-scattering albedo and asymmetry factor
 
 !  data ssaal,asyal/nband*0.999,nband*0.850/
-  DATA ssaal/0.75,0.55,0.90/
-  DATA asyal/0.40,0.50,0.60/
+  data ssaal/0.75,0.55,0.90/
+  data asyal/0.40,0.50,0.60/
 
 !  data ssaal,asyal/nband*0.400,nband*0.500/
 
 !-----coefficients for computing the single scattering albedo of
 !  ice clouds from ssa=1-(aia(*,1)+aia(*,2)*reff+aia(*,3)*reff**2)
 
-  DATA aia/                                                             &
+  data aia/                                                             &
       .08938331, .00215346,-.00000260,                                  &
       .00299387, .00073709, .00000746,                                  &
       -.00001038,-.00000134, .00000000/
@@ -967,7 +967,7 @@ SUBROUTINE solir(idim,jdim,                                             &
 !-----coefficients for computing the single scattering albedo of
 !  liquid clouds from ssa=1-(awa(*,1)+awa(*,2)*reff+awa(*,3)*reff**2)
 
-  DATA awa/                                                             &
+  data awa/                                                             &
       .01209318,-.00019934, .00000007,                                  &
       .01784739, .00088757, .00000845,                                  &
       -.00036910,-.00000650,-.00000004/
@@ -975,7 +975,7 @@ SUBROUTINE solir(idim,jdim,                                             &
 !-----coefficients for computing the asymmetry factor of ice clouds
 !  from asycl=aig(*,1)+aig(*,2)*reff+aig(*,3)*reff**2
 
-  DATA aig/                                                             &
+  data aig/                                                             &
       .84090400, .76098937, .74935228,                                  &
       .00126222, .00141864, .00119715,                                  &
       -.00000385,-.00000396,-.00000367/
@@ -983,7 +983,7 @@ SUBROUTINE solir(idim,jdim,                                             &
 !-----coefficients for computing the asymmetry factor of liquid clouds
 !  from asycl=awg(*,1)+awg(*,2)*reff+awg(*,3)*reff**2
 
-  DATA awg/                                                             &
+  data awg/                                                             &
       .83530748, .74513197, .79375035,                                  &
       .00257181, .01370071, .00832441,                                  &
       .00005519,-.00038203,-.00023263/
@@ -997,8 +997,8 @@ SUBROUTINE solir(idim,jdim,                                             &
 
 !-----initialize surface fluxes, reflectances, and transmittances
 
-  DO j= 1, n
-    DO i= 1, m
+  do j= 1, n
+    do i= 1, m
       fdirir(i,j)=0.0
       fdifir(i,j)=0.0
       rr(i,j,np+1,1)=rsirbm(i,j)
@@ -1011,26 +1011,26 @@ SUBROUTINE solir(idim,jdim,                                             &
       tt(i,j,np+1,2)=0.0
       ts(i,j,np+1,1)=0.0
       ts(i,j,np+1,2)=0.0
-    END DO
-  END DO
+    end do
+  end do
 
 !-----integration over spectral bands
 
-  DO ib=1,nband
+  do ib=1,nband
 
 !-----compute cloud single scattering albedo and asymmetry factor
 !  for a mixture of ice and liquid particles.
 
-    DO k= 1, np
+    do k= 1, np
 
-      DO j= 1, n
-        DO i= 1, m
+      do j= 1, n
+        do i= 1, m
 
           ssaclt(i,j)=1.0
           asyclt(i,j)=1.0
 
           taux=taucldi(i,j,k)+taucldl(i,j,k)
-          IF (taux > 0.05 .AND. fcld(i,j,k) > 0.01) THEN
+          if (taux > 0.05 .AND. fcld(i,j,k) > 0.01) then
 
             reff1=MIN(reffi(i,j,k),130.)
             reff2=MIN(reffl(i,j,k),20.0)
@@ -1045,32 +1045,32 @@ SUBROUTINE solir(idim,jdim,                                             &
             g2=(awg(ib,1)+(awg(ib,2)+awg(ib,3)*reff2)*reff2)*w2
             asyclt(i,j)=(g1+g2)/(w1+w2)
 
-          END IF
+          end if
 
-        END DO
-      END DO
+        end do
+      end do
 
-      DO j=1,n
-        DO i=1,m
+      do j=1,n
+        do i=1,m
           ssacl(i,j,k)=ssaclt(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           asycl(i,j,k)=asyclt(i,j)
-        END DO
-      END DO
+        end do
+      end do
 
-    END DO
+    end do
 
 !-----integration over the k-distribution function
 
-    DO ik=1,nk
+    do ik=1,nk
 
-      DO k= 1, np
+      do k= 1, np
 
-        DO j= 1, n
-          DO i= 1, m
+        do j= 1, n
+          do i= 1, m
 
             tauwv=xk(ik)*wh(i,j,k)
 
@@ -1086,17 +1086,17 @@ SUBROUTINE solir(idim,jdim,                                             &
             tauto=tausto
             ssato=ssatau/tauto+1.0E-8
 
-            IF (ssato > 0.001) THEN
+            if (ssato > 0.001) then
 
               ssato=MIN(ssato,0.999999)
               asyto=asysto/(ssato*tauto)
 
-              CALL deledd (tauto,ssato,asyto,csm(i,j),                  &
+              call deledd (tauto,ssato,asyto,csm(i,j),                  &
                            rr1t(i,j),tt1t(i,j),td1t(i,j))
 
-              CALL sagpol (tauto,ssato,asyto,rs1t(i,j),ts1t(i,j))
+              call sagpol (tauto,ssato,asyto,rs1t(i,j),ts1t(i,j))
 
-            ELSE
+            else
 
               td1t(i,j)=expmn(-tauto*csm(i,j))
               ts1t(i,j)=expmn(-1.66*tauto)
@@ -1104,11 +1104,11 @@ SUBROUTINE solir(idim,jdim,                                             &
               rr1t(i,j)=0.0
               rs1t(i,j)=0.0
 
-            END IF
+            end if
 
 !-----compute reflectance and transmittance for cloud layers
 
-            IF (tauclb(i,j,k) < 0.01) THEN
+            if (tauclb(i,j,k) < 0.01) then
 
               rr2t(i,j)=rr1t(i,j)
               tt2t(i,j)=tt1t(i,j)
@@ -1116,7 +1116,7 @@ SUBROUTINE solir(idim,jdim,                                             &
               rs2t(i,j)=rs1t(i,j)
               ts2t(i,j)=ts1t(i,j)
 
-            ELSE
+            else
 
               tauto=tausto+tauclb(i,j,k)
               ssato=(ssatau+ssacl(i,j,k)*tauclb(i,j,k))/tauto+1.0E-8
@@ -1124,7 +1124,7 @@ SUBROUTINE solir(idim,jdim,                                             &
               asyto=(asysto+asycl(i,j,k)*ssacl(i,j,k)*tauclb(i,j,k))/   &
                     (ssato*tauto)
 
-              CALL deledd (tauto,ssato,asyto,csm(i,j),                  &
+              call deledd (tauto,ssato,asyto,csm(i,j),                  &
                            rr2t(i,j),tt2t(i,j),td2t(i,j))
 
               tauto=tausto+tauclf(i,j,k)
@@ -1133,86 +1133,86 @@ SUBROUTINE solir(idim,jdim,                                             &
               asyto=(asysto+asycl(i,j,k)*ssacl(i,j,k)*tauclf(i,j,k))/   &
                     (ssato*tauto)
 
-              CALL sagpol (tauto,ssato,asyto,rs2t(i,j),ts2t(i,j))
+              call sagpol (tauto,ssato,asyto,rs2t(i,j),ts2t(i,j))
 
-            END IF
+            end if
 
-          END DO
-        END DO
+          end do
+        end do
 
-        DO j=1,n
-          DO i=1,m
+        do j=1,n
+          do i=1,m
             rr(i,j,k,1)=rr1t(i,j)
-          END DO
-        END DO
-        DO j=1,n
-          DO i=1,m
+          end do
+        end do
+        do j=1,n
+          do i=1,m
             tt(i,j,k,1)=tt1t(i,j)
-          END DO
-        END DO
-        DO j=1,n
-          DO i=1,m
+          end do
+        end do
+        do j=1,n
+          do i=1,m
             td(i,j,k,1)=td1t(i,j)
-          END DO
-        END DO
-        DO j=1,n
-          DO i=1,m
+          end do
+        end do
+        do j=1,n
+          do i=1,m
             rs(i,j,k,1)=rs1t(i,j)
-          END DO
-        END DO
-        DO j=1,n
-          DO i=1,m
+          end do
+        end do
+        do j=1,n
+          do i=1,m
             ts(i,j,k,1)=ts1t(i,j)
-          END DO
-        END DO
+          end do
+        end do
 
-        DO j=1,n
-          DO i=1,m
+        do j=1,n
+          do i=1,m
             rr(i,j,k,2)=rr2t(i,j)
-          END DO
-        END DO
-        DO j=1,n
-          DO i=1,m
+          end do
+        end do
+        do j=1,n
+          do i=1,m
             tt(i,j,k,2)=tt2t(i,j)
-          END DO
-        END DO
-        DO j=1,n
-          DO i=1,m
+          end do
+        end do
+        do j=1,n
+          do i=1,m
             td(i,j,k,2)=td2t(i,j)
-          END DO
-        END DO
-        DO j=1,n
-          DO i=1,m
+          end do
+        end do
+        do j=1,n
+          do i=1,m
             rs(i,j,k,2)=rs2t(i,j)
-          END DO
-        END DO
-        DO j=1,n
-          DO i=1,m
+          end do
+        end do
+        do j=1,n
+          do i=1,m
             ts(i,j,k,2)=ts2t(i,j)
-          END DO
-        END DO
+          end do
+        end do
 
-      END DO
+      end do
 
 !-----flux calculations
 
-      CALL cldflx (m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                    &
+      call cldflx (m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                    &
                    fclr,fall,fsdir,fsdif,                               &
                    tem2d1,tem2d2,tem2d3,tem2d4,tem2d5,                  &
                    tem3d, tem5d1,tem5d2,tem5d3,tem5d4,tem5d5)
 
-      DO k= 1, np+1
-        DO j= 1, n
-          DO i= 1, m
+      do k= 1, np+1
+        do j= 1, n
+          do i= 1, m
             flx(i,j,k) = flx(i,j,k)+fall(i,j,k)*hk(ib,ik)
-          END DO
-        END DO
-        DO j= 1, n
-          DO i= 1, m
+          end do
+        end do
+        do j= 1, n
+          do i= 1, m
             flc(i,j,k) = flc(i,j,k)+fclr(i,j,k)*hk(ib,ik)
-          END DO
-        END DO
-      END DO
+          end do
+        end do
+      end do
 
 !  write (6,'(a/2a3,2a15)') 'Flux for IR',
 !    :  'ib','k','dflxIR','flxIR'
@@ -1221,18 +1221,18 @@ SUBROUTINE solir(idim,jdim,                                             &
 !    :  ib,k,fall(2,2,k+1)-fall(2,2,k),fall(2,2,k)
 !  ENDDO
 
-      DO j= 1, n
-        DO i= 1, m
+      do j= 1, n
+        do i= 1, m
           fdirir(i,j) = fdirir(i,j)+fsdir(i,j)*hk(ib,ik)
           fdifir(i,j) = fdifir(i,j)+fsdif(i,j)*hk(ib,ik)
-        END DO
-      END DO
+        end do
+      end do
 
-    END DO
-  END DO
+    end do
+  end do
 
-  RETURN
-END SUBROUTINE solir
+  return
+end subroutine solir
 !
 !
 !##################################################################
@@ -1251,7 +1251,7 @@ END SUBROUTINE solir
 !##################################################################
 !
 
-SUBROUTINE soluv(idim,jdim,                                             &
+subroutine soluv(idim,jdim,                                             &
            m,n,np,oh,dp,taucldi,taucldl,tauclb,tauclf,reffi,reffl,      &
            ict,icb,fcld,cc,taual,csm,rsuvbm,rsuvdf,                     &
            flx,flc,fdirpar,fdifpar,                                     &
@@ -1378,129 +1378,129 @@ SUBROUTINE soluv(idim,jdim,                                             &
 !-----------------------------------------------------------------------
 !
   use radlib3d_module, only : deledd,sagpol
-  IMPLICIT NONE
+  implicit none
 
 !-----input parameters
 
-  INTEGER :: idim,jdim
-  INTEGER :: m,n,np,ict,icb
+  integer :: idim,jdim
+  integer :: m,n,np,ict,icb
 
-  REAL :: taucldi(idim,jdim,np)
-  REAL :: taucldl(idim,jdim,np)
-  REAL :: reffi(idim,jdim,np)
-  REAL :: reffl(idim,jdim,np)
-  REAL :: fcld(idim,jdim,np)
-  REAL :: taual(idim,jdim,np)
-  REAL :: rsuvbm(idim,jdim)
-  REAL :: rsuvdf(idim,jdim)
+  real :: taucldi(idim,jdim,np)
+  real :: taucldl(idim,jdim,np)
+  real :: reffi(idim,jdim,np)
+  real :: reffl(idim,jdim,np)
+  real :: fcld(idim,jdim,np)
+  real :: taual(idim,jdim,np)
+  real :: rsuvbm(idim,jdim)
+  real :: rsuvdf(idim,jdim)
 
-  REAL :: tauclb(m,n,np)
-  REAL :: tauclf(m,n,np)
-  REAL :: cc(m,n,3)
-  REAL :: oh(m,n,np)
-  REAL :: dp(m,n,np)
-  REAL :: csm(m,n)
+  real :: tauclb(m,n,np)
+  real :: tauclf(m,n,np)
+  real :: cc(m,n,3)
+  real :: oh(m,n,np)
+  real :: dp(m,n,np)
+  real :: csm(m,n)
 
 !-----output (updated) parameter
 
-  REAL :: flx(idim,jdim,np+1)
-  REAL :: flc(idim,jdim,np+1)
-  REAL :: fdirpar(idim,jdim)
-  REAL :: fdifpar(idim,jdim)
-  REAL :: fdiruv(idim,jdim) ! MS add
-  REAL :: fdifuv(idim,jdim) ! MS add
+  real :: flx(idim,jdim,np+1)
+  real :: flc(idim,jdim,np+1)
+  real :: fdirpar(idim,jdim)
+  real :: fdifpar(idim,jdim)
+  real :: fdiruv(idim,jdim) ! MS add
+  real :: fdifuv(idim,jdim) ! MS add
 
 !-----static parameters
 
-  INTEGER :: nband
-  PARAMETER (nband=8)
-  REAL :: hk(nband)
-  REAL :: xk(nband)
-  REAL :: ry(nband)
-  REAL :: asyal(nband)
-  REAL :: ssaal(nband)
-  REAL :: aig(3)
-  REAL :: awg(3)
+  integer :: nband
+  parameter (nband=8)
+  real :: hk(nband)
+  real :: xk(nband)
+  real :: ry(nband)
+  real :: asyal(nband)
+  real :: ssaal(nband)
+  real :: aig(3)
+  real :: awg(3)
 
 !-----temporary array
 
-  REAL :: fsdir(m,n)
-  REAL :: fsdif(m,n)
-  REAL :: asyclt(m,n)
-  REAL :: rr1t(m,n)
-  REAL :: tt1t(m,n)
-  REAL :: td1t(m,n)
-  REAL :: rs1t(m,n)
-  REAL :: ts1t(m,n)
-  REAL :: rr2t(m,n)
-  REAL :: tt2t(m,n)
-  REAL :: td2t(m,n)
-  REAL :: rs2t(m,n)
-  REAL :: ts2t(m,n)
+  real :: fsdir(m,n)
+  real :: fsdif(m,n)
+  real :: asyclt(m,n)
+  real :: rr1t(m,n)
+  real :: tt1t(m,n)
+  real :: td1t(m,n)
+  real :: rs1t(m,n)
+  real :: ts1t(m,n)
+  real :: rr2t(m,n)
+  real :: tt2t(m,n)
+  real :: td2t(m,n)
+  real :: rs2t(m,n)
+  real :: ts2t(m,n)
 
-  REAL :: asycl(m,n,np)
-  REAL :: fall(m,n,np+1)
-  REAL :: fclr(m,n,np+1)
+  real :: asycl(m,n,np)
+  real :: fall(m,n,np+1)
+  real :: fclr(m,n,np+1)
 
-  REAL :: td(m,n,np+1,2)
-  REAL :: rr(m,n,np+1,2)
-  REAL :: tt(m,n,np+1,2)
-  REAL :: rs(m,n,np+1,2)
-  REAL :: ts(m,n,np+1,2)
+  real :: td(m,n,np+1,2)
+  real :: rr(m,n,np+1,2)
+  real :: tt(m,n,np+1,2)
+  real :: rs(m,n,np+1,2)
+  real :: ts(m,n,np+1,2)
 
 !-----temporary arrays used in subroutine cldflx
 
-  REAL :: tem2d1(m,n)
-  REAL :: tem2d2(m,n)
-  REAL :: tem2d3(m,n)
-  REAL :: tem2d4(m,n)
-  REAL :: tem2d5(m,n)
+  real :: tem2d1(m,n)
+  real :: tem2d2(m,n)
+  real :: tem2d3(m,n)
+  real :: tem2d4(m,n)
+  real :: tem2d5(m,n)
 
-  REAL :: tem3d (m,n,np+1)
+  real :: tem3d (m,n,np+1)
 
-  REAL :: tem5d1(m,n,np+1,2,2)
-  REAL :: tem5d2(m,n,np+1,2,2)
-  REAL :: tem5d3(m,n,np+1,2,2)
-  REAL :: tem5d4(m,n,np+1,2,2)
-  REAL :: tem5d5(m,n,np+1,2,2)
+  real :: tem5d1(m,n,np+1,2,2)
+  real :: tem5d2(m,n,np+1,2,2)
+  real :: tem5d3(m,n,np+1,2,2)
+  real :: tem5d4(m,n,np+1,2,2)
+  real :: tem5d5(m,n,np+1,2,2)
 
 !-----temporary variables
 
-  INTEGER :: i,j,k,ib
-  REAL :: taurs,tauoz,tausto,ssatau,asysto,tauto,ssato,asyto
-  REAL :: taux,reff1,reff2,g1,g2
+  integer :: i,j,k,ib
+  real :: taurs,tauoz,tausto,ssatau,asysto,tauto,ssato,asyto
+  real :: taux,reff1,reff2,g1,g2
 
 !-----hk is the fractional extra-terrestrial solar flux.
 !  the sum of hk is 0.47074.
 
-  DATA hk/.00057, .00367, .00083, .00417,                               &
+  data hk/.00057, .00367, .00083, .00417,                               &
           .00600, .00556, .05913, .39081/
 
 !-----xk is the ozone absorption coefficient. unit: /(cm-atm)stp
 
-  DATA xk /30.47, 187.2,  301.9,   42.83,                               &
+  data xk /30.47, 187.2,  301.9,   42.83,                               &
            7.09,  1.25,   0.0345,  0.0539/
 
 !-----ry is the extinction coefficient for Rayleigh scattering.
 !  unit: /mb.
 
-  DATA ry /.00604, .00170, .00222, .00132,                              &
+  data ry /.00604, .00170, .00222, .00132,                              &
            .00107, .00091, .00055, .00012/
 
 !-----aerosol single-scattering albedo and asymmetry factor
 
 !  data ssaal,asyal/nband*0.999,nband*0.850/
-  DATA ssaal,asyal/nband*0.960,nband*0.700/
+  data ssaal,asyal/nband*0.960,nband*0.700/
 
 !-----coefficients for computing the asymmetry factor of ice clouds
 !  from asycl=aig(*,1)+aig(*,2)*reff+aig(*,3)*reff**2
 
-  DATA aig/.74625000,.00105410,-.00000264/
+  data aig/.74625000,.00105410,-.00000264/
 
 !-----coefficients for computing the asymmetry factor of liquid
 !  clouds from asycl=awg(*,1)+awg(*,2)*reff+awg(*,3)*reff**2
 
-  DATA awg/.82562000,.00529000,-.00014866/
+  data awg/.82562000,.00529000,-.00014866/
 
 !-----initialize surface reflectances and transmittances
 
@@ -1511,8 +1511,8 @@ SUBROUTINE soluv(idim,jdim,                                             &
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
-  DO j= 1, n
-    DO i= 1, m
+  do j= 1, n
+    do i= 1, m
       fdirpar(i,j)=0.0
       fdifpar(i,j)=0.0
       fdiruv(i,j)=0.0 ! MS add
@@ -1527,21 +1527,21 @@ SUBROUTINE soluv(idim,jdim,                                             &
       tt(i,j,np+1,2)=0.0
       ts(i,j,np+1,1)=0.0
       ts(i,j,np+1,2)=0.0
-    END DO
-  END DO
+    end do
+  end do
 
 !-----compute cloud asymmetry factor for a mixture of
 !  liquid and ice particles.  unit of reff is micrometers.
 
-  DO k= 1, np
+  do k= 1, np
 
-    DO j= 1, n
-      DO i= 1, m
+    do j= 1, n
+      do i= 1, m
 
         asyclt(i,j)=1.0
 
         taux=taucldi(i,j,k)+taucldl(i,j,k)
-        IF (taux > 0.05 .AND. fcld(i,j,k) > 0.01) THEN
+        if (taux > 0.05 .AND. fcld(i,j,k) > 0.01) then
 
           reff1=MIN(reffi(i,j,k),130.)
           reff2=MIN(reffl(i,j,k),20.0)
@@ -1550,27 +1550,27 @@ SUBROUTINE soluv(idim,jdim,                                             &
           g2=(awg(1)+(awg(2)+awg(3)*reff2)*reff2)*taucldl(i,j,k)
           asyclt(i,j)=(g1+g2)/taux
 
-        END IF
+        end if
 
-      END DO
-    END DO
+      end do
+    end do
 
-    DO j=1,n
-      DO i=1,m
+    do j=1,n
+      do i=1,m
         asycl(i,j,k)=asyclt(i,j)
-      END DO
-    END DO
+      end do
+    end do
 
-  END DO
+  end do
 
 !-----integration over spectral bands
 
-  DO ib=1,nband
+  do ib=1,nband
 
-    DO k= 1, np
+    do k= 1, np
 
-      DO j= 1, n
-        DO i= 1, m
+      do j= 1, n
+        do i= 1, m
 
 !-----compute ozone and rayleigh optical thicknesses
 
@@ -1591,14 +1591,14 @@ SUBROUTINE soluv(idim,jdim,                                             &
           ssato=MIN(ssato,0.999999)
           asyto=asysto/(ssato*tauto)
 
-          CALL deledd (tauto,ssato,asyto,csm(i,j),                      &
+          call deledd (tauto,ssato,asyto,csm(i,j),                      &
                        rr1t(i,j),tt1t(i,j),td1t(i,j))
 
-          CALL sagpol (tauto,ssato,asyto,rs1t(i,j),ts1t(i,j))
+          call sagpol (tauto,ssato,asyto,rs1t(i,j),ts1t(i,j))
 
 !-----compute reflectance and transmittance for cloud layers
 
-          IF (tauclb(i,j,k) < 0.01) THEN
+          if (tauclb(i,j,k) < 0.01) then
 
             rr2t(i,j)=rr1t(i,j)
             tt2t(i,j)=tt1t(i,j)
@@ -1606,14 +1606,14 @@ SUBROUTINE soluv(idim,jdim,                                             &
             rs2t(i,j)=rs1t(i,j)
             ts2t(i,j)=ts1t(i,j)
 
-          ELSE
+          else
 
             tauto=tausto+tauclb(i,j,k)
             ssato=(ssatau+tauclb(i,j,k))/tauto+1.0E-8
             ssato=MIN(ssato,0.999999)
             asyto=(asysto+asycl(i,j,k)*tauclb(i,j,k))/(ssato*tauto)
 
-            CALL deledd (tauto,ssato,asyto,csm(i,j),                    &
+            call deledd (tauto,ssato,asyto,csm(i,j),                    &
                          rr2t(i,j),tt2t(i,j),td2t(i,j))
 
             tauto=tausto+tauclf(i,j,k)
@@ -1621,86 +1621,86 @@ SUBROUTINE soluv(idim,jdim,                                             &
             ssato=MIN(ssato,0.999999)
             asyto=(asysto+asycl(i,j,k)*tauclf(i,j,k))/(ssato*tauto)
 
-            CALL sagpol (tauto,ssato,asyto,rs2t(i,j),ts2t(i,j))
+            call sagpol (tauto,ssato,asyto,rs2t(i,j),ts2t(i,j))
 
-          END IF
+          end if
 
-        END DO
-      END DO
+        end do
+      end do
 
-      DO j=1,n
-        DO i=1,m
+      do j=1,n
+        do i=1,m
           rr(i,j,k,1)=rr1t(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           tt(i,j,k,1)=tt1t(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           td(i,j,k,1)=td1t(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           rs(i,j,k,1)=rs1t(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           ts(i,j,k,1)=ts1t(i,j)
-        END DO
-      END DO
+        end do
+      end do
 
-      DO j=1,n
-        DO i=1,m
+      do j=1,n
+        do i=1,m
           rr(i,j,k,2)=rr2t(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           tt(i,j,k,2)=tt2t(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           td(i,j,k,2)=td2t(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           rs(i,j,k,2)=rs2t(i,j)
-        END DO
-      END DO
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+      do j=1,n
+        do i=1,m
           ts(i,j,k,2)=ts2t(i,j)
-        END DO
-      END DO
+        end do
+      end do
 
-    END DO
+    end do
 
 !-----flux calculations
 
-    CALL cldflx (m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                      &
+    call cldflx (m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                      &
                  fclr,fall,fsdir,fsdif,                                 &
                  tem2d1,tem2d2,tem2d3,tem2d4,tem2d5,                    &
                  tem3d, tem5d1,tem5d2,tem5d3,tem5d4,tem5d5)
 
-    DO k= 1, np+1
-      DO j= 1, n
-        DO i= 1, m
+    do k= 1, np+1
+      do j= 1, n
+        do i= 1, m
           flx(i,j,k)=flx(i,j,k)+fall(i,j,k)*hk(ib)
-        END DO
-      END DO
-      DO j= 1, n
-        DO i= 1, m
+        end do
+      end do
+      do j= 1, n
+        do i= 1, m
           flc(i,j,k)=flc(i,j,k)+fclr(i,j,k)*hk(ib)
-        END DO
-      END DO
-    END DO
+        end do
+      end do
+    end do
 
 !  write (6,'(a/2a3,2a15)') 'Flux for PAR',
 !    :  'ib','k','dflxpa','flxpa'
@@ -1710,28 +1710,28 @@ SUBROUTINE soluv(idim,jdim,                                             &
 !  ENDDO
 
    ! MS change for energy conservation  
-    IF(ib == 8) THEN
-      DO j=1,n
-        DO i=1,m
+    if(ib == 8) then
+      do j=1,n
+        do i=1,m
 !!!          fdirpar(i,j)=fsdir(i,j)*hk(ib)
 !!!          fdifpar(i,j)=fsdif(i,j)*hk(ib)
           fdirpar(i,j)= fdirpar(i,j) + fsdir(i,j)*hk(ib)
           fdifpar(i,j)= fdifpar(i,j) + fsdif(i,j)*hk(ib)
-        END DO
-      END DO
-    ELSE ! MS addition to count the UV radiation hitting the ground
-      DO j=1,n
-        DO i=1,m
+        end do
+      end do
+    else ! MS addition to count the UV radiation hitting the ground
+      do j=1,n
+        do i=1,m
           fdiruv(i,j)= fdiruv(i,j) + fsdir(i,j)*hk(ib)
           fdifuv(i,j)= fdifuv(i,j) + fsdif(i,j)*hk(ib)
-        END DO
-      END DO
-    END IF
+        end do
+      end do
+    end if
 
-  END DO
+  end do
 
-  RETURN
-END SUBROUTINE soluv
+  return
+end subroutine soluv
 !
 !
 !##################################################################
@@ -1750,7 +1750,7 @@ END SUBROUTINE soluv
 !##################################################################
 !
 
-SUBROUTINE cldscale(idim,jdim,                                          &
+subroutine cldscale(idim,jdim,                                          &
            m,n,np,cosz,fcld,taucldi,taucldl,ict,icb,                    &
            cc,tauclb,tauclf)
 !
@@ -1819,36 +1819,36 @@ SUBROUTINE cldscale(idim,jdim,                                          &
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
 !-----input parameters
 
-  INTEGER :: idim,jdim
-  INTEGER :: m,n,np,ict,icb
+  integer :: idim,jdim
+  integer :: m,n,np,ict,icb
 
-  REAL :: cosz(idim,jdim)
-  REAL :: fcld(idim,jdim,np)
-  REAL :: taucldi(idim,jdim,np)
-  REAL :: taucldl(idim,jdim,np)
+  real :: cosz(idim,jdim)
+  real :: fcld(idim,jdim,np)
+  real :: taucldi(idim,jdim,np)
+  real :: taucldl(idim,jdim,np)
 
 !-----output parameters
 
-  REAL :: cc(m,n,3)
-  REAL :: tauclb(m,n,np)
-  REAL :: tauclf(m,n,np)
+  real :: cc(m,n,3)
+  real :: tauclb(m,n,np)
+  real :: tauclf(m,n,np)
 
 !-----temporary variables
 
-  INTEGER :: i,j,k,im,it,ia,kk
-  REAL :: fm,ft,fa,xai,taux
+  integer :: i,j,k,im,it,ia,kk
+  real :: fm,ft,fa,xai,taux
 
 !-----pre-computed table
 
-  INTEGER :: nm,nt,na
-  PARAMETER (nm=11,nt=9,na=11)
-  REAL :: dm,dt,da,t1
+  integer :: nm,nt,na
+  parameter (nm=11,nt=9,na=11)
+  real :: dm,dt,da,t1
 !!!  REAL :: dm,dt,da,t1,caib(nm,nt,na),caif(nt,na)
-  PARAMETER (dm=0.1,dt=0.30103,da=0.1,t1=-0.9031)
+  parameter (dm=0.1,dt=0.30103,da=0.1,t1=-0.9031)
 
 !-----include the pre-computed table for cai
 
@@ -1871,32 +1871,32 @@ SUBROUTINE cldscale(idim,jdim,                                          &
 
 !!!  print *,'  ict,icb = ',ict,icb
 
-    DO j=1,n
-    DO i=1,m
+    do j=1,n
+    do i=1,m
       cc(i,j,1)=0.0
-      DO k=1,ict-1
+      do k=1,ict-1
         cc(i,j,1)=MAX(cc(i,j,1),fcld(i,j,k))
-      END DO
-    END DO
-    END DO
+      end do
+    end do
+    end do
 
-    DO j=1,n
-    DO i=1,m
+    do j=1,n
+    do i=1,m
       cc(i,j,2)=0.0
-      DO k=ict,icb-1
+      do k=ict,icb-1
         cc(i,j,2)=MAX(cc(i,j,2),fcld(i,j,k))
-      END DO
-    END DO
-    END DO
+      end do
+    end do
+    end do
 
-    DO j=1,n
-    DO i=1,m
+    do j=1,n
+    do i=1,m
       cc(i,j,3)=0.0
-      DO k=icb,np
+      do k=icb,np
         cc(i,j,3)=MAX(cc(i,j,3),fcld(i,j,k))
-      END DO
-    END DO
-    END DO
+      end do
+    end do
+    end do
 
 !!!  print *,cc(1,1,1),cc(1,1,2),cc(1,1,3)
 
@@ -1904,24 +1904,24 @@ SUBROUTINE cldscale(idim,jdim,                                          &
 !  taucldi(i,j,k) is the optical thickness for ice particles, and
 !  taucldl(i,j,k) is the optical thickness for liquid particles.
 
-  DO k=1,np
+  do k=1,np
 
-    IF(k < ict) THEN
+    if(k < ict) then
       kk=1
-    ELSE IF(k >= ict .AND. k < icb) THEN
+    else if(k >= ict .AND. k < icb) then
       kk=2
-    ELSE
+    else
       kk=3
-    END IF
+    end if
 
-    DO j=1,n
-      DO i=1,m
+    do j=1,n
+      do i=1,m
 
         tauclb(i,j,k) = 0.0
         tauclf(i,j,k) = 0.0
 
         taux=taucldi(i,j,k)+taucldl(i,j,k)
-        IF (taux > 0.05 .AND. fcld(i,j,k) > 0.01) THEN
+        if (taux > 0.05 .AND. fcld(i,j,k) > 0.01) then
 
 !-----normalize cloud cover
 
@@ -1984,14 +1984,14 @@ SUBROUTINE cldscale(idim,jdim,                                          &
 
           tauclf(i,j,k) = taux*xai
 
-        END IF
+        end if
 
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
-  RETURN
-END SUBROUTINE cldscale
+  return
+end subroutine cldscale
 !
 !
 !##################################################################
@@ -2010,7 +2010,7 @@ END SUBROUTINE cldscale
 !##################################################################
 !
 
-SUBROUTINE flxco2(m,n,np,swc,swh,csm,df)
+subroutine flxco2(m,n,np,swc,swh,csm,df)
 !
 !-----------------------------------------------------------------------
 !
@@ -2046,25 +2046,25 @@ SUBROUTINE flxco2(m,n,np,swc,swh,csm,df)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
 !-----input parameters
 
-  INTEGER :: m,n,np
+  integer :: m,n,np
 
-  REAL :: csm(m,n)
-  REAL :: swc(m,n,np+1)
-  REAL :: swh(m,n,np+1)
+  real :: csm(m,n)
+  real :: swc(m,n,np+1)
+  real :: swh(m,n,np+1)
 !!!  REAL :: cah(22,19)
 
 !-----output (undated) parameter
 
-  REAL :: df(m,n,np+1)
+  real :: df(m,n,np+1)
 
 !-----temporary variables
 
-  INTEGER :: i,j,k,ic,iw
-  REAL :: xx,CLOG,wlog,dc,dw,x1,x2,y2
+  integer :: i,j,k,ic,iw
+  real :: xx,CLOG,wlog,dc,dw,x1,x2,y2
 
 !********************************************************************
 !-----include co2 look-up table
@@ -2089,36 +2089,36 @@ SUBROUTINE flxco2(m,n,np,swc,swh,csm,df)
 !  write (6,'(a/3a3,7a10)') 'Flux reduction due to co2, i=j=3',
 !    :'k','ic','iw','x1','y2','x1-y2','ddf','df','swc','swh'
 
-  DO k= 2, np+1
-    DO j= 1, n
-      DO i= 1, m
+  do k= 2, np+1
+    do j= 1, n
+      do i= 1, m
         xx=1./.3
         CLOG=LOG10(swc(i,j,k)*csm(i,j))
         wlog=LOG10(swh(i,j,k)*csm(i,j))
         ic=INT( (CLOG+3.15)*xx+1.)
         iw=INT( (wlog+4.15)*xx+1.)
-        IF(ic < 2)ic=2
-        IF(iw < 2)iw=2
-        IF(ic > 22)ic=22
-        IF(iw > 19)iw=19
+        if(ic < 2)ic=2
+        if(iw < 2)iw=2
+        if(ic > 22)ic=22
+        if(iw > 19)iw=19
         dc=CLOG-FLOAT(ic-2)*.3+3.
         dw=wlog-FLOAT(iw-2)*.3+4.
         x1=cah(1,iw-1)+(cah(1,iw)-cah(1,iw-1))*xx*dw
         x2=cah(ic-1,iw-1)+(cah(ic-1,iw)-cah(ic-1,iw-1))*xx*dw
         y2=x2+(cah(ic,iw-1)-cah(ic-1,iw-1))*xx*dc
-        IF (x1 < y2) x1=y2
+        if (x1 < y2) x1=y2
         df(i,j,k)=df(i,j,k)+0.0343*(x1-y2)
-      END DO
-    END DO
+      end do
+    end do
 
 !    write (6,'(3i3,7f10.5)')
 !    :  k,ic,iw,x1,y2,x1-y2,
 !    :  df(3,3,k)-df(3,3,k-1),df (3,3,k),swc(3,3,k),swh(3,3,k)
 
-  END DO
+  end do
 
-  RETURN
-END SUBROUTINE flxco2
+  return
+end subroutine flxco2
 !
 !
 !##################################################################
@@ -2137,7 +2137,7 @@ END SUBROUTINE flxco2
 !##################################################################
 !
 
-SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
+subroutine cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
            fclr,fall,fsdir,fsdif,                                       &
            ch,cm,ct,fdndir,fdndif,                                      &
            flxdn,                                                       &
@@ -2201,47 +2201,47 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
 !-----input parameters
 
-  INTEGER :: m,n,np,ict,icb
+  integer :: m,n,np,ict,icb
 
-  REAL :: rr(m,n,np+1,2)
-  REAL :: tt(m,n,np+1,2)
-  REAL :: td(m,n,np+1,2)
-  REAL :: rs(m,n,np+1,2)
-  REAL :: ts(m,n,np+1,2)
-  REAL :: cc(m,n,3)
+  real :: rr(m,n,np+1,2)
+  real :: tt(m,n,np+1,2)
+  real :: td(m,n,np+1,2)
+  real :: rs(m,n,np+1,2)
+  real :: ts(m,n,np+1,2)
+  real :: cc(m,n,3)
 
 !-----output parameters
 
-  REAL :: fclr(m,n,np+1)
-  REAL :: fall(m,n,np+1)
-  REAL :: fsdir(m,n)
-  REAL :: fsdif(m,n)
+  real :: fclr(m,n,np+1)
+  real :: fall(m,n,np+1)
+  real :: fsdir(m,n)
+  real :: fsdif(m,n)
 
 !-----temporary array
 
-  REAL :: ch(m,n)
-  REAL :: cm(m,n)
-  REAL :: ct(m,n)
-  REAL :: fdndir(m,n)
-  REAL :: fdndif(m,n)
+  real :: ch(m,n)
+  real :: cm(m,n)
+  real :: ct(m,n)
+  real :: fdndir(m,n)
+  real :: fdndif(m,n)
 
-  REAL :: flxdn(m,n,np+1)
+  real :: flxdn(m,n,np+1)
 
-  REAL :: rra(m,n,np+1,2,2)
-  REAL :: tta(m,n,np+1,2,2)
-  REAL :: tda(m,n,np+1,2,2)
-  REAL :: rsa(m,n,np+1,2,2)
-  REAL :: rxa(m,n,np+1,2,2)
+  real :: rra(m,n,np+1,2,2)
+  real :: tta(m,n,np+1,2,2)
+  real :: tda(m,n,np+1,2,2)
+  real :: rsa(m,n,np+1,2,2)
+  real :: rxa(m,n,np+1,2,2)
 
 !-----temporary variables
 
-  INTEGER :: i,j,k,ih,im,is
-  REAL :: fupdif
-  REAL :: denm,xx
+  integer :: i,j,k,ih,im,is
+  real :: fupdif
+  real :: denm,xx
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
@@ -2250,14 +2250,14 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
 
-    jloop:  DO j=1,n
-    iloop:  DO i=1,m
+    jloop:  do j=1,n
+    iloop:  do i=1,m
 
 !-----initialize all-sky flux (fall) and surface downward fluxes
 
-  DO k=1,np+1
+  do k=1,np+1
         fall(i,j,k)=0.0
-  END DO
+  end do
 
       fsdir(i,j)=0.0
       fsdif(i,j)=0.0
@@ -2274,7 +2274,7 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
 !-----for high clouds. indices 1 and 2 denote clear and cloudy
 !  situations, respectively.
 
-  DO ih=1,2
+  do ih=1,2
 
         tda(i,j,1,ih,1)=td(i,j,1,ih)
         tta(i,j,1,ih,1)=tt(i,j,1,ih)
@@ -2282,7 +2282,7 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
         tda(i,j,1,ih,2)=td(i,j,1,ih)
         tta(i,j,1,ih,2)=tt(i,j,1,ih)
         rsa(i,j,1,ih,2)=rs(i,j,1,ih)
-        DO k= 2, ict-1
+        do k= 2, ict-1
           denm = ts(i,j,k,ih)/( 1.-rsa(i,j,k-1,ih,1)*rs(i,j,k,ih))
           tda(i,j,k,ih,1)= tda(i,j,k-1,ih,1)*td(i,j,k,ih)
           tta(i,j,k,ih,1)= tda(i,j,k-1,ih,1)*tt(i,j,k,ih)               &
@@ -2293,13 +2293,13 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
           tda(i,j,k,ih,2)= tda(i,j,k,ih,1)
           tta(i,j,k,ih,2)= tta(i,j,k,ih,1)
           rsa(i,j,k,ih,2)= rsa(i,j,k,ih,1)
-        END DO
+        end do
 
 !-----for middle clouds
 
-    DO im=1,2
+    do im=1,2
 
-      DO k= ict, icb-1
+      do k= ict, icb-1
             denm = ts(i,j,k,im)/( 1.-rsa(i,j,k-1,ih,im)*rs(i,j,k,im))
             tda(i,j,k,ih,im)= tda(i,j,k-1,ih,im)*td(i,j,k,im)
             tta(i,j,k,ih,im)= tda(i,j,k-1,ih,im)*tt(i,j,k,im)           &
@@ -2307,10 +2307,10 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
                           *rsa(i,j,k-1,ih,im)+tta(i,j,k-1,ih,im))*denm
             rsa(i,j,k,ih,im)= rs(i,j,k,im)+ts(i,j,k,im)                 &
                           *rsa(i,j,k-1,ih,im)*denm
-      END DO
+      end do
 
-    END DO
-  END DO
+    end do
+  end do
 
 !-----layers are added one at a time, going up from the surface.
 !  rra is the composite reflectance illuminated by beam radiation
@@ -2320,13 +2320,13 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
 
 !-----for the low clouds
 
-  DO is=1,2
+  do is=1,2
 
         rra(i,j,np+1,1,is)=rr(i,j,np+1,is)
         rxa(i,j,np+1,1,is)=rs(i,j,np+1,is)
         rra(i,j,np+1,2,is)=rr(i,j,np+1,is)
         rxa(i,j,np+1,2,is)=rs(i,j,np+1,is)
-        DO k=np,icb,-1
+        do k=np,icb,-1
           denm=ts(i,j,k,is)/( 1.-rs(i,j,k,is)*rxa(i,j,k+1,1,is) )
           rra(i,j,k,1,is)=rr(i,j,k,is)+(td(i,j,k,is)                    &
               *rra(i,j,k+1,1,is)+tt(i,j,k,is)*rxa(i,j,k+1,1,is))*denm
@@ -2334,76 +2334,76 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
               *rxa(i,j,k+1,1,is)*denm
           rra(i,j,k,2,is)=rra(i,j,k,1,is)
           rxa(i,j,k,2,is)=rxa(i,j,k,1,is)
-        END DO
+        end do
 
 !-----for middle clouds
 
-    DO im=1,2
+    do im=1,2
 
-      DO k= icb-1,ict,-1
+      do k= icb-1,ict,-1
             denm=ts(i,j,k,im)/( 1.-rs(i,j,k,im)*rxa(i,j,k+1,im,is) )
             rra(i,j,k,im,is)= rr(i,j,k,im)+(td(i,j,k,im)                &
                 *rra(i,j,k+1,im,is)+tt(i,j,k,im)*rxa(i,j,k+1,im,is))*denm
             rxa(i,j,k,im,is)= rs(i,j,k,im)+ts(i,j,k,im)                 &
                 *rxa(i,j,k+1,im,is)*denm
-      END DO
+      end do
 
-    END DO
-  END DO
+    end do
+  end do
 
 !-----integration over eight sky situations.
 !  ih, im, is denotes high, middle and low cloud groups.
 
-  DO ih=1,2
+  do ih=1,2
 
 !-----clear portion
 
-    IF(ih == 1) THEN
+    if(ih == 1) then
           ch(i,j)=1.0-cc(i,j,1)
 
-    ELSE
+    else
 
 !-----cloudy portion
 
           ch(i,j)=cc(i,j,1)
 
-    END IF
+    end if
 
-    DO im=1,2
+    do im=1,2
 
 !-----clear portion
 
-      IF(im == 1) THEN
+      if(im == 1) then
 
             cm(i,j)=ch(i,j)*(1.0-cc(i,j,2))
 
-      ELSE
+      else
 
 !-----cloudy portion
 
             cm(i,j)=ch(i,j)*cc(i,j,2)
 
-      END IF
+      end if
 
-      DO is=1,2
+      do is=1,2
 
 !-----clear portion
 
-        IF(is == 1) THEN
+        if(is == 1) then
 
               ct(i,j)=cm(i,j)*(1.0-cc(i,j,3))
 
-        ELSE
+        else
 
 !-----cloudy portion
 
               ct(i,j)=cm(i,j)*cc(i,j,3)
 
-        END IF
+        end if
 
 !-----add one layer at a time, going down.
 
-        DO k= icb, np
+        do k= icb, np
               denm = ts(i,j,k,is)/( 1.-rsa(i,j,k-1,ih,im)*rs(i,j,k,is) )
               tda(i,j,k,ih,im)= tda(i,j,k-1,ih,im)*td(i,j,k,is)
               tta(i,j,k,ih,im)=  tda(i,j,k-1,ih,im)*tt(i,j,k,is)        &
@@ -2411,17 +2411,17 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
                    *rsa(i,j,k-1,ih,im)+tta(i,j,k-1,ih,im))*denm
               rsa(i,j,k,ih,im)= rs(i,j,k,is)+ts(i,j,k,is)               &
                    *rsa(i,j,k-1,ih,im)*denm
-        END DO
+        end do
 
 !-----add one layer at a time, going up.
 
-        DO k= ict-1,1,-1
+        do k= ict-1,1,-1
               denm =ts(i,j,k,ih)/(1.-rs(i,j,k,ih)*rxa(i,j,k+1,im,is))
               rra(i,j,k,im,is)= rr(i,j,k,ih)+(td(i,j,k,ih)              &
                   *rra(i,j,k+1,im,is)+tt(i,j,k,ih)*rxa(i,j,k+1,im,is))*denm
               rxa(i,j,k,im,is)= rs(i,j,k,ih)+ts(i,j,k,ih)               &
                   *rxa(i,j,k+1,im,is)*denm
-        END DO
+        end do
 
 !-----compute fluxes following eq (5) of Chou (1992)
 
@@ -2429,37 +2429,37 @@ SUBROUTINE cldflx(m,n,np,ict,icb,cc,rr,tt,td,rs,ts,                     &
 !  fdndif is the diffuse downward flux
 !  fupdif is the diffuse upward flux
 
-        DO k=2,np+1
+        do k=2,np+1
               denm= 1./(1.- rxa(i,j,k,im,is)*rsa(i,j,k-1,ih,im))
               fdndir(i,j)= tda(i,j,k-1,ih,im)
               xx = tda(i,j,k-1,ih,im)*rra(i,j,k,im,is)
               fdndif(i,j)= (xx*rsa(i,j,k-1,ih,im)+tta(i,j,k-1,ih,im))*denm
               fupdif= (xx+tta(i,j,k-1,ih,im)*rxa(i,j,k,im,is))*denm
               flxdn(i,j,k)=fdndir(i,j)+fdndif(i,j)-fupdif
-        END DO
+        end do
 
             flxdn(i,j,1)=1.0-rra(i,j,1,im,is)
 
 !-----summation of fluxes over all (eight) sky situations.
 
-        DO k=1,np+1
-              IF(ih == 1 .AND. im == 1 .AND. is == 1) THEN
+        do k=1,np+1
+              if(ih == 1 .AND. im == 1 .AND. is == 1) then
                 fclr(i,j,k)=flxdn(i,j,k)
-              END IF
+              end if
               fall(i,j,k)=fall(i,j,k)+flxdn(i,j,k)*ct(i,j)
-        END DO
+        end do
 
             fsdir(i,j)=fsdir(i,j)+fdndir(i,j)*ct(i,j)
             fsdif(i,j)=fsdif(i,j)+fdndif(i,j)*ct(i,j)
 
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
-  END DO  iloop
-  END DO  jloop
+  end do  iloop
+  end do  jloop
 
-  RETURN
-END SUBROUTINE cldflx
+  return
+end subroutine cldflx
 
-  END MODULE sorad3d_module
+  end module sorad3d_module

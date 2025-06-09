@@ -1,4 +1,4 @@
-  MODULE sfcphys_module
+  module sfcphys_module
 
   implicit none
 
@@ -8,7 +8,7 @@
       real, parameter :: dwsp2 = 25.0
       real, parameter :: dfac = (dcd2-dcd1)/(dwsp2-dwsp1)
 
-  CONTAINS
+  contains
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -80,7 +80,7 @@
 !  cd,z0,ust:
 
   sfc_options:  &
-  IF( set_znt.eq.1 )THEN
+  if( set_znt.eq.1 )then
     ! specify z0 (roughness length):
     ! note:  set znt array in "init_surface.F"
 
@@ -99,7 +99,7 @@
     enddo
 
 
-  ELSEIF( set_ust.eq.1 )THEN  sfc_options
+  elseif( set_ust.eq.1 )then  sfc_options
       ! specify ustar (friction velocity):
 
     !$omp parallel do default(shared)   &
@@ -117,7 +117,7 @@
     enddo
     enddo
 
-  ELSEIF( cecd.eq.1 )THEN  sfc_options
+  elseif( cecd.eq.1 )then  sfc_options
     ! specify Cd (drag coefficient):
 
     !$omp parallel do default(shared)   &
@@ -135,14 +135,14 @@
     enddo
     enddo
 
-  ELSE  sfc_options
+  else  sfc_options
     ! Cd,z0,ust are functions of 10-m windspeed over water ... need to iterate:
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,wlast,n,var,rznt)
     do j=j1,j2
     do i=i1,i2
-      IF(xland(i,j).gt.1.5)THEN
+      if(xland(i,j).gt.1.5)then
         !-----------------------------------------
         ! water:  roughness length (z0) is a function of windspeed
         ! use last known z0 for first guess:
@@ -154,16 +154,16 @@
         do while( abs(s10(i,j)-wlast).gt.0.001 )
           n = n + 1
           wlast = s10(i,j)
-          IF(cecd.eq.2)THEN
+          if(cecd.eq.2)then
             ! Deacon's formula:  see Rotunno and Emanuel (1987, JAS, p. 547)
             cd(i,j) = 1.1e-3+(4.0e-5*s10(i,j))
-          ELSEIF(cecd.eq.3)THEN
+          elseif(cecd.eq.3)then
             ! based on Fairall et al (2003, JClim) at low wind speeds
             ! based on Donelan et al (2004, GRL) at high wind speeds
             cd(i,j) = dcd1+(s10(i,j)-dwsp1)*dfac
             cd(i,j) = min(cd(i,j),dcd2)
             cd(i,j) = max(cd(i,j),dcd1)
-          ENDIF
+          endif
           znt(i,j) = max( 1.0e-20 , 10.0/(exp(karman/sqrt(cd(i,j)))-1.0) )
           rznt = 1.0/znt(i,j)
           var = alog((10.0+znt(i,j))*rznt)/alog((za(i,j)+znt(i,j))*rznt)
@@ -176,7 +176,7 @@
 !!!        nmax = max(nmax,n)
         ! end water
         !-----------------------------------------
-      ELSE
+      else
         !-----------------------------------------
         ! land:  roughness length (z0) is specified ... no need to iterate
         rznt = 1.0/znt(i,j)
@@ -185,55 +185,55 @@
         s10(i,j) = s1(i,j)*var
         ! end land
         !-----------------------------------------
-      ENDIF
+      endif
       u10(i,j) = u1(i,j)*var
       v10(i,j) = v1(i,j)*var
       ust(i,j) = max( s1(i,j)*karman/alog((za(i,j)+znt(i,j))*rznt) , 1.0e-6 )
     enddo
     enddo
 
-  ENDIF  sfc_options
+  endif  sfc_options
 
 !-----------------------------------------------------------------------
 !  ch,cq:
 
-    IF(isfcflx.eq.1)THEN
+    if(isfcflx.eq.1)then
       ! surface fluxes of heat/moisture are included ... get exchange coefficients:
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,wlast,n,var,rznt)
       do j=j1,j2
       do i=i1,i2
-        IF(xland(i,j).gt.1.5)THEN
+        if(xland(i,j).gt.1.5)then
           !-------
           ! water:
-          IF(cecd.eq.1)THEN
+          if(cecd.eq.1)then
             ! constant value (from namelist.input):
             ch(i,j) = cnstce
             cq(i,j) = cnstce
-          ELSEIF(cecd.eq.2)THEN
+          elseif(cecd.eq.2)then
             ! Deacon's formula:  see Rotunno and Emanuel (1987, JAS, p. 547)
             ch(i,j) = 1.1e-3+(4.0e-5*s10(i,j))
             cq(i,j) = 1.1e-3+(4.0e-5*s10(i,j))
-          ELSEIF(cecd.eq.3)THEN
+          elseif(cecd.eq.3)then
             ! Constant, based on Drennan et al. (2007, JAS, p. 1103)
             ch(i,j) = 1.20e-3
             cq(i,j) = 1.20e-3
-          ENDIF
+          endif
           ! end water
           !-------
-        ELSE
+        else
           !-------
           ! land ... just set Ce to Cd (for now):
           ch(i,j) = cd(i,j)
           cq(i,j) = cd(i,j)
           ! end land
           !-------
-        ENDIF
+        endif
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
@@ -310,39 +310,39 @@
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c!
 
   setting_flux:  &
-  IF( set_flx.eq.1 )THEN
+  if( set_flx.eq.1 )then
 
     ! specified heat fluxes:
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j)
-    DO j=1,nj
+    do j=1,nj
     do i=1,ni
       thflux(i,j) = cnst_shflx
     enddo
-    ENDDO
+    enddo
 
-    IF( imoist.eq.1 )THEN
+    if( imoist.eq.1 )then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j)
-      DO j=1,nj
+      do j=1,nj
       do i=1,ni
         qvflux(i,j) = cnst_lhflx
       enddo
-      ENDDO
+      enddo
 
-    ENDIF
+    endif
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c!
 
-  ELSE
+  else
 
     ! normal code:
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,pisfc,qvsat)
-    DO j=1,nj
+    do j=1,nj
 
       !  sensible heat flux:
       do i=1,ni
@@ -351,58 +351,58 @@
       enddo
 
       !  latent heat flux:
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
         do i=1,ni
           qvsat=rslf(psfc(i,j),tsk(i,j))
           qsfc(i,j)=qvsat
           qvflux(i,j)=cq(i,j)*s10(i,j)*(qvsat-qva(i,j,1))*mavail(i,j)
         enddo
-      ENDIF
+      endif
 
-    ENDDO
+    enddo
 
-  ENDIF  setting_flux
+  endif  setting_flux
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c!
 
   !-------------------------------------------------------------------------
     ! for certain cases, turn off surface heat flux after specified time:
 
-    IF( testcase.eq.2 )THEN
+    if( testcase.eq.2 )then
 
       ! shear-driven PBL: 
       ! heat flux for t < 3000 s to spin-up turbulence
       ! (Moeng and Sullivan, 1994, JAS)
       if( rtime.gt.3000.0 ) thflux = 0.0
 
-    ELSEIF( testcase.eq.6 )THEN
+    elseif( testcase.eq.6 )then
 
       ! hurricane PBL  (heat flux for 3000 s to spin-up turbulence)
       ! (Bryan et al, 2017, BLM)
       if( rtime.gt.3000.0 ) thflux = 0.0
 
-    ELSEIF( testcase.eq.7 )THEN
+    elseif( testcase.eq.7 )then
 
       ! Replace normal fluxes ... use lowest-model-level wind speed:
       ! (VanZanten et al 2011, JAMES)
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,pisfc,qvsat)
-      DO j=1,nj
+      do j=1,nj
         do i=1,ni
           pisfc = (psfc(i,j)*rp00)**rovcp
           thflux(i,j) = 0.001094*s1(i,j)*(tsk(i,j)/pisfc-th0(i,j,1)-tha(i,j,1))
         enddo
-        IF(imoist.eq.1)THEN
+        if(imoist.eq.1)then
           do i=1,ni
             qvsat=rslf(psfc(i,j),tsk(i,j))
             qsfc(i,j)=qvsat
             qvflux(i,j) = 0.001133*s1(i,j)*(qvsat-qva(i,j,1))*mavail(i,j)
           enddo
-        ENDIF
-      ENDDO
+        endif
+      enddo
 
-    ELSEIF( testcase.eq.11 )THEN
+    elseif( testcase.eq.11 )then
 
       if( rtime.le.3600.0 )then
         thmag = 0.0
@@ -426,11 +426,11 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
   !-------------------------------------------------------------------------
 
-    IF(imoist.eq.1)THEN
+    if(imoist.eq.1)then
       ! some budget calculations:
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -444,7 +444,7 @@
       do j=1,nj
         qbsfc=qbsfc+bud1(j)*tem
       enddo
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
@@ -481,9 +481,9 @@
       real :: pisfc,thgb,thx,thvx,tskv,govrth,dthvdz,vconv,vsgd,dthvm,   &
               val,fluxc,rznt
 
-      REAL    , PARAMETER ::  VCONVC=1.
-      REAL    , PARAMETER ::  CZO=0.0185
-      REAL    , PARAMETER ::  OZO=1.59E-5
+      real    , parameter ::  VCONVC=1.
+      real    , parameter ::  CZO=0.0185
+      real    , parameter ::  OZO=1.59E-5
       real :: ep1
 
 
@@ -652,7 +652,7 @@
       enddo
 
     hloop:  &
-    DO nloop = 1 , 2
+    do nloop = 1 , 2
 
       k = 1
 
@@ -725,7 +725,7 @@
         if( ntot.eq.(ni*nj) ) doit = .false.
       enddo
 
-    ENDDO  hloop
+    enddo  hloop
 
       if(timestats.ge.1) time_sfcphys=time_sfcphys+mytime()
       end subroutine gethpbl2
@@ -1000,7 +1000,7 @@
         qst(i,j) = -qvflux(i,j)/ust(i,j)
         qstar = -ust(i,j)*tst(i,j)
 
-      ELSEIF( testcase.eq.11 )THEN
+      elseif( testcase.eq.11 )then
 
         ! SAS
         thflux(i,j) = max( 0.0 , thmag*sin( pi*trat1 ) )
@@ -1146,7 +1146,7 @@
       q1(1,1) = qsave
       psfc(1,1) = psave
 
-      IF( nx.ge.3 .and. ny.ge.3 )THEN
+      if( nx.ge.3 .and. ny.ge.3 )then
         ! Moeng (1984), eqn 30
         tem = avgsfcs*delt
         if( abs(tem).gt.1.0e-10 )then
@@ -1172,7 +1172,7 @@
           qvflux = 0.0
         endif
       endif
-      ENDIF
+      endif
 
     endif
 
@@ -1320,4 +1320,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE sfcphys_module
+  end module sfcphys_module

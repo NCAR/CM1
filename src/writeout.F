@@ -1,4 +1,4 @@
-  MODULE writeout_module
+  module writeout_module
 
   implicit none
 
@@ -9,7 +9,7 @@
   logical :: opens,openu,openv,openw,dointerp
   integer, parameter :: varmax = 10000
 
-  CONTAINS
+  contains
 
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -254,15 +254,15 @@
 
 #ifdef MPI
       !  limit to "nlim" writes at a time:
-      IF( output_filetype.eq.3 )THEN
-      IF( numprocs.gt.nlim )THEN
+      if( output_filetype.eq.3 )then
+      if( numprocs.gt.nlim )then
         doit = .false.
-        IF( myid.ge.nlim )THEN
+        if( myid.ge.nlim )then
           call MPI_IRECV(doit,1,mpi_logical,myid-nlim,999999,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(reqs,status,ierr)
-        ENDIF
-      ENDIF
-      ENDIF
+        endif
+      endif
+      endif
 #endif
 
 
@@ -285,7 +285,7 @@
 
 !-----------------------------------------------------------------------
 
-      IF( imove.eq.1 )THEN
+      if( imove.eq.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -297,7 +297,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -308,7 +308,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -320,7 +320,7 @@
 
 
     bigloop:  &
-    DO nloop = 1 , nmax
+    do nloop = 1 , nmax
 
       if( myid.eq.0 ) print *,'  nloop = ',nloop
 
@@ -331,8 +331,8 @@
       endif
 
 #ifdef NETCDF
-      IF(output_format.eq.2)THEN
-      IF( nloop.eq.2 )THEN
+      if(output_format.eq.2)then
+      if( nloop.eq.2 )then
         ! netcdf stuff:
         if( output_filetype.eq.3 .or. myid.eq.0 )then
             if(dowr) write(outfile,*) '  calling netcdf_prelim ... '
@@ -344,8 +344,8 @@
             if(dowr) write(outfile,*) '  ... done '
           opens = .true.
         endif
-      ENDIF
-      ENDIF
+      endif
+      endif
 #endif
 
       n_out = 0
@@ -1034,7 +1034,7 @@
 
   !.............................................
 
-    IF( do_adapt_move )THEN
+    if( do_adapt_move )then
 
       n_out = n_out + 1
       name_output(n_out) = 'psmth   '
@@ -1052,7 +1052,7 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
+    endif
 
   !.............................................
 
@@ -1444,7 +1444,7 @@
 
   !.............................................
 
-    IF( radopt.eq.1 )THEN
+    if( radopt.eq.1 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       ! nasa-goddard vars:
       n_out = n_out + 1
@@ -1463,11 +1463,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.eq.1 )THEN
+    if( radopt.eq.1 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'rnflx   '
@@ -1485,11 +1485,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.eq.1 )THEN
+    if( radopt.eq.1 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'radswnet'
@@ -1507,11 +1507,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.eq.1 )THEN
+    if( radopt.eq.1 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'radlwin '
@@ -1529,11 +1529,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.eq.1 )THEN
+    if( radopt.eq.1 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'olr     '
@@ -1551,11 +1551,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.eq.1 )THEN
+    if( radopt.eq.1 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'dsr     '
@@ -1573,11 +1573,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'lwupt'
@@ -1595,11 +1595,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'lwdnt'
@@ -1617,11 +1617,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'lwupb'
@@ -1639,11 +1639,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'lwdnb'
@@ -1661,11 +1661,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'swupt'
@@ -1683,11 +1683,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'swdnt'
@@ -1705,11 +1705,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'swupb'
@@ -1727,11 +1727,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'swdnb'
@@ -1749,11 +1749,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       ! cloud forcing vars:
       n_out = n_out + 1
@@ -1772,11 +1772,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
     if( output_sfcparams.eq.1 .and. radopt.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'swcf'
@@ -1794,11 +1794,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( radopt.ge.2 )THEN
+    if( radopt.ge.2 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'coszen'
@@ -1808,11 +1808,11 @@
 
       call   write2d(coszen(ibr,jbr),fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'u10     '
     if( imove.eq.1 )then
@@ -1832,11 +1832,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'v10     '
     if( imove.eq.1 )then
@@ -1856,11 +1856,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 's10'
       desc_output(n_out) = 's10'
@@ -1876,11 +1876,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 't2      '
       desc_output(n_out) = 'diagnostic 2m temperature'
@@ -1896,11 +1896,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'q2      '
       desc_output(n_out) = 'diagnostic 2m mixing ratio'
@@ -1916,11 +1916,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'znt     '
     if( sfcmodel.ne.4 )then
@@ -1940,11 +1940,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. dotimeavg .and. dot2p )THEN
+    if( output_sfcdiags.eq.1 .and. dotimeavg .and. dot2p )then
       n_out = n_out + 1
       name_output(n_out) = 'znttavg '
       desc_output(n_out) = 'time-average roughness length'
@@ -1960,11 +1960,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
     if( sfcmodel.eq.2 .or. sfcmodel.eq.3 )then
       n_out = n_out + 1
       name_output(n_out) = 'z0t     '
@@ -1982,11 +1982,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
     if( sfcmodel.eq.2 .or. sfcmodel.eq.3 )then
       n_out = n_out + 1
       name_output(n_out) = 'z0q     '
@@ -2004,11 +2004,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'ust     '
       desc_output(n_out) = 'friction velocity'
@@ -2024,11 +2024,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. dotimeavg .and. dot2p )THEN
+    if( output_sfcdiags.eq.1 .and. dotimeavg .and. dot2p )then
       n_out = n_out + 1
       name_output(n_out) = 'usttavg '
       desc_output(n_out) = 'time-average friction velocity'
@@ -2044,11 +2044,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. tbc.eq.3 )THEN
+    if( output_sfcdiags.eq.1 .and. tbc.eq.3 )then
       n_out = n_out + 1
       name_output(n_out) = 'ustt    '
       desc_output(n_out) = 'friction velocity at model top'
@@ -2064,11 +2064,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'stau'
       desc_output(n_out) = 'surface stress'
@@ -2084,11 +2084,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
     if( dosfcflx .or. use_pbl )then
     if( sfcmodel.ge.1 )then
       n_out = n_out + 1
@@ -2108,11 +2108,11 @@
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
     if( dosfcflx .or. use_pbl )then
     if( sfcmodel.ge.1 )then
       n_out = n_out + 1
@@ -2132,18 +2132,18 @@
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'hpbl    '
-  IF( testcase.ge.1 .and. testcase.le.7 )THEN
+  if( testcase.ge.1 .and. testcase.le.7 )then
       desc_output(n_out) = 'PBL height (using max theta gradient)'
-  ELSE
+  else
       desc_output(n_out) = 'diagnosed PBL height'
-  ENDIF
+  endif
       unit_output(n_out) = 'm'
       grid_output(n_out) = '2'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
 
@@ -2156,12 +2156,12 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
-    IF( ( testcase.ge.1 .and. testcase.le.7 ) .or. testcase.eq.9 )THEN
+    if(output_sfcdiags.eq.1)then
+    if( ( testcase.ge.1 .and. testcase.le.7 ) .or. testcase.eq.9 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'zi'
@@ -2228,12 +2228,12 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
-    ENDIF
+    endif
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
 
       n_out = n_out + 1
       name_output(n_out) = 'zol     '
@@ -2250,11 +2250,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'mol'
       desc_output(n_out) = 'Monin-Obukhov length (L)'
@@ -2274,11 +2274,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. dotimeavg .and. dot2p )THEN
+    if( output_sfcdiags.eq.1 .and. dotimeavg .and. dot2p )then
       n_out = n_out + 1
       name_output(n_out) = 'moltavg '
       desc_output(n_out) = 'time-average Monin-Obukhov length (L)'
@@ -2294,11 +2294,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'br      '
       desc_output(n_out) = 'bulk Richardson number in surface layer'
@@ -2314,11 +2314,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. use_pbl )THEN
+    if( output_sfcdiags.eq.1 .and. use_pbl )then
       n_out = n_out + 1
       name_output(n_out) = 'brcr'
       desc_output(n_out) = 'critical bulk Richardson number for PBL'
@@ -2334,11 +2334,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. use_pbl )THEN
+    if( output_sfcdiags.eq.1 .and. use_pbl )then
       n_out = n_out + 1
       name_output(n_out) = 'wstar'
       desc_output(n_out) = 'w-star from pbl code'
@@ -2354,11 +2354,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. (ipbl.eq.1.or.ipbl.eq.4.or.ipbl.eq.5) )THEN
+    if( output_sfcdiags.eq.1 .and. (ipbl.eq.1.or.ipbl.eq.4.or.ipbl.eq.5) )then
       n_out = n_out + 1
       name_output(n_out) = 'delta'
       desc_output(n_out) = 'thickness of entrainment zone in pbl scheme'
@@ -2374,11 +2374,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1 .and. (ipbl.eq.1.or.ipbl.eq.3) )THEN
+    if(output_sfcdiags.eq.1 .and. (ipbl.eq.1.or.ipbl.eq.3) )then
       n_out = n_out + 1
       name_output(n_out) = 'prkpp'
       desc_output(n_out) = 'Prandtl number in KPP pbl'
@@ -2394,11 +2394,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1 .and. ipbl.eq.3 )THEN
+    if(output_sfcdiags.eq.1 .and. ipbl.eq.3 )then
       n_out = n_out + 1
       name_output(n_out) = 'wscale'
       desc_output(n_out) = 'wscale from GFS-EDMF'
@@ -2414,11 +2414,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1 .and. ipbl.eq.3 )THEN
+    if(output_sfcdiags.eq.1 .and. ipbl.eq.3 )then
       n_out = n_out + 1
       name_output(n_out) = 'wscaleu'
       desc_output(n_out) = 'wscaleu from GFS-EDMF'
@@ -2434,11 +2434,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'psim'
       desc_output(n_out) = 'similarity nondimen wind shear at lowest model level'
@@ -2454,11 +2454,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'psih'
       desc_output(n_out) = 'similarity nondimen temp grad at lowest model level'
@@ -2474,11 +2474,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'psiq    '
       desc_output(n_out) = 'similarity stability function (moisture) at lowest model level'
@@ -2494,11 +2494,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'fm'
       desc_output(n_out) = 'fm (from surface layer: ln(z/z0)-psim)'
@@ -2514,11 +2514,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'fh'
       desc_output(n_out) = 'fh (from surface layer: ln(z/z0t)-psih)'
@@ -2534,11 +2534,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'qsfc    '
       desc_output(n_out) = 'land/ocean water vapor mixing ratio'
@@ -2554,11 +2554,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF(output_sfcdiags.eq.1)THEN
+    if(output_sfcdiags.eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'wspd    '
       desc_output(n_out) = 'sfc layer wind speed (with gust)   '
@@ -2574,11 +2574,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.4 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.4 )then
       n_out = n_out + 1
       name_output(n_out) = 'mznt'
       desc_output(n_out) = 'momentum roughness length (m) (NOTE: unusual naming convention)'
@@ -2594,11 +2594,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.4 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.4 )then
       n_out = n_out + 1
       name_output(n_out) = 'taux'
       desc_output(n_out) = 'Instantaneous stress along X direction'
@@ -2614,11 +2614,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.4 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.4 )then
       n_out = n_out + 1
       name_output(n_out) = 'tauy'
       desc_output(n_out) = 'Instantaneous stress along Y direction'
@@ -2634,11 +2634,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )then
       n_out = n_out + 1
       name_output(n_out) = 'z0base'
       desc_output(n_out) = 'z0base'
@@ -2654,11 +2654,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )then
       n_out = n_out + 1
       name_output(n_out) = 'thz0'
       desc_output(n_out) = 'thz0'
@@ -2674,11 +2674,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )then
       n_out = n_out + 1
       name_output(n_out) = 'qz0'
       desc_output(n_out) = 'qz0'
@@ -2694,11 +2694,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )then
       n_out = n_out + 1
       name_output(n_out) = 'uz0'
       desc_output(n_out) = 'uz0'
@@ -2714,11 +2714,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )then
       n_out = n_out + 1
       name_output(n_out) = 'vz0'
       desc_output(n_out) = 'vz0'
@@ -2734,11 +2734,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )then
       n_out = n_out + 1
       name_output(n_out) = 'u10e'
       desc_output(n_out) = 'u10e'
@@ -2754,11 +2754,11 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )THEN
+    if( output_sfcdiags.eq.1 .and. sfcmodel.eq.7 )then
       n_out = n_out + 1
       name_output(n_out) = 'v10e'
       desc_output(n_out) = 'v10e'
@@ -2774,12 +2774,12 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-    ENDIF
+    endif
 
   !.............................................
 
 
-    IF( imoist.eq.1 .and. output_lwp.eq.1 )THEN
+    if( imoist.eq.1 .and. output_lwp.eq.1 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'cwp     '
@@ -2812,11 +2812,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. output_lwp.eq.1 )THEN
+    if( imoist.eq.1 .and. output_lwp.eq.1 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'lwp     '
@@ -2849,11 +2849,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. output_pwat.eq.1 )THEN
+    if( imoist.eq.1 .and. output_pwat.eq.1 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'pwat    '
@@ -2887,17 +2887,17 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 )THEN
-    IF( output_cape.eq.1 .or. output_cin.eq.1 .or. output_lcl.eq.1 .or. output_lfc.eq.1 )THEN
+    if( imoist.eq.1 )then
+    if( output_cape.eq.1 .or. output_cin.eq.1 .or. output_lcl.eq.1 .or. output_lfc.eq.1 )then
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k,pfoo,tfoo,qfoo,zel,psource,tsource,qvsource)
-          DO j=1,nj
-          DO i=1,ni
+          do j=1,nj
+          do i=1,ni
 
             allocate( pfoo(nk+1) )
             allocate( tfoo(nk+1) )
@@ -2925,16 +2925,16 @@
             deallocate( tfoo )
             deallocate( qfoo )
 
-          ENDDO
-          ENDDO
+          enddo
+          enddo
 
-    ENDIF
-    ENDIF
+    endif
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 )THEN
-    IF( output_cape.eq.1 )THEN
+    if( imoist.eq.1 )then
+    if( output_cape.eq.1 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'cape    '
@@ -2952,13 +2952,13 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
-    ENDIF
+    endif
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 )THEN
-    IF( output_cin.eq.1 )THEN
+    if( imoist.eq.1 )then
+    if( output_cin.eq.1 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'cin     '
@@ -2976,13 +2976,13 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
-    ENDIF
+    endif
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 )THEN
-    IF( output_lcl.eq.1 )THEN
+    if( imoist.eq.1 )then
+    if( output_lcl.eq.1 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'lcl     '
@@ -3000,13 +3000,13 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
-    ENDIF
+    endif
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 )THEN
-    IF( output_lfc.eq.1 )THEN
+    if( imoist.eq.1 )then
+    if( output_lfc.eq.1 )then
 
       n_out = n_out + 1
       name_output(n_out) = 'lfc     '
@@ -3024,8 +3024,8 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
-    ENDIF
+    endif
+    endif
 
   !.............................................
 
@@ -3060,7 +3060,7 @@
 
   !.............................................
 
-    IF( do_ib )THEN
+    if( do_ib )then
 
       n_out = n_out + 1
       name_output(n_out) = 'kbdy'
@@ -3078,11 +3078,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( do_recycle )THEN
+    if( do_recycle )then
 
       n_out = n_out + 1
       name_output(n_out) = 'recy_cap'
@@ -3100,11 +3100,11 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( do_recycle )THEN
+    if( do_recycle )then
 
       n_out = n_out + 1
       name_output(n_out) = 'recy_inj'
@@ -3122,12 +3122,12 @@
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
-    ENDIF
+    endif
 
   !.............................................
 
     out2dcheck:  &
-    IF( nout2d.ge.1 .and. ie2d.gt.1 .and. je2d.gt.1 )THEN
+    if( nout2d.ge.1 .and. ie2d.gt.1 .and. je2d.gt.1 )then
 
       ! arbitrary output (out2d array)
 
@@ -3162,7 +3162,7 @@
 
       enddo
 
-    ENDIF  out2dcheck
+    endif  out2dcheck
 
   !.............................................
 
@@ -3229,7 +3229,7 @@
 
   !.............................................
 
-    IF( dotimeavg .and. ttav.ge.1 )THEN
+    if( dotimeavg .and. ttav.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'thtavg'
       desc_output(n_out) = 'time-average theta'
@@ -3250,7 +3250,7 @@
           enddo
 
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-    ENDIF
+    endif
 
   !.............................................
 
@@ -3516,7 +3516,7 @@
 
   !.............................................
 
-    IF( dotimeavg .and. qtav.ge.1 .and. imoist.eq.1 )THEN
+    if( dotimeavg .and. qtav.ge.1 .and. imoist.eq.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvtavg'
       desc_output(n_out) = 'time-average qv'
@@ -3537,7 +3537,7 @@
           enddo
 
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-    ENDIF
+    endif
 
   !.............................................
 
@@ -3564,7 +3564,7 @@
 
     ! all moisture variables (except qv):
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
 
       do n=1,numq
@@ -3595,10 +3595,10 @@
                 enddo
 
                 ! for NSSL microphysics:
-                IF( ptype.ge.26 .and. ptype.le.28 )THEN
-                IF ( output_n_as_m3 > 0 ) THEN
+                if( ptype.ge.26 .and. ptype.le.28 )then
+                if ( output_n_as_m3 > 0 ) then
                 ! convert output to number per m^3
-                IF ( trim(qunit(n)) == '#/kg' ) THEN
+                if ( trim(qunit(n)) == '#/kg' ) then
                   unit_output(n_out) = '#/m3'
 
                 !$omp parallel do default(shared)  &
@@ -3610,9 +3610,9 @@
                 enddo
                 enddo
                 enddo
-                ENDIF
-                ENDIF
-                ENDIF
+                endif
+                endif
+                endif
 
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
 
@@ -3622,14 +3622,14 @@
       enddo
 
     endif
-    ENDIF
+    endif
 
 !--------------------------------------------------------------------------------
 !  begin P3 diagnostics
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.50 .or. ptype.eq.51 .or. ptype.eq.52 .or. ptype.eq.53 )then
         n_out = n_out + 1
@@ -3650,11 +3650,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.50 .or. ptype.eq.51 .or. ptype.eq.52 .or. ptype.eq.53 )then
         n_out = n_out + 1
@@ -3675,11 +3675,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.50 .or. ptype.eq.51 .or. ptype.eq.52 .or. ptype.eq.53 )then
         n_out = n_out + 1
@@ -3700,11 +3700,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.52 )then
         n_out = n_out + 1
@@ -3725,11 +3725,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.52 )then
         n_out = n_out + 1
@@ -3750,11 +3750,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.52 )then
         n_out = n_out + 1
@@ -3775,7 +3775,7 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
 !  end P3 diagnostics
 !--------------------------------------------------------------------------------
@@ -3784,7 +3784,7 @@
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -3805,11 +3805,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -3830,11 +3830,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -3855,11 +3855,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -3880,11 +3880,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -3905,11 +3905,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -3930,11 +3930,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -3955,11 +3955,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -3980,11 +3980,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -4005,11 +4005,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -4030,11 +4030,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -4055,11 +4055,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( imoist.eq.1 .and. numq.gt.1 )THEN
+    if( imoist.eq.1 .and. numq.gt.1 )then
     if(output_q      .eq.1)then
       if( ptype.eq.55 )then
         n_out = n_out + 1
@@ -4080,7 +4080,7 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-    ENDIF
+    endif
 
 !  end ISHMAEL diagnostics
 !--------------------------------------------------------------------------------
@@ -4125,13 +4125,13 @@
               dum1(i,j,k) = g*tha(i,j,k)/th0(i,j,k)
             enddo
             enddo
-            IF(imoist.eq.1)THEN
+            if(imoist.eq.1)then
               do j=1,nj
               do i=1,ni
                 dum1(i,j,k) = dum1(i,j,k)+g*repsm1*(qa(i,j,k,nqv)-qv0(i,j,k))
               enddo
               enddo
-              IF(nql1.ge.1)THEN
+              if(nql1.ge.1)then
               do nn=nql1,nql2
                 do j=1,nj
                 do i=1,ni
@@ -4139,8 +4139,8 @@
                 enddo
                 enddo
               enddo
-              ENDIF
-              IF(iice.eq.1)THEN
+              endif
+              if(iice.eq.1)then
               do nn=nqs1,nqs2
                 do j=1,nj
                 do i=1,ni
@@ -4148,8 +4148,8 @@
                 enddo
                 enddo
               enddo
-              ENDIF
-            ENDIF
+              endif
+            endif
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
 
@@ -4224,7 +4224,7 @@
     doit = .false.
 
     docyl:  &
-    IF( doit )THEN
+    if( doit )then
     if( doazimavg .or. do_adapt_move )then
 
               ! dum1 = u at s pts
@@ -4298,11 +4298,11 @@
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
 
     endif
-    ENDIF  docyl
+    endif  docyl
 
   !.............................................
 
-    IF( dotimeavg .and. utav.ge.1 .and. vtav.ge.1 )THEN
+    if( dotimeavg .and. utav.ge.1 .and. vtav.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wsptavg'
       desc_output(n_out) = 'time-average horiz wind speed'
@@ -4323,7 +4323,7 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-    ENDIF
+    endif
 
   !.............................................
 
@@ -4984,7 +4984,7 @@
     doit = .false.
     if( doit )then
     dobrz:  &
-    IF( ipbl.ge.1 )THEN
+    if( ipbl.ge.1 )then
 
         n_out = n_out + 1
         name_output(n_out) = 'brz'
@@ -5032,7 +5032,7 @@
       enddo
 
     hlp:  &
-    DO hloop = 1 , 2
+    do hloop = 1 , 2
 
       k = 1
 
@@ -5078,7 +5078,7 @@
       enddo
       enddo
 
-    ENDDO  hlp
+    enddo  hlp
 
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
 
@@ -5087,7 +5087,7 @@
       deallocate(    thv1 )
       deallocate(  thvsfc )
 
-    ENDIF  dobrz
+    endif  dobrz
     endif
 
   !.............................................
@@ -5095,7 +5095,7 @@
     ! arbitrary output (out3d array)
 
     out3dcheck:  &
-    IF( nout3d.ge.1 .and. ie3d.gt.1 .and. je3d.gt.1 .and. ke3d.gt.1 )THEN
+    if( nout3d.ge.1 .and. ie3d.gt.1 .and. je3d.gt.1 .and. ke3d.gt.1 )then
 
       do n=1,nout3d
 
@@ -5134,11 +5134,11 @@
 
       enddo
 
-    ENDIF  out3dcheck
+    endif  out3dcheck
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_hadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_hadv'
@@ -5161,11 +5161,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_vadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_vadv'
@@ -5188,11 +5188,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_hidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_hidiff'
@@ -5211,11 +5211,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_vidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_vidiff'
@@ -5234,11 +5234,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_hediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_hediff'
@@ -5257,11 +5257,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_vediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_vediff'
@@ -5280,11 +5280,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_hturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_hturb'
@@ -5303,11 +5303,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_vturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_vturb'
@@ -5326,11 +5326,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_mp.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_mp'
@@ -5349,11 +5349,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_rdamp.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_rdamp'
@@ -5372,11 +5372,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_nudge.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_nudge'
@@ -5395,11 +5395,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_rad.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_rad'
@@ -5418,11 +5418,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_div.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_div'
@@ -5441,11 +5441,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_diss.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_diss'
@@ -5468,11 +5468,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_pbl.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_pbl'
@@ -5495,11 +5495,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_lsw.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ptb_lsw'
@@ -5518,11 +5518,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( td_cond.ge.1 )then
         n_out = n_out + 1
@@ -5543,11 +5543,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( td_evac.ge.1 )then
         n_out = n_out + 1
@@ -5568,11 +5568,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( td_evar.ge.1 )then
         n_out = n_out + 1
@@ -5593,11 +5593,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( td_dep.ge.1 )then
         n_out = n_out + 1
@@ -5618,11 +5618,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( td_subl.ge.1 )then
         n_out = n_out + 1
@@ -5643,11 +5643,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( td_melt.ge.1 )then
         n_out = n_out + 1
@@ -5668,11 +5668,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( td_frz.ge.1 )then
         n_out = n_out + 1
@@ -5693,11 +5693,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_thbudget.eq.1 )THEN
+  if( output_thbudget.eq.1 )then
     if( td_efall.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'td_efall'
@@ -5716,11 +5716,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-    IF( output_fallvel.eq.1 )THEN
+    if( output_fallvel.eq.1 )then
       if( qd_vtc.gt.0 )then
         n_out = n_out + 1
         name_output(n_out) = 'vtc     '
@@ -5740,11 +5740,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_fallvel.eq.1 )THEN
+    if( output_fallvel.eq.1 )then
       if( qd_vtr.gt.0 )then
         n_out = n_out + 1
         name_output(n_out) = 'vtr     '
@@ -5764,11 +5764,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_fallvel.eq.1 )THEN
+    if( output_fallvel.eq.1 )then
       if( qd_vts.gt.0 )then
         n_out = n_out + 1
         name_output(n_out) = 'vts     '
@@ -5788,11 +5788,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_fallvel.eq.1 )THEN
+    if( output_fallvel.eq.1 )then
       if( qd_vtg.gt.0 )then
         n_out = n_out + 1
         name_output(n_out) = 'vtg     '
@@ -5812,11 +5812,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_fallvel.eq.1 )THEN
+    if( output_fallvel.eq.1 )then
       if( qd_vti.gt.0 )then
         n_out = n_out + 1
         name_output(n_out) = 'vti     '
@@ -5836,11 +5836,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_hadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_hadv'
@@ -5863,11 +5863,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_vadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_vadv'
@@ -5890,10 +5890,10 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_hidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_hidiff'
@@ -5912,11 +5912,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_vidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_vidiff'
@@ -5935,11 +5935,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_hediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_hediff'
@@ -5958,11 +5958,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_vediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_vediff'
@@ -5981,11 +5981,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_hturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_hturb'
@@ -6004,11 +6004,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_vturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_vturb'
@@ -6027,12 +6027,12 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_mp.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_mp'
@@ -6051,11 +6051,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_nudge.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_nudge'
@@ -6074,11 +6074,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_pbl.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_pbl'
@@ -6097,11 +6097,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( qd_lsw.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'qvb_lsw'
@@ -6120,11 +6120,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( qd_cond.ge.1 )then
         n_out = n_out + 1
@@ -6145,11 +6145,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( qd_evac.ge.1 )then
         n_out = n_out + 1
@@ -6170,11 +6170,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( qd_evar.ge.1 )then
         n_out = n_out + 1
@@ -6195,11 +6195,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( qd_dep.ge.1 )then
         n_out = n_out + 1
@@ -6220,11 +6220,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-  IF( output_qvbudget.eq.1 )THEN
+  if( output_qvbudget.eq.1 )then
     if( ptype.eq.5 )then
       if( qd_subl.ge.1 )then
         n_out = n_out + 1
@@ -6245,11 +6245,11 @@
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
       endif
     endif
-  ENDIF
+  endif
 
   !.............................................
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
 
         n_out = n_out + 1
         name_output(n_out) = 'pipb'
@@ -6267,11 +6267,11 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
   !.............................................
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
         n_out = n_out + 1
         name_output(n_out) = 'pipdl'
         desc_output(n_out) = 'diagnosed pi-prime: linear dynamic component'
@@ -6288,11 +6288,11 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
   !.............................................
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
         n_out = n_out + 1
         name_output(n_out) = 'pipdn'
         desc_output(n_out) = 'diagnosed pi-prime: nonlinear dynamic component'
@@ -6309,12 +6309,12 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
   !.............................................
 
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
         if( icor.eq.1 )then
         n_out = n_out + 1
         name_output(n_out) = 'pipc'
@@ -6333,11 +6333,11 @@
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
         endif
-      ENDIF
+      endif
 
   !.............................................
 
-      IF( axisymm.eq.1 )THEN
+      if( axisymm.eq.1 )then
         n_out = n_out + 1
         name_output(n_out) = 'vgrad'
         desc_output(n_out) = 'gradient wind speed'
@@ -6353,11 +6353,11 @@
             ql = 0.0
             if( imoist.eq.1 )then
               qv = qa(i,j,k,nqv)
-              IF(nql1.ge.1)THEN
+              if(nql1.ge.1)then
               do nn=nql1,nql2
                 ql = ql+qa(i,j,k,nn)
               enddo
-              ENDIF
+              endif
               if( iice.eq.1 )then
                 do nn=nqs1,nqs2
                   ql = ql+qa(i,j,k,nn)
@@ -6375,12 +6375,12 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'qke'
         desc_output(n_out) = 'twice TKE from MYNN'
@@ -6397,14 +6397,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'qwt'
         desc_output(n_out) = 'TKE vertical transport (MYNN)'
@@ -6421,14 +6421,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'qshear'
         desc_output(n_out) = 'TKE Production - shear (MYNN)'
@@ -6445,14 +6445,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'qbuoy'
         desc_output(n_out) = 'TKE Production - buoyancy (MYNN)'
@@ -6469,14 +6469,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'qdiss'
         desc_output(n_out) = 'TKE dissipation (MYNN)'
@@ -6493,14 +6493,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'dqke'
         desc_output(n_out) = 'TKE change (MYNN)'
@@ -6517,14 +6517,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'qke_adv'
         desc_output(n_out) = 'advection of twice TKE from MYNN'
@@ -6541,14 +6541,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'sh3d'
         desc_output(n_out) = 'Stability function for heat (MYNN)'
@@ -6565,14 +6565,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'sm3d'
         desc_output(n_out) = 'Stability function for momentum (MYNN)'
@@ -6589,14 +6589,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'tsq'
         desc_output(n_out) = 'liquid water pottemp variance (MYNN)'
@@ -6613,14 +6613,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'qsq'
         desc_output(n_out) = 'liquid water variance (MYNN)'
@@ -6637,14 +6637,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'cov'
         desc_output(n_out) = 'liquid water-liquid water pottemp covariance (MYNN)'
@@ -6661,13 +6661,13 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 .and. icloud_bl.ge.1 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 .and. icloud_bl.ge.1 )then
         n_out = n_out + 1
         name_output(n_out) = 'qc_bl'
         desc_output(n_out) = 'qc_bl (MYNN)'
@@ -6684,13 +6684,13 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 .and. icloud_bl.ge.1 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 .and. icloud_bl.ge.1 )then
         n_out = n_out + 1
         name_output(n_out) = 'qi_bl'
         desc_output(n_out) = 'qi_bl (MYNN)'
@@ -6707,13 +6707,13 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 .and. icloud_bl.ge.1 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 .and. icloud_bl.ge.1 )then
         n_out = n_out + 1
         name_output(n_out) = 'cldfra_bl'
         desc_output(n_out) = 'cldfra_bl (MYNN)'
@@ -6730,13 +6730,13 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
   !.............................................
 
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
         n_out = n_out + 1
         name_output(n_out) = 'edmf_a'
         desc_output(n_out) = 'edmf_a (MYNN)'
@@ -6753,13 +6753,13 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
   !.............................................
 
 
-      IF( do_ib )THEN
+      if( do_ib )then
         n_out = n_out + 1
         name_output(n_out) = 'bndy'
         desc_output(n_out) = 'bndy'
@@ -6778,14 +6778,14 @@
           enddo
           enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-      ENDIF
+      endif
 
 
   !.............................................
 
     doit = .false.
     if( doit )then
-    IF( dotimeavg .and. dot2p )THEN
+    if( dotimeavg .and. dot2p )then
       n_out = n_out + 1
       name_output(n_out) = 'wspa'
       desc_output(n_out) = 'analytic wind speed'
@@ -6811,7 +6811,7 @@
         enddo
         enddo
         call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
-    ENDIF
+    endif
     endif
 
   !.............................................
@@ -6836,7 +6836,7 @@
 
   !.............................................
 
-    IF( dotimeavg .and. utav.ge.1 )THEN
+    if( dotimeavg .and. utav.ge.1 )then
     if(output_u    .eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'utavg'
@@ -6858,7 +6858,7 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
@@ -6895,7 +6895,7 @@
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_hadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_hadv'
@@ -6918,11 +6918,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_vadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_vadv'
@@ -6945,10 +6945,10 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_hidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_hidiff'
@@ -6967,11 +6967,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_vidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_vidiff'
@@ -6990,11 +6990,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_hediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_hediff'
@@ -7013,11 +7013,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_vediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_vediff'
@@ -7036,11 +7036,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_hturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_hturb'
@@ -7059,11 +7059,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_vturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_vturb'
@@ -7082,12 +7082,12 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_pgrad.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_pgrad'
@@ -7106,11 +7106,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_rdamp.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_rdamp'
@@ -7129,11 +7129,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_cor.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_cor'
@@ -7152,11 +7152,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_cent.ge.1 )then
       if( axisymm.eq.1 )then
       n_out = n_out + 1
@@ -7177,11 +7177,11 @@
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_pbl.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_pbl'
@@ -7200,11 +7200,11 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_ubudget.eq.1 )THEN
+    if( output_ubudget.eq.1 )then
       if( ud_lsw.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'ub_lsw'
@@ -7223,7 +7223,7 @@
           enddo
         call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
@@ -7232,7 +7232,7 @@
 ! KLUDGE !
   if(ptype.eq.91919)then
     out3dchecku:  &
-    IF( nout3d.ge.1 .and. ie3d.gt.1 .and. je3d.gt.1 .and. ke3d.gt.1 )THEN
+    if( nout3d.ge.1 .and. ie3d.gt.1 .and. je3d.gt.1 .and. ke3d.gt.1 )then
 
       do n=1,nout3d
 
@@ -7271,7 +7271,7 @@
 
       enddo
 
-    ENDIF  out3dchecku
+    endif  out3dchecku
   endif
 ! KLUDGE !
 
@@ -7297,7 +7297,7 @@
 
   !.............................................
 
-    IF( dotimeavg .and. vtav.ge.1 )THEN
+    if( dotimeavg .and. vtav.ge.1 )then
     if(output_v    .eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'vtavg'
@@ -7319,7 +7319,7 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
@@ -7356,7 +7356,7 @@
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_hadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_hadv'
@@ -7379,11 +7379,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_vadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_vadv'
@@ -7406,11 +7406,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_hidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_hidiff'
@@ -7429,11 +7429,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_vidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_vidiff'
@@ -7452,11 +7452,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_hediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_hediff'
@@ -7475,11 +7475,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_vediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_vediff'
@@ -7498,11 +7498,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_hturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_hturb'
@@ -7521,11 +7521,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_vturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_vturb'
@@ -7544,11 +7544,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_pgrad.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_pgrad'
@@ -7567,11 +7567,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_rdamp.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_rdamp'
@@ -7590,11 +7590,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_cor.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_cor'
@@ -7613,11 +7613,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_cent.ge.1 )then
       if( axisymm.eq.1 )then
       n_out = n_out + 1
@@ -7638,11 +7638,11 @@
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_pbl.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_pbl'
@@ -7661,11 +7661,11 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_vbudget.eq.1 )THEN
+    if( output_vbudget.eq.1 )then
       if( vd_lsw.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'vb_lsw'
@@ -7684,7 +7684,7 @@
           enddo
         call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
@@ -7693,7 +7693,7 @@
 ! KLUDGE !
   if(ptype.eq.91919)then
     out3dcheckv:  &
-    IF( nout3d.ge.1 .and. ie3d.gt.1 .and. je3d.gt.1 .and. ke3d.gt.1 )THEN
+    if( nout3d.ge.1 .and. ie3d.gt.1 .and. je3d.gt.1 .and. ke3d.gt.1 )then
 
       do n=1,nout3d
 
@@ -7732,7 +7732,7 @@
 
       enddo
 
-    ENDIF  out3dcheckv
+    endif  out3dcheckv
   endif
 ! KLUDGE !
 
@@ -7759,7 +7759,7 @@
 
   !.............................................
 
-    IF( dotimeavg .and. wtav.ge.1 )THEN
+    if( dotimeavg .and. wtav.ge.1 )then
     if(output_w    .eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'wtavg'
@@ -7781,7 +7781,7 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
@@ -7798,7 +7798,7 @@
 
   !.............................................
 
-    IF( dotimeavg .and. etav.ge.1 )THEN
+    if( dotimeavg .and. etav.ge.1 )then
     if(output_tke  .eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'tketavg'
@@ -7820,18 +7820,18 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
-    ENDIF
+    endif
 
   !.............................................
 
     if(output_km .eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'kmh     '
-      IF( ipbl.eq.1 .or. ipbl.eq.3 .or. ipbl.eq.4 .or. ipbl.eq.5 .or. ipbl.eq.6 )THEN
+      if( ipbl.eq.1 .or. ipbl.eq.3 .or. ipbl.eq.4 .or. ipbl.eq.5 .or. ipbl.eq.6 )then
         desc_output(n_out) = 'horizontal eddy viscosity for momentum (from 2D Smagorinsky scheme)'
-      ELSE
+      else
         desc_output(n_out) = 'horizontal eddy viscosity for momentum'
-      ENDIF
+      endif
       unit_output(n_out) = 'm^2/s'
       grid_output(n_out) = 'w'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
       levs_output(n_out) = maxk+1
@@ -7860,11 +7860,11 @@
     if(output_kh .eq.1)then
       n_out = n_out + 1
       name_output(n_out) = 'khh     '
-      IF( ipbl.eq.1 .or. ipbl.eq.3 .or. ipbl.eq.4 .or. ipbl.eq.5 .or. ipbl.eq.6 )THEN
+      if( ipbl.eq.1 .or. ipbl.eq.3 .or. ipbl.eq.4 .or. ipbl.eq.5 .or. ipbl.eq.6 )then
         desc_output(n_out) = 'horizontal eddy diffusivity for scalars (from 2D Smgorinsky scheme)'
-      ELSE
+      else
         desc_output(n_out) = 'horizontal eddy diffusivity for scalars'
-      ENDIF
+      endif
       unit_output(n_out) = 'm^2/s'
       grid_output(n_out) = 'w'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
       levs_output(n_out) = maxk+1
@@ -8203,7 +8203,7 @@
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_hadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_hadv'
@@ -8227,11 +8227,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_vadv.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_vadv'
@@ -8255,11 +8255,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_hidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_hidiff'
@@ -8279,11 +8279,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_vidiff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_vidiff'
@@ -8303,11 +8303,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_hediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_hediff'
@@ -8327,11 +8327,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_vediff.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_vediff'
@@ -8351,11 +8351,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_hturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_hturb'
@@ -8375,11 +8375,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_vturb.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_vturb'
@@ -8399,11 +8399,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_pgrad.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_pgrad'
@@ -8423,11 +8423,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_rdamp.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_rdamp'
@@ -8447,11 +8447,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-    IF( output_wbudget.eq.1 )THEN
+    if( output_wbudget.eq.1 )then
       if( wd_buoy.ge.1 )then
       n_out = n_out + 1
       name_output(n_out) = 'wb_buoy'
@@ -8471,11 +8471,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
-    ENDIF
+    endif
 
   !.............................................
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
 
         n_out = n_out + 1
         name_output(n_out) = 'pgradb'
@@ -8504,12 +8504,12 @@
           enddo
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-      ENDIF
+      endif
 
   !.............................................
 
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
         n_out = n_out + 1
         name_output(n_out) = 'pgraddl'
         desc_output(n_out) = 'vert pres grad: linear dynamic component'
@@ -8528,11 +8528,11 @@
           enddo
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-      ENDIF
+      endif
 
   !.............................................
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
         n_out = n_out + 1
         name_output(n_out) = 'pgraddn'
         desc_output(n_out) = 'vert pres grad: nonlinear dynamic component'
@@ -8551,11 +8551,11 @@
           enddo
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-      ENDIF
+      endif
 
   !.............................................
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
         if( icor.eq.1 )then
         n_out = n_out + 1
         name_output(n_out) = 'pgradc'
@@ -8576,11 +8576,11 @@
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
         endif
-      ENDIF
+      endif
 
   !.............................................
 
-      IF( (cm1setup.eq.1.or.cm1setup.eq.4) .and. sgsmodel.eq.4 .and. dotimeavg )THEN
+      if( (cm1setup.eq.1.or.cm1setup.eq.4) .and. sgsmodel.eq.4 .and. dotimeavg )then
         n_out = n_out + 1
         name_output(n_out) = 'kmw'
         desc_output(n_out) = 'kmw'
@@ -8600,7 +8600,7 @@
           enddo
           enddo
         call   writew(dumw,wnum,wrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
-      ENDIF
+      endif
 
   !.............................................
 
@@ -8609,7 +8609,7 @@
 ! KLUDGE !
   if(ptype.eq.91919)then
     out3dcheckw:  &
-    IF( nout3d.ge.1 .and. ie3d.gt.1 .and. je3d.gt.1 .and. ke3d.gt.1 )THEN
+    if( nout3d.ge.1 .and. ie3d.gt.1 .and. je3d.gt.1 .and. ke3d.gt.1 )then
 
       do n=1,nout3d
 
@@ -8649,7 +8649,7 @@
 
       enddo
 
-    ENDIF  out3dcheckw
+    endif  out3dcheckw
   endif
 ! KLUDGE !
 
@@ -8660,7 +8660,7 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-    ENDDO  bigloop
+    enddo  bigloop
 
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -8670,36 +8670,36 @@
 !---------------------------------------------------------------
 #ifdef MPI
       !  limit to "nlim" writes at a time:
-      IF( output_filetype.eq.3 )THEN
-      IF( numprocs.gt.nlim )THEN
+      if( output_filetype.eq.3 )then
+      if( numprocs.gt.nlim )then
         doit = .true.
-        IF( myid+nlim .le. (numprocs-1) )THEN
+        if( myid+nlim .le. (numprocs-1) )then
           call MPI_ISEND(doit,1,mpi_logical,myid+nlim,999999,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(reqs,status,ierr)
-        ENDIF
-      ENDIF
-      ENDIF
+        endif
+      endif
+      endif
 #endif
 !--------------------------------------------------------------
 
       if(dowr) write(outfile,*)
-      if(dowr) write(outfile,*) 'Done Writing Data to File '
+      if(dowr) write(outfile,*) 'Done Writing data to File '
       if(dowr) write(outfile,*)
 
-    IF(output_format.eq.1)THEN
+    if(output_format.eq.1)then
       if( opens ) close(unit=fnum)
       if( openu ) close(unit=unum)
       if( openv ) close(unit=vnum)
       if( openw ) close(unit=wnum)
 #ifdef NETCDF
-    ELSEIF( output_format.eq.2 )THEN
+    elseif( output_format.eq.2 )then
       if( opens )then
         if( myid.eq.0 ) print *,'  calling nf90_close ... '
         call disp_err( nf90_close(ncid) , .true. )
         if( myid.eq.0 ) print *,'  ... done '
       endif
 #endif
-    ENDIF
+    endif
 
 
       sout2d = 0
@@ -8812,17 +8812,17 @@
 #else
   ! MPI section:
 
-  IF(output_filetype.eq.1.or.output_filetype.eq.2)THEN
+  if(output_filetype.eq.1.or.output_filetype.eq.2)then
 
-      IF(myid.ne.nodeleader)THEN
+      if(myid.ne.nodeleader)then
         call     writeocomm1(numi,numj,numk1,numk2,ngxy,d3i,d3j,nodeleader,dat1,var)
-      ELSE
-        IF(myid.ne.0)THEN
+      else
+        if(myid.ne.0)then
           call   writeocomm2(numi,numj,numk1,numk2,ngxy,d3i,d3j,d3n,d3t,nodeleader,myid,ppnode,reqt,dat1,dat3,var)
-        ELSE
+        else
           call   writeocomm3(numi,numj,numk1,numk2,ngxy,d2i,d2j,d3i,d3j,d3n,d3t,nodeleader,myid,mynode,ppnode,nodes,numprocs,ni,nj,nxr,nyr,output_format,fileunit,irec,myi1p,myi2p,myj1p,myj2p,reqt,dat1,dat2,dat3,var,ncid,aname,time_index)
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 !!!#ifdef MPI
 !!!    ! can help with memory:
@@ -8836,15 +8836,15 @@
   !  this section wites one output file per MPI process:
   !  (for MPI runs only)
 
-  ELSEIF(output_filetype.eq.3)THEN
-    IF( output_format.eq.1 )THEN
+  elseif(output_filetype.eq.3)then
+    if( output_format.eq.1 )then
       ! grads format:
-      DO k=numk1,numk2
+      do k=numk1,numk2
         write(fileunit,rec=irec) ((var(i,j,k),i=1,numi),j=1,numj)
         irec=irec+1
-      ENDDO
+      enddo
 #ifdef NETCDF
-    ELSEIF( output_format.eq.2 )THEN
+    elseif( output_format.eq.2 )then
       ! netcdf format:
       status = nf90_inq_varid(ncid,aname,varid)
       if(status.ne.nf90_noerr)then
@@ -8853,7 +8853,7 @@
         call stopcm1
       endif
       print *,'  ncid,aname,varid = ',ncid,aname,varid,var(1,1,1)
-      DO k=numk1,numk2
+      do k=numk1,numk2
         !$omp parallel do default(shared)   &
         !$omp private(i,j)
         do j=1,numj
@@ -8878,10 +8878,10 @@
             call stopcm1
           endif
         endif
-      ENDDO
+      enddo
 #endif
-    ENDIF
-  ENDIF
+    endif
+  endif
 #endif
 
   !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -8935,10 +8935,10 @@
       endif
 #endif
 
-      IF(output_format.eq.1)THEN
+      if(output_format.eq.1)then
 
         ! ----- grads format -----
-        DO k=numk1,numk2
+        do k=numk1,numk2
 #ifdef DP
           ! double precision:
           do j=1,nyr
@@ -8952,10 +8952,10 @@
           write(fileunit,rec=irec) ((var(i,j,k),i=1,nxr),j=1,nyr)
 #endif
           irec = irec+1
-        ENDDO
+        enddo
 
 #ifdef NETCDF
-      ELSEIF(output_format.eq.2)THEN
+      elseif(output_format.eq.2)then
 
         ! ----- netcdf format -----
         if(numk1.eq.numk2)then
@@ -8972,7 +8972,7 @@
             call stopcm1
           endif
         else
-          DO k=numk1,numk2
+          do k=numk1,numk2
             do j=1,nyr
             do i=1,nxr
               dat2(i,j) = var(i,j,k)
@@ -8985,11 +8985,11 @@
               print *,nf90_strerror(status)
               call stopcm1
             endif
-          ENDDO
+          enddo
         endif
 #endif
 
-      ENDIF
+      endif
 
 
       end subroutine writeosp
@@ -9016,7 +9016,7 @@
 
       tag = 1
 
-      DO k=numk1,numk2
+      do k=numk1,numk2
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j)
@@ -9031,7 +9031,7 @@
 
         tag = tag+2
 
-      ENDDO
+      enddo
 
       ! DONE, ordinary processors
 
@@ -9062,7 +9062,7 @@
 
       tag = 1
 
-      DO k=numk1,numk2
+      do k=numk1,numk2
 
         ! start receives from all other processors on a node:
         do proc=myid+1,myid+(ppnode-1)
@@ -9088,7 +9088,7 @@
 
         tag = tag+2
 
-      ENDDO
+      enddo
 
       ! end nodeleader section (not proc0):
 
@@ -9158,7 +9158,7 @@
       endif
 #endif
 
-      DO k=numk1,numk2
+      do k=numk1,numk2
 
         ! my data:
         !$omp parallel do default(shared)  &
@@ -9214,7 +9214,7 @@
           enddo
 
           ! ready to write ... but first, start receives for next level:
-          IF( k.lt.numk2 )THEN
+          if( k.lt.numk2 )then
             do proc=1,(ppnode-1)
               call MPI_IRECV(dat3(1,1,proc),d3i*d3j,MPI_REAL,proc,tag+2,MPI_COMM_WORLD,reqt(proc),ierr)
             enddo
@@ -9222,15 +9222,15 @@
               proc = nn*ppnode
               call MPI_IRECV(dat3(1,1,proc),d3i*d3j*ppnode,MPI_REAL,proc,tag+3,MPI_COMM_WORLD,reqt(ppnode-1+nn),ierr)
             enddo
-          ENDIF
+          endif
 
       !-------------------- write data --------------------!
-        IF(output_format.eq.1)THEN
+        if(output_format.eq.1)then
           ! ----- grads format -----
           write(fileunit,rec=irec) ((dat2(i,j),i=1,nxr),j=1,nyr)
           irec = irec+1
 #ifdef NETCDF
-        ELSEIF(output_format.eq.2)THEN
+        elseif(output_format.eq.2)then
           ! ----- netcdf format -----
           if(numk1.eq.numk2)then
             status = nf90_put_var(ncid,varid,dat2,(/1,1,time_index/),(/nxr,nyr,1/))
@@ -9244,12 +9244,12 @@
             call stopcm1
           endif
 #endif
-        ENDIF
+        endif
       !-------------------- end write data --------------------!
 
         tag = tag+2
 
-      ENDDO
+      enddo
 
       ! end proc0:
 
@@ -9291,7 +9291,7 @@
       !----------------------------------------------------------------
 
     idcheck:  &
-    IF( myid.eq.0 )THEN
+    if( myid.eq.0 )then
 
       do i=1,maxstring
         string(i:i) = ' '
@@ -9302,11 +9302,11 @@
       if( output_interp.eq.1 ) ctlmax = 5
 
       ctlloop:  &
-      DO ctl = 1 , ctlmax
+      do ctl = 1 , ctlmax
 
         doit = .false.
 
-        IF(     ctl.eq.1 )THEN
+        if(     ctl.eq.1 )then
           if( s_out.ge.1 )then
           string = 'cm1out_s.ctl'
           if(dowr) write(outfile,*) string
@@ -9317,7 +9317,7 @@
           endif
           doit = .true.
           endif
-        ELSEIF( ctl.eq.2 )THEN
+        elseif( ctl.eq.2 )then
           if( u_out.ge.1 )then
           string = 'cm1out_u.ctl'
           if(dowr) write(outfile,*) string
@@ -9328,7 +9328,7 @@
           endif
           doit = .true.
           endif
-        ELSEIF( ctl.eq.3 )THEN
+        elseif( ctl.eq.3 )then
           if( v_out.ge.1 )then
           string = 'cm1out_v.ctl'
           if(dowr) write(outfile,*) string
@@ -9339,7 +9339,7 @@
           endif
           doit = .true.
           endif
-        ELSEIF( ctl.eq.4 )THEN
+        elseif( ctl.eq.4 )then
           if( w_out.ge.1 )then
           string = 'cm1out_w.ctl'
           if(dowr) write(outfile,*) string
@@ -9350,7 +9350,7 @@
           endif
           doit = .true.
           endif
-        ELSEIF( ctl.eq.5 )THEN
+        elseif( ctl.eq.5 )then
           if( s_out.ge.1 )then
           string = 'cm1out_i.ctl'
           if(dowr) write(outfile,*) string
@@ -9361,13 +9361,13 @@
           endif
           doit = .true.
           endif
-        ELSE
+        else
           print *,'  98371 '
           call stopcm1
-        ENDIF
+        endif
 
         dowrite:  &
-        IF( doit )THEN
+        if( doit )then
 
           open(unit=50,file=string,status='unknown')
 
@@ -9380,7 +9380,7 @@
           endif
           write(50,203) grads_undef
 
-          IF( ctl.eq.2 )THEN
+          if( ctl.eq.2 )then
             ! u staggering:
             if(stretch_x.ge.1)then
               write(50,214) nx+1
@@ -9390,7 +9390,7 @@
             else
               write(50,204) nx+1,outunitconv*xf(1),outunitconv*dx
             endif
-          ELSE
+          else
             ! s staggering:
             if(stretch_x.ge.1)then
               write(50,214) nx
@@ -9400,9 +9400,9 @@
             else
               write(50,204) nx,outunitconv*xh(1),outunitconv*dx
             endif
-          ENDIF
+          endif
 
-          IF( ctl.eq.3 )THEN
+          if( ctl.eq.3 )then
             ! v staggering:
             if(stretch_y.ge.1)then
               write(50,215) ny+1
@@ -9412,7 +9412,7 @@
             else
               write(50,205) ny+1,outunitconv*yf(1),outunitconv*dy
             endif
-          ELSE
+          else
             ! s staggering:
             if(stretch_y.ge.1)then
               write(50,215) ny
@@ -9422,9 +9422,9 @@
             else
               write(50,205) ny,outunitconv*yh(1),outunitconv*dy
             endif
-          ENDIF
+          endif
 
-          IF( ctl.eq.4 )THEN
+          if( ctl.eq.4 )then
             ! w staggering:
             if(stretch_z.eq.0)then
               write(50,206) maxk+1,0.0,outunitconv*dz
@@ -9434,7 +9434,7 @@
                 write(50,217) outunitconv*sigmaf(k)
               enddo
             endif
-          ELSE
+          else
             ! s staggering:
             if(stretch_z.eq.0)then
               write(50,206) maxk,outunitconv*sigma(1),outunitconv*dz
@@ -9444,33 +9444,33 @@
                 write(50,217) outunitconv*sigma(k)
               enddo
             endif
-          ENDIF
+          endif
 
 
               write(50,227) nwrite
 
 
-          IF( ctl.eq.1 .or. ctl.eq.5 )THEN
+          if( ctl.eq.1 .or. ctl.eq.5 )then
             ! scalars:
             write(50,208) s_out
             n1 = 1
             n2 = s_out
-          ELSEIF( ctl.eq.2 )THEN
+          elseif( ctl.eq.2 )then
             ! u vars:
             write(50,208) u_out
             n1 = s_out+1
             n2 = s_out+u_out
-          ELSEIF( ctl.eq.3 )THEN
+          elseif( ctl.eq.3 )then
             ! v vars:
             write(50,208) v_out
             n1 = s_out+u_out+1
             n2 = s_out+u_out+v_out
-          ELSEIF( ctl.eq.4 )THEN
+          elseif( ctl.eq.4 )then
             ! w vars:
             write(50,208) w_out
             n1 = s_out+u_out+v_out+1
             n2 = s_out+u_out+v_out+w_out
-          ENDIF
+          endif
 
           do n = n1,n2
             a12 = '            '
@@ -9495,11 +9495,11 @@
           write(50,210)
           close(unit=50)
 
-        ENDIF  dowrite
+        endif  dowrite
 
-      ENDDO  ctlloop
+      enddo  ctlloop
 
-    ENDIF  idcheck
+    endif  idcheck
 
 301   format(a1)
 314   format(a10)
@@ -9554,7 +9554,7 @@
 
       nvar = 0
 
-    IF( myid.eq.0 )THEN
+    if( myid.eq.0 )then
 
       open(unit=61,file='cm1out_metadata.dat',status='unknown',  &
            form='unformatted',access='direct',recl=4)
@@ -9588,7 +9588,7 @@
 
     !---------------------------
 
-    IF( adapt_dt .eq. 1 )THEN
+    if( adapt_dt .eq. 1 )then
 
       nvar = nvar+1
       varname(nvar) = 'adt'
@@ -9598,7 +9598,7 @@
       write(61,rec=mrec) var
       mrec = mrec+1
 
-    ENDIF
+    endif
 
     !---------------------------
 
@@ -9611,7 +9611,7 @@
 
     !---------------------------
 
-    IF( imove.ge.1 )THEN
+    if( imove.ge.1 )then
 
       nvar = nvar+1
       varname(nvar) = 'umove'
@@ -9647,11 +9647,11 @@
       write(61,rec=mrec) sngl(domainlocy)
       mrec = mrec+1
 
-    ENDIF
+    endif
 
     !---------------------------
 
-    IF( radopt.ge.1 )THEN
+    if( radopt.ge.1 )then
 
       nvar = nvar+1
       varname(nvar) = 'solcon'
@@ -9660,11 +9660,11 @@
       write(61,rec=mrec) rad_solcon
       mrec = mrec+1
 
-    ENDIF
+    endif
 
     !---------------------------
 
-    IF( radopt.ge.1 )THEN
+    if( radopt.ge.1 )then
 
       nvar = nvar+1
       varname(nvar) = 'jday'
@@ -9673,11 +9673,11 @@
       write(61,rec=mrec) rad_jday
       mrec = mrec+1
 
-    ENDIF
+    endif
 
     !---------------------------
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
 
       nvar = nvar+1
       varname(nvar) = 'zenith_angle'
@@ -9686,11 +9686,11 @@
       write(61,rec=mrec) rad_zenangle
       mrec = mrec+1
 
-    ENDIF
+    endif
 
     !---------------------------
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
 
       nvar = nvar+1
       varname(nvar) = 'declin_angle'
@@ -9699,11 +9699,11 @@
       write(61,rec=mrec) rad_declin
       mrec = mrec+1
 
-    ENDIF
+    endif
 
     !---------------------------
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
 
       nvar = nvar+1
       varname(nvar) = 'hrang'
@@ -9712,7 +9712,7 @@
       write(61,rec=mrec) rad_hrang
       mrec = mrec+1
 
-    ENDIF
+    endif
 
     !---------------------------
 
@@ -9750,7 +9750,7 @@
 209   format(a12,1x,i6,' 99 ',a60,1x,a12)
 210   format('endvars')
 
-    ENDIF
+    endif
 
     !---------------------------
 
@@ -9781,16 +9781,16 @@
   !---------------------------------------------------------------------
 
     checktype:  &
-    IF(     type .eq. 's' )THEN
+    if(     type .eq. 's' )then
 
       sof1:  &
-      IF(output_format.eq.1)THEN
+      if(output_format.eq.1)then
         ! grads output:
 
 !beh1
-        IF( output_filetype.eq.1 .or. output_filetype.eq.2 )THEN
+        if( output_filetype.eq.1 .or. output_filetype.eq.2 )then
 
-          IF( myid.eq.nodeleader )THEN
+          if( myid.eq.nodeleader )then
 
           if( output_filetype.eq.1 )then
 
@@ -9820,9 +9820,9 @@
           opens = .true.
 !beh3
 
-          ENDIF
+          endif
 
-        ELSEIF( output_filetype.eq.3 )THEN
+        elseif( output_filetype.eq.3 )then
 
           if(fnum.eq.51)then
             string = 'cm1out_XXXXXX_YYYYYY_s.dat  '
@@ -9838,27 +9838,27 @@
                recl=(ni*nj*4),status='unknown')
           opens = .true.
 
-        ELSE
+        else
 
           print *,'  unrecognized value for output_filetype in open_file_s '
           call stopcm1
 
-        ENDIF
+        endif
 
-      ENDIF  sof1
+      endif  sof1
 
   !---------------------------------------------------------------------
 
-    ELSEIF( type .eq. 'u' )THEN
+    elseif( type .eq. 'u' )then
 
       uof1:  &
-      IF(output_format.eq.1)THEN
+      if(output_format.eq.1)then
         ! grads output:
 
 !beh1
-        IF( output_filetype.eq.1 .or. output_filetype.eq.2 )THEN
+        if( output_filetype.eq.1 .or. output_filetype.eq.2 )then
 
-          IF( myid.eq.nodeleader )THEN
+          if( myid.eq.nodeleader )then
 
           if( output_filetype.eq.1 )then
 
@@ -9888,9 +9888,9 @@
           openu = .true.
 !beh3
 
-          ENDIF
+          endif
 
-        ELSEIF( output_filetype.eq.3 )THEN
+        elseif( output_filetype.eq.3 )then
 
 
             string = 'cm1out_XXXXXX_YYYYYY_u.dat  '
@@ -9906,27 +9906,27 @@
                recl=((ni+1)*nj*4),status='unknown')
           openu = .true.
 
-        ELSE
+        else
 
           print *,'  unrecognized value for output_filetype in open_file_u '
           call stopcm1
 
-        ENDIF
+        endif
 
-      ENDIF  uof1
+      endif  uof1
 
   !---------------------------------------------------------------------
 
-    ELSEIF( type .eq. 'v' )THEN
+    elseif( type .eq. 'v' )then
 
       vof1:  &
-      IF(output_format.eq.1)THEN
+      if(output_format.eq.1)then
         ! grads output:
 
 !beh1
-        IF( output_filetype.eq.1 .or. output_filetype.eq.2 )THEN
+        if( output_filetype.eq.1 .or. output_filetype.eq.2 )then
 
-          IF( myid.eq.nodeleader )THEN
+          if( myid.eq.nodeleader )then
 
           if( output_filetype.eq.1 )then
 
@@ -9956,9 +9956,9 @@
           openv = .true.
 !beh3
 
-          ENDIF
+          endif
 
-        ELSEIF( output_filetype.eq.3 )THEN
+        elseif( output_filetype.eq.3 )then
 
 
             string = 'cm1out_XXXXXX_YYYYYY_v.dat  '
@@ -9974,27 +9974,27 @@
                recl=(ni*(nj+1)*4),status='unknown')
           openv = .true.
 
-        ELSE
+        else
 
           print *,'  unrecognized value for output_filetype in open_file_v '
           call stopcm1
 
-        ENDIF
+        endif
 
-      ENDIF  vof1
+      endif  vof1
 
   !---------------------------------------------------------------------
 
-    ELSEIF( type .eq. 'w' )THEN
+    elseif( type .eq. 'w' )then
 
       wof1:  &
-      IF(output_format.eq.1)THEN
+      if(output_format.eq.1)then
         ! grads output:
 
 !beh1
-        IF( output_filetype.eq.1 .or. output_filetype.eq.2 )THEN
+        if( output_filetype.eq.1 .or. output_filetype.eq.2 )then
 
-          IF( myid.eq.nodeleader )THEN
+          if( myid.eq.nodeleader )then
 
           if( output_filetype.eq.1 )then
 
@@ -10024,9 +10024,9 @@
           openw = .true.
 !beh3
 
-          ENDIF
+          endif
 
-        ELSEIF( output_filetype.eq.3 )THEN
+        elseif( output_filetype.eq.3 )then
 
 
             string = 'cm1out_XXXXXX_YYYYYY_w.dat  '
@@ -10042,23 +10042,23 @@
                recl=(ni*nj*4),status='unknown')
           openw = .true.
 
-        ELSE
+        else
 
           print *,'  unrecognized value for output_filetype in open_file_w '
           call stopcm1
 
-        ENDIF
+        endif
 
-      ENDIF  wof1
+      endif  wof1
 
   !---------------------------------------------------------------------
 
-    ELSE
+    else
 
       print *,'  Unknown type in open_file '
       call stopcm1
 
-    ENDIF  checktype
+    endif  checktype
 
     end subroutine open_file
 
@@ -10086,9 +10086,9 @@
     integer, intent(in) :: levs_output
 
     nout = n_out  ! kludge
-    IF( .not. opens .and. output_format.eq.1 )THEN
+    if( .not. opens .and. output_format.eq.1 )then
       call open_file('s',snum,nwrite)
-    ENDIF
+    endif
 
     if( output_format.eq.1 .or. ( output_format.eq.2 .and. nloop.eq.2 ) )   &
     call writeo(ni,nj,1,1,nx,ny,var2d(ib,jb),trim(name_output),             &
@@ -10129,9 +10129,9 @@
     integer, intent(in) :: levs_output
 
     nout = n_out  ! kludge
-    IF( .not. opens .and. output_format.eq.1 )THEN
+    if( .not. opens .and. output_format.eq.1 )then
       call open_file('s',snum,nwrite)
-    ENDIF
+    endif
 
     if( dointerp .and. trim(name_output).ne.'zhval' ) call zinterp(sigma,zs,zh,vars,dum9)
 
@@ -10170,9 +10170,9 @@
 
     nout = n_out  ! kludge
   if( .not. dointerp )then
-    IF( .not. openu .and. output_format.eq.1 )THEN
+    if( .not. openu .and. output_format.eq.1 )then
       call open_file('u',unum,nwrite)
-    ENDIF
+    endif
 
     if( output_format.eq.1 .or. ( output_format.eq.2 .and. nloop.eq.2 ) )   &
     call writeo(ni+1,nj,1,levs_output,nx+1,ny,varu(ib,jb,1),trim(name_output),     &
@@ -10210,9 +10210,9 @@
 
     nout = n_out  ! kludge
   if( .not. dointerp )then
-    IF( .not. openv .and. output_format.eq.1 )THEN
+    if( .not. openv .and. output_format.eq.1 )then
       call open_file('v',vnum,nwrite)
-    ENDIF
+    endif
 
     if( output_format.eq.1 .or. ( output_format.eq.2 .and. nloop.eq.2 ) )   &
     call writeo(ni,nj+1,1,levs_output,nx,ny+1,varv(ib,jb,1),trim(name_output),     &
@@ -10250,9 +10250,9 @@
 
     nout = n_out  ! kludge
   if( .not. dointerp )then
-    IF( .not. openw .and. output_format.eq.1 )THEN
+    if( .not. openw .and. output_format.eq.1 )then
       call open_file('w',wnum,nwrite)
-    ENDIF
+    endif
 
     if( output_format.eq.1 .or. ( output_format.eq.2 .and. nloop.eq.2 ) )   &
     call writeo(ni,nj,1,levs_output,nx,ny,varw(ib,jb,1),trim(name_output),       &
@@ -10271,4 +10271,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-  END MODULE writeout_module
+  end module writeout_module

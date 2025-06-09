@@ -1,4 +1,4 @@
-  MODULE constants
+  module constants
 
   implicit none
 
@@ -62,7 +62,7 @@
 
       real, parameter :: grads_undef  =  -999999.9
 
-  CONTAINS
+  contains
 
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
@@ -75,7 +75,7 @@
       !--------------------
       !  For test cases:
 
-      IF( testcase.eq.4 )THEN
+      if( testcase.eq.4 )then
 
         !  nonprecipitating stratocumulus (Stevens et al, 2005, MWR)
         g      = 9.81
@@ -86,7 +86,7 @@
         xls    = 2834000.0
         earth_radius  =  6370000.0
 
-      ELSEIF( testcase.eq.5 )THEN
+      elseif( testcase.eq.5 )then
 
         !  drizzling stratocumulus (Ackerman et al, 2009, MWR)
         g      = 9.81
@@ -97,7 +97,7 @@
         xls    = 2834000.0
         earth_radius  =  6370000.0
 
-      ELSE
+      else
 
         !  RCEMIP
 !!!        g      = 9.79764
@@ -117,7 +117,7 @@
         xls    = 2834000.0
         earth_radius  =  6370000.0
 
-      ENDIF
+      endif
 
       !--------------------
 
@@ -158,10 +158,10 @@
       svpt0  = 273.15
 
 
-      IF( testcase.eq.4 .or. testcase.eq.5 )THEN
+      if( testcase.eq.4 .or. testcase.eq.5 )then
         lv1 = xlv
         lv2 = 0.0
-      ENDIF
+      endif
 
 
       ! DO NOT CHANGE THESE:
@@ -175,13 +175,13 @@
 
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE constants
+  end module constants
   
 ! ---------------------------------------------------------------------------  
 
     ! GHB: index_module is for NSSL microphysics
   
-  MODULE index_module
+  module index_module
   
   implicit none
 
@@ -229,5 +229,5 @@
   logical :: f_cina = .false.
   
   
-  END MODULE index_module
+  end module index_module
  

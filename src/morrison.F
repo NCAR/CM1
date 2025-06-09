@@ -88,53 +88,53 @@
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-MODULE module_mp_GRAUPEL
+module module_mp_GRAUPEL
 !!!   USE     module_wrf_error
 !!!      USE module_utility, ONLY: WRFU_Clock, WRFU_Alarm  ! GT
 !!!      USE module_domain, ONLY : HISTORY_ALARM, Is_alarm_tstep  ! GT
 
 !  USE module_state_description
 
-   IMPLICIT NONE
+   implicit none
 
    private
    public :: graupel_init,mp_graupel
 
-   REAL, PARAMETER :: PI = 3.1415926535897932384626434
-   REAL, PARAMETER :: xxx = 0.9189385332046727417803297
+   real, parameter :: PI = 3.1415926535897932384626434
+   real, parameter :: xxx = 0.9189385332046727417803297
 
 !!!   PUBLIC  ::  MP_GRAUPEL
 !!!   PUBLIC  ::  POLYSVP
 
-   PRIVATE :: GAMMA, DERF1
-   PRIVATE :: PI, xxx
-   PRIVATE :: M2005MICRO_GRAUPEL
+   private :: GAMMA, DERF1
+   private :: PI, xxx
+   private :: M2005MICRO_GRAUPEL
 
 ! SWITCHES FOR MICROPHYSICS SCHEME
 ! IACT = 1, USE POWER-LAW CCN SPECTRA, NCCN = CS^K
 ! IACT = 2, USE LOGNORMAL AEROSOL SIZE DIST TO DERIVE CCN SPECTRA
 
-     INTEGER, PRIVATE ::  IACT
+     integer, private ::  IACT
 
 ! INUM = 0, PREDICT DROPLET CONCENTRATION
 ! INUM = 1, ASSUME CONSTANT DROPLET CONCENTRATION   
 
-     INTEGER, PRIVATE ::  INUM
+     integer, private ::  INUM
 
 ! FOR INUM = 1, SET CONSTANT DROPLET CONCENTRATION (CM-3)
-     REAL, PRIVATE ::      NDCNST
+     real, private ::      NDCNST
 
 ! SWITCH FOR LIQUID-ONLY RUN
 ! ILIQ = 0, INCLUDE ICE
 ! ILIQ = 1, LIQUID ONLY, NO ICE
 
-     INTEGER, PRIVATE ::  ILIQ
+     integer, private ::  ILIQ
 
 ! SWITCH FOR ICE NUCLEATION
 ! INUC = 0, USE FORMULA FROM RASMUSSEN ET AL. 2002 (MID-LATITUDE)
 !      = 1, USE MPACE OBSERVATIONS
 
-     INTEGER, PRIVATE ::  INUC
+     integer, private ::  INUC
 
 ! IBASE = 1, NEGLECT DROPLET ACTIVATION AT LATERAL CLOUD EDGES DUE TO 
 !             UNRESOLVED ENTRAINMENT AND MIXING, ACTIVATE
@@ -150,165 +150,165 @@ MODULE module_mp_GRAUPEL
 
 ! NOTE: ONLY USED FOR PREDICTED DROPLET CONCENTRATION (INUM = 0) IN NON-WRF-CHEM VERSION OF CODE
 
-     INTEGER, PRIVATE ::  IBASE
+     integer, private ::  IBASE
 
 ! INCLUDE SUB-GRID VERTICAL VELOCITY IN DROPLET ACTIVATION
 ! ISUB = 0, INCLUDE SUB-GRID W (RECOMMENDED FOR LOWER RESOLUTION)
 ! ISUB = 1, EXCLUDE SUB-GRID W, ONLY USE GRID-SCALE W
 
-     INTEGER, PRIVATE ::  ISUB      
+     integer, private ::  ISUB      
 
 ! SWITCH FOR GRAUPEL/NO GRAUPEL
 ! IGRAUP = 0, INCLUDE GRAUPEL
 ! IGRAUP = 1, NO GRAUPEL
 
-     INTEGER, PRIVATE ::  IGRAUP
+     integer, private ::  IGRAUP
 
 ! HM ADDED NEW OPTION FOR HAIL V1.3
 ! SWITCH FOR HAIL/GRAUPEL
 ! IHAIL = 0, DENSE PRECIPITATING ICE IS GRAUPEL
 ! IHAIL = 1, DENSE PRECIPITATING GICE IS HAIL
 
-     INTEGER, PRIVATE ::  IHAIL
+     integer, private ::  IHAIL
 
 ! HM ADDED 8/1/08, v1.4
 ! SWITCH FOR WARM RAIN SCHEME
 ! IRAIN = 0, WARM RAIN (AUTO, ACC, SELF-COLL) FROM KHAIROUTIDNOV AND KOGAN (2000)
 ! IRAIN = 1, WARM RAIN (AUTO, ACC, SELF-COLL) FROM SEIFERT AND BEHENG (2001)
 
-     INTEGER, PRIVATE ::  IRAIN      
+     integer, private ::  IRAIN      
 
 ! CLOUD MICROPHYSICS CONSTANTS
 
-     REAL, PRIVATE ::      AI,AC,AS,AR,AG ! 'A' PARAMETER IN FALLSPEED-DIAM RELATIONSHIP
-     REAL, PRIVATE ::      BI,BC,BS,BR,BG ! 'B' PARAMETER IN FALLSPEED-DIAM RELATIONSHIP
-     REAL, PRIVATE ::      R           ! GAS CONSTANT FOR AIR
-     REAL, PRIVATE ::      RV          ! GAS CONSTANT FOR WATER VAPOR
-     REAL, PRIVATE ::      CP          ! SPECIFIC HEAT AT CONSTANT PRESSURE FOR DRY AIR
-     REAL, PRIVATE ::      EP_2
+     real, private ::      AI,AC,AS,AR,AG ! 'A' parameter in FALLSPEED-DIAM RELATIONSHIP
+     real, private ::      BI,BC,BS,BR,BG ! 'B' parameter in FALLSPEED-DIAM RELATIONSHIP
+     real, private ::      R           ! GAS CONSTANT FOR AIR
+     real, private ::      RV          ! GAS CONSTANT FOR WATER VAPOR
+     real, private ::      CP          ! SPECIFIC HEAT AT CONSTANT PRESSURE FOR DRY AIR
+     real, private ::      EP_2
      ! GHB: Needed for eqtset=2 in CM1
-     REAL, PRIVATE ::      cv
-     REAL, PRIVATE ::      cvv
-     REAL, PRIVATE ::      cpv
-     REAL, PRIVATE ::      cpl
-     REAL, PRIVATE ::      cpi
-     REAL, PRIVATE ::      xlv0
-     REAL, PRIVATE ::      xls0
-     REAL, PRIVATE ::      lv1
-     REAL, PRIVATE ::      lv2
-     REAL, PRIVATE ::      ls1
-     REAL, PRIVATE ::      ls2
+     real, private ::      cv
+     real, private ::      cvv
+     real, private ::      cpv
+     real, private ::      cpl
+     real, private ::      cpi
+     real, private ::      xlv0
+     real, private ::      xls0
+     real, private ::      lv1
+     real, private ::      lv2
+     real, private ::      ls1
+     real, private ::      ls2
      ! GHB
-     REAL, PRIVATE ::      RHOSU       ! STANDARD AIR DENSITY AT 850 MB
-     REAL, PRIVATE ::      RHOW        ! DENSITY OF LIQUID WATER
-     REAL, PRIVATE ::      RHOI        ! BULK DENSITY OF CLOUD ICE
-     REAL, PRIVATE ::      RHOSN       ! BULK DENSITY OF SNOW
-     REAL, PRIVATE ::      RHOG        ! BULK DENSITY OF GRAUPEL
-     REAL, PRIVATE ::      AIMM        ! PARAMETER IN BIGG IMMERSION FREEZING
-     REAL, PRIVATE ::      BIMM        ! PARAMETER IN BIGG IMMERSION FREEZING
-     REAL, PRIVATE ::      ECR         ! COLLECTION EFFICIENCY BETWEEN DROPLETS/RAIN AND SNOW/RAIN
-     REAL, PRIVATE ::      DCS         ! THRESHOLD SIZE FOR CLOUD ICE AUTOCONVERSION
-     REAL, PRIVATE ::      MI0         ! INITIAL SIZE OF NUCLEATED CRYSTAL
-     REAL, PRIVATE ::      MG0         ! MASS OF EMBRYO GRAUPEL
-     REAL, PRIVATE ::      F1S         ! VENTILATION PARAMETER FOR SNOW
-     REAL, PRIVATE ::      F2S         ! VENTILATION PARAMETER FOR SNOW
-     REAL, PRIVATE ::      F1R         ! VENTILATION PARAMETER FOR RAIN
-     REAL, PRIVATE ::      F2R         ! VENTILATION PARAMETER FOR RAIN
-     REAL, PRIVATE ::      G           ! GRAVITATIONAL ACCELERATION
-     REAL, PRIVATE ::      QSMALL      ! SMALLEST ALLOWED HYDROMETEOR MIXING RATIO
-     REAL, PRIVATE ::      QTHR        ! ghb: SMALL HYDROMETEOR MIXING RATIO THRESHOLD IN SUBSATURATED CONDITIONS
-     REAL, PRIVATE ::      CI,DI,CS,DS,CG,DG ! SIZE DISTRIBUTION PARAMETERS FOR CLOUD ICE, SNOW, GRAUPEL
-     REAL, PRIVATE ::      EII         ! COLLECTION EFFICIENCY, ICE-ICE COLLISIONS
-     REAL, PRIVATE ::      ECI         ! COLLECTION EFFICIENCY, ICE-DROPLET COLLISIONS
-     REAL, PRIVATE ::      RIN     ! RADIUS OF CONTACT NUCLEI (M)
+     real, private ::      RHOSU       ! STANDARD AIR DENSITY AT 850 MB
+     real, private ::      RHOW        ! DENSITY OF LIQUID WATER
+     real, private ::      RHOI        ! BULK DENSITY OF CLOUD ICE
+     real, private ::      RHOSN       ! BULK DENSITY OF SNOW
+     real, private ::      RHOG        ! BULK DENSITY OF GRAUPEL
+     real, private ::      AIMM        ! parameter in BIGG IMMERSION FREEZING
+     real, private ::      BIMM        ! parameter in BIGG IMMERSION FREEZING
+     real, private ::      ECR         ! COLLECTION EFFICIENCY BETWEEN DROPLETS/RAIN AND SNOW/RAIN
+     real, private ::      DCS         ! THRESHOLD SIZE FOR CLOUD ICE AUTOCONVERSION
+     real, private ::      MI0         ! INITIAL SIZE OF NUCLEATED CRYSTAL
+     real, private ::      MG0         ! MASS OF EMBRYO GRAUPEL
+     real, private ::      F1S         ! VENTILATION parameter FOR SNOW
+     real, private ::      F2S         ! VENTILATION parameter FOR SNOW
+     real, private ::      F1R         ! VENTILATION parameter FOR RAIN
+     real, private ::      F2R         ! VENTILATION parameter FOR RAIN
+     real, private ::      G           ! GRAVITATIONAL ACCELERATION
+     real, private ::      QSMALL      ! SMALLEST ALLOWED HYDROMETEOR MIXING RATIO
+     real, private ::      QTHR        ! ghb: SMALL HYDROMETEOR MIXING RATIO THRESHOLD in SUBSATURATED CONDITIONS
+     real, private ::      CI,DI,CS,DS,CG,DG ! SIZE DISTRIBUTION PARAMETERS FOR CLOUD ICE, SNOW, GRAUPEL
+     real, private ::      EII         ! COLLECTION EFFICIENCY, ICE-ICE COLLISIONS
+     real, private ::      ECI         ! COLLECTION EFFICIENCY, ICE-DROPLET COLLISIONS
+     real, private ::      RIN     ! RADIUS OF CONTACT NUCLEI (M)
 ! V1.6
-     REAL, PRIVATE ::      TMELT     ! melting temp (K)
+     real, private ::      TMELT     ! melting temp (K)
 ! hm, add for V2.1
-     REAL, PRIVATE ::      CPW     ! SPECIFIC HEAT OF LIQUID WATER
+     real, private ::      CPW     ! SPECIFIC HEAT OF LIQUID WATER
 
 ! CCN SPECTRA FOR IACT = 1
 
-     REAL, PRIVATE ::      C1     ! 'C' IN NCCN = CS^K (CM-3)
-     REAL, PRIVATE ::      K1     ! 'K' IN NCCN = CS^K
+     real, private ::      C1     ! 'C' in NCCN = CS^K (CM-3)
+     real, private ::      K1     ! 'K' in NCCN = CS^K
 
 ! AEROSOL PARAMETERS FOR IACT = 2
 
-     REAL, PRIVATE ::      MW      ! MOLECULAR WEIGHT WATER (KG/MOL)
-     REAL, PRIVATE ::      OSM     ! OSMOTIC COEFFICIENT
-     REAL, PRIVATE ::      VI      ! NUMBER OF ION DISSOCIATED IN SOLUTION
-     REAL, PRIVATE ::      EPSM    ! AEROSOL SOLUBLE FRACTION
-     REAL, PRIVATE ::      RHOA    ! AEROSOL BULK DENSITY (KG/M3)
-     REAL, PRIVATE ::      MAP     ! MOLECULAR WEIGHT AEROSOL (KG/MOL)
-     REAL, PRIVATE ::      MA      ! MOLECULAR WEIGHT OF 'AIR' (KG/MOL)
-     REAL, PRIVATE ::      RR      ! UNIVERSAL GAS CONSTANT
-     REAL, PRIVATE ::      BACT    ! ACTIVATION PARAMETER
-     REAL, PRIVATE ::      RM1     ! GEOMETRIC MEAN RADIUS, MODE 1 (M)
-     REAL, PRIVATE ::      RM2     ! GEOMETRIC MEAN RADIUS, MODE 2 (M)
-     REAL, PRIVATE ::      NANEW1  ! TOTAL AEROSOL CONCENTRATION, MODE 1 (M^-3)
-     REAL, PRIVATE ::      NANEW2  ! TOTAL AEROSOL CONCENTRATION, MODE 2 (M^-3)
-     REAL, PRIVATE ::      SIG1    ! STANDARD DEVIATION OF AEROSOL S.D., MODE 1
-     REAL, PRIVATE ::      SIG2    ! STANDARD DEVIATION OF AEROSOL S.D., MODE 2
-     REAL, PRIVATE ::      F11     ! CORRECTION FACTOR FOR ACTIVATION, MODE 1
-     REAL, PRIVATE ::      F12     ! CORRECTION FACTOR FOR ACTIVATION, MODE 1
-     REAL, PRIVATE ::      F21     ! CORRECTION FACTOR FOR ACTIVATION, MODE 2
-     REAL, PRIVATE ::      F22     ! CORRECTION FACTOR FOR ACTIVATION, MODE 2     
-     REAL, PRIVATE ::      MMULT   ! MASS OF SPLINTERED ICE PARTICLE
-     REAL, PRIVATE ::      LAMMAXI,LAMMINI,LAMMAXR,LAMMINR,LAMMAXS,LAMMINS,LAMMAXG,LAMMING
-     REAL, PRIVATE ::      D_b     ! cutoff diameter for breakup
+     real, private ::      MW      ! MOLECULAR WEIGHT WATER (KG/MOL)
+     real, private ::      OSM     ! OSMOTIC COEFFICIENT
+     real, private ::      VI      ! NUMBER OF ION DISSOCIATED in SOLUTION
+     real, private ::      EPSM    ! AEROSOL SOLUBLE FRACTION
+     real, private ::      RHOA    ! AEROSOL BULK DENSITY (KG/M3)
+     real, private ::      MAP     ! MOLECULAR WEIGHT AEROSOL (KG/MOL)
+     real, private ::      MA      ! MOLECULAR WEIGHT OF 'AIR' (KG/MOL)
+     real, private ::      RR      ! UNIVERSAL GAS CONSTANT
+     real, private ::      BACT    ! ACTIVATION parameter
+     real, private ::      RM1     ! GEOMETRIC MEAN RADIUS, MODE 1 (M)
+     real, private ::      RM2     ! GEOMETRIC MEAN RADIUS, MODE 2 (M)
+     real, private ::      NANEW1  ! TOTAL AEROSOL CONCENTRATION, MODE 1 (M^-3)
+     real, private ::      NANEW2  ! TOTAL AEROSOL CONCENTRATION, MODE 2 (M^-3)
+     real, private ::      SIG1    ! STANDARD DEVIATION OF AEROSOL S.D., MODE 1
+     real, private ::      SIG2    ! STANDARD DEVIATION OF AEROSOL S.D., MODE 2
+     real, private ::      F11     ! CORRECTION FACTOR FOR ACTIVATION, MODE 1
+     real, private ::      F12     ! CORRECTION FACTOR FOR ACTIVATION, MODE 1
+     real, private ::      F21     ! CORRECTION FACTOR FOR ACTIVATION, MODE 2
+     real, private ::      F22     ! CORRECTION FACTOR FOR ACTIVATION, MODE 2     
+     real, private ::      MMULT   ! MASS OF SPLINTERED ICE PARTICLE
+     real, private ::      LAMMAXI,LAMMINI,LAMMAXR,LAMMINR,LAMMAXS,LAMMINS,LAMMAXG,LAMMING
+     real, private ::      D_b     ! cutoff diameter for breakup
 
 ! CONSTANTS TO IMPROVE EFFICIENCY
 
-     REAL, PRIVATE :: CONS1,CONS2,CONS3,CONS4,CONS5,CONS6,CONS7,CONS8,CONS9,CONS10
-     REAL, PRIVATE :: CONS11,CONS12,CONS13,CONS14,CONS15,CONS16,CONS17,CONS18,CONS19,CONS20
-     REAL, PRIVATE :: CONS21,CONS22,CONS23,CONS24,CONS25,CONS26,CONS27,CONS28,CONS29,CONS30
-     REAL, PRIVATE :: CONS31,CONS32,CONS33,CONS34,CONS35,CONS36,CONS37,CONS38,CONS39,CONS40
-     REAL, PRIVATE :: CONS41
+     real, private :: CONS1,CONS2,CONS3,CONS4,CONS5,CONS6,CONS7,CONS8,CONS9,CONS10
+     real, private :: CONS11,CONS12,CONS13,CONS14,CONS15,CONS16,CONS17,CONS18,CONS19,CONS20
+     real, private :: CONS21,CONS22,CONS23,CONS24,CONS25,CONS26,CONS27,CONS28,CONS29,CONS30
+     real, private :: CONS31,CONS32,CONS33,CONS34,CONS35,CONS36,CONS37,CONS38,CONS39,CONS40
+     real, private :: CONS41
 
 ! v1.4
-     REAL, PRIVATE :: dnu(16)
+     real, private :: dnu(16)
 
 !..Various radar related variables, from GT
 
 !..Lookup table dimensions
-      INTEGER, PARAMETER, PRIVATE:: nbins = 100
-      INTEGER, PARAMETER, PRIVATE:: nbr = nbins
-      INTEGER, PARAMETER, PRIVATE:: nbs = nbins
-      INTEGER, PARAMETER, PRIVATE:: nbg = nbins
-      DOUBLE PRECISION, DIMENSION(nbins+1):: ddx
-      DOUBLE PRECISION, DIMENSION(nbr):: Dr, dtr
-      DOUBLE PRECISION, DIMENSION(nbs):: Dds, dts
-      DOUBLE PRECISION, DIMENSION(nbg):: Ddg, dtg
+      integer, parameter, private:: nbins = 100
+      integer, parameter, private:: nbr = nbins
+      integer, parameter, private:: nbs = nbins
+      integer, parameter, private:: nbg = nbins
+      double precision, dimension(nbins+1):: ddx
+      double precision, dimension(nbr):: Dr, dtr
+      double precision, dimension(nbs):: Dds, dts
+      double precision, dimension(nbg):: Ddg, dtg
 
-      DOUBLE PRECISION, PARAMETER, PRIVATE:: lamda_radar = 0.10         ! in meters
-      DOUBLE PRECISION, PRIVATE:: K_w, PI5, lamda4
-      COMPLEX*16, PRIVATE:: m_w_0, m_i_0
-      DOUBLE PRECISION, DIMENSION(nbins+1), PRIVATE:: simpson
-      DOUBLE PRECISION, DIMENSION(3), PARAMETER, PRIVATE:: basis =      &
+      double precision, parameter, private:: lamda_radar = 0.10         ! in meters
+      double precision, private:: K_w, PI5, lamda4
+      complex*16, private:: m_w_0, m_i_0
+      double precision, dimension(nbins+1), private:: simpson
+      double precision, dimension(3), parameter, private:: basis =      &
                            (/1.d0/3.d0, 4.d0/3.d0, 1.d0/3.d0/)
 
-      INTEGER, PARAMETER, PRIVATE:: slen = 20
-      CHARACTER(len=slen), PRIVATE::                                    &
+      integer, parameter, private:: slen = 20
+      character(len=slen), private::                                    &
               mixingrulestring_s, matrixstring_s, inclusionstring_s,    &
               hoststring_s, hostmatrixstring_s, hostinclusionstring_s,  &
               mixingrulestring_g, matrixstring_g, inclusionstring_g,    &
               hoststring_g, hostmatrixstring_g, hostinclusionstring_g
 
-      REAL, PARAMETER, PRIVATE:: D0r = 50.E-6
-      REAL, PARAMETER, PRIVATE:: D0s = 100.E-6
-      REAL, PARAMETER, PRIVATE:: D0g = 100.E-6
-      CHARACTER*256:: mp_debug
+      real, parameter, private:: D0r = 50.E-6
+      real, parameter, private:: D0s = 100.E-6
+      real, parameter, private:: D0g = 100.E-6
+      character*256:: mp_debug
 
-CONTAINS
+contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-SUBROUTINE GRAUPEL_INIT(cm1hail,cm1inum,cm1ndcnst)
+subroutine GRAUPEL_INIT(cm1hail,cm1inum,cm1ndcnst)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! THIS SUBROUTINE INITIALIZES ALL PHYSICAL CONSTANTS AMND PARAMETERS 
 ! NEEDED BY THE MICROPHYSICS SCHEME.
 ! NEEDS TO BE CALLED AT FIRST TIME STEP, PRIOR TO CALL TO MAIN MICROPHYSICS INTERFACE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      IMPLICIT NONE
+      implicit none
 
       integer, intent(in) :: cm1hail
       integer, intent(inout) :: cm1inum
@@ -404,13 +404,13 @@ SUBROUTINE GRAUPEL_INIT(cm1hail,cm1inum,cm1ndcnst)
          BS = 0.41
          BR = 0.8
 ! V1.3
-         IF (IHAIL.EQ.0) THEN
+         if (IHAIL.EQ.0) then
 	 AG = 19.3
 	 BG = 0.37
-         ELSE ! (MATSUN AND HUGGINS 1980)
+         else ! (MATSUN AND HUGGINS 1980)
          AG = 114.5 
          BG = 0.5
-         END IF
+         end if
 
 ! CONSTANTS AND PARAMETERS
          R = 287.04
@@ -438,11 +438,11 @@ SUBROUTINE GRAUPEL_INIT(cm1hail,cm1inum,cm1ndcnst)
          RHOI = 500.
          RHOSN = 100.
 ! V1.3
-         IF (IHAIL.EQ.0) THEN
+         if (IHAIL.EQ.0) then
 	 RHOG = 400.
-         ELSE
+         else
          RHOG = 900.
-         END IF
+         end if
          AIMM = 0.66
          BIMM = 100.
          ECR = 1.
@@ -655,7 +655,7 @@ SUBROUTINE GRAUPEL_INIT(cm1hail,cm1inum,cm1ndcnst)
 
       cm1inum   = inum
 
-END SUBROUTINE GRAUPEL_INIT
+end subroutine GRAUPEL_INIT
 
 !interface copied from new thompson interface
 !and added NC, NS, NR, and NG variables.
@@ -683,7 +683,7 @@ END SUBROUTINE GRAUPEL_INIT
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
+subroutine MP_GRAUPEL(ITIMESTEP,                       &
                 T3D, pii ,QV, QC, QR, QI, QS, QG, NNI, NS, NR, NG, NC,   &
                      P, RHO, DT_IN, DDZ, W, RAINNC, prate ,         &
                 effc,effi,effs,effr,effg,effis,                    &
@@ -747,7 +747,7 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
 
    use input
    use constants , only : rovcp,rd,rp00
-   IMPLICIT NONE
+   implicit none
 
 !!!   INTEGER,      INTENT(IN   )    ::   ids, ide, jds, jde, kds, kde , &
 !!!                                       ims, ime, jms, jme, kms, kme , &
@@ -760,20 +760,20 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
 
 !!!   REAL, DIMENSION(ims:ime, kms:kme, jms:jme), INTENT(IN):: &
 !!!                          pii, p, dz, rho, w !, tke, nctend, nitend,kzh
-   REAL, DIMENSION(ib:ie,jb:je,kb:ke), INTENT(INOUT):: &
+   real, dimension(ib:ie,jb:je,kb:ke), intent(inout):: &
                           qv, qc, qr, qi, qs, qg, nni, nc, ns, nr, T3D, NG,   &
                           vtc,vtr,vti,vts,vtg,pii
    real, intent(inout), dimension(ibr:ier,jbr:jer,kbr:ker) :: effc,effi,effs,effr,effg,effis
 
-   REAL, DIMENSION(ib:ie,jb:je,kb:ke), INTENT(IN):: &
+   real, dimension(ib:ie,jb:je,kb:ke), intent(in):: &
                           rmh, rr,      p, rho, ddz
-   REAL, DIMENSION(ib:ie,jb:je,kb:ke+1), INTENT(IN):: &
+   real, dimension(ib:ie,jb:je,kb:ke+1), intent(in):: &
                           w
-   REAL, INTENT(IN):: dt_in
-   INTEGER, INTENT(IN):: ITIMESTEP
+   real, intent(in):: dt_in
+   integer, intent(in):: ITIMESTEP
 
-   real, dimension(ib:ie,jb:je,nrain), INTENT(INOUT) :: rainnc
-   real, dimension(ib:ie,jb:je),       INTENT(INOUT) :: prate
+   real, dimension(ib:ie,jb:je,nrain), intent(inout) :: rainnc
+   real, dimension(ib:ie,jb:je),       intent(inout) :: prate
    double precision :: tcond,tevac,tevar,train
    real, dimension(ib:ie) :: ruh
    real, dimension(jb:je) :: rvh
@@ -803,7 +803,7 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
 !!!   REAL, DIMENSION(its:ite, kts:kte, jts:jte)::                     &
 !!!                      T, WVAR, EFFC
 
-   REAL, DIMENSION(nk) ::                                                                & 
+   real, dimension(nk) ::                                                                & 
                             QC_TEND1D, QI_TEND1D, QNI_TEND1D, QR_TEND1D, NC_TEND1D,           &
                             NI_TEND1D, NS_TEND1D, NR_TEND1D,                                  &
                             QC1D, QI1D, QR1D, NC1D,NI1D, NS1D, NR1D, QS1D,                    &
@@ -818,11 +818,11 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
 ! HM add reflectivity      
                             dbz,effis1d  ! hm 8/20/12
                           
-   REAL PRECPRT1D, SNOWRT1D
+   real PRECPRT1D, SNOWRT1D
 
-   INTEGER I,K,J,n
+   integer I,K,J,n
 
-   REAL :: DT,rdt,rpii
+   real :: DT,rdt,rpii
 
    real, dimension(1:nk) :: PRE,EVPMS,EVPMG,PCC,FR,FI,FC,FS,FG,  &
                           PRD,PRDS,PRDG,EPRD,EPRDS,EPRDG,MNUCCD, &
@@ -830,7 +830,7 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
    real :: tem1,tem2,tfoo,thfoo,qvfoo,thorig
    double precision, dimension(nj) :: bud1,bud2,bud3,bud4
 
-   LOGICAL:: dBZ_tstep ! GT
+   logical:: dBZ_tstep ! GT
 
 
    ! Initialize tendencies (all set to 0) and transfer
@@ -912,11 +912,11 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
 
           NC1D = 0.0
 
-      IF(inum.eq.0)THEN
+      if(inum.eq.0)then
         do k=1,nk
           NC1D(k)       = NC(i,j,k)
         enddo
-      ENDIF
+      endif
 
       do k=1,nk      ! k loop (vertical)
 
@@ -963,14 +963,14 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
 
       end do
 
-      IF( dorad )THEN
+      if( dorad )then
       EFFC1D = 0.0
       EFFI1D = 0.0
       EFFS1D = 0.0
       EFFR1D = 0.0
       EFFG1D = 0.0
       effis1d = 0.0
-      ENDIF
+      endif
 
       tbcond = 0.0
       tbevar = 0.0
@@ -1030,7 +1030,7 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
 
       end do
 
-      IF( dorad )THEN
+      if( dorad )then
         if( radopt.eq.1 )then
           ! for goddard radiation scheme:
           do k=1,nk
@@ -1054,15 +1054,15 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
             EFFS(i,j,k) = EFFS1D(k)*1.0e-6
           enddo
         endif
-      ENDIF
+      endif
 
-      IF(inum.eq.0)THEN
+      if(inum.eq.0)then
         do k=1,nk
           NC(i,j,k)        = NC1D(k)
         enddo
-      ENDIF
+      endif
 
-      IF( getvt )THEN
+      if( getvt )then
         do k=1,nk
           vtc(i,j,k) = fc(k)
           vtr(i,j,k) = fr(k)
@@ -1070,7 +1070,7 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
           vts(i,j,k) = fs(k)
           vtg(i,j,k) = fg(k)
         enddo
-      ENDIF
+      endif
 
 ! hm modified so that m2005 precip variables correctly match wrf precip variables
 !!!      RAINNC(i,j) = RAINNC(I,J)+PRECPRT1D
@@ -1101,7 +1101,7 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
          if( dotbud )then
 
            eqs2:  &
-           IF(eqtset.eq.2)THEN
+           if(eqtset.eq.2)then
 
            if( td_cond.ge.1 )then
              do k=1,nk
@@ -1162,7 +1162,7 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
              enddo
            endif
 
-           ELSE  eqs2
+           else  eqs2
 
            if( td_cond.ge.1 )then
              do k=1,nk
@@ -1200,7 +1200,7 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
              enddo
            endif
 
-           ENDIF  eqs2
+           endif  eqs2
          endif  tbuds
 
          qbuds:  &
@@ -1263,11 +1263,11 @@ SUBROUTINE MP_GRAUPEL(ITIMESTEP,                       &
      tevac=tevac+bud4(j)
    enddo
 
-END SUBROUTINE MP_GRAUPEL
+end subroutine MP_GRAUPEL
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      SUBROUTINE M2005MICRO_GRAUPEL(QC3DTEN,QI3DTEN,QNI3DTEN,QR3DTEN,NC3DTEN,    &
+      subroutine M2005MICRO_GRAUPEL(QC3DTEN,QI3DTEN,QNI3DTEN,QR3DTEN,NC3DTEN,    &
        NI3DTEN,NS3DTEN,NR3DTEN,QC3D,QI3D,QNI3D,QR3D,NC3D,NI3D,NS3D,NR3D,         &
        T3DTEN,QV3DTEN,T3D,QV3D,PRES,RHO3D,DZQ,W3D,WVAR,PRECRT,SNOWRT,            &
        EFFC,EFFI,EFFS,EFFR,DT,RDT,                                               &
@@ -1297,7 +1297,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! DECLARATIONS
 
-      IMPLICIT NONE
+      implicit none
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! THESE VARIABLES BELOW MUST BE LINKED WITH THE MAIN MODEL.
@@ -1306,48 +1306,48 @@ END SUBROUTINE MP_GRAUPEL
 ! INPUT NUMBER OF GRID CELLS
 
 ! INPUT/OUTPUT PARAMETERS                                 ! DESCRIPTION (UNITS)
-      INTEGER, INTENT( IN)  :: IMS,IME, JMS,JME, KMS,KME,          &
+      integer, intent( in)  :: IMS,IME, JMS,JME, KMS,KME,          &
                                ITS,ITE, JTS,JTE, KTS,KTE
 
-      REAL, DIMENSION(KMS:KME) ::  QC3DTEN            ! CLOUD WATER MIXING RATIO TENDENCY (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QI3DTEN            ! CLOUD ICE MIXING RATIO TENDENCY (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QNI3DTEN           ! SNOW MIXING RATIO TENDENCY (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QR3DTEN            ! RAIN MIXING RATIO TENDENCY (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  NC3DTEN            ! CLOUD DROPLET NUMBER CONCENTRATION (1/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  NI3DTEN            ! CLOUD ICE NUMBER CONCENTRATION (1/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  NS3DTEN            ! SNOW NUMBER CONCENTRATION (1/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  NR3DTEN            ! RAIN NUMBER CONCENTRATION (1/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QC3D               ! CLOUD WATER MIXING RATIO (KG/KG)
-      REAL, DIMENSION(KMS:KME) ::  QI3D               ! CLOUD ICE MIXING RATIO (KG/KG)
-      REAL, DIMENSION(KMS:KME) ::  QNI3D              ! SNOW MIXING RATIO (KG/KG)
-      REAL, DIMENSION(KMS:KME) ::  QR3D               ! RAIN MIXING RATIO (KG/KG)
-      REAL, DIMENSION(KMS:KME) ::  NC3D               ! CLOUD DROPLET NUMBER CONCENTRATION (1/KG)
-      REAL, DIMENSION(KMS:KME) ::  NI3D               ! CLOUD ICE NUMBER CONCENTRATION (1/KG)
-      REAL, DIMENSION(KMS:KME) ::  NS3D               ! SNOW NUMBER CONCENTRATION (1/KG)
-      REAL, DIMENSION(KMS:KME) ::  NR3D               ! RAIN NUMBER CONCENTRATION (1/KG)
-      REAL, DIMENSION(KMS:KME) ::  T3DTEN             ! TEMPERATURE TENDENCY (K/S)
-      REAL, DIMENSION(KMS:KME) ::  QV3DTEN            ! WATER VAPOR MIXING RATIO TENDENCY (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  T3D                ! TEMPERATURE (K)
-      REAL, DIMENSION(KMS:KME) ::  QV3D               ! WATER VAPOR MIXING RATIO (KG/KG)
-      REAL, DIMENSION(KMS:KME) ::  PRES               ! ATMOSPHERIC PRESSURE (PA)
-      REAL, DIMENSION(KMS:KME) ::  RHO3D              ! DENSITY (KG/M^3)
-      REAL, DIMENSION(KMS:KME) ::  DZQ                ! DIFFERENCE IN HEIGHT ACROSS LEVEL (m)
-      REAL, DIMENSION(KMS:KME) ::  W3D                ! GRID-SCALE VERTICAL VELOCITY (M/S)
-      REAL, DIMENSION(KMS:KME) ::  WVAR               ! SUB-GRID VERTICAL VELOCITY (M/S)
+      real, dimension(KMS:KME) ::  QC3DTEN            ! CLOUD WATER MIXING RATIO TENDENCY (KG/KG/S)
+      real, dimension(KMS:KME) ::  QI3DTEN            ! CLOUD ICE MIXING RATIO TENDENCY (KG/KG/S)
+      real, dimension(KMS:KME) ::  QNI3DTEN           ! SNOW MIXING RATIO TENDENCY (KG/KG/S)
+      real, dimension(KMS:KME) ::  QR3DTEN            ! RAIN MIXING RATIO TENDENCY (KG/KG/S)
+      real, dimension(KMS:KME) ::  NC3DTEN            ! CLOUD DROPLET NUMBER CONCENTRATION (1/KG/S)
+      real, dimension(KMS:KME) ::  NI3DTEN            ! CLOUD ICE NUMBER CONCENTRATION (1/KG/S)
+      real, dimension(KMS:KME) ::  NS3DTEN            ! SNOW NUMBER CONCENTRATION (1/KG/S)
+      real, dimension(KMS:KME) ::  NR3DTEN            ! RAIN NUMBER CONCENTRATION (1/KG/S)
+      real, dimension(KMS:KME) ::  QC3D               ! CLOUD WATER MIXING RATIO (KG/KG)
+      real, dimension(KMS:KME) ::  QI3D               ! CLOUD ICE MIXING RATIO (KG/KG)
+      real, dimension(KMS:KME) ::  QNI3D              ! SNOW MIXING RATIO (KG/KG)
+      real, dimension(KMS:KME) ::  QR3D               ! RAIN MIXING RATIO (KG/KG)
+      real, dimension(KMS:KME) ::  NC3D               ! CLOUD DROPLET NUMBER CONCENTRATION (1/KG)
+      real, dimension(KMS:KME) ::  NI3D               ! CLOUD ICE NUMBER CONCENTRATION (1/KG)
+      real, dimension(KMS:KME) ::  NS3D               ! SNOW NUMBER CONCENTRATION (1/KG)
+      real, dimension(KMS:KME) ::  NR3D               ! RAIN NUMBER CONCENTRATION (1/KG)
+      real, dimension(KMS:KME) ::  T3DTEN             ! TEMPERATURE TENDENCY (K/S)
+      real, dimension(KMS:KME) ::  QV3DTEN            ! WATER VAPOR MIXING RATIO TENDENCY (KG/KG/S)
+      real, dimension(KMS:KME) ::  T3D                ! TEMPERATURE (K)
+      real, dimension(KMS:KME) ::  QV3D               ! WATER VAPOR MIXING RATIO (KG/KG)
+      real, dimension(KMS:KME) ::  PRES               ! ATMOSPHERIC PRESSURE (PA)
+      real, dimension(KMS:KME) ::  RHO3D              ! DENSITY (KG/M^3)
+      real, dimension(KMS:KME) ::  DZQ                ! DIFFERENCE in HEIGHT ACROSS LEVEL (m)
+      real, dimension(KMS:KME) ::  W3D                ! GRID-SCALE VERTICAL VELOCITY (M/S)
+      real, dimension(KMS:KME) ::  WVAR               ! SUB-GRID VERTICAL VELOCITY (M/S)
 
 ! HM ADDED GRAUPEL VARIABLES
-      REAL, DIMENSION(KMS:KME) ::  QG3DTEN            ! GRAUPEL MIX RATIO TENDENCY (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  NG3DTEN            ! GRAUPEL NUMB CONC TENDENCY (1/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QG3D            ! GRAUPEL MIX RATIO (KG/KG)
-      REAL, DIMENSION(KMS:KME) ::  NG3D            ! GRAUPEL NUMBER CONC (1/KG)
+      real, dimension(KMS:KME) ::  QG3DTEN            ! GRAUPEL MIX RATIO TENDENCY (KG/KG/S)
+      real, dimension(KMS:KME) ::  NG3DTEN            ! GRAUPEL NUMB CONC TENDENCY (1/KG/S)
+      real, dimension(KMS:KME) ::  QG3D            ! GRAUPEL MIX RATIO (KG/KG)
+      real, dimension(KMS:KME) ::  NG3D            ! GRAUPEL NUMBER CONC (1/KG)
 
 ! HM, ADD 1/16/07, SEDIMENTATION TENDENCIES FOR MIXING RATIO
 
-      REAL, DIMENSION(KMS:KME) ::  QGSTEN            ! GRAUPEL SED TEND (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QRSTEN            ! RAIN SED TEND (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QISTEN            ! CLOUD ICE SED TEND (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QNISTEN           ! SNOW SED TEND (KG/KG/S)
-      REAL, DIMENSION(KMS:KME) ::  QCSTEN            ! CLOUD WAT SED TEND (KG/KG/S)      
+      real, dimension(KMS:KME) ::  QGSTEN            ! GRAUPEL SED TEND (KG/KG/S)
+      real, dimension(KMS:KME) ::  QRSTEN            ! RAIN SED TEND (KG/KG/S)
+      real, dimension(KMS:KME) ::  QISTEN            ! CLOUD ICE SED TEND (KG/KG/S)
+      real, dimension(KMS:KME) ::  QNISTEN           ! SNOW SED TEND (KG/KG/S)
+      real, dimension(KMS:KME) ::  QCSTEN            ! CLOUD WAT SED TEND (KG/KG/S)      
 
       integer, intent(in) :: eqtset
       logical, intent(in) :: dorad
@@ -1355,20 +1355,20 @@ END SUBROUTINE MP_GRAUPEL
 
 ! OUTPUT VARIABLES
 
-        REAL PRECRT                ! TOTAL PRECIP PER TIME STEP (mm)
-        REAL SNOWRT                ! SNOW PER TIME STEP (mm)
+        real PRECRT                ! TOTAL PRECIP PER TIME STEP (mm)
+        real SNOWRT                ! SNOW PER TIME STEP (mm)
 
-        REAL, DIMENSION(KMS:KME) ::   EFFC            ! DROPLET EFFECTIVE RADIUS (MICRON)
-        REAL, DIMENSION(KMS:KME) ::   EFFI            ! CLOUD ICE EFFECTIVE RADIUS (MICRON)
-        REAL, DIMENSION(KMS:KME) ::   EFFS            ! SNOW EFFECTIVE RADIUS (MICRON)
-        REAL, DIMENSION(KMS:KME) ::   EFFR            ! RAIN EFFECTIVE RADIUS (MICRON)
-        REAL, DIMENSION(KMS:KME) ::   EFFG            ! GRAUPEL EFFECTIVE RADIUS (MICRON)
+        real, dimension(KMS:KME) ::   EFFC            ! DROPLET EFFECTIVE RADIUS (MICRON)
+        real, dimension(KMS:KME) ::   EFFI            ! CLOUD ICE EFFECTIVE RADIUS (MICRON)
+        real, dimension(KMS:KME) ::   EFFS            ! SNOW EFFECTIVE RADIUS (MICRON)
+        real, dimension(KMS:KME) ::   EFFR            ! RAIN EFFECTIVE RADIUS (MICRON)
+        real, dimension(KMS:KME) ::   EFFG            ! GRAUPEL EFFECTIVE RADIUS (MICRON)
 ! hm 8/20/12
-        REAL, DIMENSION(KMS:KME) ::   effis           ! GRAUPEL EFFECTIVE RADIUS (MICRON)
+        real, dimension(KMS:KME) ::   effis           ! GRAUPEL EFFECTIVE RADIUS (MICRON)
 
 ! MODEL INPUT PARAMETERS (FORMERLY IN COMMON BLOCKS)
 
-        REAL, intent(in) :: DT,RDT         ! MODEL TIME STEP (SEC)
+        real, intent(in) :: DT,RDT         ! MODEL TIME STEP (SEC)
         integer, intent(in) :: testcase
 
 !.....................................................................................................
@@ -1377,148 +1377,148 @@ END SUBROUTINE MP_GRAUPEL
 
 ! SIZE PARAMETER VARIABLES
 
-     REAL, DIMENSION(KMS:KME) :: LAMC          ! SLOPE PARAMETER FOR DROPLETS (M-1)
-     REAL, DIMENSION(KMS:KME) :: LAMI          ! SLOPE PARAMETER FOR CLOUD ICE (M-1)
-     REAL, DIMENSION(KMS:KME) :: LAMS          ! SLOPE PARAMETER FOR SNOW (M-1)
-     REAL, DIMENSION(KMS:KME) :: LAMR          ! SLOPE PARAMETER FOR RAIN (M-1)
-     REAL, DIMENSION(KMS:KME) :: LAMG          ! SLOPE PARAMETER FOR GRAUPEL (M-1)
-     REAL, DIMENSION(KMS:KME) :: CDIST1        ! PSD PARAMETER FOR DROPLETS
-     REAL, DIMENSION(KMS:KME) :: N0I           ! INTERCEPT PARAMETER FOR CLOUD ICE (KG-1 M-1)
-     REAL, DIMENSION(KMS:KME) :: N0S           ! INTERCEPT PARAMETER FOR SNOW (KG-1 M-1)
-     REAL, DIMENSION(KMS:KME) :: N0RR          ! INTERCEPT PARAMETER FOR RAIN (KG-1 M-1)
-     REAL, DIMENSION(KMS:KME) :: N0G           ! INTERCEPT PARAMETER FOR GRAUPEL (KG-1 M-1)
-     REAL, DIMENSION(KMS:KME) :: PGAM          ! SPECTRAL SHAPE PARAMETER FOR DROPLETS
+     real, dimension(KMS:KME) :: LAMC          ! SLOPE parameter FOR DROPLETS (M-1)
+     real, dimension(KMS:KME) :: LAMI          ! SLOPE parameter FOR CLOUD ICE (M-1)
+     real, dimension(KMS:KME) :: LAMS          ! SLOPE parameter FOR SNOW (M-1)
+     real, dimension(KMS:KME) :: LAMR          ! SLOPE parameter FOR RAIN (M-1)
+     real, dimension(KMS:KME) :: LAMG          ! SLOPE parameter FOR GRAUPEL (M-1)
+     real, dimension(KMS:KME) :: CDIST1        ! PSD parameter FOR DROPLETS
+     real, dimension(KMS:KME) :: N0I           ! INTERCEPT parameter FOR CLOUD ICE (KG-1 M-1)
+     real, dimension(KMS:KME) :: N0S           ! INTERCEPT parameter FOR SNOW (KG-1 M-1)
+     real, dimension(KMS:KME) :: N0RR          ! INTERCEPT parameter FOR RAIN (KG-1 M-1)
+     real, dimension(KMS:KME) :: N0G           ! INTERCEPT parameter FOR GRAUPEL (KG-1 M-1)
+     real, dimension(KMS:KME) :: PGAM          ! SPECTRAL SHAPE parameter FOR DROPLETS
 
 ! MICROPHYSICAL PROCESSES
 
-     REAL, DIMENSION(KMS:KME) ::  NSUBC     ! LOSS OF NC DURING EVAP
-     REAL, DIMENSION(KMS:KME) ::  NSUBI     ! LOSS OF NI DURING SUB.
-     REAL, DIMENSION(KMS:KME) ::  NSUBS     ! LOSS OF NS DURING SUB.
-     REAL, DIMENSION(KMS:KME) ::  NSUBR     ! LOSS OF NR DURING EVAP
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  PRD       ! DEP CLOUD ICE
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  PRE       ! EVAP OF RAIN
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  PRDS      ! DEP SNOW
-     REAL, DIMENSION(KMS:KME) ::  NNUCCC    ! CHANGE N DUE TO CONTACT FREEZ DROPLETS
-     REAL, DIMENSION(KMS:KME) ::  MNUCCC    ! CHANGE Q DUE TO CONTACT FREEZ DROPLETS
-     REAL, DIMENSION(KMS:KME) ::  PRA       ! ACCRETION DROPLETS BY RAIN
-     REAL, DIMENSION(KMS:KME) ::  PRC       ! AUTOCONVERSION DROPLETS
-     REAL, INTENT(INOUT), DIMENSION(KMS:KME) ::  PCC       ! COND/EVAP DROPLETS
-     REAL, DIMENSION(KMS:KME) ::  NNUCCD    ! CHANGE N FREEZING AEROSOL (PRIM ICE NUCLEATION)
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  MNUCCD    ! CHANGE Q FREEZING AEROSOL (PRIM ICE NUCLEATION)
-     REAL, DIMENSION(KMS:KME) ::  MNUCCR    ! CHANGE Q DUE TO CONTACT FREEZ RAIN
-     REAL, DIMENSION(KMS:KME) ::  NNUCCR    ! CHANGE N DUE TO CONTACT FREEZ RAIN
-     REAL, DIMENSION(KMS:KME) ::  NPRA      ! CHANGE IN N DUE TO DROPLET ACC BY RAIN
-     REAL, DIMENSION(KMS:KME) ::  NRAGG     ! SELF-COLLECTION/BREAKUP OF RAIN
-     REAL, DIMENSION(KMS:KME) ::  NSAGG     ! SELF-COLLECTION OF SNOW
-     REAL, DIMENSION(KMS:KME) ::  NPRC      ! CHANGE NC AUTOCONVERSION DROPLETS
-     REAL, DIMENSION(KMS:KME) ::  NPRC1      ! CHANGE NR AUTOCONVERSION DROPLETS
-     REAL, DIMENSION(KMS:KME) ::  PRAI      ! CHANGE Q ACCRETION CLOUD ICE
-     REAL, DIMENSION(KMS:KME) ::  PRCI      ! CHANGE Q AUTOCONVERSION CLOUD ICE BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  PSACWS    ! CHANGE Q DROPLET ACCRETION BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  NPSACWS   ! CHANGE N DROPLET ACCRETION BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  PSACWI    ! CHANGE Q DROPLET ACCRETION BY CLOUD ICE
-     REAL, DIMENSION(KMS:KME) ::  NPSACWI   ! CHANGE N DROPLET ACCRETION BY CLOUD ICE
-     REAL, DIMENSION(KMS:KME) ::  NPRCI     ! CHANGE N AUTOCONVERSION CLOUD ICE BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  NPRAI     ! CHANGE N ACCRETION CLOUD ICE
-     REAL, DIMENSION(KMS:KME) ::  NMULTS    ! ICE MULT DUE TO RIMING DROPLETS BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  NMULTR    ! ICE MULT DUE TO RIMING RAIN BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  QMULTS    ! CHANGE Q DUE TO ICE MULT DROPLETS/SNOW
-     REAL, DIMENSION(KMS:KME) ::  QMULTR    ! CHANGE Q DUE TO ICE RAIN/SNOW
-     REAL, DIMENSION(KMS:KME) ::  PRACS     ! CHANGE Q RAIN-SNOW COLLECTION
-     REAL, DIMENSION(KMS:KME) ::  NPRACS    ! CHANGE N RAIN-SNOW COLLECTION
-     REAL, DIMENSION(KMS:KME) ::  PCCN      ! CHANGE Q DROPLET ACTIVATION
-     REAL, DIMENSION(KMS:KME) ::  PSMLT     ! CHANGE Q MELTING SNOW TO RAIN
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  EVPMS     ! CHNAGE Q MELTING SNOW EVAPORATING
-     REAL, DIMENSION(KMS:KME) ::  NSMLTS    ! CHANGE N MELTING SNOW
-     REAL, DIMENSION(KMS:KME) ::  NSMLTR    ! CHANGE N MELTING SNOW TO RAIN
+     real, dimension(KMS:KME) ::  NSUBC     ! LOSS OF NC DURING EVAP
+     real, dimension(KMS:KME) ::  NSUBI     ! LOSS OF NI DURING SUB.
+     real, dimension(KMS:KME) ::  NSUBS     ! LOSS OF NS DURING SUB.
+     real, dimension(KMS:KME) ::  NSUBR     ! LOSS OF NR DURING EVAP
+     real, dimension(KMS:KME), intent(inout) ::  PRD       ! DEP CLOUD ICE
+     real, dimension(KMS:KME), intent(inout) ::  PRE       ! EVAP OF RAIN
+     real, dimension(KMS:KME), intent(inout) ::  PRDS      ! DEP SNOW
+     real, dimension(KMS:KME) ::  NNUCCC    ! CHANGE N DUE to CONTACT FREEZ DROPLETS
+     real, dimension(KMS:KME) ::  MNUCCC    ! CHANGE Q DUE to CONTACT FREEZ DROPLETS
+     real, dimension(KMS:KME) ::  PRA       ! ACCRETION DROPLETS BY RAIN
+     real, dimension(KMS:KME) ::  PRC       ! AUTOCONVERSION DROPLETS
+     real, intent(inout), dimension(KMS:KME) ::  PCC       ! COND/EVAP DROPLETS
+     real, dimension(KMS:KME) ::  NNUCCD    ! CHANGE N FREEZING AEROSOL (PRIM ICE NUCLEATION)
+     real, dimension(KMS:KME), intent(inout) ::  MNUCCD    ! CHANGE Q FREEZING AEROSOL (PRIM ICE NUCLEATION)
+     real, dimension(KMS:KME) ::  MNUCCR    ! CHANGE Q DUE to CONTACT FREEZ RAIN
+     real, dimension(KMS:KME) ::  NNUCCR    ! CHANGE N DUE to CONTACT FREEZ RAIN
+     real, dimension(KMS:KME) ::  NPRA      ! CHANGE in N DUE to DROPLET ACC BY RAIN
+     real, dimension(KMS:KME) ::  NRAGG     ! SELF-COLLECTION/BREAKUP OF RAIN
+     real, dimension(KMS:KME) ::  NSAGG     ! SELF-COLLECTION OF SNOW
+     real, dimension(KMS:KME) ::  NPRC      ! CHANGE NC AUTOCONVERSION DROPLETS
+     real, dimension(KMS:KME) ::  NPRC1      ! CHANGE NR AUTOCONVERSION DROPLETS
+     real, dimension(KMS:KME) ::  PRAI      ! CHANGE Q ACCRETION CLOUD ICE
+     real, dimension(KMS:KME) ::  PRCI      ! CHANGE Q AUTOCONVERSION CLOUD ICE BY SNOW
+     real, dimension(KMS:KME) ::  PSACWS    ! CHANGE Q DROPLET ACCRETION BY SNOW
+     real, dimension(KMS:KME) ::  NPSACWS   ! CHANGE N DROPLET ACCRETION BY SNOW
+     real, dimension(KMS:KME) ::  PSACWI    ! CHANGE Q DROPLET ACCRETION BY CLOUD ICE
+     real, dimension(KMS:KME) ::  NPSACWI   ! CHANGE N DROPLET ACCRETION BY CLOUD ICE
+     real, dimension(KMS:KME) ::  NPRCI     ! CHANGE N AUTOCONVERSION CLOUD ICE BY SNOW
+     real, dimension(KMS:KME) ::  NPRAI     ! CHANGE N ACCRETION CLOUD ICE
+     real, dimension(KMS:KME) ::  NMULTS    ! ICE MULT DUE to RIMING DROPLETS BY SNOW
+     real, dimension(KMS:KME) ::  NMULTR    ! ICE MULT DUE to RIMING RAIN BY SNOW
+     real, dimension(KMS:KME) ::  QMULTS    ! CHANGE Q DUE to ICE MULT DROPLETS/SNOW
+     real, dimension(KMS:KME) ::  QMULTR    ! CHANGE Q DUE to ICE RAIN/SNOW
+     real, dimension(KMS:KME) ::  PRACS     ! CHANGE Q RAIN-SNOW COLLECTION
+     real, dimension(KMS:KME) ::  NPRACS    ! CHANGE N RAIN-SNOW COLLECTION
+     real, dimension(KMS:KME) ::  PCCN      ! CHANGE Q DROPLET ACTIVATION
+     real, dimension(KMS:KME) ::  PSMLT     ! CHANGE Q MELTING SNOW to RAIN
+     real, dimension(KMS:KME), intent(inout) ::  EVPMS     ! CHNAGE Q MELTING SNOW EVAPORATING
+     real, dimension(KMS:KME) ::  NSMLTS    ! CHANGE N MELTING SNOW
+     real, dimension(KMS:KME) ::  NSMLTR    ! CHANGE N MELTING SNOW to RAIN
 ! HM ADDED 12/13/06
-     REAL, DIMENSION(KMS:KME) ::  PIACR     ! CHANGE QR, ICE-RAIN COLLECTION
-     REAL, DIMENSION(KMS:KME) ::  NIACR     ! CHANGE N, ICE-RAIN COLLECTION
-     REAL, DIMENSION(KMS:KME) ::  PRACI     ! CHANGE QI, ICE-RAIN COLLECTION
-     REAL, DIMENSION(KMS:KME) ::  PIACRS     ! CHANGE QR, ICE RAIN COLLISION, ADDED TO SNOW
-     REAL, DIMENSION(KMS:KME) ::  NIACRS     ! CHANGE N, ICE RAIN COLLISION, ADDED TO SNOW
-     REAL, DIMENSION(KMS:KME) ::  PRACIS     ! CHANGE QI, ICE RAIN COLLISION, ADDED TO SNOW
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  EPRD      ! SUBLIMATION CLOUD ICE
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  EPRDS     ! SUBLIMATION SNOW
+     real, dimension(KMS:KME) ::  PIACR     ! CHANGE QR, ICE-RAIN COLLECTION
+     real, dimension(KMS:KME) ::  NIACR     ! CHANGE N, ICE-RAIN COLLECTION
+     real, dimension(KMS:KME) ::  PRACI     ! CHANGE QI, ICE-RAIN COLLECTION
+     real, dimension(KMS:KME) ::  PIACRS     ! CHANGE QR, ICE RAIN COLLISION, ADDED to SNOW
+     real, dimension(KMS:KME) ::  NIACRS     ! CHANGE N, ICE RAIN COLLISION, ADDED to SNOW
+     real, dimension(KMS:KME) ::  PRACIS     ! CHANGE QI, ICE RAIN COLLISION, ADDED to SNOW
+     real, dimension(KMS:KME), intent(inout) ::  EPRD      ! SUBLIMATION CLOUD ICE
+     real, dimension(KMS:KME), intent(inout) ::  EPRDS     ! SUBLIMATION SNOW
 ! HM ADDED GRAUPEL PROCESSES
-     REAL, DIMENSION(KMS:KME) ::  PRACG    ! CHANGE IN Q COLLECTION RAIN BY GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  PSACWG    ! CHANGE IN Q COLLECTION DROPLETS BY GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  PGSACW    ! CONVERSION Q TO GRAUPEL DUE TO COLLECTION DROPLETS BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  PGRACS    ! CONVERSION Q TO GRAUPEL DUE TO COLLECTION RAIN BY SNOW
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  PRDG    ! DEP OF GRAUPEL
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  EPRDG    ! SUB OF GRAUPEL
-     REAL, DIMENSION(KMS:KME), intent(inout) ::  EVPMG    ! CHANGE Q MELTING OF GRAUPEL AND EVAPORATION
-     REAL, DIMENSION(KMS:KME) ::  PGMLT    ! CHANGE Q MELTING OF GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  NPRACG    ! CHANGE N COLLECTION RAIN BY GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  NPSACWG    ! CHANGE N COLLECTION DROPLETS BY GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  NSCNG    ! CHANGE N CONVERSION TO GRAUPEL DUE TO COLLECTION DROPLETS BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  NGRACS    ! CHANGE N CONVERSION TO GRAUPEL DUE TO COLLECTION RAIN BY SNOW
-     REAL, DIMENSION(KMS:KME) ::  NGMLTG    ! CHANGE N MELTING GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  NGMLTR    ! CHANGE N MELTING GRAUPEL TO RAIN
-     REAL, DIMENSION(KMS:KME) ::  NSUBG    ! CHANGE N SUB/DEP OF GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  PSACR    ! CONVERSION DUE TO COLL OF SNOW BY RAIN
-     REAL, DIMENSION(KMS:KME) ::  NMULTG    ! ICE MULT DUE TO ACC DROPLETS BY GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  NMULTRG    ! ICE MULT DUE TO ACC RAIN BY GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  QMULTG    ! CHANGE Q DUE TO ICE MULT DROPLETS/GRAUPEL
-     REAL, DIMENSION(KMS:KME) ::  QMULTRG    ! CHANGE Q DUE TO ICE MULT RAIN/GRAUPEL
+     real, dimension(KMS:KME) ::  PRACG    ! CHANGE in Q COLLECTION RAIN BY GRAUPEL
+     real, dimension(KMS:KME) ::  PSACWG    ! CHANGE in Q COLLECTION DROPLETS BY GRAUPEL
+     real, dimension(KMS:KME) ::  PGSACW    ! CONVERSION Q to GRAUPEL DUE to COLLECTION DROPLETS BY SNOW
+     real, dimension(KMS:KME) ::  PGRACS    ! CONVERSION Q to GRAUPEL DUE to COLLECTION RAIN BY SNOW
+     real, dimension(KMS:KME), intent(inout) ::  PRDG    ! DEP OF GRAUPEL
+     real, dimension(KMS:KME), intent(inout) ::  EPRDG    ! SUB OF GRAUPEL
+     real, dimension(KMS:KME), intent(inout) ::  EVPMG    ! CHANGE Q MELTING OF GRAUPEL AND EVAPORATION
+     real, dimension(KMS:KME) ::  PGMLT    ! CHANGE Q MELTING OF GRAUPEL
+     real, dimension(KMS:KME) ::  NPRACG    ! CHANGE N COLLECTION RAIN BY GRAUPEL
+     real, dimension(KMS:KME) ::  NPSACWG    ! CHANGE N COLLECTION DROPLETS BY GRAUPEL
+     real, dimension(KMS:KME) ::  NSCNG    ! CHANGE N CONVERSION to GRAUPEL DUE to COLLECTION DROPLETS BY SNOW
+     real, dimension(KMS:KME) ::  NGRACS    ! CHANGE N CONVERSION to GRAUPEL DUE to COLLECTION RAIN BY SNOW
+     real, dimension(KMS:KME) ::  NGMLTG    ! CHANGE N MELTING GRAUPEL
+     real, dimension(KMS:KME) ::  NGMLTR    ! CHANGE N MELTING GRAUPEL to RAIN
+     real, dimension(KMS:KME) ::  NSUBG    ! CHANGE N SUB/DEP OF GRAUPEL
+     real, dimension(KMS:KME) ::  PSACR    ! CONVERSION DUE to COLL OF SNOW BY RAIN
+     real, dimension(KMS:KME) ::  NMULTG    ! ICE MULT DUE to ACC DROPLETS BY GRAUPEL
+     real, dimension(KMS:KME) ::  NMULTRG    ! ICE MULT DUE to ACC RAIN BY GRAUPEL
+     real, dimension(KMS:KME) ::  QMULTG    ! CHANGE Q DUE to ICE MULT DROPLETS/GRAUPEL
+     real, dimension(KMS:KME) ::  QMULTRG    ! CHANGE Q DUE to ICE MULT RAIN/GRAUPEL
 
 ! TIME-VARYING ATMOSPHERIC PARAMETERS
 
-     REAL, DIMENSION(KMS:KME) ::   KAP   ! THERMAL CONDUCTIVITY OF AIR
-     REAL, DIMENSION(KMS:KME) ::   EVS   ! SATURATION VAPOR PRESSURE
-     REAL, DIMENSION(KMS:KME) ::   EIS   ! ICE SATURATION VAPOR PRESSURE
-     REAL, DIMENSION(KMS:KME) ::   QVS   ! SATURATION MIXING RATIO
-     REAL, DIMENSION(KMS:KME) ::   QVI   ! ICE SATURATION MIXING RATIO
-     REAL, DIMENSION(KMS:KME) ::   QVQVS ! SAUTRATION RATIO
-     REAL, DIMENSION(KMS:KME) ::   QVQVSI! ICE SATURAION RATIO
-     REAL, DIMENSION(KMS:KME) ::   DV    ! DIFFUSIVITY OF WATER VAPOR IN AIR
-     REAL, DIMENSION(KMS:KME) ::   XXLS  ! LATENT HEAT OF SUBLIMATION
-     REAL, DIMENSION(KMS:KME) ::   XXLV  ! LATENT HEAT OF VAPORIZATION
-     REAL, DIMENSION(KMS:KME) ::   CPM   ! SPECIFIC HEAT AT CONST PRESSURE FOR MOIST AIR
+     real, dimension(KMS:KME) ::   KAP   ! THERMAL CONDUCTIVITY OF AIR
+     real, dimension(KMS:KME) ::   EVS   ! SATURATION VAPOR PRESSURE
+     real, dimension(KMS:KME) ::   EIS   ! ICE SATURATION VAPOR PRESSURE
+     real, dimension(KMS:KME) ::   QVS   ! SATURATION MIXING RATIO
+     real, dimension(KMS:KME) ::   QVI   ! ICE SATURATION MIXING RATIO
+     real, dimension(KMS:KME) ::   QVQVS ! SAUTRATION RATIO
+     real, dimension(KMS:KME) ::   QVQVSI! ICE SATURAION RATIO
+     real, dimension(KMS:KME) ::   DV    ! DIFFUSIVITY OF WATER VAPOR in AIR
+     real, dimension(KMS:KME) ::   XXLS  ! LATENT HEAT OF SUBLIMATION
+     real, dimension(KMS:KME) ::   XXLV  ! LATENT HEAT OF VAPORIZATION
+     real, dimension(KMS:KME) ::   CPM   ! SPECIFIC HEAT AT CONST PRESSURE FOR MOIST AIR
      ! GHB
-     REAL :: cvm
-     REAL, DIMENSION(KMS:KME) ::   ecnd,edep,efrz
+     real :: cvm
+     real, dimension(KMS:KME) ::   ecnd,edep,efrz
      ! GHB
-     REAL, DIMENSION(KMS:KME) ::   MU    ! VISCOCITY OF AIR
-     REAL, DIMENSION(KMS:KME) ::   SC    ! SCHMIDT NUMBER
-     REAL, DIMENSION(KMS:KME) ::   XLF   ! LATENT HEAT OF FREEZING
-     REAL, DIMENSION(KMS:KME) ::   RHO   ! AIR DENSITY
-     REAL, DIMENSION(KMS:KME) ::   AB    ! CORRECTION TO CONDENSATION RATE DUE TO LATENT HEATING
-     REAL, DIMENSION(KMS:KME) ::   ABI    ! CORRECTION TO DEPOSITION RATE DUE TO LATENT HEATING
+     real, dimension(KMS:KME) ::   MU    ! VISCOCITY OF AIR
+     real, dimension(KMS:KME) ::   SC    ! SCHMIDT NUMBER
+     real, dimension(KMS:KME) ::   XLF   ! LATENT HEAT OF FREEZING
+     real, dimension(KMS:KME) ::   RHO   ! AIR DENSITY
+     real, dimension(KMS:KME) ::   AB    ! CORRECTION to CONDENSATION RATE DUE to LATENT HEATING
+     real, dimension(KMS:KME) ::   ABI    ! CORRECTION to DEPOSITION RATE DUE to LATENT HEATING
 
 ! TIME-VARYING MICROPHYSICS PARAMETERS
 
-     REAL, DIMENSION(KMS:KME) ::   DAP    ! DIFFUSIVITY OF AEROSOL
-     REAL    NACNT                    ! NUMBER OF CONTACT IN
-     REAL    FMULT                    ! TEMP.-DEP. PARAMETER FOR RIME-SPLINTERING
-     REAL    COFFI                    ! ICE AUTOCONVERSION PARAMETER
+     real, dimension(KMS:KME) ::   DAP    ! DIFFUSIVITY OF AEROSOL
+     real    NACNT                    ! NUMBER OF CONTACT in
+     real    FMULT                    ! TEMP.-DEP. parameter FOR RIME-SPLINTERING
+     real    COFFI                    ! ICE AUTOCONVERSION parameter
 
 ! FALL SPEED WORKING VARIABLES (DEFINED IN CODE)
 
-      REAL, DIMENSION(KMS:KME), intent(inout) :: FR,FI,FC,FS,FG
-      REAL, DIMENSION(KMS:KME) ::    DUMI,DUMR,DUMFNI,DUMG,DUMFNG
-      REAL UNI, UMI,UMR
-      REAL, DIMENSION(KMS:KME) ::    FNI,FNG
-      REAL RGVM
-      REAL, DIMENSION(KMS:KME) ::   FALOUTR,FALOUTI,FALOUTNI
-      REAL FALTNDR,FALTNDI,FALTNDNI,RHO2
-      REAL, DIMENSION(KMS:KME) ::   DUMQS,DUMFNS
-      REAL UMS,UNS
-      REAL, DIMENSION(KMS:KME) ::   FNS, FALOUTS,FALOUTNS,FALOUTG,FALOUTNG
-      REAL FALTNDS,FALTNDNS,UNR,FALTNDG,FALTNDNG
-      REAL, DIMENSION(KMS:KME) ::    DUMC,DUMFNC
-      REAL UNC,UMC,UNG,UMG
-      REAL, DIMENSION(KMS:KME) ::   FALOUTC,FALOUTNC
-      REAL FALTNDC,FALTNDNC
-      REAL, DIMENSION(KMS:KME) ::   FNC,DUMFNR,FALOUTNR
-      REAL FALTNDNR
-      REAL, DIMENSION(KMS:KME) ::   FNR(KMS:KME)
+      real, dimension(KMS:KME), intent(inout) :: FR,FI,FC,FS,FG
+      real, dimension(KMS:KME) ::    DUMI,DUMR,DUMFNI,DUMG,DUMFNG
+      real UNI, UMI,UMR
+      real, dimension(KMS:KME) ::    FNI,FNG
+      real RGVM
+      real, dimension(KMS:KME) ::   FALOUTR,FALOUTI,FALOUTNI
+      real FALTNDR,FALTNDI,FALTNDNI,RHO2
+      real, dimension(KMS:KME) ::   DUMQS,DUMFNS
+      real UMS,UNS
+      real, dimension(KMS:KME) ::   FNS, FALOUTS,FALOUTNS,FALOUTG,FALOUTNG
+      real FALTNDS,FALTNDNS,UNR,FALTNDG,FALTNDNG
+      real, dimension(KMS:KME) ::    DUMC,DUMFNC
+      real UNC,UMC,UNG,UMG
+      real, dimension(KMS:KME) ::   FALOUTC,FALOUTNC
+      real FALTNDC,FALTNDNC
+      real, dimension(KMS:KME) ::   FNC,DUMFNR,FALOUTNR
+      real FALTNDNR
+      real, dimension(KMS:KME) ::   FNR(KMS:KME)
 
 ! FALL-SPEED PARAMETER 'A' WITH AIR DENSITY CORRECTION
 
-      REAL, DIMENSION(KMS:KME) ::    AIN,ARN,ASN,ACN,AGN
+      real, dimension(KMS:KME) ::    AIN,ARN,ASN,ACN,AGN
 
-      REAL, DIMENSION(KMS:KME), intent(inout) :: tbcond,tbevar,tbmelt,tbfrz,tbdep,tbsub
+      real, dimension(KMS:KME), intent(inout) :: tbcond,tbevar,tbmelt,tbfrz,tbdep,tbsub
 
 ! EXTERNAL FUNCTION CALL RETURN VARIABLES
 
@@ -1528,77 +1528,77 @@ END SUBROUTINE MP_GRAUPEL
 
 ! DUMMY VARIABLES
 
-     REAL DUM,DUM1,DUM2,DUMT,DUMQV,DUMQSS,DUMQSI,DUMS
-     REAL DUMMQS,DUMQG,SAVEQC,SAVET
+     real DUM,DUM1,DUM2,DUMT,DUMQV,DUMQSS,DUMQSI,DUMS
+     real DUMMQS,DUMQG,SAVEQC,SAVET
 
 ! PROGNOSTIC SUPERSATURATION
 
-     REAL DQSDT    ! CHANGE OF SAT. MIX. RAT. WITH TEMPERATURE
-     REAL DQSIDT   ! CHANGE IN ICE SAT. MIXING RAT. WITH T
-     REAL EPSI     ! 1/PHASE REL. TIME (SEE M2005), ICE
-     REAL EPSS     ! 1/PHASE REL. TIME (SEE M2005), SNOW
-     REAL EPSR     ! 1/PHASE REL. TIME (SEE M2005), RAIN
-     REAL EPSG     ! 1/PHASE REL. TIME (SEE M2005), GRAUPEL
+     real DQSDT    ! CHANGE OF SAT. MIX. RAT. WITH TEMPERATURE
+     real DQSIDT   ! CHANGE in ICE SAT. MIXING RAT. WITH T
+     real EPSI     ! 1/PHASE REL. TIME (SEE M2005), ICE
+     real EPSS     ! 1/PHASE REL. TIME (SEE M2005), SNOW
+     real EPSR     ! 1/PHASE REL. TIME (SEE M2005), RAIN
+     real EPSG     ! 1/PHASE REL. TIME (SEE M2005), GRAUPEL
 
 ! NEW DROPLET ACTIVATION VARIABLES
-     REAL TAUC     ! PHASE REL. TIME (SEE M2005), DROPLETS
-     REAL TAUR     ! PHASE REL. TIME (SEE M2005), RAIN
-     REAL TAUI     ! PHASE REL. TIME (SEE M2005), CLOUD ICE
-     REAL TAUS     ! PHASE REL. TIME (SEE M2005), SNOW
-     REAL TAUG     ! PHASE REL. TIME (SEE M2005), GRAUPEL
-     REAL DUMACT,DUM3
+     real TAUC     ! PHASE REL. TIME (SEE M2005), DROPLETS
+     real TAUR     ! PHASE REL. TIME (SEE M2005), RAIN
+     real TAUI     ! PHASE REL. TIME (SEE M2005), CLOUD ICE
+     real TAUS     ! PHASE REL. TIME (SEE M2005), SNOW
+     real TAUG     ! PHASE REL. TIME (SEE M2005), GRAUPEL
+     real DUMACT,DUM3
 
 ! COUNTING/INDEX VARIABLES
 
 ! V1.3 DIFFERENT NSTEP FOR EACH SPECIES
-     INTEGER K,N,NSTEPR,NSTEPI,NSTEPS,NSTEPC,NSTEPG ! ,I
+     integer K,N,NSTEPR,NSTEPI,NSTEPS,NSTEPC,NSTEPG ! ,I
 
 ! LTRUE, SWITCH = 0, NO HYDROMETEORS IN COLUMN, 
 !               = 1, HYDROMETEORS IN COLUMN
 
-      INTEGER LTRUE
+      integer LTRUE
 
 ! DROPLET ACTIVATION/FREEZING AEROSOL
 
 
-     REAL    CT      ! DROPLET ACTIVATION PARAMETER
-     REAL    TEMP1   ! DUMMY TEMPERATURE
-     REAL    SAT1    ! DUMMY SATURATION
-     REAL    SIGVL   ! SURFACE TENSION LIQ/VAPOR
-     REAL    KEL     ! KELVIN PARAMETER
-     REAL    KC2     ! TOTAL ICE NUCLEATION RATE
+     real    CT      ! DROPLET ACTIVATION parameter
+     real    TEMP1   ! DUMMY TEMPERATURE
+     real    SAT1    ! DUMMY SATURATION
+     real    SIGVL   ! SURFACE TENSION LIQ/VAPOR
+     real    KEL     ! KELVIN parameter
+     real    KC2     ! TOTAL ICE NUCLEATION RATE
 
-       REAL CRY,KRY   ! AEROSOL ACTIVATION PARAMETERS
+       real CRY,KRY   ! AEROSOL ACTIVATION PARAMETERS
 
 ! MORE WORKING/DUMMY VARIABLES
 
-     REAL DUMQI,DUMNI,DC0,DS0,DG0
-     REAL DUMQC,DUMQR,RATIO,SUM_DEP,FUDGEF
+     real DUMQI,DUMNI,DC0,DS0,DG0
+     real DUMQC,DUMQR,RATIO,SUM_DEP,FUDGEF
 
 ! EFFECTIVE VERTICAL VELOCITY  (M/S)
-     REAL WEF
+     real WEF
 
 ! WORKING PARAMETERS FOR ICE NUCLEATION
 
-      REAL ANUC,BNUC
+      real ANUC,BNUC
 
 ! WORKING PARAMETERS FOR AEROSOL ACTIVATION
 
-        REAL AACT,GAMM,GG,PSI,ETA1,ETA2,SM1,SM2,SMAX,UU1,UU2,ALPHA
+        real AACT,GAMM,GG,PSI,ETA1,ETA2,SM1,SM2,SMAX,UU1,UU2,ALPHA
 
 ! DUMMY SIZE DISTRIBUTION PARAMETERS
 
-        REAL DLAMS,DLAMR,DLAMI,DLAMC,DLAMG,LAMMAX,LAMMIN
+        real DLAMS,DLAMR,DLAMI,DLAMC,DLAMG,LAMMAX,LAMMIN
 
-        INTEGER IDROP
+        integer IDROP
 
 ! v1.4
 ! new variables for seifert and beheng warm rain scheme
-      REAL, DIMENSION(KMS:KME) :: nu
+      real, dimension(KMS:KME) :: nu
       integer dumii
 
       real :: dttmp
-      REAL, DIMENSION(KMS:KME) :: temr,temz
+      real, dimension(KMS:KME) :: temr,temz
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
@@ -1606,7 +1606,7 @@ END SUBROUTINE MP_GRAUPEL
 
          LTRUE = 0
 
-      IF( dorad )THEN
+      if( dorad )then
 ! V.13 initialize effective radii to default values (from P. Blossey)
 ! hm 8/20/12
          effc(kts:kte) = 25.         
@@ -1615,12 +1615,12 @@ END SUBROUTINE MP_GRAUPEL
          effr(kts:kte) = 25.         
          effg(kts:kte) = 25.         
 	 effis(kts:kte) = 25.
-      ENDIF
+      endif
 !---------------------------------!
 
 ! ATMOSPHERIC PARAMETERS THAT VARY IN TIME AND HEIGHT
          kloop1:  &
-         DO K = KTS,KTE
+         do K = KTS,KTE
 
 ! LATENT HEAT OF VAPORATION
 
@@ -1659,7 +1659,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! MAKE SURE ICE SATURATION DOESN'T EXCEED WATER SAT. NEAR FREEZING
 
-            IF (EIS(K).GT.EVS(K)) EIS(K) = EVS(K)
+            if (EIS(K).GT.EVS(K)) EIS(K) = EVS(K)
 
             QVS(K) = EP_2*EVS(K)/(PRES(K)-EVS(K))
             QVI(K) = EP_2*EIS(K)/(PRES(K)-EIS(K))
@@ -1678,41 +1678,41 @@ END SUBROUTINE MP_GRAUPEL
 ! this improves reflectivity at low mixing ratios
 ! ghb 160428:  use QTHR
 
-             IF (QVQVS(K).LT.0.9) THEN
-               IF (QR3D(K).LT.QTHR) THEN
+             if (QVQVS(K).LT.0.9) then
+               if (QR3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QR3D(K)
 !!!                  T3D(K)=T3D(K)-QR3D(K)*XXLV(K)/CPM(K)
                   T3D(K)=T3D(K)-QR3D(K)*ecnd(k)
                   QR3D(K)=0.
-               END IF
-               IF (QC3D(K).LT.QTHR) THEN
+               end if
+               if (QC3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QC3D(K)
 !!!                  T3D(K)=T3D(K)-QC3D(K)*XXLV(K)/CPM(K)
                   T3D(K)=T3D(K)-QC3D(K)*ecnd(k)
                   QC3D(K)=0.
-               END IF
-             END IF
+               end if
+             end if
 
-             IF (QVQVSI(K).LT.0.9) THEN
-               IF (QI3D(K).LT.QTHR) THEN
+             if (QVQVSI(K).LT.0.9) then
+               if (QI3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QI3D(K)
 !!!                  T3D(K)=T3D(K)-QI3D(K)*XXLS(K)/CPM(K)
                   T3D(K)=T3D(K)-QI3D(K)*edep(k)
                   QI3D(K)=0.
-               END IF
-               IF (QNI3D(K).LT.QTHR) THEN
+               end if
+               if (QNI3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QNI3D(K)
 !!!                  T3D(K)=T3D(K)-QNI3D(K)*XXLS(K)/CPM(K)
                   T3D(K)=T3D(K)-QNI3D(K)*edep(k)
                   QNI3D(K)=0.
-               END IF
-               IF (QG3D(K).LT.QTHR) THEN
+               end if
+               if (QG3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QG3D(K)
 !!!                  T3D(K)=T3D(K)-QG3D(K)*XXLS(K)/CPM(K)
                   T3D(K)=T3D(K)-QG3D(K)*edep(k)
                   QG3D(K)=0.
-               END IF
-             END IF
+               end if
+             end if
 
 ! HEAT OF FUSION
 
@@ -1721,26 +1721,26 @@ END SUBROUTINE MP_GRAUPEL
 !..................................................................
 ! IF MIXING RATIO < QSMALL SET MIXING RATIO AND NUMBER CONC TO ZERO
 
-       IF (QC3D(K).LT.QSMALL) THEN
+       if (QC3D(K).LT.QSMALL) then
          QC3D(K) = 0.
          NC3D(K) = 0.
-       END IF
-       IF (QR3D(K).LT.QSMALL) THEN
+       end if
+       if (QR3D(K).LT.QSMALL) then
          QR3D(K) = 0.
          NR3D(K) = 0.
-       END IF
-       IF (QI3D(K).LT.QSMALL) THEN
+       end if
+       if (QI3D(K).LT.QSMALL) then
          QI3D(K) = 0.
          NI3D(K) = 0.
-       END IF
-       IF (QNI3D(K).LT.QSMALL) THEN
+       end if
+       if (QNI3D(K).LT.QSMALL) then
          QNI3D(K) = 0.
          NS3D(K) = 0.
-       END IF
-       IF (QG3D(K).LT.QSMALL) THEN
+       end if
+       if (QG3D(K).LT.QSMALL) then
          QG3D(K) = 0.
          NG3D(K) = 0.
-       END IF
+       end if
 
 ! INITIALIZE SEDIMENTATION TENDENCIES FOR MIXING RATIO
 
@@ -1783,11 +1783,11 @@ END SUBROUTINE MP_GRAUPEL
 ! IF THERE IS NO CLOUD/PRECIP WATER, AND IF SUBSATURATED, THEN SKIP MICROPHYSICS
 ! FOR THIS LEVEL
 
-            IF (QC3D(K).LT.QSMALL.AND.QI3D(K).LT.QSMALL.AND.QNI3D(K).LT.QSMALL &
-                 .AND.QR3D(K).LT.QSMALL.AND.QG3D(K).LT.QSMALL) THEN
-                 IF (T3D(K).LT.TMELT.AND.QVQVSI(K).LT.0.999) GOTO 200
-                 IF (T3D(K).GE.TMELT.AND.QVQVS(K).LT.0.999) GOTO 200
-            END IF
+            if (QC3D(K).LT.QSMALL.AND.QI3D(K).LT.QSMALL.AND.QNI3D(K).LT.QSMALL &
+                 .AND.QR3D(K).LT.QSMALL.AND.QG3D(K).LT.QSMALL) then
+                 if (T3D(K).LT.TMELT.AND.QVQVSI(K).LT.0.999) GOTO 200
+                 if (T3D(K).GE.TMELT.AND.QVQVS(K).LT.0.999) GOTO 200
+            end if
 
 ! THERMAL CONDUCTIVITY FOR AIR
 
@@ -1820,44 +1820,44 @@ END SUBROUTINE MP_GRAUPEL
 !.....................................................................
 ! CASE FOR TEMPERATURE ABOVE FREEZING
 
-            IF (T3D(K).GE.TMELT) THEN
+            if (T3D(K).GE.TMELT) then
 
 !......................................................................
 !HM ADD, ALLOW FOR CONSTANT DROPLET NUMBER
 ! INUM = 0, PREDICT DROPLET NUMBER
 ! INUM = 1, SET CONSTANT DROPLET NUMBER
 
-         IF (INUM.EQ.1) THEN
+         if (INUM.EQ.1) then
 ! CONVERT NDCNST FROM CM-3 TO KG-1
             NC3D(K)=NDCNST*1.E6/RHO(K)
-         END IF
+         end if
 
 ! GET SIZE DISTRIBUTION PARAMETERS
 
 ! MELT VERY SMALL SNOW AND GRAUPEL MIXING RATIOS, ADD TO RAIN
-       IF (QNI3D(K).LT.1.E-6) THEN
+       if (QNI3D(K).LT.1.E-6) then
           QR3D(K)=QR3D(K)+QNI3D(K)
           NR3D(K)=NR3D(K)+NS3D(K)
 !!!          T3D(K)=T3D(K)-QNI3D(K)*XLF(K)/CPM(K)
           T3D(K)=T3D(K)-QNI3D(K)*efrz(k)
           QNI3D(K) = 0.
           NS3D(K) = 0.
-       END IF
-       IF (QG3D(K).LT.1.E-6) THEN
+       end if
+       if (QG3D(K).LT.1.E-6) then
           QR3D(K)=QR3D(K)+QG3D(K)
           NR3D(K)=NR3D(K)+NG3D(K)
 !!!          T3D(K)=T3D(K)-QG3D(K)*XLF(K)/CPM(K)
           T3D(K)=T3D(K)-QG3D(K)*efrz(k)
           QG3D(K) = 0.
           NG3D(K) = 0.
-       END IF
+       end if
 
-       IF (QC3D(K).LT.QSMALL.AND.QNI3D(K).LT.1.E-8.AND.QR3D(K).LT.QSMALL.AND.QG3D(K).LT.1.E-8) GOTO 300
+       if (QC3D(K).LT.QSMALL.AND.QNI3D(K).LT.1.E-8.AND.QR3D(K).LT.QSMALL.AND.QG3D(K).LT.1.E-8) GOTO 300
 
 ! MAKE SURE NUMBER CONCENTRATIONS AREN'T NEGATIVE
 
       NS3D(K) = MAX(0.,NS3D(K))
-      IF(INUM.EQ.0)  &
+      if(INUM.EQ.0)  &
       NC3D(K) = MAX(0.,NC3D(K))
       NR3D(K) = MAX(0.,NR3D(K))
       NG3D(K) = MAX(0.,NG3D(K))
@@ -1865,7 +1865,7 @@ END SUBROUTINE MP_GRAUPEL
 !......................................................................
 ! RAIN
 
-      IF (QR3D(K).GE.QSMALL) THEN
+      if (QR3D(K).GE.QSMALL) then
       LAMR(K) = (PI*RHOW*NR3D(K)/QR3D(K))**(1./3.)
       N0RR(K) = NR3D(K)*LAMR(K)
 
@@ -1873,27 +1873,27 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (LAMR(K).LT.LAMMINR) THEN
+      if (LAMR(K).LT.LAMMINR) then
 
       LAMR(K) = LAMMINR
 
       N0RR(K) = LAMR(K)**4*QR3D(K)/(PI*RHOW)
 
       NR3D(K) = N0RR(K)/LAMR(K)
-      ELSE IF (LAMR(K).GT.LAMMAXR) THEN
+      else if (LAMR(K).GT.LAMMAXR) then
       LAMR(K) = LAMMAXR
       N0RR(K) = LAMR(K)**4*QR3D(K)/(PI*RHOW)
 
       NR3D(K) = N0RR(K)/LAMR(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !......................................................................
 ! CLOUD DROPLETS
 
 ! MARTIN ET AL. (1994) FORMULA FOR PGAM
 
-      IF (QC3D(K).GE.QSMALL) THEN
+      if (QC3D(K).GE.QSMALL) then
 
 !         DUM = PRES(K)/(R*T3D(K))
 ! V1.5
@@ -1918,25 +1918,25 @@ END SUBROUTINE MP_GRAUPEL
       LAMMIN = (PGAM(K)+1.)/60.E-6
       LAMMAX = (PGAM(K)+1.)/1.E-6
 
-      IF (LAMC(K).LT.LAMMIN) THEN
+      if (LAMC(K).LT.LAMMIN) then
       LAMC(K) = LAMMIN
 
       NC3D(K) = EXP(3.*LOG(LAMC(K))+LOG(QC3D(K))+              &
                 LOG(GAMMA(PGAM(K)+1.))-LOG(GAMMA(PGAM(K)+4.)))/CONS26
-      ELSE IF (LAMC(K).GT.LAMMAX) THEN
+      else if (LAMC(K).GT.LAMMAX) then
       LAMC(K) = LAMMAX
 
       NC3D(K) = EXP(3.*LOG(LAMC(K))+LOG(QC3D(K))+              &
                 LOG(GAMMA(PGAM(K)+1.))-LOG(GAMMA(PGAM(K)+4.)))/CONS26
 
-      END IF
+      end if
 
-      END IF
+      end if
 
 !......................................................................
 ! SNOW
 
-      IF (QNI3D(K).GE.QSMALL) THEN
+      if (QNI3D(K).GE.QSMALL) then
       LAMS(K) = (CONS1*NS3D(K)/QNI3D(K))**(1./DS)
       N0S(K) = NS3D(K)*LAMS(K)
 
@@ -1944,44 +1944,44 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (LAMS(K).LT.LAMMINS) THEN
+      if (LAMS(K).LT.LAMMINS) then
       LAMS(K) = LAMMINS
       N0S(K) = LAMS(K)**(DS+1.)*QNI3D(K)/CONS1
 
       NS3D(K) = N0S(K)/LAMS(K)
 
-      ELSE IF (LAMS(K).GT.LAMMAXS) THEN
+      else if (LAMS(K).GT.LAMMAXS) then
 
       LAMS(K) = LAMMAXS
       N0S(K) = LAMS(K)**(DS+1.)*QNI3D(K)/CONS1
 
       NS3D(K) = N0S(K)/LAMS(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !......................................................................
 ! GRAUPEL
 
-      IF (QG3D(K).GE.QSMALL) THEN
+      if (QG3D(K).GE.QSMALL) then
       LAMG(K) = (CONS2*NG3D(K)/QG3D(K))**(1./DG)
       N0G(K) = NG3D(K)*LAMG(K)
 
 ! ADJUST VARS
 
-      IF (LAMG(K).LT.LAMMING) THEN
+      if (LAMG(K).LT.LAMMING) then
       LAMG(K) = LAMMING
       N0G(K) = LAMG(K)**(DG+1.)*QG3D(K)/CONS2
 
       NG3D(K) = N0G(K)/LAMG(K)
 
-      ELSE IF (LAMG(K).GT.LAMMAXG) THEN
+      else if (LAMG(K).GT.LAMMAXG) then
 
       LAMG(K) = LAMMAXG
       N0G(K) = LAMG(K)**(DG+1.)*QG3D(K)/CONS2
 
       NG3D(K) = N0G(K)/LAMG(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !.....................................................................
 ! ZERO OUT PROCESS RATES
@@ -2022,12 +2022,12 @@ END SUBROUTINE MP_GRAUPEL
 
 ! USE MINIMUM VALUE OF 1.E-6 TO PREVENT FLOATING POINT ERROR
 
-         IF (QC3D(K).GE.1.E-6) THEN
+         if (QC3D(K).GE.1.E-6) then
 
 ! HM ADD 12/13/06, REPLACE WITH NEWER FORMULA
 ! FROM KHAIROUTDINOV AND KOGAN 2000, MWR
 
-            IF (IRAIN.EQ.0) THEN
+            if (IRAIN.EQ.0) then
 
                 PRC(K)=1350.*QC3D(K)**2.47*  &
            (NC3D(K)/1.e6*RHO(K))**(-1.79)
@@ -2042,7 +2042,7 @@ END SUBROUTINE MP_GRAUPEL
                 NPRC(K) = MIN(NPRC(K),NC3D(K)/DT)
                 NPRC1(K) = MIN(NPRC1(K),NPRC(K))
 
-            ELSE IF (IRAIN.EQ.1) THEN
+            else if (IRAIN.EQ.1) then
 
 ! v1.4
 ! replace with seifert and beheng
@@ -2058,13 +2058,13 @@ END SUBROUTINE MP_GRAUPEL
         nprc(k) = prc(k)*2./2.6e-7*1000.
         nprc1(k) = 0.5*nprc(k)
 
-        END IF
-         END IF
+        end if
+         end if
 
 !.......................................................................
 ! HM ADD 12/13/06, COLLECTION OF SNOW BY RAIN ABOVE FREEZING
 
-         IF (QR3D(K).GE.1.E-8.AND.QNI3D(K).GE.1.E-8) THEN
+         if (QR3D(K).GE.1.E-8.AND.QNI3D(K).GE.1.E-8) then
 
             UMS = ASN(K)*CONS3/(LAMS(K)**BS)
             UMR = ARN(K)*CONS4/(LAMR(K)**BR)
@@ -2103,13 +2103,13 @@ END SUBROUTINE MP_GRAUPEL
 !                 1./(LAMR(K)**2*LAMS(K)**2)+                   &
 !                 1./(LAMR(K)*LAMS(K)**3))
 
-         END IF
+         end if
 
 ! ADD COLLECTION OF GRAUPEL BY RAIN ABOVE FREEZING
 ! ASSUME ALL RAIN COLLECTION BY GRAUPEL ABOVE FREEZING IS SHED
 ! ASSUME SHED DROPS ARE 1 MM IN SIZE
 
-         IF (QR3D(K).GE.1.E-8.AND.QG3D(K).GE.1.E-8) THEN
+         if (QR3D(K).GE.1.E-8.AND.QG3D(K).GE.1.E-8) then
 
             UMG = AGN(K)*CONS7/(LAMG(K)**BG)
             UMR = ARN(K)*CONS4/(LAMR(K)**BR)
@@ -2149,25 +2149,25 @@ END SUBROUTINE MP_GRAUPEL
 !            NPRACG(K)=MAX(NPRACG(K)-DUM,0.)
             NPRACG(K)=NPRACG(K)-DUM
 
-	    END IF
+	    end if
 
 !.......................................................................
 ! ACCRETION OF CLOUD LIQUID WATER BY RAIN
 ! CONTINUOUS COLLECTION EQUATION WITH
 ! GRAVITATIONAL COLLECTION KERNEL, DROPLET FALL SPEED NEGLECTED
 
-         IF (QR3D(K).GE.1.E-8 .AND. QC3D(K).GE.1.E-8) THEN
+         if (QR3D(K).GE.1.E-8 .AND. QC3D(K).GE.1.E-8) then
 
 ! 12/13/06 HM ADD, REPLACE WITH NEWER FORMULA FROM
 ! KHAIROUTDINOV AND KOGAN 2000, MWR
 
-            IF (IRAIN.EQ.0) THEN
+            if (IRAIN.EQ.0) then
 
            DUM=(QC3D(K)*QR3D(K))
            PRA(K) = 67.*(DUM)**1.15
            NPRA(K) = PRA(K)/(QC3D(K)/NC3D(K))
 
-           ELSE IF (IRAIN.EQ.1) THEN
+           else if (IRAIN.EQ.1) then
 
 ! v1.4
 ! seifert and beheng (2001) formulation
@@ -2178,8 +2178,8 @@ END SUBROUTINE MP_GRAUPEL
            npra(k) = pra(k)*rho(k)/1000.*(nc3d(k)*rho(k)/1.e6)/ &
            (qc3d(k)*rho(k)/1000.)*1.e6/rho(k)
 
-         END IF
-         END IF
+         end if
+         end if
 !.......................................................................
 ! SELF-COLLECTION OF RAIN DROPS
 ! FROM BEHENG(1994)
@@ -2188,7 +2188,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! v1.4, replace with seifert and beheng (2001)
 
-         IF (QR3D(K).GE.1.E-8) THEN
+         if (QR3D(K).GE.1.E-8) then
 ! v1.4
 ! seifert and beheng
 ! include breakup, V2.1
@@ -2200,24 +2200,24 @@ END SUBROUTINE MP_GRAUPEL
             end if
             nragg(k) = -5.78*dum*qr3d(k)*nr3d(k)*rho(k)
 
-         END IF
+         end if
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! CALCULATE EVAP OF RAIN
 
-      IF (QR3D(K).GE.QSMALL) THEN
+      if (QR3D(K).GE.QSMALL) then
         EPSR = 2.*PI*N0RR(K)*RHO(K)*DV(K)*                           &
                    (F1R/(LAMR(K)*LAMR(K))+                       &
                     F2R*(ARN(K)*RHO(K)/MU(K))**0.5*                      &
                     SC(K)**(1./3.)*CONS9/                   &
                 (LAMR(K)**CONS34))
-      ELSE
+      else
       EPSR = 0.
-      END IF
+      end if
 
 ! NO CONDENSATION ONTO RAIN, ONLY EVAP
 
-           IF (QV3D(K).LT.QVS(K)) THEN
+           if (QV3D(K).LT.QVS(K)) then
               PRE(K) = EPSR*(QV3D(K)-QVS(K))/AB(K)
               PRE(K) = MIN(PRE(K),0.)
               ! dont allow evap to exceed saturation:  GHB, 130712:
@@ -2225,9 +2225,9 @@ END SUBROUTINE MP_GRAUPEL
               if( dum.gt.QVS(K) )then
                 PRE(K)=(QV3D(K)-QVS(K))/DT
               endif
-           ELSE
+           else
               PRE(K) = 0.
-           END IF
+           end if
 
 !.......................................................................
 ! MELTING OF SNOW
@@ -2235,7 +2235,7 @@ END SUBROUTINE MP_GRAUPEL
 ! SNOW MAY PERSITS ABOVE FREEZING, FORMULA FROM RUTLEDGE AND HOBBS, 1984
 ! IF WATER SUPERSATURATION, SNOW MELTS TO FORM RAIN
 
-          IF (QNI3D(K).GE.1.E-8) THEN
+          if (QNI3D(K).GE.1.E-8) then
 
 ! v3 5/27/11 bug fix
 !             DUM = -CPW/XLF(K)*T3D(K)*PRACS(K)
@@ -2255,7 +2255,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! IN WATER SUBSATURATION, SNOW MELTS AND EVAPORATES
 
-      IF (QVQVS(K).LT.1.) THEN
+      if (QVQVS(K).LT.1.) then
         EPSS = 2.*PI*N0S(K)*RHO(K)*DV(K)*                            &
                    (F1S/(LAMS(K)*LAMS(K))+                       &
                     F2S*(ASN(K)*RHO(K)/MU(K))**0.5*                      &
@@ -2265,8 +2265,8 @@ END SUBROUTINE MP_GRAUPEL
         EVPMS(K) = (QV3D(K)-QVS(K))*EPSS/AB(K)    
         EVPMS(K) = MAX(EVPMS(K),PSMLT(K))
         PSMLT(K) = PSMLT(K)-EVPMS(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !.......................................................................
 ! MELTING OF GRAUPEL
@@ -2274,7 +2274,7 @@ END SUBROUTINE MP_GRAUPEL
 ! GRAUPEL MAY PERSITS ABOVE FREEZING, FORMULA FROM RUTLEDGE AND HOBBS, 1984
 ! IF WATER SUPERSATURATION, GRAUPEL MELTS TO FORM RAIN
 
-          IF (QG3D(K).GE.1.E-8) THEN
+          if (QG3D(K).GE.1.E-8) then
 
 ! v3 5/27/11 bug fix
 !             DUM = -CPW/XLF(K)*T3D(K)*PRACG(K)
@@ -2294,7 +2294,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! IN WATER SUBSATURATION, GRAUPEL MELTS AND EVAPORATES
 
-      IF (QVQVS(K).LT.1.) THEN
+      if (QVQVS(K).LT.1.) then
         EPSG = 2.*PI*N0G(K)*RHO(K)*DV(K)*                                &
                    (F1S/(LAMG(K)*LAMG(K))+                               &
                     F2S*(AGN(K)*RHO(K)/MU(K))**0.5*                      &
@@ -2304,8 +2304,8 @@ END SUBROUTINE MP_GRAUPEL
         EVPMG(K) = (QV3D(K)-QVS(K))*EPSG/AB(K)
         EVPMG(K) = MAX(EVPMG(K),PGMLT(K))
         PGMLT(K) = PGMLT(K)-EVPMG(K)
-      END IF
-      END IF
+      end if
+      end if
 
 ! HM, V2.1
 ! RESET PRACG AND PRACS TO ZERO, THIS IS DONE BECAUSE THERE IS NO
@@ -2325,20 +2325,20 @@ END SUBROUTINE MP_GRAUPEL
 
       DUM = (PRC(K)+PRA(K))*DT
 
-      IF (DUM.GT.QC3D(K).AND.QC3D(K).GE.QSMALL) THEN
+      if (DUM.GT.QC3D(K).AND.QC3D(K).GE.QSMALL) then
 
         RATIO = QC3D(K)/DUM
 
         PRC(K) = PRC(K)*RATIO
         PRA(K) = PRA(K)*RATIO
 
-        END IF
+        end if
 
 ! CONSERVATION OF SNOW
 
         DUM = (-PSMLT(K)-EVPMS(K)+PRACS(K))*DT
 
-        IF (DUM.GT.QNI3D(K).AND.QNI3D(K).GE.QSMALL) THEN
+        if (DUM.GT.QNI3D(K).AND.QNI3D(K).GE.QSMALL) then
 
 ! NO SOURCE TERMS FOR SNOW AT T > FREEZING
         RATIO = QNI3D(K)/DUM
@@ -2347,13 +2347,13 @@ END SUBROUTINE MP_GRAUPEL
         EVPMS(K) = EVPMS(K)*RATIO
         PRACS(K) = PRACS(K)*RATIO
 
-        END IF
+        end if
 
 ! CONSERVATION OF GRAUPEL
 
         DUM = (-PGMLT(K)-EVPMG(K)+PRACG(K))*DT
 
-        IF (DUM.GT.QG3D(K).AND.QG3D(K).GE.QSMALL) THEN
+        if (DUM.GT.QG3D(K).AND.QG3D(K).GE.QSMALL) then
 
 ! NO SOURCE TERM FOR GRAUPEL ABOVE FREEZING
         RATIO = QG3D(K)/DUM
@@ -2362,20 +2362,20 @@ END SUBROUTINE MP_GRAUPEL
         EVPMG(K) = EVPMG(K)*RATIO
         PRACG(K) = PRACG(K)*RATIO
 
-        END IF
+        end if
 
 ! CONSERVATION OF QR
 ! HM 12/13/06, ADDED CONSERVATION OF RAIN SINCE PRE IS NEGATIVE
 
         DUM = (-PRACS(K)-PRACG(K)-PRE(K)-PRA(K)-PRC(K)+PSMLT(K)+PGMLT(K))*DT
 
-        IF (DUM.GT.QR3D(K).AND.QR3D(K).GE.QSMALL) THEN
+        if (DUM.GT.QR3D(K).AND.QR3D(K).GE.QSMALL) then
 
         RATIO = (QR3D(K)/DT+PRACS(K)+PRACG(K)+PRA(K)+PRC(K)-PSMLT(K)-PGMLT(K))/ &
                         (-PRE(K))
         PRE(K) = PRE(K)*RATIO
         
-        END IF
+        end if
 
 !....................................
 
@@ -2401,33 +2401,33 @@ END SUBROUTINE MP_GRAUPEL
       NC3DTEN(K) = NC3DTEN(K)+ (-NPRA(K)-NPRC(K))
       NR3DTEN(K) = NR3DTEN(K)+ (NPRC1(K)+NRAGG(K)-NPRACG(K))
 
-      IF (PRE(K).LT.0.) THEN
+      if (PRE(K).LT.0.) then
          DUM = PRE(K)*DT/QR3D(K)
            DUM = MAX(-1.,DUM)
          NSUBR(K) = DUM*NR3D(K)/DT
-      END IF
+      end if
 
 ! V1.3 move code below to before saturation adjustment
-        IF (EVPMS(K)+PSMLT(K).LT.0.) THEN
+        if (EVPMS(K)+PSMLT(K).LT.0.) then
          DUM = (EVPMS(K)+PSMLT(K))*DT/QNI3D(K)
            DUM = MAX(-1.,DUM)
          NSMLTS(K) = DUM*NS3D(K)/DT
-        END IF
-        IF (PSMLT(K).LT.0.) THEN
+        end if
+        if (PSMLT(K).LT.0.) then
           DUM = PSMLT(K)*DT/QNI3D(K)
           DUM = MAX(-1.0,DUM)
           NSMLTR(K) = DUM*NS3D(K)/DT
-        END IF
-        IF (EVPMG(K)+PGMLT(K).LT.0.) THEN
+        end if
+        if (EVPMG(K)+PGMLT(K).LT.0.) then
          DUM = (EVPMG(K)+PGMLT(K))*DT/QG3D(K)
            DUM = MAX(-1.,DUM)
          NGMLTG(K) = DUM*NG3D(K)/DT
-        END IF
-        IF (PGMLT(K).LT.0.) THEN
+        end if
+        if (PGMLT(K).LT.0.) then
           DUM = PGMLT(K)*DT/QG3D(K)
           DUM = MAX(-1.0,DUM)
           NGMLTR(K) = DUM*NG3D(K)/DT
-        END IF
+        end if
 
 !        nsubr(k)=0.
 !        nsubs(k)=0.
@@ -2437,7 +2437,7 @@ END SUBROUTINE MP_GRAUPEL
          NG3DTEN(K) = NG3DTEN(K)+(NGMLTG(K))
          NR3DTEN(K) = NR3DTEN(K)+(NSUBR(K)-NSMLTR(K)-NGMLTR(K))
 
- 300  CONTINUE
+ 300  continue
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! NOW CALCULATE SATURATION ADJUSTMENT TO CONDENSE EXTRA VAPOR ABOVE
@@ -2471,38 +2471,38 @@ END SUBROUTINE MP_GRAUPEL
 !!!      QC3DTEN(K) = QC3DTEN(K)+PCC(K)
       ! GHB2
 
-      IF( abs(DUMT-SAVET).ge.0.0001 )THEN
+      if( abs(DUMT-SAVET).ge.0.0001 )then
         PCC(K) = (DUMQC-SAVEQC)*RDT
         QV3DTEN(K) = QV3DTEN(K)-PCC(K)
         QC3DTEN(K) = QC3DTEN(K)+PCC(K)
         T3DTEN(K) = T3DTEN(K)+(DUMT-SAVET)*RDT
         tbcond(k) = tbcond(k)+(DUMT-SAVET)*RDT
-      ENDIF
+      endif
 
 !.......................................................................
 ! ACTIVATION OF CLOUD DROPLETS
 
     ! GHB, 120124:
-    IF(INUM.EQ.0)THEN
-      IF (QC3D(K)+QC3DTEN(K)*DT.GE.QSMALL) THEN
+    if(INUM.EQ.0)then
+      if (QC3D(K)+QC3DTEN(K)*DT.GE.QSMALL) then
 
 ! EFFECTIVE VERTICAL VELOCITY (M/S)
 
-      IF (ISUB.EQ.0) THEN
+      if (ISUB.EQ.0) then
 ! ADD SUB-GRID VERTICAL VELOCITY
          DUM = W3D(K)+WVAR(K)
 
 ! ASSUME MINIMUM EFF. SUB-GRID VELOCITY 0.10 M/S
          DUM = MAX(DUM,0.10)
 
-      ELSE IF (ISUB.EQ.1) THEN
+      else if (ISUB.EQ.1) then
          DUM=W3D(K)
-      END IF
+      end if
 
 ! ONLY ACTIVATE IN REGIONS OF UPWARD MOTION
-      IF (DUM.GE.0.001) THEN
+      if (DUM.GE.0.001) then
 
-      IF (IBASE.EQ.1) THEN
+      if (IBASE.EQ.1) then
 
 ! ACTIVATE ONLY IF THERE IS LITTLE CLOUD WATER
 ! OR IF AT CLOUD BASE, OR AT LOWEST MODEL LEVEL (K=1)
@@ -2510,34 +2510,34 @@ END SUBROUTINE MP_GRAUPEL
          IDROP=0
 
 ! V1.3 USE CURRENT VALUE OF QC FOR IDROP
-         IF (QC3D(K).LE.0.05E-3/RHO(K)) THEN
+         if (QC3D(K).LE.0.05E-3/RHO(K)) then
             IDROP=1
-         END IF
-         IF (K.EQ.1) THEN
+         end if
+         if (K.EQ.1) then
             IDROP=1
-         ELSE IF (K.GE.2) THEN
-            IF (QC3D(K).GT.0.05E-3/RHO(K).AND. &
-             QC3D(K-1).LE.0.05E-3/RHO(K-1)) THEN
+         else if (K.GE.2) then
+            if (QC3D(K).GT.0.05E-3/RHO(K).AND. &
+             QC3D(K-1).LE.0.05E-3/RHO(K-1)) then
             IDROP=1
-            END IF
-         END IF
+            end if
+         end if
 
-         IF (IDROP.EQ.1) THEN
+         if (IDROP.EQ.1) then
 ! ACTIVATE AT CLOUD BASE OR REGIONS WITH VERY LITTLE LIQ WATER
 
-           IF (IACT.EQ.1) THEN
+           if (IACT.EQ.1) then
 ! USE ROGERS AND YAU (1989) TO RELATE NUMBER ACTIVATED TO W
 ! BASED ON TWOMEY 1959
 
-            DUM=DUM*100.  ! CONVERT FROM M/S TO CM/S
+            DUM=DUM*100.  ! CONVERT FROM M/S to CM/S
             DUM2 = 0.88*C1**(2./(K1+2.))*(7.E-2*DUM**1.5)**(K1/(K1+2.))
-            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 TO M-3
-            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 TO KG-1
+            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 to M-3
+            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 to KG-1
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
 
-           ELSE IF (IACT.EQ.2) THEN
+           else if (IACT.EQ.2) then
 ! DROPLET ACTIVATION FROM ABDUL-RAZZAK AND GHAN (2000)
 
            SIGVL = 0.0761-1.55E-4*(T3D(K)-TMELT)
@@ -2566,7 +2566,7 @@ END SUBROUTINE MP_GRAUPEL
            DUM1 = NANEW1/2.*(1.-DERF1(UU1))
            DUM2 = NANEW2/2.*(1.-DERF1(UU2))
 
-           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT TO KG-1
+           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT to KG-1
 
 ! MAKE SURE THIS VALUE ISN'T GREATER THAN TOTAL NUMBER OF AEROSOL
 
@@ -2575,31 +2575,31 @@ END SUBROUTINE MP_GRAUPEL
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
-           END IF  ! IACT
+           end if  ! IACT
 
 !.............................................................................
-        ELSE IF (IDROP.EQ.0) THEN
+        else if (IDROP.EQ.0) then
 ! ACTIVATE IN CLOUD INTERIOR
 ! FIND EQUILIBRIUM SUPERSATURATION
 
            TAUC=1./(2.*PI*RHO(k)*DV(K)*NC3D(K)*(PGAM(K)+1.)/LAMC(K))
-           IF (EPSR.GT.1.E-8) THEN
+           if (EPSR.GT.1.E-8) then
              TAUR=1./EPSR
-           ELSE
+           else
              TAUR=1.E8
-           END IF
+           end if
 
 ! hm fix 1/20/15
 !           DUM3=(QVS(K)*RHO(K)/(PRES(K)-EVS(K))+DQSDT/CP)*G*DUM
            DUM3=(-QVS(K)*RHO(K)/(PRES(K)-EVS(K))+DQSDT/CP)*G*DUM
            DUM3=DUM3*TAUC*TAUR/(TAUC+TAUR)
 
-           IF (DUM3/QVS(K).GE.1.E-6) THEN
-           IF (IACT.EQ.1) THEN
+           if (DUM3/QVS(K).GE.1.E-6) then
+           if (IACT.EQ.1) then
 
 ! FIND MAXIMUM ALLOWED ACTIVATION WITH NON-EQULIBRIUM SS
 
-            DUM=DUM*100.  ! CONVERT FROM M/S TO CM/S
+            DUM=DUM*100.  ! CONVERT FROM M/S to CM/S
             DUMACT = 0.88*C1**(2./(K1+2.))*(7.E-2*DUM**1.5)**(K1/(K1+2.))
 
 ! USE POWER LAW CCN SPECTRA
@@ -2610,13 +2610,13 @@ END SUBROUTINE MP_GRAUPEL
             DUM2=C1*DUM3**K1
 ! MAKE SURE VALUE DOESN'T EXCEED THAT FOR NON-EQUILIBRIUM SS
             DUM2=MIN(DUM2,DUMACT)
-            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 TO M-3
-            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 TO KG-1
+            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 to M-3
+            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 to KG-1
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
 
-           ELSE IF (IACT.EQ.2) THEN
+           else if (IACT.EQ.2) then
 
 ! FIND MAXIMUM ALLOWED ACTIVATION WITH NON-EQULIBRIUM SS
 
@@ -2646,7 +2646,7 @@ END SUBROUTINE MP_GRAUPEL
            DUM1 = NANEW1/2.*(1.-DERF1(UU1))
            DUM2 = NANEW2/2.*(1.-DERF1(UU2))
 
-           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT TO KG-1
+           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT to KG-1
 
 ! MAKE SURE THIS VALUE ISN'T GREATER THAN TOTAL NUMBER OF AEROSOL
 
@@ -2667,7 +2667,7 @@ END SUBROUTINE MP_GRAUPEL
            DUM1 = NANEW1/2.*(1.-DERF1(UU1))
            DUM2 = NANEW2/2.*(1.-DERF1(UU2))
 
-           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT TO KG-1
+           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT to KG-1
 
 ! MAKE SURE THIS VALUE ISN'T GREATER THAN TOTAL NUMBER OF AEROSOL
 
@@ -2680,26 +2680,26 @@ END SUBROUTINE MP_GRAUPEL
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
 
-           END IF ! IACT
-           END IF ! DUM3/QVS > 1.E-6
-        END IF  ! IDROP = 1
+           end if ! IACT
+           end if ! DUM3/QVS > 1.E-6
+        end if  ! IDROP = 1
 
 !.......................................................................
-      ELSE IF (IBASE.EQ.2) THEN
+      else if (IBASE.EQ.2) then
 
-           IF (IACT.EQ.1) THEN
+           if (IACT.EQ.1) then
 ! USE ROGERS AND YAU (1989) TO RELATE NUMBER ACTIVATED TO W
 ! BASED ON TWOMEY 1959
 
-            DUM=DUM*100.  ! CONVERT FROM M/S TO CM/S
+            DUM=DUM*100.  ! CONVERT FROM M/S to CM/S
             DUM2 = 0.88*C1**(2./(K1+2.))*(7.E-2*DUM**1.5)**(K1/(K1+2.))
-            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 TO M-3
-            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 TO KG-1
+            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 to M-3
+            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 to KG-1
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
 
-           ELSE IF (IACT.EQ.2) THEN
+           else if (IACT.EQ.2) then
 
            SIGVL = 0.0761-1.55E-4*(T3D(K)-TMELT)
            AACT = 2.*MW/(RHOW*RR)*SIGVL/T3D(K)
@@ -2727,7 +2727,7 @@ END SUBROUTINE MP_GRAUPEL
            DUM1 = NANEW1/2.*(1.-DERF1(UU1))
            DUM2 = NANEW2/2.*(1.-DERF1(UU2))
 
-           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT TO KG-1
+           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT to KG-1
 
 ! MAKE SURE THIS VALUE ISN'T GREATER THAN TOTAL NUMBER OF AEROSOL
 
@@ -2736,12 +2736,12 @@ END SUBROUTINE MP_GRAUPEL
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
-           END IF  ! IACT
-        END IF  ! IBASE
-        END IF  ! W > 0.001
-        END IF  ! QC3D > QSMALL
+           end if  ! IACT
+        end if  ! IBASE
+        end if  ! W > 0.001
+        end if  ! QC3D > QSMALL
     ! GHB, 120124:
-    ENDIF     ! INUM=0
+    endif     ! INUM=0
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! SUBLIMATE, MELT, OR EVAPORATE NUMBER CONCENTRATION
@@ -2760,23 +2760,23 @@ END SUBROUTINE MP_GRAUPEL
 
 !.....................................................................
 !.....................................................................
-         ELSE  ! TEMPERATURE < 273.15
+         else  ! TEMPERATURE < 273.15
 
 !......................................................................
 !HM ADD, ALLOW FOR CONSTANT DROPLET NUMBER
 ! INUM = 0, PREDICT DROPLET NUMBER
 ! INUM = 1, SET CONSTANT DROPLET NUMBER
 
-         IF (INUM.EQ.1) THEN
+         if (INUM.EQ.1) then
 ! CONVERT NDCNST FROM CM-3 TO KG-1
             NC3D(K)=NDCNST*1.E6/RHO(K)
-         END IF
+         end if
 
 ! MAKE SURE NUMBER CONCENTRATIONS AREN'T NEGATIVE
 
       NI3D(K) = MAX(0.,NI3D(K))
       NS3D(K) = MAX(0.,NS3D(K))
-      IF(INUM.EQ.0)  &
+      if(INUM.EQ.0)  &
       NC3D(K) = MAX(0.,NC3D(K))
       NR3D(K) = MAX(0.,NR3D(K))
       NG3D(K) = MAX(0.,NG3D(K))
@@ -2784,7 +2784,7 @@ END SUBROUTINE MP_GRAUPEL
 !......................................................................
 ! CLOUD ICE
 
-      IF (QI3D(K).GE.QSMALL) THEN
+      if (QI3D(K).GE.QSMALL) then
          LAMI(K) = (CONS12*                 &
               NI3D(K)/QI3D(K))**(1./DI)
          N0I(K) = NI3D(K)*LAMI(K)
@@ -2793,25 +2793,25 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (LAMI(K).LT.LAMMINI) THEN
+      if (LAMI(K).LT.LAMMINI) then
 
       LAMI(K) = LAMMINI
 
       N0I(K) = LAMI(K)**(DI+1.)*QI3D(K)/CONS12
 
       NI3D(K) = N0I(K)/LAMI(K)
-      ELSE IF (LAMI(K).GT.LAMMAXI) THEN
+      else if (LAMI(K).GT.LAMMAXI) then
       LAMI(K) = LAMMAXI
       N0I(K) = LAMI(K)**(DI+1.)*QI3D(K)/CONS12
 
       NI3D(K) = N0I(K)/LAMI(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !......................................................................
 ! RAIN
 
-      IF (QR3D(K).GE.QSMALL) THEN
+      if (QR3D(K).GE.QSMALL) then
       LAMR(K) = (PI*RHOW*NR3D(K)/QR3D(K))**(1./3.)
       N0RR(K) = NR3D(K)*LAMR(K)
 
@@ -2819,27 +2819,27 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (LAMR(K).LT.LAMMINR) THEN
+      if (LAMR(K).LT.LAMMINR) then
 
       LAMR(K) = LAMMINR
 
       N0RR(K) = LAMR(K)**4*QR3D(K)/(PI*RHOW)
 
       NR3D(K) = N0RR(K)/LAMR(K)
-      ELSE IF (LAMR(K).GT.LAMMAXR) THEN
+      else if (LAMR(K).GT.LAMMAXR) then
       LAMR(K) = LAMMAXR
       N0RR(K) = LAMR(K)**4*QR3D(K)/(PI*RHOW)
 
       NR3D(K) = N0RR(K)/LAMR(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !......................................................................
 ! CLOUD DROPLETS
 
 ! MARTIN ET AL. (1994) FORMULA FOR PGAM
 
-      IF (QC3D(K).GE.QSMALL) THEN
+      if (QC3D(K).GE.QSMALL) then
 
 !         DUM = PRES(K)/(R*T3D(K))
 ! V1.5
@@ -2865,28 +2865,28 @@ END SUBROUTINE MP_GRAUPEL
       LAMMIN = (PGAM(K)+1.)/60.E-6
       LAMMAX = (PGAM(K)+1.)/1.E-6
 
-      IF (LAMC(K).LT.LAMMIN) THEN
+      if (LAMC(K).LT.LAMMIN) then
       LAMC(K) = LAMMIN
 
       NC3D(K) = EXP(3.*LOG(LAMC(K))+LOG(QC3D(K))+              &
                 LOG(GAMMA(PGAM(K)+1.))-LOG(GAMMA(PGAM(K)+4.)))/CONS26
-      ELSE IF (LAMC(K).GT.LAMMAX) THEN
+      else if (LAMC(K).GT.LAMMAX) then
       LAMC(K) = LAMMAX
       NC3D(K) = EXP(3.*LOG(LAMC(K))+LOG(QC3D(K))+              &
                 LOG(GAMMA(PGAM(K)+1.))-LOG(GAMMA(PGAM(K)+4.)))/CONS26
 
-      END IF
+      end if
 
 ! TO CALCULATE DROPLET FREEZING
 
         CDIST1(K) = NC3D(K)/GAMMA(PGAM(K)+1.)
 
-      END IF
+      end if
 
 !......................................................................
 ! SNOW
 
-      IF (QNI3D(K).GE.QSMALL) THEN
+      if (QNI3D(K).GE.QSMALL) then
       LAMS(K) = (CONS1*NS3D(K)/QNI3D(K))**(1./DS)
       N0S(K) = NS3D(K)*LAMS(K)
 
@@ -2894,25 +2894,25 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (LAMS(K).LT.LAMMINS) THEN
+      if (LAMS(K).LT.LAMMINS) then
       LAMS(K) = LAMMINS
       N0S(K) = LAMS(K)**(DS+1.)*QNI3D(K)/CONS1
 
       NS3D(K) = N0S(K)/LAMS(K)
 
-      ELSE IF (LAMS(K).GT.LAMMAXS) THEN
+      else if (LAMS(K).GT.LAMMAXS) then
 
       LAMS(K) = LAMMAXS
       N0S(K) = LAMS(K)**(DS+1.)*QNI3D(K)/CONS1
 
       NS3D(K) = N0S(K)/LAMS(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !......................................................................
 ! GRAUPEL
 
-      IF (QG3D(K).GE.QSMALL) THEN
+      if (QG3D(K).GE.QSMALL) then
       LAMG(K) = (CONS2*NG3D(K)/QG3D(K))**(1./DG)
       N0G(K) = NG3D(K)*LAMG(K)
 
@@ -2920,20 +2920,20 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (LAMG(K).LT.LAMMING) THEN
+      if (LAMG(K).LT.LAMMING) then
       LAMG(K) = LAMMING
       N0G(K) = LAMG(K)**(DG+1.)*QG3D(K)/CONS2
 
       NG3D(K) = N0G(K)/LAMG(K)
 
-      ELSE IF (LAMG(K).GT.LAMMAXG) THEN
+      else if (LAMG(K).GT.LAMMAXG) then
 
       LAMG(K) = LAMMAXG
       N0G(K) = LAMG(K)**(DG+1.)*QG3D(K)/CONS2
 
       NG3D(K) = N0G(K)/LAMG(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !.....................................................................
 ! ZERO OUT PROCESS RATES
@@ -3005,7 +3005,7 @@ END SUBROUTINE MP_GRAUPEL
 !.......................................................................
 ! FREEZING OF CLOUD DROPLETS
 ! ONLY ALLOWED BELOW -4 C
-        IF (QC3D(K).GE.QSMALL .AND. T3D(K).LT.269.15) THEN
+        if (QC3D(K).GE.QSMALL .AND. T3D(K).LT.269.15) then
 
 ! NUMBER OF CONTACT NUCLEI (M^-3) FROM MEYERS ET AL., 1992
 ! FACTOR OF 1000 IS TO CONVERT FROM L^-1 TO M^-3
@@ -3061,7 +3061,7 @@ END SUBROUTINE MP_GRAUPEL
 
            NNUCCC(K) = MIN(NNUCCC(K),NC3D(K)/DT)
 
-        END IF
+        end if
 
 !.................................................................
 !.......................................................................
@@ -3073,12 +3073,12 @@ END SUBROUTINE MP_GRAUPEL
 
 ! USE MINIMUM VALUE OF 1.E-6 TO PREVENT FLOATING POINT ERROR
 
-         IF (QC3D(K).GE.1.E-6) THEN
+         if (QC3D(K).GE.1.E-6) then
 
 ! HM ADD 12/13/06, REPLACE WITH NEWER FORMULA
 ! FROM KHAIROUTDINOV AND KOGAN 2000, MWR
 
-            IF (IRAIN.EQ.0) THEN
+            if (IRAIN.EQ.0) then
 
                 PRC(K)=1350.*QC3D(K)**2.47*  &
            (NC3D(K)/1.e6*RHO(K))**(-1.79)
@@ -3093,7 +3093,7 @@ END SUBROUTINE MP_GRAUPEL
                 NPRC(K) = MIN(NPRC(K),NC3D(K)/DT)
                 NPRC1(K) = MIN(NPRC1(K),NPRC(K))
 
-             ELSE IF (IRAIN.EQ.1) THEN
+             else if (IRAIN.EQ.1) then
 
 ! v1.4
 ! replace with seifert and beheng
@@ -3109,8 +3109,8 @@ END SUBROUTINE MP_GRAUPEL
         nprc(k) = prc(k)*2./2.6e-7*1000.
         nprc1(k) = 0.5*nprc(k)
 
-         END IF
-         END IF
+         end if
+         end if
 
 !.......................................................................
 ! SELF-COLLECTION OF DROPLET NOT INCLUDED IN KK2000 SCHEME
@@ -3118,12 +3118,12 @@ END SUBROUTINE MP_GRAUPEL
 ! SNOW AGGREGATION FROM PASSARELLI, 1978, USED BY REISNER, 1998
 ! THIS IS HARD-WIRED FOR BS = 0.4 FOR NOW
 
-         IF (QNI3D(K).GE.1.E-8) THEN
+         if (QNI3D(K).GE.1.E-8) then
              NSAGG(K) = CONS15*ASN(K)*RHO(K)**            &
             ((2.+BS)/3.)*QNI3D(K)**((2.+BS)/3.)*                  &
             (NS3D(K)*RHO(K))**((4.-BS)/3.)/                       &
             (RHO(K))
-         END IF
+         end if
 
 !.......................................................................
 ! ACCRETION OF CLOUD DROPLETS ONTO SNOW/GRAUPEL
@@ -3132,7 +3132,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! SNOW
 
-         IF (QNI3D(K).GE.1.E-8 .AND. QC3D(K).GE.QSMALL) THEN
+         if (QNI3D(K).GE.1.E-8 .AND. QC3D(K).GE.QSMALL) then
 
            PSACWS(K) = CONS13*ASN(K)*QC3D(K)*RHO(K)*               &
                   N0S(K)/                        &
@@ -3141,12 +3141,12 @@ END SUBROUTINE MP_GRAUPEL
                   N0S(K)/                        &
                   LAMS(K)**(BS+3.)
 
-         END IF
+         end if
 
 !............................................................................
 ! COLLECTION OF CLOUD WATER BY GRAUPEL
 
-         IF (QG3D(K).GE.1.E-8 .AND. QC3D(K).GE.QSMALL) THEN
+         if (QG3D(K).GE.1.E-8 .AND. QC3D(K).GE.QSMALL) then
 
            PSACWG(K) = CONS14*AGN(K)*QC3D(K)*RHO(K)*               &
                   N0G(K)/                        &
@@ -3154,7 +3154,7 @@ END SUBROUTINE MP_GRAUPEL
            NPSACWG(K) = CONS14*AGN(K)*NC3D(K)*RHO(K)*              &
                   N0G(K)/                        &
                   LAMG(K)**(BG+3.)
-	    END IF
+	    end if
 
 !.......................................................................
 ! HM, ADD 12/13/06
@@ -3163,12 +3163,12 @@ END SUBROUTINE MP_GRAUPEL
 ! ASSUME THAT RIME COLLECTED ON CLOUD ICE DOES NOT LEAD
 ! TO HALLET-MOSSOP SPLINTERING
 
-         IF (QI3D(K).GE.1.E-8 .AND. QC3D(K).GE.QSMALL) THEN
+         if (QI3D(K).GE.1.E-8 .AND. QC3D(K).GE.QSMALL) then
 
 ! PUT IN SIZE DEPENDENT COLLECTION EFFICIENCY BASED ON STOKES LAW
 ! FROM THOMPSON ET AL. 2004, MWR
 
-            IF (1./LAMI(K).GE.100.E-6) THEN
+            if (1./LAMI(K).GE.100.E-6) then
 
            PSACWI(K) = CONS16*AIN(K)*QC3D(K)*RHO(K)*               &
                   N0I(K)/                        &
@@ -3176,14 +3176,14 @@ END SUBROUTINE MP_GRAUPEL
            NPSACWI(K) = CONS16*AIN(K)*NC3D(K)*RHO(K)*              &
                   N0I(K)/                        &
                   LAMI(K)**(BI+3.)
-           END IF
-         END IF
+           end if
+         end if
 
 !.......................................................................
 ! ACCRETION OF RAIN WATER BY SNOW
 ! FORMULA FROM IKAWA AND SAITO, 1991, USED BY REISNER ET AL, 1998
 
-         IF (QR3D(K).GE.1.E-8.AND.QNI3D(K).GE.1.E-8) THEN
+         if (QR3D(K).GE.1.E-8.AND.QNI3D(K).GE.1.E-8) then
 
             UMS = ASN(K)*CONS3/(LAMS(K)**BS)
             UMR = ARN(K)*CONS4/(LAMR(K)**BR)
@@ -3223,23 +3223,23 @@ END SUBROUTINE MP_GRAUPEL
 ! V1.3
 ! V1.5
 !            IF (IHAIL.EQ.0) THEN
-            IF (QNI3D(K).GE.0.1E-3.AND.QR3D(K).GE.0.1E-3) THEN
+            if (QNI3D(K).GE.0.1E-3.AND.QR3D(K).GE.0.1E-3) then
             PSACR(K) = CONS31*(((1.2*UMR-0.95*UMS)**2+              &
                   0.08*UMS*UMR)**0.5*RHO(K)*                     &
                  N0RR(K)*N0S(K)/LAMS(K)**3*                               &
                   (5./(LAMS(K)**3*LAMR(K))+                    &
                   2./(LAMS(K)**2*LAMR(K)**2)+                  &
                   0.5/(LAMS(K)*LAMR(K)**3)))            
-            END IF
+            end if
 !            END IF
 
-         END IF
+         end if
 
 !.......................................................................
 
 ! COLLECTION OF RAINWATER BY GRAUPEL, FROM IKAWA AND SAITO 1990, 
 ! USED BY REISNER ET AL 1998
-         IF (QR3D(K).GE.1.E-8.AND.QG3D(K).GE.1.E-8) THEN
+         if (QR3D(K).GE.1.E-8.AND.QG3D(K).GE.1.E-8) then
 
             UMG = AGN(K)*CONS7/(LAMG(K)**BG)
             UMR = ARN(K)*CONS4/(LAMR(K)**BR)
@@ -3273,7 +3273,7 @@ END SUBROUTINE MP_GRAUPEL
 
             PRACG(K) = MIN(PRACG(K),QR3D(K)/DT)
 
-	    END IF
+	    end if
 
 !.......................................................................
 ! RIME-SPLINTERING - SNOW
@@ -3287,26 +3287,26 @@ END SUBROUTINE MP_GRAUPEL
 ! THESE THRESHOLDS CORRESPOND WITH GRAUPEL THRESHOLDS IN RH 1984
 
 !v1.4
-         IF (QNI3D(K).GE.0.1E-3) THEN
-         IF (QC3D(K).GE.0.5E-3.OR.QR3D(K).GE.0.1E-3) THEN
-         IF (PSACWS(K).GT.0..OR.PRACS(K).GT.0.) THEN
-            IF (T3D(K).LT.270.16 .AND. T3D(K).GT.265.16) THEN
+         if (QNI3D(K).GE.0.1E-3) then
+         if (QC3D(K).GE.0.5E-3.OR.QR3D(K).GE.0.1E-3) then
+         if (PSACWS(K).GT.0..OR.PRACS(K).GT.0.) then
+            if (T3D(K).LT.270.16 .AND. T3D(K).GT.265.16) then
 
-               IF (T3D(K).GT.270.16) THEN
+               if (T3D(K).GT.270.16) then
                   FMULT = 0.
-               ELSE IF (T3D(K).LE.270.16.AND.T3D(K).GT.268.16)  THEN
+               else if (T3D(K).LE.270.16.AND.T3D(K).GT.268.16)  then
                   FMULT = (270.16-T3D(K))/2.
-               ELSE IF (T3D(K).GE.265.16.AND.T3D(K).LE.268.16)   THEN
+               else if (T3D(K).GE.265.16.AND.T3D(K).LE.268.16)   then
                   FMULT = (T3D(K)-265.16)/3.
-               ELSE IF (T3D(K).LT.265.16) THEN
+               else if (T3D(K).LT.265.16) then
                   FMULT = 0.
-               END IF
+               end if
 
 ! 1000 IS TO CONVERT FROM KG TO G
 
 ! SPLINTERING FROM DROPLETS ACCRETED ONTO SNOW
 
-               IF (PSACWS(K).GT.0.) THEN
+               if (PSACWS(K).GT.0.) then
                   NMULTS(K) = 35.E4*PSACWS(K)*FMULT*1000.
                   QMULTS(K) = NMULTS(K)*MMULT
 
@@ -3316,11 +3316,11 @@ END SUBROUTINE MP_GRAUPEL
                   QMULTS(K) = MIN(QMULTS(K),PSACWS(K))
                   PSACWS(K) = PSACWS(K)-QMULTS(K)
 
-               END IF
+               end if
 
 ! RIMING AND SPLINTERING FROM ACCRETED RAINDROPS
 
-               IF (PRACS(K).GT.0.) THEN
+               if (PRACS(K).GT.0.) then
                    NMULTR(K) = 35.E4*PRACS(K)*FMULT*1000.
                    QMULTR(K) = NMULTR(K)*MMULT
 
@@ -3331,12 +3331,12 @@ END SUBROUTINE MP_GRAUPEL
 
                    PRACS(K) = PRACS(K)-QMULTR(K)
 
-               END IF
+               end if
 
-            END IF
-            END IF
-         END IF
-         END IF
+            end if
+            end if
+         end if
+         end if
 
 !.......................................................................
 ! RIME-SPLINTERING - GRAUPEL 
@@ -3352,26 +3352,26 @@ END SUBROUTINE MP_GRAUPEL
 ! V1.5
 !         IF (IHAIL.EQ.0) THEN
 ! v1.4
-         IF (QG3D(K).GE.0.1E-3) THEN
-         IF (QC3D(K).GE.0.5E-3.OR.QR3D(K).GE.0.1E-3) THEN
-         IF (PSACWG(K).GT.0..OR.PRACG(K).GT.0.) THEN
-            IF (T3D(K).LT.270.16 .AND. T3D(K).GT.265.16) THEN
+         if (QG3D(K).GE.0.1E-3) then
+         if (QC3D(K).GE.0.5E-3.OR.QR3D(K).GE.0.1E-3) then
+         if (PSACWG(K).GT.0..OR.PRACG(K).GT.0.) then
+            if (T3D(K).LT.270.16 .AND. T3D(K).GT.265.16) then
 
-               IF (T3D(K).GT.270.16) THEN
+               if (T3D(K).GT.270.16) then
                   FMULT = 0.
-               ELSE IF (T3D(K).LE.270.16.AND.T3D(K).GT.268.16)  THEN
+               else if (T3D(K).LE.270.16.AND.T3D(K).GT.268.16)  then
                   FMULT = (270.16-T3D(K))/2.
-               ELSE IF (T3D(K).GE.265.16.AND.T3D(K).LE.268.16)   THEN
+               else if (T3D(K).GE.265.16.AND.T3D(K).LE.268.16)   then
                   FMULT = (T3D(K)-265.16)/3.
-               ELSE IF (T3D(K).LT.265.16) THEN
+               else if (T3D(K).LT.265.16) then
                   FMULT = 0.
-               END IF
+               end if
 
 ! 1000 IS TO CONVERT FROM KG TO G
 
 ! SPLINTERING FROM DROPLETS ACCRETED ONTO GRAUPEL
 
-               IF (PSACWG(K).GT.0.) THEN
+               if (PSACWG(K).GT.0.) then
                   NMULTG(K) = 35.E4*PSACWG(K)*FMULT*1000.
                   QMULTG(K) = NMULTG(K)*MMULT
 
@@ -3381,11 +3381,11 @@ END SUBROUTINE MP_GRAUPEL
                   QMULTG(K) = MIN(QMULTG(K),PSACWG(K))
                   PSACWG(K) = PSACWG(K)-QMULTG(K)
 
-               END IF
+               end if
 
 ! RIMING AND SPLINTERING FROM ACCRETED RAINDROPS
 
-               IF (PRACG(K).GT.0.) THEN
+               if (PRACG(K).GT.0.) then
                    NMULTRG(K) = 35.E4*PRACG(K)*FMULT*1000.
                    QMULTRG(K) = NMULTRG(K)*MMULT
 
@@ -3395,12 +3395,12 @@ END SUBROUTINE MP_GRAUPEL
                    QMULTRG(K) = MIN(QMULTRG(K),PRACG(K))
                    PRACG(K) = PRACG(K)-QMULTRG(K)
 
-               END IF
+               end if
 
-            END IF
-            END IF
-            END IF
-            END IF
+            end if
+            end if
+            end if
+            end if
 !         END IF
 
 !........................................................................
@@ -3409,9 +3409,9 @@ END SUBROUTINE MP_GRAUPEL
 ! V1.3
 ! V1.5
 !           IF (IHAIL.EQ.0) THEN
-	   IF (PSACWS(K).GT.0.) THEN
+	   if (PSACWS(K).GT.0.) then
 ! ONLY ALLOW CONVERSION IF QNI > 0.1 AND QC > 0.5 G/KG FOLLOWING RUTLEDGE AND HOBBS (1984)
-              IF (QNI3D(K).GE.0.1E-3.AND.QC3D(K).GE.0.5E-3) THEN
+              if (QNI3D(K).GE.0.1E-3.AND.QC3D(K).GE.0.5E-3) then
 
 ! PORTION OF RIMING CONVERTED TO GRAUPEL (REISNER ET AL. 1998, ORIGINALLY IS1991)
 	     PGSACW(K) = MIN(PSACWS(K),CONS17*DT*N0S(K)*QC3D(K)*QC3D(K)* &
@@ -3428,14 +3428,14 @@ END SUBROUTINE MP_GRAUPEL
 
 ! PORTION OF RIMING LEFT FOR SNOW
              PSACWS(K) = PSACWS(K) - PGSACW(K)
-             END IF
-	   END IF
+             end if
+	   end if
 
 ! CONVERSION OF RIMED RAINWATER ONTO SNOW CONVERTED TO GRAUPEL
 
-	   IF (PRACS(K).GT.0.) THEN
+	   if (PRACS(K).GT.0.) then
 ! ONLY ALLOW CONVERSION IF QNI > 0.1 AND QR > 0.1 G/KG FOLLOWING RUTLEDGE AND HOBBS (1984)
-              IF (QNI3D(K).GE.0.1E-3.AND.QR3D(K).GE.0.1E-3) THEN
+              if (QNI3D(K).GE.0.1E-3.AND.QR3D(K).GE.0.1E-3) then
 ! PORTION OF COLLECTED RAINWATER CONVERTED TO GRAUPEL (REISNER ET AL. 1998)
 	      DUM = CONS18*(4./LAMS(K))**3*(4./LAMS(K))**3 &    
                    /(CONS18*(4./LAMS(K))**3*(4./LAMS(K))**3+ &  
@@ -3453,15 +3453,15 @@ END SUBROUTINE MP_GRAUPEL
             NPRACS(K) = NPRACS(K) - NGRACS(K)
 ! CONVERSION TO GRAUPEL DUE TO COLLECTION OF SNOW BY RAIN
             PSACR(K)=PSACR(K)*(1.-DUM)
-            END IF
-	   END IF
+            end if
+	   end if
 !           END IF
 
 !.......................................................................
 ! FREEZING OF RAIN DROPS
 ! FREEZING ALLOWED BELOW -4 C
 
-         IF (T3D(K).LT.269.15.AND.QR3D(K).GE.QSMALL) THEN
+         if (T3D(K).LT.269.15.AND.QR3D(K).GE.QSMALL) then
 
 ! IMMERSION FREEZING (BIGG 1953)
 !            MNUCCR(K) = CONS20*NR3D(K)*EXP(AIMM*(273.15-T3D(K)))/LAMR(K)**3 &
@@ -3478,25 +3478,25 @@ END SUBROUTINE MP_GRAUPEL
 ! PREVENT DIVERGENCE BETWEEN MIXING RATIO AND NUMBER CONC
             NNUCCR(K) = MIN(NNUCCR(K),NR3D(K)/DT)
 
-         END IF
+         end if
 
 !.......................................................................
 ! ACCRETION OF CLOUD LIQUID WATER BY RAIN
 ! CONTINUOUS COLLECTION EQUATION WITH
 ! GRAVITATIONAL COLLECTION KERNEL, DROPLET FALL SPEED NEGLECTED
 
-         IF (QR3D(K).GE.1.E-8 .AND. QC3D(K).GE.1.E-8) THEN
+         if (QR3D(K).GE.1.E-8 .AND. QC3D(K).GE.1.E-8) then
 
 ! 12/13/06 HM ADD, REPLACE WITH NEWER FORMULA FROM
 ! KHAIROUTDINOV AND KOGAN 2000, MWR
 
-            IF (IRAIN.EQ.0) THEN
+            if (IRAIN.EQ.0) then
 
            DUM=(QC3D(K)*QR3D(K))
            PRA(K) = 67.*(DUM)**1.15
            NPRA(K) = PRA(K)/(QC3D(K)/NC3D(K))
 
-           ELSE IF (IRAIN.EQ.1) THEN
+           else if (IRAIN.EQ.1) then
 
 ! v1.4
 ! seifert and beheng (2001) formulation
@@ -3507,8 +3507,8 @@ END SUBROUTINE MP_GRAUPEL
            npra(k) = pra(k)*rho(k)/1000.*(nc3d(k)*rho(k)/1.e6)/ &
            (qc3d(k)*rho(k)/1000.)*1.e6/rho(k)
 
-         END IF
-         END IF
+         end if
+         end if
 !.......................................................................
 ! SELF-COLLECTION OF RAIN DROPS
 ! FROM BEHENG(1994)
@@ -3517,7 +3517,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! v1.4 replace with seifert and beheng (2001)
 
-         IF (QR3D(K).GE.1.E-8) THEN
+         if (QR3D(K).GE.1.E-8) then
 ! v1.4
 ! seifert and beheng
 ! include breakup, V2.1
@@ -3529,7 +3529,7 @@ END SUBROUTINE MP_GRAUPEL
             end if
             nragg(k) = -5.78*dum*qr3d(k)*nr3d(k)*rho(k)
 
-         END IF
+         end if
 
 !.......................................................................
 ! AUTOCONVERSION OF CLOUD ICE TO SNOW
@@ -3537,7 +3537,7 @@ END SUBROUTINE MP_GRAUPEL
 ! HERE IT IS ASSUMED THAT AUTOCONVERSION CAN ONLY OCCUR WHEN THE
 ! ICE IS GROWING, I.E. IN CONDITIONS OF ICE SUPERSATURATION
 
-         IF (QI3D(K).GE.1.E-8 .AND.QVQVSI(K).GE.1.) THEN
+         if (QI3D(K).GE.1.E-8 .AND.QVQVSI(K).GE.1.) then
 
 !           COFFI = 2./LAMI(K)
 !           IF (COFFI.GE.DCS) THEN
@@ -3547,33 +3547,33 @@ END SUBROUTINE MP_GRAUPEL
               NPRCI(K) = MIN(NPRCI(K),NI3D(K)/DT)
 
 !           END IF
-         END IF
+         end if
 
 !.......................................................................
 ! ACCRETION OF CLOUD ICE BY SNOW
 ! FOR THIS CALCULATION, IT IS ASSUMED THAT THE VS >> VI
 ! AND DS >> DI FOR CONTINUOUS COLLECTION
 
-         IF (QNI3D(K).GE.1.E-8 .AND. QI3D(K).GE.QSMALL) THEN
+         if (QNI3D(K).GE.1.E-8 .AND. QI3D(K).GE.QSMALL) then
             PRAI(K) = CONS23*ASN(K)*QI3D(K)*RHO(K)*N0S(K)/     &
                      LAMS(K)**(BS+3.)
             NPRAI(K) = CONS23*ASN(K)*NI3D(K)*                                       &
                   RHO(K)*N0S(K)/                                 &
                   LAMS(K)**(BS+3.)
             NPRAI(K)=MIN(NPRAI(K),NI3D(K)/DT)
-         END IF
+         end if
 
 !.......................................................................
 ! HM, ADD 12/13/06, COLLISION OF RAIN AND ICE TO PRODUCE SNOW OR GRAUPEL
 ! FOLLOWS REISNER ET AL. 1998
 ! ASSUMED FALLSPEED AND SIZE OF ICE CRYSTAL << THAN FOR RAIN
 
-         IF (QR3D(K).GE.1.E-8.AND.QI3D(K).GE.1.E-8.AND.T3D(K).LE.TMELT) THEN
+         if (QR3D(K).GE.1.E-8.AND.QI3D(K).GE.1.E-8.AND.T3D(K).LE.TMELT) then
 
 ! ALLOW GRAUPEL FORMATION FROM RAIN-ICE COLLISIONS ONLY IF RAIN MIXING RATIO > 0.1 G/KG,
 ! OTHERWISE ADD TO SNOW
 
-            IF (QR3D(K).GE.0.1E-3) THEN
+            if (QR3D(K).GE.0.1E-3) then
             NIACR(K)=CONS24*NI3D(K)*N0RR(K)*ARN(K) &
                 /LAMR(K)**(BR+3.)*RHO(K)
             PIACR(K)=CONS25*NI3D(K)*N0RR(K)*ARN(K) &
@@ -3582,7 +3582,7 @@ END SUBROUTINE MP_GRAUPEL
                 LAMR(K)**(BR+3.)*RHO(K)
             NIACR(K)=MIN(NIACR(K),NR3D(K)/DT)
             NIACR(K)=MIN(NIACR(K),NI3D(K)/DT)
-            ELSE 
+            else 
             NIACRS(K)=CONS24*NI3D(K)*N0RR(K)*ARN(K) &
                 /LAMR(K)**(BR+3.)*RHO(K)
             PIACRS(K)=CONS25*NI3D(K)*N0RR(K)*ARN(K) &
@@ -3591,13 +3591,13 @@ END SUBROUTINE MP_GRAUPEL
                 LAMR(K)**(BR+3.)*RHO(K)
             NIACRS(K)=MIN(NIACRS(K),NR3D(K)/DT)
             NIACRS(K)=MIN(NIACRS(K),NI3D(K)/DT)
-            END IF
-         END IF
+            end if
+         end if
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! NUCLEATION OF CLOUD ICE FROM HOMOGENEOUS AND HETEROGENEOUS FREEZING ON AEROSOL
 
-         IF (INUC.EQ.0) THEN
+         if (INUC.EQ.0) then
 
 ! FREEZING OF AEROSOL ONLY ALLOWED BELOW -5 C
 ! AND ABOVE DELIQUESCENCE THRESHOLD OF 80%
@@ -3614,54 +3614,54 @@ END SUBROUTINE MP_GRAUPEL
       kc2 = min(kc2,500.e3)
       kc2=MAX(kc2/rho(k),0.)  ! convert to kg-1
 
-          IF (KC2.GT.NI3D(K)+NS3D(K)+NG3D(K)) THEN
+          if (KC2.GT.NI3D(K)+NS3D(K)+NG3D(K)) then
              NNUCCD(K) = (KC2-NI3D(K)-NS3D(K)-NG3D(K))/DT
              MNUCCD(K) = NNUCCD(K)*MI0
-          END IF
+          end if
 
-          END IF
+          end if
 
-          ELSE IF (INUC.EQ.1) THEN
+          else if (INUC.EQ.1) then
 
-          IF (T3D(K).LT.TMELT.AND.QVQVSI(K).GT.1.) THEN
+          if (T3D(K).LT.TMELT.AND.QVQVSI(K).GT.1.) then
 
-             KC2 = 0.16*1000./RHO(K)  ! CONVERT FROM L-1 TO KG-1
-          IF (KC2.GT.NI3D(K)+NS3D(K)+NG3D(K)) THEN
+             KC2 = 0.16*1000./RHO(K)  ! CONVERT FROM L-1 to KG-1
+          if (KC2.GT.NI3D(K)+NS3D(K)+NG3D(K)) then
              NNUCCD(K) = (KC2-NI3D(K)-NS3D(K)-NG3D(K))/DT
              MNUCCD(K) = NNUCCD(K)*MI0
-          END IF
-          END IF
+          end if
+          end if
 
-         END IF
+         end if
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
- 101      CONTINUE
+ 101      continue
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! CALCULATE EVAP/SUB/DEP TERMS FOR QI,QNI,QR
 
 ! NO VENTILATION FOR CLOUD ICE
 
-        IF (QI3D(K).GE.QSMALL) THEN
+        if (QI3D(K).GE.QSMALL) then
 
          EPSI = 2.*PI*N0I(K)*RHO(K)*DV(K)/(LAMI(K)*LAMI(K))
 
-      ELSE
+      else
          EPSI = 0.
-      END IF
+      end if
 
-      IF (QNI3D(K).GE.QSMALL) THEN
+      if (QNI3D(K).GE.QSMALL) then
         EPSS = 2.*PI*N0S(K)*RHO(K)*DV(K)*                            &
                    (F1S/(LAMS(K)*LAMS(K))+                       &
                     F2S*(ASN(K)*RHO(K)/MU(K))**0.5*                      &
                     SC(K)**(1./3.)*CONS10/                   &
                (LAMS(K)**CONS35))
-      ELSE
+      else
       EPSS = 0.
-      END IF
+      end if
 
-      IF (QG3D(K).GE.QSMALL) THEN
+      if (QG3D(K).GE.QSMALL) then
         EPSG = 2.*PI*N0G(K)*RHO(K)*DV(K)*                                &
                    (F1S/(LAMG(K)*LAMG(K))+                               &
                     F2S*(AGN(K)*RHO(K)/MU(K))**0.5*                      &
@@ -3669,43 +3669,43 @@ END SUBROUTINE MP_GRAUPEL
                (LAMG(K)**CONS36))
 
 
-      ELSE
+      else
       EPSG = 0.
-      END IF
+      end if
 
-      IF (QR3D(K).GE.QSMALL) THEN
+      if (QR3D(K).GE.QSMALL) then
         EPSR = 2.*PI*N0RR(K)*RHO(K)*DV(K)*                           &
                    (F1R/(LAMR(K)*LAMR(K))+                       &
                     F2R*(ARN(K)*RHO(K)/MU(K))**0.5*                      &
                     SC(K)**(1./3.)*CONS9/                   &
                 (LAMR(K)**CONS34))
-      ELSE
+      else
       EPSR = 0.
-      END IF
+      end if
 
 ! ONLY INCLUDE REGION OF ICE SIZE DIST < DCS
 ! DUM IS FRACTION OF D*N(D) < DCS
 
-              IF (QI3D(K).GE.QSMALL) THEN              
+              if (QI3D(K).GE.QSMALL) then              
               DUM=(1.-EXP(-LAMI(K)*DCS)*(1.+LAMI(K)*DCS))
               PRD(K) = EPSI*(QV3D(K)-QVI(K))/ABI(K)*DUM
-              ELSE
+              else
               DUM=0.
-              END IF
+              end if
 ! ADD DEPOSITION IN TAIL OF ICE SIZE DIST TO SNOW IF SNOW IS PRESENT
-              IF (QNI3D(K).GE.QSMALL) THEN
+              if (QNI3D(K).GE.QSMALL) then
               PRDS(K) = EPSS*(QV3D(K)-QVI(K))/ABI(K)+ &
                 EPSI*(QV3D(K)-QVI(K))/ABI(K)*(1.-DUM)
 ! OTHERWISE ADD TO CLOUD ICE
-              ELSE
+              else
               PRD(K) = PRD(K)+EPSI*(QV3D(K)-QVI(K))/ABI(K)*(1.-DUM)
-              END IF
+              end if
 ! VAPOR DPEOSITION ON GRAUPEL
               PRDG(K) = EPSG*(QV3D(K)-QVI(K))/ABI(K)
 
 ! NO CONDENSATION ONTO RAIN, ONLY EVAP
 
-           IF (QV3D(K).LT.QVS(K)) THEN
+           if (QV3D(K).LT.QVS(K)) then
               PRE(K) = EPSR*(QV3D(K)-QVS(K))/AB(K)
               PRE(K) = MIN(PRE(K),0.)
               ! dont allow evap to exceed saturation:  GHB, 130712:
@@ -3713,9 +3713,9 @@ END SUBROUTINE MP_GRAUPEL
               if( dum.gt.QVS(K) )then
                 PRE(K)=(QV3D(K)-QVS(K))/DT
               endif
-           ELSE
+           else
               PRE(K) = 0.
-           END IF
+           end if
 
 ! MAKE SURE NOT PUSHED INTO ICE SUPERSAT/SUBSAT
 ! FORMULA FROM REISNER 2 SCHEME
@@ -3725,28 +3725,28 @@ END SUBROUTINE MP_GRAUPEL
            FUDGEF = 0.9999
            SUM_DEP = PRD(K)+PRDS(K)+MNUCCD(K)+PRDG(K)
 
-           IF( (DUM.GT.0. .AND. SUM_DEP.GT.DUM*FUDGEF) .OR.                      &
-               (DUM.LT.0. .AND. SUM_DEP.LT.DUM*FUDGEF) ) THEN
+           if( (DUM.GT.0. .AND. SUM_DEP.GT.DUM*FUDGEF) .OR.                      &
+               (DUM.LT.0. .AND. SUM_DEP.LT.DUM*FUDGEF) ) then
                MNUCCD(K) = FUDGEF*MNUCCD(K)*DUM/SUM_DEP
                PRD(K) = FUDGEF*PRD(K)*DUM/SUM_DEP
                PRDS(K) = FUDGEF*PRDS(K)*DUM/SUM_DEP
 	       PRDG(K) = FUDGEF*PRDG(K)*DUM/SUM_DEP
-           ENDIF
+           endif
 
 ! IF CLOUD ICE/SNOW/GRAUPEL VAP DEPOSITION IS NEG, THEN ASSIGN TO SUBLIMATION PROCESSES
 
-           IF (PRD(K).LT.0.) THEN
+           if (PRD(K).LT.0.) then
               EPRD(K)=PRD(K)
               PRD(K)=0.
-           END IF
-           IF (PRDS(K).LT.0.) THEN
+           end if
+           if (PRDS(K).LT.0.) then
               EPRDS(K)=PRDS(K)
               PRDS(K)=0.
-           END IF
-           IF (PRDG(K).LT.0.) THEN
+           end if
+           if (PRDG(K).LT.0.) then
               EPRDG(K)=PRDG(K)
               PRDG(K)=0.
-           END IF
+           end if
 
 !.......................................................................
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -3768,17 +3768,17 @@ END SUBROUTINE MP_GRAUPEL
 
 !****SENSITIVITY - NO ICE
 
-      IF (ILIQ.EQ.1) THEN
+      if (ILIQ.EQ.1) then
       MNUCCC(K)=0.
       NNUCCC(K)=0.
       MNUCCR(K)=0.
       NNUCCR(K)=0.
       MNUCCD(K)=0.
       NNUCCD(K)=0.
-      END IF
+      end if
 
 ! ****SENSITIVITY - NO GRAUPEL
-      IF (IGRAUP.EQ.1) THEN
+      if (IGRAUP.EQ.1) then
             PRACG(K) = 0.
             PSACR(K) = 0.
 	    PSACWG(K) = 0.
@@ -3805,13 +3805,13 @@ END SUBROUTINE MP_GRAUPEL
 	    PGSACW(K) = 0.
 	    PRACS(K)=PRACS(K)+PGRACS(K)
 	    PGRACS(K) = 0.
-       END IF
+       end if
 
 ! CONSERVATION OF QC
 
       DUM = (PRC(K)+PRA(K)+MNUCCC(K)+PSACWS(K)+PSACWI(K)+QMULTS(K)+PSACWG(K)+PGSACW(K)+QMULTG(K))*DT
 
-      IF (DUM.GT.QC3D(K).AND.QC3D(K).GE.QSMALL) THEN
+      if (DUM.GT.QC3D(K).AND.QC3D(K).GE.QSMALL) then
         RATIO = QC3D(K)/DUM
 
         PRC(K) = PRC(K)*RATIO
@@ -3823,14 +3823,14 @@ END SUBROUTINE MP_GRAUPEL
         QMULTG(K) = QMULTG(K)*RATIO
         PSACWG(K) = PSACWG(K)*RATIO
 	PGSACW(K) = PGSACW(K)*RATIO
-        END IF
+        end if
  
 ! CONSERVATION OF QI
 
       DUM = (-PRD(K)-MNUCCC(K)+PRCI(K)+PRAI(K)-QMULTS(K)-QMULTG(K)-QMULTR(K)-QMULTRG(K) &
                 -MNUCCD(K)+PRACI(K)+PRACIS(K)-EPRD(K)-PSACWI(K))*DT
 
-      IF (DUM.GT.QI3D(K).AND.QI3D(K).GE.QSMALL) THEN
+      if (DUM.GT.QI3D(K).AND.QI3D(K).GE.QSMALL) then
 
         RATIO = (QI3D(K)/DT+PRD(K)+MNUCCC(K)+QMULTS(K)+QMULTG(K)+QMULTR(K)+QMULTRG(K)+ &
                      MNUCCD(K)+PSACWI(K))/ &
@@ -3842,14 +3842,14 @@ END SUBROUTINE MP_GRAUPEL
         PRACIS(K) = PRACIS(K)*RATIO
         EPRD(K) = EPRD(K)*RATIO
 
-        END IF
+        end if
 
 ! CONSERVATION OF QR
 
       DUM=((PRACS(K)-PRE(K))+(QMULTR(K)+QMULTRG(K)-PRC(K))+(MNUCCR(K)-PRA(K))+ &
              PIACR(K)+PIACRS(K)+PGRACS(K)+PRACG(K))*DT
 
-      IF (DUM.GT.QR3D(K).AND.QR3D(K).GE.QSMALL) THEN
+      if (DUM.GT.QR3D(K).AND.QR3D(K).GE.QSMALL) then
 
         RATIO = (QR3D(K)/DT+PRC(K)+PRA(K))/ &
              (-PRE(K)+QMULTR(K)+QMULTRG(K)+PRACS(K)+MNUCCR(K)+PIACR(K)+PIACRS(K)+PGRACS(K)+PRACG(K))
@@ -3864,52 +3864,52 @@ END SUBROUTINE MP_GRAUPEL
         PGRACS(K) = PGRACS(K)*RATIO
         PRACG(K) = PRACG(K)*RATIO
 
-        END IF
+        end if
 
 ! CONSERVATION OF QNI
 ! CONSERVATION FOR GRAUPEL SCHEME
 
-        IF (IGRAUP.EQ.0) THEN
+        if (IGRAUP.EQ.0) then
 
       DUM = (-PRDS(K)-PSACWS(K)-PRAI(K)-PRCI(K)-PRACS(K)-EPRDS(K)+PSACR(K)-PIACRS(K)-PRACIS(K))*DT
 
-      IF (DUM.GT.QNI3D(K).AND.QNI3D(K).GE.QSMALL) THEN
+      if (DUM.GT.QNI3D(K).AND.QNI3D(K).GE.QSMALL) then
 
         RATIO = (QNI3D(K)/DT+PRDS(K)+PSACWS(K)+PRAI(K)+PRCI(K)+PRACS(K)+PIACRS(K)+PRACIS(K))/(-EPRDS(K)+PSACR(K))
 
        EPRDS(K) = EPRDS(K)*RATIO
        PSACR(K) = PSACR(K)*RATIO
 
-       END IF
+       end if
 
 ! FOR NO GRAUPEL, NEED TO INCLUDE FREEZING OF RAIN FOR SNOW
-       ELSE IF (IGRAUP.EQ.1) THEN
+       else if (IGRAUP.EQ.1) then
 
       DUM = (-PRDS(K)-PSACWS(K)-PRAI(K)-PRCI(K)-PRACS(K)-EPRDS(K)+PSACR(K)-PIACRS(K)-PRACIS(K)-MNUCCR(K))*DT
 
-      IF (DUM.GT.QNI3D(K).AND.QNI3D(K).GE.QSMALL) THEN
+      if (DUM.GT.QNI3D(K).AND.QNI3D(K).GE.QSMALL) then
 
        RATIO = (QNI3D(K)/DT+PRDS(K)+PSACWS(K)+PRAI(K)+PRCI(K)+PRACS(K)+PIACRS(K)+PRACIS(K)+MNUCCR(K))/(-EPRDS(K)+PSACR(K))
 
        EPRDS(K) = EPRDS(K)*RATIO
        PSACR(K) = PSACR(K)*RATIO
 
-       END IF
+       end if
 
-       END IF
+       end if
 
 ! CONSERVATION OF QG
 
       DUM = (-PSACWG(K)-PRACG(K)-PGSACW(K)-PGRACS(K)-PRDG(K)-MNUCCR(K)-EPRDG(K)-PIACR(K)-PRACI(K)-PSACR(K))*DT
 
-      IF (DUM.GT.QG3D(K).AND.QG3D(K).GE.QSMALL) THEN
+      if (DUM.GT.QG3D(K).AND.QG3D(K).GE.QSMALL) then
 
         RATIO = (QG3D(K)/DT+PSACWG(K)+PRACG(K)+PGSACW(K)+PGRACS(K)+PRDG(K)+MNUCCR(K)+PSACR(K)+&
                   PIACR(K)+PRACI(K))/(-EPRDG(K))
 
        EPRDG(K) = EPRDG(K)*RATIO
 
-      END IF
+      end if
 
 ! TENDENCIES
 
@@ -3951,7 +3951,7 @@ END SUBROUTINE MP_GRAUPEL
                  (PRE(K)+PRA(K)+PRC(K)-PRACS(K)-MNUCCR(K)-QMULTR(K)-QMULTRG(K) &
              -PIACR(K)-PIACRS(K)-PRACG(K)-PGRACS(K))
 
-      IF (IGRAUP.EQ.0) THEN
+      if (IGRAUP.EQ.0) then
 
       QNI3DTEN(K) = QNI3DTEN(K)+                                    &
            (PRAI(K)+PSACWS(K)+PRDS(K)+PRACS(K)+PRCI(K)+EPRDS(K)-PSACR(K)+PIACRS(K)+PRACIS(K))
@@ -3961,13 +3961,13 @@ END SUBROUTINE MP_GRAUPEL
       NG3DTEN(K) = NG3DTEN(K)+(NSCNG(K)+NGRACS(K)+NNUCCR(K)+NIACR(K))
 
 ! FOR NO GRAUPEL, NEED TO INCLUDE FREEZING OF RAIN FOR SNOW
-      ELSE IF (IGRAUP.EQ.1) THEN
+      else if (IGRAUP.EQ.1) then
 
       QNI3DTEN(K) = QNI3DTEN(K)+                                    &
            (PRAI(K)+PSACWS(K)+PRDS(K)+PRACS(K)+PRCI(K)+EPRDS(K)-PSACR(K)+PIACRS(K)+PRACIS(K)+MNUCCR(K))
       NS3DTEN(K) = NS3DTEN(K)+(NSAGG(K)+NPRCI(K)-NSCNG(K)-NGRACS(K)+NIACRS(K)+NNUCCR(K))
 
-      END IF
+      end if
 
       NC3DTEN(K) = NC3DTEN(K)+(-NNUCCC(K)-NPSACWS(K)                &
             -NPRA(K)-NPRC(K)-NPSACWI(K)-NPSACWG(K))
@@ -3980,26 +3980,26 @@ END SUBROUTINE MP_GRAUPEL
                    +NRAGG(K)-NIACR(K)-NIACRS(K)-NPRACG(K)-NGRACS(K))
 
 ! V1.3 move code below to before saturation adjustment
-      IF (EPRD(K).LT.0.) THEN
+      if (EPRD(K).LT.0.) then
          DUM = EPRD(K)*DT/QI3D(K)
             DUM = MAX(-1.,DUM)
          NSUBI(K) = DUM*NI3D(K)/DT
-      END IF
-      IF (EPRDS(K).LT.0.) THEN
+      end if
+      if (EPRDS(K).LT.0.) then
          DUM = EPRDS(K)*DT/QNI3D(K)
            DUM = MAX(-1.,DUM)
          NSUBS(K) = DUM*NS3D(K)/DT
-      END IF
-      IF (PRE(K).LT.0.) THEN
+      end if
+      if (PRE(K).LT.0.) then
          DUM = PRE(K)*DT/QR3D(K)
            DUM = MAX(-1.,DUM)
          NSUBR(K) = DUM*NR3D(K)/DT
-      END IF
-      IF (EPRDG(K).LT.0.) THEN
+      end if
+      if (EPRDG(K).LT.0.) then
          DUM = EPRDG(K)*DT/QG3D(K)
            DUM = MAX(-1.,DUM)
          NSUBG(K) = DUM*NG3D(K)/DT
-      END IF
+      end if
 
 !        nsubr(k)=0.
 !        nsubs(k)=0.
@@ -4042,38 +4042,38 @@ END SUBROUTINE MP_GRAUPEL
 !!!      QC3DTEN(K) = QC3DTEN(K)+PCC(K)
       ! GHB2
 
-      IF( abs(DUMT-SAVET).ge.0.0001 )THEN
+      if( abs(DUMT-SAVET).ge.0.0001 )then
         PCC(K) = (DUMQC-SAVEQC)*RDT
         QV3DTEN(K) = QV3DTEN(K)-PCC(K)
         QC3DTEN(K) = QC3DTEN(K)+PCC(K)
         T3DTEN(K) = T3DTEN(K)+(DUMT-SAVET)*RDT
         tbcond(k) = tbcond(k)+(DUMT-SAVET)*RDT
-      ENDIF
+      endif
 
 !.......................................................................
 ! ACTIVATION OF CLOUD DROPLETS
 
     ! GHB, 120124:
-    IF(INUM.EQ.0)THEN
-      IF (QC3D(K)+QC3DTEN(K)*DT.GE.QSMALL) THEN
+    if(INUM.EQ.0)then
+      if (QC3D(K)+QC3DTEN(K)*DT.GE.QSMALL) then
 
 ! EFFECTIVE VERTICAL VELOCITY (M/S)
 
-      IF (ISUB.EQ.0) THEN
+      if (ISUB.EQ.0) then
 ! ADD SUB-GRID VERTICAL VELOCITY
          DUM = W3D(K)+WVAR(K)
 
 ! ASSUME MINIMUM EFF. SUB-GRID VELOCITY 0.10 M/S
          DUM = MAX(DUM,0.10)
 
-      ELSE IF (ISUB.EQ.1) THEN
+      else if (ISUB.EQ.1) then
          DUM=W3D(K)
-      END IF
+      end if
 
 ! ONLY ACTIVATE IN REGIONS OF UPWARD MOTION
-      IF (DUM.GE.0.001) THEN
+      if (DUM.GE.0.001) then
 
-      IF (IBASE.EQ.1) THEN
+      if (IBASE.EQ.1) then
 
 ! ACTIVATE ONLY IF THERE IS LITTLE CLOUD WATER
 ! OR IF AT CLOUD BASE, OR AT LOWEST MODEL LEVEL (K=1)
@@ -4081,34 +4081,34 @@ END SUBROUTINE MP_GRAUPEL
          IDROP=0
 
 ! V1.3 USE CURRENT VALUE OF QC FOR IDROP
-         IF (QC3D(K).LE.0.05E-3/RHO(K)) THEN
+         if (QC3D(K).LE.0.05E-3/RHO(K)) then
             IDROP=1
-         END IF
-         IF (K.EQ.1) THEN
+         end if
+         if (K.EQ.1) then
             IDROP=1
-         ELSE IF (K.GE.2) THEN
-            IF (QC3D(K).GT.0.05E-3/RHO(K).AND. &
-             QC3D(K-1).LE.0.05E-3/RHO(K-1)) THEN
+         else if (K.GE.2) then
+            if (QC3D(K).GT.0.05E-3/RHO(K).AND. &
+             QC3D(K-1).LE.0.05E-3/RHO(K-1)) then
             IDROP=1
-            END IF
-         END IF
+            end if
+         end if
 
-         IF (IDROP.EQ.1) THEN
+         if (IDROP.EQ.1) then
 ! ACTIVATE AT CLOUD BASE OR REGIONS WITH VERY LITTLE LIQ WATER
 
-           IF (IACT.EQ.1) THEN
+           if (IACT.EQ.1) then
 ! USE ROGERS AND YAU (1989) TO RELATE NUMBER ACTIVATED TO W
 ! BASED ON TWOMEY 1959
 
-            DUM=DUM*100.  ! CONVERT FROM M/S TO CM/S
+            DUM=DUM*100.  ! CONVERT FROM M/S to CM/S
             DUM2 = 0.88*C1**(2./(K1+2.))*(7.E-2*DUM**1.5)**(K1/(K1+2.))
-            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 TO M-3
-            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 TO KG-1
+            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 to M-3
+            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 to KG-1
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
 
-           ELSE IF (IACT.EQ.2) THEN
+           else if (IACT.EQ.2) then
 ! DROPLET ACTIVATION FROM ABDUL-RAZZAK AND GHAN (2000)
 
            SIGVL = 0.0761-1.55E-4*(T3D(K)-TMELT)
@@ -4137,7 +4137,7 @@ END SUBROUTINE MP_GRAUPEL
            DUM1 = NANEW1/2.*(1.-DERF1(UU1))
            DUM2 = NANEW2/2.*(1.-DERF1(UU2))
 
-           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT TO KG-1
+           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT to KG-1
 
 ! MAKE SURE THIS VALUE ISN'T GREATER THAN TOTAL NUMBER OF AEROSOL
 
@@ -4146,34 +4146,34 @@ END SUBROUTINE MP_GRAUPEL
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
-           END IF  ! IACT
+           end if  ! IACT
 
 !.............................................................................
-        ELSE IF (IDROP.EQ.0) THEN
+        else if (IDROP.EQ.0) then
 ! ACTIVATE IN CLOUD INTERIOR
 ! FIND EQUILIBRIUM SUPERSATURATION
 
            TAUC=1./(2.*PI*RHO(k)*DV(K)*NC3D(K)*(PGAM(K)+1.)/LAMC(K))
-           IF (EPSR.GT.1.E-8) THEN
+           if (EPSR.GT.1.E-8) then
              TAUR=1./EPSR
-           ELSE
+           else
              TAUR=1.E8
-           END IF
-           IF (EPSI.GT.1.E-8) THEN
+           end if
+           if (EPSI.GT.1.E-8) then
              TAUI=1./EPSI
-           ELSE
+           else
              TAUI=1.E8
-           END IF
-           IF (EPSS.GT.1.E-8) THEN
+           end if
+           if (EPSS.GT.1.E-8) then
              TAUS=1./EPSS
-           ELSE
+           else
              TAUS=1.E8
-           END IF
-           IF (EPSG.GT.1.E-8) THEN
+           end if
+           if (EPSG.GT.1.E-8) then
              TAUG=1./EPSG
-           ELSE
+           else
              TAUG=1.E8
-           END IF
+           end if
 
 ! EQUILIBRIUM SS INCLUDING BERGERON EFFECT
 
@@ -4185,12 +4185,12 @@ END SUBROUTINE MP_GRAUPEL
            (TAUC*TAUR*TAUI*TAUG+TAUC*TAUR*TAUS*TAUG+TAUC*TAUR*TAUI*TAUS+ &
             TAUR*TAUI*TAUS*TAUG+TAUC*TAUI*TAUS*TAUG)
 
-           IF (DUM3/QVS(K).GE.1.E-6) THEN
-           IF (IACT.EQ.1) THEN
+           if (DUM3/QVS(K).GE.1.E-6) then
+           if (IACT.EQ.1) then
 
 ! FIND MAXIMUM ALLOWED ACTIVATION WITH NON-EQULIBRIUM SS
 
-            DUM=DUM*100.  ! CONVERT FROM M/S TO CM/S
+            DUM=DUM*100.  ! CONVERT FROM M/S to CM/S
             DUMACT = 0.88*C1**(2./(K1+2.))*(7.E-2*DUM**1.5)**(K1/(K1+2.))
 
 ! USE POWER LAW CCN SPECTRA
@@ -4201,13 +4201,13 @@ END SUBROUTINE MP_GRAUPEL
             DUM2=C1*DUM3**K1
 ! MAKE SURE VALUE DOESN'T EXCEED THAT FOR NON-EQUILIBRIUM SS
             DUM2=MIN(DUM2,DUMACT)
-            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 TO M-3
-            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 TO KG-1
+            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 to M-3
+            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 to KG-1
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
 
-           ELSE IF (IACT.EQ.2) THEN
+           else if (IACT.EQ.2) then
 
 ! FIND MAXIMUM ALLOWED ACTIVATION WITH NON-EQULIBRIUM SS
 
@@ -4237,7 +4237,7 @@ END SUBROUTINE MP_GRAUPEL
            DUM1 = NANEW1/2.*(1.-DERF1(UU1))
            DUM2 = NANEW2/2.*(1.-DERF1(UU2))
 
-           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT TO KG-1
+           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT to KG-1
 
 ! MAKE SURE THIS VALUE ISN'T GREATER THAN TOTAL NUMBER OF AEROSOL
 
@@ -4258,7 +4258,7 @@ END SUBROUTINE MP_GRAUPEL
            DUM1 = NANEW1/2.*(1.-DERF1(UU1))
            DUM2 = NANEW2/2.*(1.-DERF1(UU2))
 
-           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT TO KG-1
+           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT to KG-1
 
 ! MAKE SURE THIS VALUE ISN'T GREATER THAN TOTAL NUMBER OF AEROSOL
 
@@ -4271,26 +4271,26 @@ END SUBROUTINE MP_GRAUPEL
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
 
-           END IF ! IACT
-           END IF ! DUM3/QVS > 1.E-6
-        END IF  ! IDROP = 1
+           end if ! IACT
+           end if ! DUM3/QVS > 1.E-6
+        end if  ! IDROP = 1
 
 !.......................................................................
-      ELSE IF (IBASE.EQ.2) THEN
+      else if (IBASE.EQ.2) then
 
-           IF (IACT.EQ.1) THEN
+           if (IACT.EQ.1) then
 ! USE ROGERS AND YAU (1989) TO RELATE NUMBER ACTIVATED TO W
 ! BASED ON TWOMEY 1959
 
-            DUM=DUM*100.  ! CONVERT FROM M/S TO CM/S
+            DUM=DUM*100.  ! CONVERT FROM M/S to CM/S
             DUM2 = 0.88*C1**(2./(K1+2.))*(7.E-2*DUM**1.5)**(K1/(K1+2.))
-            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 TO M-3
-            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 TO KG-1
+            DUM2=DUM2*1.E6 ! CONVERT FROM CM-3 to M-3
+            DUM2=DUM2/RHO(K)  ! CONVERT FROM M-3 to KG-1
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
 
-           ELSE IF (IACT.EQ.2) THEN
+           else if (IACT.EQ.2) then
 
            SIGVL = 0.0761-1.55E-4*(T3D(K)-TMELT)
            AACT = 2.*MW/(RHOW*RR)*SIGVL/T3D(K)
@@ -4318,7 +4318,7 @@ END SUBROUTINE MP_GRAUPEL
            DUM1 = NANEW1/2.*(1.-DERF1(UU1))
            DUM2 = NANEW2/2.*(1.-DERF1(UU2))
 
-           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT TO KG-1
+           DUM2 = (DUM1+DUM2)/RHO(K)  !CONVERT to KG-1
 
 ! MAKE SURE THIS VALUE ISN'T GREATER THAN TOTAL NUMBER OF AEROSOL
 
@@ -4327,12 +4327,12 @@ END SUBROUTINE MP_GRAUPEL
             DUM2 = (DUM2-NC3D(K))/DT
             DUM2 = MAX(0.,DUM2)
             NC3DTEN(K) = NC3DTEN(K)+DUM2
-           END IF  ! IACT
-        END IF  ! IBASE
-        END IF  ! W > 0.001
-        END IF  ! QC3D > QSMALL
+           end if  ! IACT
+        end if  ! IBASE
+        end if  ! W > 0.001
+        end if  ! QC3D > QSMALL
     ! GHB, 120124:
-    ENDIF       ! INUM=0
+    endif       ! INUM=0
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ! SUBLIMATE, MELT, OR EVAPORATE NUMBER CONCENTRATION
@@ -4349,14 +4349,14 @@ END SUBROUTINE MP_GRAUPEL
 
 !        NC3DTEN(K) = NC3DTEN(K)+NSUBC(K)
 
-         END IF !!!!!! TEMPERATURE
+         end if !!!!!! TEMPERATURE
 
 ! SWITCH LTRUE TO 1, SINCE HYDROMETEORS ARE PRESENT
          LTRUE = 1
 
- 200     CONTINUE
+ 200     continue
 
-         ENDDO  kloop1
+         enddo  kloop1
 
 ! V1.3 move precip initialization to here
 ! INITIALIZE PRECIP AND SNOW RATES
@@ -4366,7 +4366,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! IF THERE ARE NO HYDROMETEORS, THEN SKIP TO END OF SUBROUTINE
 
-        IF (LTRUE.EQ.0) GOTO 400
+        if (LTRUE.EQ.0) GOTO 400
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 !.......................................................................
@@ -4383,13 +4383,13 @@ END SUBROUTINE MP_GRAUPEL
       NSTEPC=1
       NSTEPG=1
 
-      DO K = KTS,KTE
+      do K = KTS,KTE
         temz(k) = 1.0/DZQ(K)
-      ENDDO
+      enddo
 
 ! v3 5/27/11
       kloop2:  &
-      DO K = KTE,KTS,-1
+      do K = KTE,KTS,-1
 
         DUMI(K) = QI3D(K)+QI3DTEN(K)*DT
         DUMQS(K) = QNI3D(K)+QNI3DTEN(K)*DT
@@ -4403,9 +4403,9 @@ END SUBROUTINE MP_GRAUPEL
 	DUMFNG(K) = NG3D(K)+NG3DTEN(K)*DT
 
 ! SWITCH FOR CONSTANT DROPLET NUMBER
-        IF (INUM.EQ.1) THEN
+        if (INUM.EQ.1) then
         DUMFNC(K) = NC3D(K)
-        END IF
+        end if
 
 ! GET DUMMY LAMDA
 
@@ -4419,23 +4419,23 @@ END SUBROUTINE MP_GRAUPEL
 !......................................................................
 ! CLOUD ICE
 
-      IF (DUMI(K).GE.QSMALL) THEN
+      if (DUMI(K).GE.QSMALL) then
         DLAMI = (CONS12*DUMFNI(K)/DUMI(K))**(1./DI)
         DLAMI=MAX(DLAMI,LAMMINI)
         DLAMI=MIN(DLAMI,LAMMAXI)
-      END IF
+      end if
 !......................................................................
 ! RAIN
 
-      IF (DUMR(K).GE.QSMALL) THEN
+      if (DUMR(K).GE.QSMALL) then
         DLAMR = (PI*RHOW*DUMFNR(K)/DUMR(K))**(1./3.)
         DLAMR=MAX(DLAMR,LAMMINR)
         DLAMR=MIN(DLAMR,LAMMAXR)
-      END IF
+      end if
 !......................................................................
 ! CLOUD DROPLETS
 
-      IF (DUMC(K).GE.QSMALL) THEN
+      if (DUMC(K).GE.QSMALL) then
 !         DUM = PRES(K)/(R*T3D(K))
 ! V1.5
          PGAM(K)=0.0005714*(NC3D(K)/1.E6*RHO(K))+0.2714
@@ -4448,36 +4448,36 @@ END SUBROUTINE MP_GRAUPEL
         LAMMAX = (PGAM(K)+1.)/1.E-6
         DLAMC=MAX(DLAMC,LAMMIN)
         DLAMC=MIN(DLAMC,LAMMAX)
-      END IF
+      end if
 !......................................................................
 ! SNOW
 
-      IF (DUMQS(K).GE.QSMALL) THEN
+      if (DUMQS(K).GE.QSMALL) then
         DLAMS = (CONS1*DUMFNS(K)/ DUMQS(K))**(1./DS)
         DLAMS=MAX(DLAMS,LAMMINS)
         DLAMS=MIN(DLAMS,LAMMAXS)
-      END IF
+      end if
 !......................................................................
 ! GRAUPEL
 
-      IF (DUMG(K).GE.QSMALL) THEN
+      if (DUMG(K).GE.QSMALL) then
         DLAMG = (CONS2*DUMFNG(K)/ DUMG(K))**(1./DG)
         DLAMG=MAX(DLAMG,LAMMING)
         DLAMG=MIN(DLAMG,LAMMAXG)
-      END IF
+      end if
 
 !......................................................................
 ! CALCULATE NUMBER-WEIGHTED AND MASS-WEIGHTED TERMINAL FALL SPEEDS
 
 ! CLOUD WATER
 
-      IF (DUMC(K).GE.QSMALL) THEN
+      if (DUMC(K).GE.QSMALL) then
       UNC =  ACN(K)*GAMMA(1.+BC+PGAM(K))/ (DLAMC**BC*GAMMA(PGAM(K)+1.))
       UMC = ACN(K)*GAMMA(4.+BC+PGAM(K))/  (DLAMC**BC*GAMMA(PGAM(K)+4.))
-      ELSE
+      else
       UMC = 0.
       UNC = 0.
-      END IF
+      end if
 
       if( testcase.eq.5 )then
         ! drizzling stratoCu (Ackerman et al, 2009, MWR)
@@ -4491,37 +4491,37 @@ END SUBROUTINE MP_GRAUPEL
         endif
       endif
 
-      IF (DUMI(K).GE.QSMALL) THEN
+      if (DUMI(K).GE.QSMALL) then
       UNI =  AIN(K)*CONS27/DLAMI**BI
       UMI = AIN(K)*CONS28/(DLAMI**BI)
-      ELSE
+      else
       UMI = 0.
       UNI = 0.
-      END IF
+      end if
 
-      IF (DUMR(K).GE.QSMALL) THEN
+      if (DUMR(K).GE.QSMALL) then
       UNR = ARN(K)*CONS6/DLAMR**BR
       UMR = ARN(K)*CONS4/(DLAMR**BR)
-      ELSE
+      else
       UMR = 0.
       UNR = 0.
-      END IF
+      end if
 
-      IF (DUMQS(K).GE.QSMALL) THEN
+      if (DUMQS(K).GE.QSMALL) then
       UMS = ASN(K)*CONS3/(DLAMS**BS)
       UNS = ASN(K)*CONS5/DLAMS**BS
-      ELSE
+      else
       UMS = 0.
       UNS = 0.
-      END IF
+      end if
 
-      IF (DUMG(K).GE.QSMALL) THEN
+      if (DUMG(K).GE.QSMALL) then
       UMG = AGN(K)*CONS7/(DLAMG**BG)
       UNG = AGN(K)*CONS8/DLAMG**BG
-      ELSE
+      else
       UMG = 0.
       UNG = 0.
-      END IF
+      end if
 
 ! SET REALISTIC LIMITS ON FALLSPEED
 
@@ -4551,38 +4551,38 @@ END SUBROUTINE MP_GRAUPEL
 
 ! v3 5/27/11 MODIFY FALLSPEED BELOW LEVEL OF PRECIP
 
-	IF (K.LE.KTE-1) THEN
-        IF (FR(K).LT.1.E-10) THEN
+	if (K.LE.KTE-1) then
+        if (FR(K).LT.1.E-10) then
 	FR(K)=FR(K+1)
-	END IF
-        IF (FI(K).LT.1.E-10) THEN
+	end if
+        if (FI(K).LT.1.E-10) then
 	FI(K)=FI(K+1)
-	END IF
-        IF (FNI(K).LT.1.E-10) THEN
+	end if
+        if (FNI(K).LT.1.E-10) then
 	FNI(K)=FNI(K+1)
-	END IF
-        IF (FS(K).LT.1.E-10) THEN
+	end if
+        if (FS(K).LT.1.E-10) then
 	FS(K)=FS(K+1)
-	END IF
-        IF (FNS(K).LT.1.E-10) THEN
+	end if
+        if (FNS(K).LT.1.E-10) then
 	FNS(K)=FNS(K+1)
-	END IF
-        IF (FNR(K).LT.1.E-10) THEN
+	end if
+        if (FNR(K).LT.1.E-10) then
 	FNR(K)=FNR(K+1)
-	END IF
-        IF (FC(K).LT.1.E-10) THEN
+	end if
+        if (FC(K).LT.1.E-10) then
 	FC(K)=FC(K+1)
-	END IF
-        IF (FNC(K).LT.1.E-10) THEN
+	end if
+        if (FNC(K).LT.1.E-10) then
 	FNC(K)=FNC(K+1)
-	END IF
-        IF (FG(K).LT.1.E-10) THEN
+	end if
+        if (FG(K).LT.1.E-10) then
 	FG(K)=FG(K+1)
-	END IF
-        IF (FNG(K).LT.1.E-10) THEN
+	end if
+        if (FNG(K).LT.1.E-10) then
 	FNG(K)=FNG(K+1)
-	END IF
-	END IF ! K LE KTE-1
+	end if
+	end if ! K LE KTE-1
 
       RGVM = MAX(FR(K),FNR(K))
 ! VVT CHANGED IFIX -> INT (GENERIC FUNCTION)
@@ -4616,7 +4616,7 @@ END SUBROUTINE MP_GRAUPEL
       DUMG(k) = DUMG(K)*RHO(K)
       DUMFNG(k) = DUMFNG(K)*RHO(K)
 
-      ENDDO  kloop2
+      enddo  kloop2
 
 ! V1.3, change so that sub-stepping is done
 ! individually for each species
@@ -4624,16 +4624,16 @@ END SUBROUTINE MP_GRAUPEL
 ! RAIN
 
       dttmp = DT/NSTEPR
-      DO K = KTS,KTE
+      do K = KTS,KTE
         temr(k) = 1.0/(NSTEPR*RHO(k))
-      ENDDO
+      enddo
 
-      DO N = 1,NSTEPR
+      do N = 1,NSTEPR
 
-      DO K = KTS,KTE
+      do K = KTS,KTE
       FALOUTR(K) = FR(K)*DUMR(K)
       FALOUTNR(K) = FNR(K)*DUMFNR(K)
-      END DO
+      end do
 ! TOP OF MODEL
       K = KTE
       FALTNDR = FALOUTR(K)*temz(k)
@@ -4643,31 +4643,31 @@ END SUBROUTINE MP_GRAUPEL
       NR3DTEN(K) = NR3DTEN(K)-FALTNDNR*temr(k)
       DUMR(K) = DUMR(K)-FALTNDR*dttmp
       DUMFNR(K) = DUMFNR(K)-FALTNDNR*dttmp
-      DO K = KTE-1,KTS,-1
+      do K = KTE-1,KTS,-1
       FALTNDR = (FALOUTR(K+1)-FALOUTR(K))*temz(K)
       FALTNDNR = (FALOUTNR(K+1)-FALOUTNR(K))*temz(K)
       QRSTEN(K) = QRSTEN(K)+FALTNDR*temr(k)
       NR3DTEN(K) = NR3DTEN(K)+FALTNDNR*temr(k)
       DUMR(K) = DUMR(K)+FALTNDR*dttmp
       DUMFNR(K) = DUMFNR(K)+FALTNDNR*dttmp
-      END DO
+      end do
       PRECRT = PRECRT+(FALOUTR(KTS))  &
                      *dttmp
-      END DO
+      end do
 
 ! CLOUD ICE
 
       dttmp = DT/NSTEPI
-      DO K = KTS,KTE
+      do K = KTS,KTE
         temr(k) = 1.0/(NSTEPI*RHO(k))
-      ENDDO
+      enddo
 
-      DO N = 1,NSTEPI
+      do N = 1,NSTEPI
 
-      DO K = KTS,KTE
+      do K = KTS,KTE
       FALOUTI(K) = FI(K)*DUMI(K)
       FALOUTNI(K) = FNI(K)*DUMFNI(K)
-      END DO
+      end do
 ! TOP OF MODEL
       K = KTE
       FALTNDI = FALOUTI(K)*temz(k)
@@ -4677,32 +4677,32 @@ END SUBROUTINE MP_GRAUPEL
       NI3DTEN(K) = NI3DTEN(K)-FALTNDNI*temr(k)
       DUMI(K) = DUMI(K)-FALTNDI*dttmp
       DUMFNI(K) = DUMFNI(K)-FALTNDNI*dttmp
-      DO K = KTE-1,KTS,-1
+      do K = KTE-1,KTS,-1
       FALTNDI = (FALOUTI(K+1)-FALOUTI(K))*temz(K)
       FALTNDNI = (FALOUTNI(K+1)-FALOUTNI(K))*temz(K)
       QISTEN(K) = QISTEN(K)+FALTNDI*temr(k)
       NI3DTEN(K) = NI3DTEN(K)+FALTNDNI*temr(k)
       DUMI(K) = DUMI(K)+FALTNDI*dttmp
       DUMFNI(K) = DUMFNI(K)+FALTNDNI*dttmp
-      END DO
+      end do
       PRECRT = PRECRT+(FALOUTI(KTS))  &
                      *dttmp
       SNOWRT = SNOWRT+(FALOUTI(KTS))*dttmp
-      END DO
+      end do
 
 ! CLOUD DROPLETS
 
       dttmp = DT/NSTEPC
-      DO K = KTS,KTE
+      do K = KTS,KTE
         temr(k) = 1.0/(NSTEPC*RHO(k))
-      ENDDO
+      enddo
 
-      DO N = 1,NSTEPC
+      do N = 1,NSTEPC
 
-      DO K = KTS,KTE
+      do K = KTS,KTE
       FALOUTC(K) = FC(K)*DUMC(K)
       FALOUTNC(K) = FNC(K)*DUMFNC(K)
-      END DO
+      end do
 ! TOP OF MODEL
       K = KTE
       FALTNDC = FALOUTC(K)*temz(k)
@@ -4712,31 +4712,31 @@ END SUBROUTINE MP_GRAUPEL
       NC3DTEN(K) = NC3DTEN(K)-FALTNDNC*temr(k)
       DUMC(K) = DUMC(K)-FALTNDC*dttmp
       DUMFNC(K) = DUMFNC(K)-FALTNDNC*dttmp
-      DO K = KTE-1,KTS,-1
+      do K = KTE-1,KTS,-1
       FALTNDC = (FALOUTC(K+1)-FALOUTC(K))*temz(K)
       FALTNDNC = (FALOUTNC(K+1)-FALOUTNC(K))*temz(K)
       QCSTEN(K) = QCSTEN(K)+FALTNDC*temr(k)
       NC3DTEN(K) = NC3DTEN(K)+FALTNDNC*temr(k)
       DUMC(K) = DUMC(K)+FALTNDC*dttmp
       DUMFNC(K) = DUMFNC(K)+FALTNDNC*dttmp
-      END DO
+      end do
       PRECRT = PRECRT+(FALOUTC(KTS))  &
                      *dttmp
-      END DO
+      end do
 
 ! SNOW
 
       dttmp = DT/NSTEPS
-      DO K = KTS,KTE
+      do K = KTS,KTE
         temr(k) = 1.0/(NSTEPS*RHO(k))
-      ENDDO
+      enddo
 
-      DO N = 1,NSTEPS
+      do N = 1,NSTEPS
 
-      DO K = KTS,KTE
+      do K = KTS,KTE
       FALOUTS(K) = FS(K)*DUMQS(K)
       FALOUTNS(K) = FNS(K)*DUMFNS(K)
-      END DO
+      end do
 ! TOP OF MODEL
       K = KTE
       FALTNDS = FALOUTS(K)*temz(k)
@@ -4746,32 +4746,32 @@ END SUBROUTINE MP_GRAUPEL
       NS3DTEN(K) = NS3DTEN(K)-FALTNDNS*temr(k)
       DUMQS(K) = DUMQS(K)-FALTNDS*dttmp
       DUMFNS(K) = DUMFNS(K)-FALTNDNS*dttmp
-      DO K = KTE-1,KTS,-1
+      do K = KTE-1,KTS,-1
       FALTNDS = (FALOUTS(K+1)-FALOUTS(K))*temz(K)
       FALTNDNS = (FALOUTNS(K+1)-FALOUTNS(K))*temz(K)
       QNISTEN(K) = QNISTEN(K)+FALTNDS*temr(k)
       NS3DTEN(K) = NS3DTEN(K)+FALTNDNS*temr(k)
       DUMQS(K) = DUMQS(K)+FALTNDS*dttmp
       DUMFNS(K) = DUMFNS(K)+FALTNDNS*dttmp
-      END DO
+      end do
       PRECRT = PRECRT+(FALOUTS(KTS))  &
                      *dttmp
       SNOWRT = SNOWRT+(FALOUTS(KTS))*dttmp
-      END DO
+      end do
 
 ! GRAUPEL
 
       dttmp = DT/NSTEPG
-      DO K = KTS,KTE
+      do K = KTS,KTE
         temr(k) = 1.0/(NSTEPG*RHO(k))
-      ENDDO
+      enddo
 
-      DO N = 1,NSTEPG
+      do N = 1,NSTEPG
 
-      DO K = KTS,KTE
+      do K = KTS,KTE
       FALOUTG(K) = FG(K)*DUMG(K)
       FALOUTNG(K) = FNG(K)*DUMFNG(K)
-      END DO
+      end do
 ! TOP OF MODEL
       K = KTE
       FALTNDG = FALOUTG(K)*temz(k)
@@ -4781,21 +4781,21 @@ END SUBROUTINE MP_GRAUPEL
       NG3DTEN(K) = NG3DTEN(K)-FALTNDNG*temr(k)
       DUMG(K) = DUMG(K)-FALTNDG*dttmp
       DUMFNG(K) = DUMFNG(K)-FALTNDNG*dttmp
-      DO K = KTE-1,KTS,-1
+      do K = KTE-1,KTS,-1
       FALTNDG = (FALOUTG(K+1)-FALOUTG(K))*temz(K)
       FALTNDNG = (FALOUTNG(K+1)-FALOUTNG(K))*temz(K)
       QGSTEN(K) = QGSTEN(K)+FALTNDG*temr(k)
       NG3DTEN(K) = NG3DTEN(K)+FALTNDNG*temr(k)
       DUMG(K) = DUMG(K)+FALTNDG*dttmp
       DUMFNG(K) = DUMFNG(K)+FALTNDNG*dttmp
-      END DO
+      end do
       PRECRT = PRECRT+(FALOUTG(KTS))  &
                      *dttmp
       SNOWRT = SNOWRT+(FALOUTG(KTS))*dttmp
-      END DO
+      end do
 
       kloop:  &
-      DO K=KTS,KTE
+      do K=KTS,KTE
 
 ! ADD ON SEDIMENTATION TENDENCIES FOR MIXING RATIO TO REST OF TENDENCIES
 
@@ -4810,15 +4810,15 @@ END SUBROUTINE MP_GRAUPEL
 ! V1.7
 !hm 7/9/09 bug fix
 !        IF (QI3D(K).GE.QSMALL.AND.T3D(K).LT.273.15) THEN
-        IF (QI3D(K).GE.QSMALL.AND.T3D(K).LT.TMELT.AND.LAMI(K).GE.1.E-10) THEN
+        if (QI3D(K).GE.QSMALL.AND.T3D(K).LT.TMELT.AND.LAMI(K).GE.1.E-10) then
 
-        IF (1./LAMI(K).GE.2.*DCS) THEN
+        if (1./LAMI(K).GE.2.*DCS) then
            QNI3DTEN(K) = QNI3DTEN(K)+QI3D(K)/DT+ QI3DTEN(K)
            NS3DTEN(K) = NS3DTEN(K)+NI3D(K)/DT+   NI3DTEN(K)
            QI3DTEN(K) = -QI3D(K)/DT
            NI3DTEN(K) = -NI3D(K)/DT
-        END IF
-        END IF
+        end if
+        end if
 
 ! hm add tendencies here, then call sizeparameter
 ! to ensure consisitency between mixing ratio and number concentration
@@ -4832,10 +4832,10 @@ END SUBROUTINE MP_GRAUPEL
           NS3D(k)        = NS3D(k)+NS3DTEN(k)*DT
           NR3D(k)        = NR3D(k)+NR3DTEN(k)*DT
 
-          IF (IGRAUP.EQ.0) THEN
+          if (IGRAUP.EQ.0) then
           QG3D(k)        = QG3D(k)+QG3DTEN(k)*DT
           NG3D(k)        = NG3D(k)+NG3DTEN(k)*DT
-          END IF
+          end if
 
 ! ADD TEMPERATURE AND WATER VAPOR TENDENCIES FROM MICROPHYSICS
           T3D(K)         = T3D(K)+T3DTEN(k)*DT
@@ -4851,7 +4851,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! MAKE SURE ICE SATURATION DOESN'T EXCEED WATER SAT. NEAR FREEZING
 
-            IF (EIS(K).GT.EVS(K)) EIS(K) = EVS(K)
+            if (EIS(K).GT.EVS(K)) EIS(K) = EVS(K)
 
             QVS(K) = EP_2*EVS(K)/(PRES(K)-EVS(K))
             QVI(K) = EP_2*EIS(K)/(PRES(K)-EIS(K))
@@ -4865,70 +4865,70 @@ END SUBROUTINE MP_GRAUPEL
 ! this improves reflectivity at low mixing ratios
 ! ghb 160428:  use QTHR
 
-             IF (QVQVS(K).LT.0.9) THEN
-               IF (QR3D(K).LT.QTHR) THEN
+             if (QVQVS(K).LT.0.9) then
+               if (QR3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QR3D(K)
 !!!                  T3D(K)=T3D(K)-QR3D(K)*XXLV(K)/CPM(K)
                   T3D(K)=T3D(K)-QR3D(K)*ecnd(k)
                   QR3D(K)=0.
-               END IF
-               IF (QC3D(K).LT.QTHR) THEN
+               end if
+               if (QC3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QC3D(K)
 !!!                  T3D(K)=T3D(K)-QC3D(K)*XXLV(K)/CPM(K)
                   T3D(K)=T3D(K)-QC3D(K)*ecnd(k)
                   QC3D(K)=0.
-               END IF
-             END IF
+               end if
+             end if
 
-             IF (QVQVSI(K).LT.0.9) THEN
-               IF (QI3D(K).LT.QTHR) THEN
+             if (QVQVSI(K).LT.0.9) then
+               if (QI3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QI3D(K)
 !!!                  T3D(K)=T3D(K)-QI3D(K)*XXLS(K)/CPM(K)
                   T3D(K)=T3D(K)-QI3D(K)*edep(k)
                   QI3D(K)=0.
-               END IF
-               IF (QNI3D(K).LT.QTHR) THEN
+               end if
+               if (QNI3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QNI3D(K)
 !!!                  T3D(K)=T3D(K)-QNI3D(K)*XXLS(K)/CPM(K)
                   T3D(K)=T3D(K)-QNI3D(K)*edep(k)
                   QNI3D(K)=0.
-               END IF
-               IF (QG3D(K).LT.QTHR) THEN
+               end if
+               if (QG3D(K).LT.QTHR) then
                   QV3D(K)=QV3D(K)+QG3D(K)
 !!!                  T3D(K)=T3D(K)-QG3D(K)*XXLS(K)/CPM(K)
                   T3D(K)=T3D(K)-QG3D(K)*edep(k)
                   QG3D(K)=0.
-               END IF
-             END IF
+               end if
+             end if
 
 !..................................................................
 ! IF MIXING RATIO < QSMALL SET MIXING RATIO AND NUMBER CONC TO ZERO
 
-       IF (QC3D(K).LT.QSMALL) THEN
+       if (QC3D(K).LT.QSMALL) then
          QC3D(K) = 0.
          NC3D(K) = 0.
-       END IF
-       IF (QR3D(K).LT.QSMALL) THEN
+       end if
+       if (QR3D(K).LT.QSMALL) then
          QR3D(K) = 0.
          NR3D(K) = 0.
-       END IF
-       IF (QI3D(K).LT.QSMALL) THEN
+       end if
+       if (QI3D(K).LT.QSMALL) then
          QI3D(K) = 0.
          NI3D(K) = 0.
-       END IF
-       IF (QNI3D(K).LT.QSMALL) THEN
+       end if
+       if (QNI3D(K).LT.QSMALL) then
          QNI3D(K) = 0.
          NS3D(K) = 0.
-       END IF
-       IF (QG3D(K).LT.QSMALL) THEN
+       end if
+       if (QG3D(K).LT.QSMALL) then
          QG3D(K) = 0.
          NG3D(K) = 0.
-       END IF
+       end if
 
 !..................................
 ! IF THERE IS NO CLOUD/PRECIP WATER, THEN SKIP CALCULATIONS
 
-            IF (QC3D(K).LT.QSMALL.AND.QI3D(K).LT.QSMALL.AND.QNI3D(K).LT.QSMALL &
+            if (QC3D(K).LT.QSMALL.AND.QI3D(K).LT.QSMALL.AND.QNI3D(K).LT.QSMALL &
                  .AND.QR3D(K).LT.QSMALL.AND.QG3D(K).LT.QSMALL) GOTO 500
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -4936,7 +4936,7 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADD MELTING OF CLOUD ICE TO FORM RAIN
 
-        IF (QI3D(K).GE.QSMALL.AND.T3D(K).GE.TMELT) THEN
+        if (QI3D(K).GE.QSMALL.AND.T3D(K).GE.TMELT) then
            QR3D(K) = QR3D(K)+QI3D(K)
 !!!           T3D(K) = T3D(K)-QI3D(K)*XLF(K)/CPM(K)
            T3D(K) = T3D(K)-QI3D(K)*efrz(k)
@@ -4944,14 +4944,14 @@ END SUBROUTINE MP_GRAUPEL
            QI3D(K) = 0.
            NR3D(K) = NR3D(K)+NI3D(K)
            NI3D(K) = 0.
-        END IF
+        end if
 
 ! ****SENSITIVITY - NO ICE
-        IF (ILIQ.EQ.1) GOTO 778
+        if (ILIQ.EQ.1) GOTO 778
 
 ! HOMOGENEOUS FREEZING OF CLOUD WATER
 
-        IF (T3D(K).LE.233.15.AND.QC3D(K).GE.QSMALL) THEN
+        if (T3D(K).LE.233.15.AND.QC3D(K).GE.QSMALL) then
            QI3D(K)=QI3D(K)+QC3D(K)
 !!!           T3D(K)=T3D(K)+QC3D(K)*XLF(K)/CPM(K)
            T3D(K)=T3D(K)+QC3D(K)*efrz(k)
@@ -4959,13 +4959,13 @@ END SUBROUTINE MP_GRAUPEL
            QC3D(K)=0.
            NI3D(K)=NI3D(K)+NC3D(K)
            NC3D(K)=0.
-        END IF
+        end if
 
 ! HOMOGENEOUS FREEZING OF RAIN
 
-        IF (IGRAUP.EQ.0) THEN
+        if (IGRAUP.EQ.0) then
 
-        IF (T3D(K).LE.233.15.AND.QR3D(K).GE.QSMALL) THEN
+        if (T3D(K).LE.233.15.AND.QR3D(K).GE.QSMALL) then
            QG3D(K) = QG3D(K)+QR3D(K)
 !!!           T3D(K) = T3D(K)+QR3D(K)*XLF(K)/CPM(K)
            T3D(K) = T3D(K)+QR3D(K)*efrz(k)
@@ -4973,11 +4973,11 @@ END SUBROUTINE MP_GRAUPEL
            QR3D(K) = 0.
            NG3D(K) = NG3D(K)+ NR3D(K)
            NR3D(K) = 0.
-        END IF
+        end if
 
-        ELSE IF (IGRAUP.EQ.1) THEN
+        else if (IGRAUP.EQ.1) then
 
-        IF (T3D(K).LE.233.15.AND.QR3D(K).GE.QSMALL) THEN
+        if (T3D(K).LE.233.15.AND.QR3D(K).GE.QSMALL) then
            QNI3D(K) = QNI3D(K)+QR3D(K)
 !!!           T3D(K) = T3D(K)+QR3D(K)*XLF(K)/CPM(K)
            T3D(K) = T3D(K)+QR3D(K)*efrz(k)
@@ -4985,11 +4985,11 @@ END SUBROUTINE MP_GRAUPEL
            QR3D(K) = 0.
            NS3D(K) = NS3D(K)+NR3D(K)
            NR3D(K) = 0.
-        END IF
+        end if
 
-        END IF
+        end if
 
- 778    CONTINUE
+ 778    continue
 
 ! MAKE SURE NUMBER CONCENTRATIONS AREN'T NEGATIVE
 
@@ -5002,7 +5002,7 @@ END SUBROUTINE MP_GRAUPEL
 !......................................................................
 ! CLOUD ICE
 
-      IF (QI3D(K).GE.QSMALL) THEN
+      if (QI3D(K).GE.QSMALL) then
          LAMI(K) = (CONS12*                 &
               NI3D(K)/QI3D(K))**(1./DI)
 
@@ -5010,53 +5010,53 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (LAMI(K).LT.LAMMINI) THEN
+      if (LAMI(K).LT.LAMMINI) then
 
       LAMI(K) = LAMMINI
 
       N0I(K) = LAMI(K)**(DI+1.)*QI3D(K)/CONS12
 
       NI3D(K) = N0I(K)/LAMI(K)
-      ELSE IF (LAMI(K).GT.LAMMAXI) THEN
+      else if (LAMI(K).GT.LAMMAXI) then
       LAMI(K) = LAMMAXI
       N0I(K) = LAMI(K)**(DI+1.)*QI3D(K)/CONS12
 
       NI3D(K) = N0I(K)/LAMI(K)
-      END IF
-      END IF
+      end if
+      end if
 
 !......................................................................
 ! RAIN
 
-      IF (QR3D(K).GE.QSMALL) THEN
+      if (QR3D(K).GE.QSMALL) then
       LAMR(K) = (PI*RHOW*NR3D(K)/QR3D(K))**(1./3.)
 
 ! CHECK FOR SLOPE
 
 ! ADJUST VARS
 
-      IF (LAMR(K).LT.LAMMINR) THEN
+      if (LAMR(K).LT.LAMMINR) then
 
       LAMR(K) = LAMMINR
 
       N0RR(K) = LAMR(K)**4*QR3D(K)/(PI*RHOW)
 
       NR3D(K) = N0RR(K)/LAMR(K)
-      ELSE IF (LAMR(K).GT.LAMMAXR) THEN
+      else if (LAMR(K).GT.LAMMAXR) then
       LAMR(K) = LAMMAXR
       N0RR(K) = LAMR(K)**4*QR3D(K)/(PI*RHOW)
 
       NR3D(K) = N0RR(K)/LAMR(K)
-      END IF
+      end if
 
-      END IF
+      end if
 
 !......................................................................
 ! CLOUD DROPLETS
 
 ! MARTIN ET AL. (1994) FORMULA FOR PGAM
 
-      IF (QC3D(K).GE.QSMALL) THEN
+      if (QC3D(K).GE.QSMALL) then
 
 !         DUM = PRES(K)/(R*T3D(K))
 ! V1.5
@@ -5076,107 +5076,107 @@ END SUBROUTINE MP_GRAUPEL
       LAMMIN = (PGAM(K)+1.)/60.E-6
       LAMMAX = (PGAM(K)+1.)/1.E-6
 
-      IF (LAMC(K).LT.LAMMIN) THEN
+      if (LAMC(K).LT.LAMMIN) then
       LAMC(K) = LAMMIN
       NC3D(K) = EXP(3.*LOG(LAMC(K))+LOG(QC3D(K))+              &
                 LOG(GAMMA(PGAM(K)+1.))-LOG(GAMMA(PGAM(K)+4.)))/CONS26
 
-      ELSE IF (LAMC(K).GT.LAMMAX) THEN
+      else if (LAMC(K).GT.LAMMAX) then
       LAMC(K) = LAMMAX
       NC3D(K) = EXP(3.*LOG(LAMC(K))+LOG(QC3D(K))+              &
                 LOG(GAMMA(PGAM(K)+1.))-LOG(GAMMA(PGAM(K)+4.)))/CONS26
 
-      END IF
+      end if
 
-      END IF
+      end if
 
 !......................................................................
 ! SNOW
 
-      IF (QNI3D(K).GE.QSMALL) THEN
+      if (QNI3D(K).GE.QSMALL) then
       LAMS(K) = (CONS1*NS3D(K)/QNI3D(K))**(1./DS)
 
 ! CHECK FOR SLOPE
 
 ! ADJUST VARS
 
-      IF (LAMS(K).LT.LAMMINS) THEN
+      if (LAMS(K).LT.LAMMINS) then
       LAMS(K) = LAMMINS
       N0S(K) = LAMS(K)**(DS+1.)*QNI3D(K)/CONS1
 
       NS3D(K) = N0S(K)/LAMS(K)
 
-      ELSE IF (LAMS(K).GT.LAMMAXS) THEN
+      else if (LAMS(K).GT.LAMMAXS) then
 
       LAMS(K) = LAMMAXS
       N0S(K) = LAMS(K)**(DS+1.)*QNI3D(K)/CONS1
       NS3D(K) = N0S(K)/LAMS(K)
-      END IF
+      end if
 
-      END IF
+      end if
 
 !......................................................................
 ! GRAUPEL
 
-      IF (QG3D(K).GE.QSMALL) THEN
+      if (QG3D(K).GE.QSMALL) then
       LAMG(K) = (CONS2*NG3D(K)/QG3D(K))**(1./DG)
 
 ! CHECK FOR SLOPE
 
 ! ADJUST VARS
 
-      IF (LAMG(K).LT.LAMMING) THEN
+      if (LAMG(K).LT.LAMMING) then
       LAMG(K) = LAMMING
       N0G(K) = LAMG(K)**(DG+1.)*QG3D(K)/CONS2
 
       NG3D(K) = N0G(K)/LAMG(K)
 
-      ELSE IF (LAMG(K).GT.LAMMAXG) THEN
+      else if (LAMG(K).GT.LAMMAXG) then
 
       LAMG(K) = LAMMAXG
       N0G(K) = LAMG(K)**(DG+1.)*QG3D(K)/CONS2
 
       NG3D(K) = N0G(K)/LAMG(K)
-      END IF
+      end if
 
-      END IF
+      end if
 
- 500  CONTINUE
+ 500  continue
 
-      ifrad:  IF( dorad )THEN
+      ifrad:  if( dorad )then
 !! CALCULATE EFFECTIVE RADIUS
 
 ! hm 8/20/12
-      IF (QI3D(K).GE.QSMALL) THEN
+      if (QI3D(K).GE.QSMALL) then
          EFFI(K) = 3./LAMI(K)/2.*1.E6
-      ELSE
+      else
          EFFI(K) = 25.
-      END IF
+      end if
 
-      IF (QNI3D(K).GE.QSMALL) THEN
+      if (QNI3D(K).GE.QSMALL) then
          EFFS(K) = 3./LAMS(K)/2.*1.E6
-      ELSE
+      else
          EFFS(K) = 25.
-      END IF
+      end if
 
-      IF (QR3D(K).GE.QSMALL) THEN
+      if (QR3D(K).GE.QSMALL) then
          EFFR(K) = 3./LAMR(K)/2.*1.E6
-      ELSE
+      else
          EFFR(K) = 25.
-      END IF
+      end if
 
-      IF (QC3D(K).GE.QSMALL) THEN
+      if (QC3D(K).GE.QSMALL) then
       EFFC(K) = GAMMA(PGAM(K)+4.)/                        &
              GAMMA(PGAM(K)+3.)/LAMC(K)/2.*1.E6
-      ELSE
+      else
       EFFC(K) = 25.
-      END IF
+      end if
 
-      IF (QG3D(K).GE.QSMALL) THEN
+      if (QG3D(K).GE.QSMALL) then
          EFFG(K) = 3./LAMG(K)/2.*1.E6
-      ELSE
+      else
          EFFG(K) = 25.
-      END IF
+      end if
 
 ! add combined cloud ice + snow effective radius, used by Goddard radiation
 
@@ -5194,7 +5194,7 @@ END SUBROUTINE MP_GRAUPEL
       if (qi3d(k).lt.qsmall.and.qni3d(k).lt.qsmall) then
          effis(k) = 25.
       end if
-      ENDIF  ifrad
+      endif  ifrad
 
 !---------------------------------!
 
@@ -5208,22 +5208,22 @@ END SUBROUTINE MP_GRAUPEL
           NI3D(K) = MIN(NI3D(K),0.3E6/RHO(K))
 
 ! ADD BOUND ON DROPLET NUMBER - CANNOT EXCEED AEROSOL CONCENTRATION
-          IF (INUM.EQ.0.AND.IACT.EQ.2) THEN
+          if (INUM.EQ.0.AND.IACT.EQ.2) then
           NC3D(K) = MIN(NC3D(K),(NANEW1+NANEW2)/RHO(K))
-          END IF
+          end if
 ! SWITCH FOR CONSTANT DROPLET NUMBER
-          IF (INUM.EQ.1) THEN
+          if (INUM.EQ.1) then
 ! CHANGE NDCNST FROM CM-3 TO KG-1
              NC3D(K) = NDCNST*1.E6/RHO(K)
-          END IF
+          end if
 
-      END DO  kloop !!! K LOOP
+      end do  kloop !!! K LOOP
 
- 400         CONTINUE
+ 400         continue
 
 ! ALL DONE !!!!!!!!!!!
-      RETURN
-      END  SUBROUTINE M2005MICRO_GRAUPEL
+      return
+      end  subroutine M2005MICRO_GRAUPEL
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
@@ -5305,7 +5305,7 @@ END SUBROUTINE MP_GRAUPEL
 
 !------------------------------------------------------------------------------
 
-      REAL FUNCTION GAMMA(X)
+      real function GAMMA(X)
 !----------------------------------------------------------------------
 !
 ! THIS ROUTINE CALCULATES THE GAMMA FUNCTION FOR A REAL ARGUMENT X.
@@ -5396,156 +5396,156 @@ END SUBROUTINE MP_GRAUPEL
 !
 !----------------------------------------------------------------------
       implicit none
-      INTEGER I,N
-      LOGICAL PARITY
-      REAL                                                          &
+      integer I,N
+      logical PARITY
+      real                                                          &
           CONV,EPS,FACT,HALF,ONE,RES,SUM,TWELVE,                    &
           TWO,X,XBIG,XDEN,XINF,XMININ,XNUM,Y,Y1,YSQ,Z,ZERO
-      REAL, DIMENSION(7) :: C
-      REAL, DIMENSION(8) :: P
-      REAL, DIMENSION(8) :: Q
+      real, dimension(7) :: C
+      real, dimension(8) :: P
+      real, dimension(8) :: Q
 !----------------------------------------------------------------------
 !  MATHEMATICAL CONSTANTS
 !----------------------------------------------------------------------
-      DATA ONE,HALF,TWELVE,TWO,ZERO/1.0E0,0.5E0,12.0E0,2.0E0,0.0E0/
+      data ONE,HALF,TWELVE,TWO,ZERO/1.0E0,0.5E0,12.0E0,2.0E0,0.0E0/
 
 
 !----------------------------------------------------------------------
 !  MACHINE DEPENDENT PARAMETERS
 !----------------------------------------------------------------------
-      DATA XBIG,XMININ,EPS/35.040E0,1.18E-38,1.19E-7/,XINF/3.4E38/
+      data XBIG,XMININ,EPS/35.040E0,1.18E-38,1.19E-7/,XINF/3.4E38/
 !----------------------------------------------------------------------
 !  NUMERATOR AND DENOMINATOR COEFFICIENTS FOR RATIONAL MINIMAX
 !     APPROXIMATION OVER (1,2).
 !----------------------------------------------------------------------
-      DATA P/-1.71618513886549492533811E+0,2.47656508055759199108314E+1,  &
+      data P/-1.71618513886549492533811E+0,2.47656508055759199108314E+1,  &
              -3.79804256470945635097577E+2,6.29331155312818442661052E+2,  &
              8.66966202790413211295064E+2,-3.14512729688483675254357E+4,  &
              -3.61444134186911729807069E+4,6.64561438202405440627855E+4/
-      DATA Q/-3.08402300119738975254353E+1,3.15350626979604161529144E+2,  &
+      data Q/-3.08402300119738975254353E+1,3.15350626979604161529144E+2,  &
              -1.01515636749021914166146E+3,-3.10777167157231109440444E+3, &
               2.25381184209801510330112E+4,4.75584627752788110767815E+3,  &
             -1.34659959864969306392456E+5,-1.15132259675553483497211E+5/
 !----------------------------------------------------------------------
 !  COEFFICIENTS FOR MINIMAX APPROXIMATION OVER (12, INF).
 !----------------------------------------------------------------------
-      DATA C/-1.910444077728E-03,8.4171387781295E-04,                      &
+      data C/-1.910444077728E-03,8.4171387781295E-04,                      &
            -5.952379913043012E-04,7.93650793500350248E-04,				   &
            -2.777777777777681622553E-03,8.333333333333333331554247E-02,	   &
             5.7083835261E-03/
 !----------------------------------------------------------------------
 !  STATEMENT FUNCTIONS FOR CONVERSION BETWEEN INTEGER AND FLOAT
 !----------------------------------------------------------------------
-      CONV(I) = REAL(I)
+      CONV(I) = real(I)
       PARITY=.FALSE.
       FACT=ONE
       N=0
       Y=X
-      IF(Y.LE.ZERO)THEN
+      if(Y.LE.ZERO)then
 !----------------------------------------------------------------------
 !  ARGUMENT IS NEGATIVE
 !----------------------------------------------------------------------
         Y=-X
         Y1=AINT(Y)
         RES=Y-Y1
-        IF(RES.NE.ZERO)THEN
-          IF(Y1.NE.AINT(Y1*HALF)*TWO)PARITY=.TRUE.
+        if(RES.NE.ZERO)then
+          if(Y1.NE.AINT(Y1*HALF)*TWO)PARITY=.TRUE.
           FACT=-PI/SIN(PI*RES)
           Y=Y+ONE
-        ELSE
+        else
           RES=XINF
           GOTO 900
-        ENDIF
-      ENDIF
+        endif
+      endif
 !----------------------------------------------------------------------
 !  ARGUMENT IS POSITIVE
 !----------------------------------------------------------------------
-      IF(Y.LT.EPS)THEN
+      if(Y.LT.EPS)then
 !----------------------------------------------------------------------
 !  ARGUMENT .LT. EPS
 !----------------------------------------------------------------------
-        IF(Y.GE.XMININ)THEN
+        if(Y.GE.XMININ)then
           RES=ONE/Y
-        ELSE
+        else
           RES=XINF
           GOTO 900
-        ENDIF
-      ELSEIF(Y.LT.TWELVE)THEN
+        endif
+      elseif(Y.LT.TWELVE)then
         Y1=Y
-        IF(Y.LT.ONE)THEN
+        if(Y.LT.ONE)then
 !----------------------------------------------------------------------
 !  0.0 .LT. ARGUMENT .LT. 1.0
 !----------------------------------------------------------------------
           Z=Y
           Y=Y+ONE
-        ELSE
+        else
 !----------------------------------------------------------------------
 !  1.0 .LT. ARGUMENT .LT. 12.0, REDUCE ARGUMENT IF NECESSARY
 !----------------------------------------------------------------------
           N=INT(Y)-1
           Y=Y-CONV(N)
           Z=Y-ONE
-        ENDIF
+        endif
 !----------------------------------------------------------------------
 !  EVALUATE APPROXIMATION FOR 1.0 .LT. ARGUMENT .LT. 2.0
 !----------------------------------------------------------------------
         XNUM=ZERO
         XDEN=ONE
-        DO I=1,8
+        do I=1,8
           XNUM=(XNUM+P(I))*Z
           XDEN=XDEN*Z+Q(I)
-        END DO
+        end do
         RES=XNUM/XDEN+ONE
-        IF(Y1.LT.Y)THEN
+        if(Y1.LT.Y)then
 !----------------------------------------------------------------------
 !  ADJUST RESULT FOR CASE  0.0 .LT. ARGUMENT .LT. 1.0
 !----------------------------------------------------------------------
           RES=RES/Y1
-        ELSEIF(Y1.GT.Y)THEN
+        elseif(Y1.GT.Y)then
 !----------------------------------------------------------------------
 !  ADJUST RESULT FOR CASE  2.0 .LT. ARGUMENT .LT. 12.0
 !----------------------------------------------------------------------
-          DO I=1,N
+          do I=1,N
             RES=RES*Y
             Y=Y+ONE
-          END DO
-        ENDIF
-      ELSE
+          end do
+        endif
+      else
 !----------------------------------------------------------------------
 !  EVALUATE FOR ARGUMENT .GE. 12.0,
 !----------------------------------------------------------------------
-        IF(Y.LE.XBIG)THEN
+        if(Y.LE.XBIG)then
           YSQ=Y*Y
           SUM=C(7)
-          DO I=1,6
+          do I=1,6
             SUM=SUM/YSQ+C(I)
-          END DO
+          end do
           SUM=SUM/Y-Y+xxx
           SUM=SUM+(Y-HALF)*LOG(Y)
           RES=EXP(SUM)
-        ELSE
+        else
           RES=XINF
           GOTO 900
-        ENDIF
-      ENDIF
+        endif
+      endif
 !----------------------------------------------------------------------
 !  FINAL ADJUSTMENTS AND RETURN
 !----------------------------------------------------------------------
-      IF(PARITY)RES=-RES
-      IF(FACT.NE.ONE)RES=FACT/RES
+      if(PARITY)RES=-RES
+      if(FACT.NE.ONE)RES=FACT/RES
   900 GAMMA=RES
-      RETURN
+      return
 ! ---------- LAST LINE OF GAMMA ----------
-      END FUNCTION GAMMA
+      end function GAMMA
 
 
-      REAL FUNCTION DERF1(X)
-      IMPLICIT NONE
-      REAL X
-      REAL, DIMENSION(0 : 64) :: A, B
-      REAL W,T,Y
-      INTEGER K,I
-      DATA A/                                                 &
+      real function DERF1(X)
+      implicit none
+      real X
+      real, dimension(0 : 64) :: A, B
+      real W,T,Y
+      integer K,I
+      data A/                                                 &
          0.00000000005958930743E0, -0.00000000113739022964E0, &
          0.00000001466005199839E0, -0.00000016350354461960E0, &
          0.00000164610044809620E0, -0.00001492559551950604E0, &
@@ -5581,7 +5581,7 @@ END SUBROUTINE MP_GRAUPEL
          0.00024879276133931664E0, -0.00162940941748079288E0, &
          0.00988786373932350462E0, -0.05962426839442303805E0, &
          0.49766113250947636708E0 /
-      DATA (B(I), I = 0, 12) /                                  &
+      data (B(I), I = 0, 12) /                                  &
          -0.00000000029734388465E0,  0.00000000269776334046E0, 	&
          -0.00000000640788827665E0, -0.00000001667820132100E0,  &
          -0.00000021854388148686E0,  0.00000266246030457984E0, 	&
@@ -5589,7 +5589,7 @@ END SUBROUTINE MP_GRAUPEL
           0.00015380842432375365E0,  0.00815533022524927908E0, 	&
          -0.01402283663896319337E0, -0.19746892495383021487E0,  &
           0.71511720328842845913E0 /
-      DATA (B(I), I = 13, 25) /                                 &
+      data (B(I), I = 13, 25) /                                 &
          -0.00000000001951073787E0, -0.00000000032302692214E0,  &
           0.00000000522461866919E0,  0.00000000342940918551E0, 	&
          -0.00000035772874310272E0,  0.00000019999935792654E0, 	&
@@ -5597,7 +5597,7 @@ END SUBROUTINE MP_GRAUPEL
          -0.00080991728956032271E0,  0.00661062970502241174E0, 	&
           0.00909530922354827295E0, -0.20160072778491013140E0, 	&
           0.51169696718727644908E0 /
-      DATA (B(I), I = 26, 38) /                                 &
+      data (B(I), I = 26, 38) /                                 &
          0.00000000003147682272E0, -0.00000000048465972408E0,   &
          0.00000000063675740242E0,  0.00000003377623323271E0, 	&
         -0.00000015451139637086E0, -0.00000203340624738438E0, 	&
@@ -5605,7 +5605,7 @@ END SUBROUTINE MP_GRAUPEL
         -0.00101565063152200272E0,  0.00271187003520095655E0, 	&
          0.02328095035422810727E0, -0.16725021123116877197E0, 	&
          0.32490054966649436974E0 /
-      DATA (B(I), I = 39, 51) /                                 &
+      data (B(I), I = 39, 51) /                                 &
          0.00000000002319363370E0, -0.00000000006303206648E0,   &
         -0.00000000264888267434E0,  0.00000002050708040581E0, 	&
          0.00000011371857327578E0, -0.00000211211337219663E0, 	&
@@ -5613,7 +5613,7 @@ END SUBROUTINE MP_GRAUPEL
         -0.00065860243990455368E0, -0.00075285814895230877E0, 	&
          0.02585434424202960464E0, -0.11637092784486193258E0, 	&
          0.18267336775296612024E0 /
-      DATA (B(I), I = 52, 64) /                                 &
+      data (B(I), I = 52, 64) /                                 &
         -0.00000000000367789363E0,  0.00000000020876046746E0, 	&
         -0.00000000193319027226E0, -0.00000000435953392472E0, 	&
          0.00000018006992266137E0, -0.00000078441223763969E0, 	&
@@ -5622,7 +5622,7 @@ END SUBROUTINE MP_GRAUPEL
          0.02064129023876022970E0, -0.06905562880005864105E0,   &
          0.09084526782065478489E0 /
       W = ABS(X)
-      IF (W .LT. 2.2D0) THEN
+      if (W .LT. 2.2D0) then
           T = W * W
           K = INT(T)
           T = T - K
@@ -5632,7 +5632,7 @@ END SUBROUTINE MP_GRAUPEL
               A(K + 5)) * T + A(K + 6)) * T + A(K + 7)) * T +     &
               A(K + 8)) * T + A(K + 9)) * T + A(K + 10)) * T + 	  &
               A(K + 11)) * T + A(K + 12)) * W
-      ELSE IF (W .LT. 6.9D0) THEN
+      else if (W .LT. 6.9D0) then
           K = INT(W)
           T = W - K
           K = 13 * (K - 2)
@@ -5645,19 +5645,19 @@ END SUBROUTINE MP_GRAUPEL
           Y = Y * Y
           Y = Y * Y
           Y = 1 - Y * Y
-      ELSE
+      else
           Y = 1
-      END IF
-      IF (X .LT. 0) Y = -Y
+      end if
+      if (X .LT. 0) Y = -Y
       DERF1 = Y
-      END FUNCTION DERF1
+      end function DERF1
 
 !+---+-----------------------------------------------------------------+
 !
       subroutine radar_init
 
-      IMPLICIT NONE
-      INTEGER:: n
+      implicit none
+      integer:: n
       PI5 = PI*PI*PI*PI*PI
       lamda4 = lamda_radar*lamda_radar*lamda_radar*lamda_radar
       m_w_0 = m_complex_water_ray (lamda_radar, 0.0d0)
@@ -5705,18 +5705,18 @@ END SUBROUTINE MP_GRAUPEL
       end subroutine radar_init
 !+---+-----------------------------------------------------------------+
 
-      COMPLEX*16 FUNCTION m_complex_water_ray(lambda,T)
+      complex*16 function m_complex_water_ray(lambda,T)
 
 !      Complex refractive Index of Water as function of Temperature T
 !      [deg C] and radar wavelength lambda [m]; valid for
 !      lambda in [0.001,1.0] m; T in [-10.0,30.0] deg C
 !      after Ray (1972)
 
-      IMPLICIT NONE
-      DOUBLE PRECISION, INTENT(IN):: T,lambda
-      DOUBLE PRECISION:: epsinf,epss,epsr,epsi
-      DOUBLE PRECISION:: alpha,lambdas,sigma,nenner
-      COMPLEX*16, PARAMETER:: i = (0d0,1d0)
+      implicit none
+      double precision, intent(in):: T,lambda
+      double precision:: epsinf,epss,epsr,epsi
+      double precision:: alpha,lambdas,sigma,nenner
+      complex*16, parameter:: i = (0d0,1d0)
 
       epsinf  = 5.27137d0 + 0.02164740d0 * T - 0.00131198d0 * T*T
       epss    = 78.54d+0 * (1.0 - 4.579d-3 * (T - 25.0)                 &
@@ -5735,11 +5735,11 @@ END SUBROUTINE MP_GRAUPEL
       
       m_complex_water_ray = SQRT(CMPLX(epsr,-epsi))
       
-      END FUNCTION m_complex_water_ray
+      end function m_complex_water_ray
 
 !+---+-----------------------------------------------------------------+
       
-      COMPLEX*16 FUNCTION m_complex_ice_maetzler(lambda,T)
+      complex*16 function m_complex_ice_maetzler(lambda,T)
       
 !      complex refractive index of ice as function of Temperature T
 !      [deg C] and radar wavelength lambda [m]; valid for
@@ -5753,9 +5753,9 @@ END SUBROUTINE MP_GRAUPEL
 !      TK = temperature (K), range 20 to 273.15
 !      f = frequency in GHz, range 0.01 to 3000
          
-      IMPLICIT NONE
-      DOUBLE PRECISION, INTENT(IN):: T,lambda
-      DOUBLE PRECISION:: f,c,TK,B1,B2,b,deltabeta,betam,beta,theta,alfa
+      implicit none
+      double precision, intent(in):: T,lambda
+      double precision:: f,c,TK,B1,B2,b,deltabeta,betam,beta,theta,alfa
 
       c = 2.99d8
       TK = T + 273.16
@@ -5774,7 +5774,7 @@ END SUBROUTINE MP_GRAUPEL
                              + CMPLX(0.0d0, (alfa/f + beta*f)) 
       m_complex_ice_maetzler = SQRT(CONJG(m_complex_ice_maetzler))
       
-      END FUNCTION m_complex_ice_maetzler
+      end function m_complex_ice_maetzler
 !+---+-----------------------------------------------------------------+
 
       subroutine rayleigh_soak_wetgraupel (x_g, a_geo, b_geo, fmelt,    &
@@ -5782,20 +5782,20 @@ END SUBROUTINE MP_GRAUPEL
                      mixingrule,matrix,inclusion,                       &
                      host,hostmatrix,hostinclusion)
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION, INTENT(in):: x_g, a_geo, b_geo, fmelt, lambda,  &
+      double precision, intent(in):: x_g, a_geo, b_geo, fmelt, lambda,  &
                                      meltratio_outside
-      DOUBLE PRECISION, INTENT(out):: C_back
-      COMPLEX*16, INTENT(in):: m_w, m_i
-      CHARACTER(len=*), INTENT(in):: mixingrule, matrix, inclusion,     &
+      double precision, intent(out):: C_back
+      complex*16, intent(in):: m_w, m_i
+      character(len=*), intent(in):: mixingrule, matrix, inclusion,     &
                                      host, hostmatrix, hostinclusion
 
-      COMPLEX*16:: m_core, m_air
-      DOUBLE PRECISION:: D_large, D_g, rhog, x_w, xw_a, fm, fmgrenz,    &
+      complex*16:: m_core, m_air
+      double precision:: D_large, D_g, rhog, x_w, xw_a, fm, fmgrenz,    &
                          volg, vg, volair, volice, volwater,            &
                          meltratio_outside_grenz, mra
-      INTEGER:: error
+      integer:: error
       real :: rho_i, rho_w
 
       rho_i = 900.
@@ -5881,17 +5881,17 @@ END SUBROUTINE MP_GRAUPEL
                      volice, volwater, mixingrule, host, matrix,        &
                      inclusion, hostmatrix, hostinclusion, cumulerror)
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION, INTENT(in):: volice, volair, volwater
-      COMPLEX*16, INTENT(in):: m_a, m_i, m_w
-      CHARACTER(len=*), INTENT(in):: mixingrule, host, matrix,          &
+      double precision, intent(in):: volice, volair, volwater
+      complex*16, intent(in):: m_a, m_i, m_w
+      character(len=*), intent(in):: mixingrule, host, matrix,          &
                      inclusion, hostmatrix, hostinclusion
-      INTEGER, INTENT(out):: cumulerror
+      integer, intent(out):: cumulerror
 
-      DOUBLE PRECISION:: vol1, vol2
-      COMPLEX*16:: mtmp
-      INTEGER:: error
+      double precision:: vol1, vol2
+      complex*16:: mtmp
+      integer:: error
 
       !..Folded: ( (m1 + m2) + m3), where m1,m2,m3 could each be
       !.. air, ice, or water
@@ -6005,7 +6005,7 @@ END SUBROUTINE MP_GRAUPEL
        cumulerror = cumulerror + 1
       endif
 
-      IF (cumulerror .ne. 0) THEN
+      if (cumulerror .ne. 0) then
        write(mp_debug,*) 'GET_M_MIX_NESTED: error encountered'
 !!!       CALL wrf_debug(150, mp_debug)
        get_m_mix_nested = CMPLX(1.0d0,0.0d0)    
@@ -6015,15 +6015,15 @@ END SUBROUTINE MP_GRAUPEL
 
 !+---+-----------------------------------------------------------------+
 
-      COMPLEX*16 FUNCTION get_m_mix (m_a, m_i, m_w, volair, volice,     &
+      complex*16 function get_m_mix (m_a, m_i, m_w, volair, volice,     &
                      volwater, mixingrule, matrix, inclusion, error)
 
-      IMPLICIT NONE
+      implicit none
 
-      DOUBLE PRECISION, INTENT(in):: volice, volair, volwater
-      COMPLEX*16, INTENT(in):: m_a, m_i, m_w
-      CHARACTER(len=*), INTENT(in):: mixingrule, matrix, inclusion
-      INTEGER, INTENT(out):: error
+      double precision, intent(in):: volice, volair, volwater
+      complex*16, intent(in):: m_a, m_i, m_w
+      character(len=*), intent(in):: mixingrule, matrix, inclusion
+      integer, intent(out):: error
 
       error = 0
       get_m_mix = CMPLX(1.0d0,0.0d0)
@@ -6055,21 +6055,21 @@ END SUBROUTINE MP_GRAUPEL
 !!!       CALL wrf_debug(150, mp_debug)
       endif
 
-      END FUNCTION get_m_mix
+      end function get_m_mix
 
 !+---+-----------------------------------------------------------------+
 
-      COMPLEX*16 FUNCTION m_complex_maxwellgarnett(vol1, vol2, vol3,    &
+      complex*16 function m_complex_maxwellgarnett(vol1, vol2, vol3,    &
                      m1, m2, m3, inclusion, error)
 
-      IMPLICIT NONE
+      implicit none
 
-      COMPLEX*16 :: m1, m2, m3
-      DOUBLE PRECISION :: vol1, vol2, vol3
-      CHARACTER(len=*) :: inclusion
+      complex*16 :: m1, m2, m3
+      double precision :: vol1, vol2, vol3
+      character(len=*) :: inclusion
 
-      COMPLEX*16 :: beta2, beta3, m1t, m2t, m3t
-      INTEGER, INTENT(out) :: error
+      complex*16 :: beta2, beta3, m1t, m2t, m3t
+      integer, intent(out) :: error
 
       error = 0
 
@@ -6105,7 +6105,7 @@ END SUBROUTINE MP_GRAUPEL
        SQRT(((1.0d0-vol2-vol3)*m1t + vol2*beta2*m2t + vol3*beta3*m3t) / &
        (1.0d0-vol2-vol3+vol2*beta2+vol3*beta3))
 
-      END FUNCTION m_complex_maxwellgarnett
+      end function m_complex_maxwellgarnett
 
 !+---+-----------------------------------------------------------------+
 !..Compute radar reflectivity assuming 10 cm wavelength radar and using
@@ -6118,37 +6118,37 @@ END SUBROUTINE MP_GRAUPEL
       subroutine calc_refl10cm (qv1d, qr1d, qs1d, qg1d, t1d, p1d, dBZ,  &
                           kts, kte, ii, jj, nr1d, ns1d, ng1d, rho1d)
 
-      IMPLICIT NONE
+      implicit none
 
 !..Sub arguments
-      INTEGER, INTENT(IN):: kts, kte, ii, jj
-      REAL, DIMENSION(kts:kte), INTENT(IN)::                            &
+      integer, intent(in):: kts, kte, ii, jj
+      real, dimension(kts:kte), intent(in)::                            &
                 qv1d, qr1d, qs1d, qg1d, t1d, p1d, nr1d, ns1d, ng1d, rho1d
-      REAL, DIMENSION(kts:kte), INTENT(INOUT):: dBZ
+      real, dimension(kts:kte), intent(inout):: dBZ
 
 !..Local variables
-      REAL, DIMENSION(kts:kte):: temp, pres, qv, rho
-      REAL, DIMENSION(kts:kte):: rr, rs, rg,rnr,rns,rng
+      real, dimension(kts:kte):: temp, pres, qv, rho
+      real, dimension(kts:kte):: rr, rs, rg,rnr,rns,rng
 
-      DOUBLE PRECISION, DIMENSION(kts:kte):: ilamr, ilamg, N0_r, N0_g,ilams,n0_s
+      double precision, dimension(kts:kte):: ilamr, ilamg, N0_r, N0_g,ilams,n0_s
 
-      REAL, DIMENSION(kts:kte):: ze_rain, ze_snow, ze_graupel
+      real, dimension(kts:kte):: ze_rain, ze_snow, ze_graupel
 
-      DOUBLE PRECISION:: lamg
-      DOUBLE PRECISION:: fmelt_s, fmelt_g
+      double precision:: lamg
+      double precision:: fmelt_s, fmelt_g
 
-      INTEGER:: i, k, k_0
-      LOGICAL:: melti
-      LOGICAL, DIMENSION(kts:kte):: L_qr, L_qs, L_qg
+      integer:: i, k, k_0
+      logical:: melti
+      logical, dimension(kts:kte):: L_qr, L_qs, L_qg
 
 !..Single melting snow/graupel particle 70% meltwater on external sfc
-      DOUBLE PRECISION, PARAMETER:: melt_outside_s = 0.7d0
-      DOUBLE PRECISION, PARAMETER:: melt_outside_g = 0.7d0
+      double precision, parameter:: melt_outside_s = 0.7d0
+      double precision, parameter:: melt_outside_g = 0.7d0
 
-      DOUBLE PRECISION:: cback, x, eta, f_d
+      double precision:: cback, x, eta, f_d
 
 ! hm added parameter
-      REAL R1,t_0,dumlams,dumlamr,dumlamg,dumn0s,dumn0r,dumn0g,ocms,obms,ocmg,obmg
+      real R1,t_0,dumlams,dumlamr,dumlamg,dumn0s,dumn0r,dumn0g,ocms,obms,ocmg,obmg
 
       integer n
 
@@ -6227,10 +6227,10 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (dumLAMS.LT.LAMMINS) THEN
+      if (dumLAMS.LT.LAMMINS) then
       dumLAMS = LAMMINS
       dumN0S = dumLAMS**4*rs(K)/CONS1
-      ELSE IF (dumLAMS.GT.LAMMAXS) THEN
+      else if (dumLAMS.GT.LAMMAXS) then
       dumLAMS = LAMMAXS
       dumN0S = dumLAMS**4*rs(k)/CONS1
       end if
@@ -6256,10 +6256,10 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (dumLAMg.LT.LAMMINg) THEN
+      if (dumLAMg.LT.LAMMINg) then
       dumLAMg = LAMMINg
       dumN0g = dumLAMg**4*rg(K)/CONS2
-      ELSE IF (dumLAMg.GT.LAMMAXg) THEN
+      else if (dumLAMg.GT.LAMMAXg) then
       dumLAMg = LAMMAXg
       dumN0g = dumLAMg**4*rg(k)/CONS2
       end if
@@ -6284,10 +6284,10 @@ END SUBROUTINE MP_GRAUPEL
 
 ! ADJUST VARS
 
-      IF (dumLAMr.LT.LAMMINr) THEN
+      if (dumLAMr.LT.LAMMINr) then
       dumLAMr = LAMMINr
       dumN0r = dumLAMr**4*rr(K)/(PI*RHOW)
-      ELSE IF (dumLAMr.GT.LAMMAXr) THEN
+      else if (dumLAMr.GT.LAMMAXr) then
       dumLAMr = LAMMAXr
       dumN0r = dumLAMr**4*rr(k)/(PI*RHOW)
       end if
@@ -6419,14 +6419,14 @@ END SUBROUTINE MP_GRAUPEL
 
     iflag=0
 
-    IF(eqtset.eq.2)THEN
+    if(eqtset.eq.2)then
 
         converge=2.0*tsmall
 
         esl=min( prs*0.5 , 611.2*exp( 17.67 * ( tnew - 273.15 ) / ( tnew - 29.65 ) ) )
         qvs=ep_2*esl/(prs-esl)
 
-        IF(qcnew.gt.qsmall .or. qvnew.gt.qvs)THEN
+        if(qcnew.gt.qsmall .or. qvnew.gt.qvs)then
 
           ql=max(0.0,qcnew+qrnew)
           qi=max(0.0,qinew+qsnew+qgnew)
@@ -6468,9 +6468,9 @@ END SUBROUTINE MP_GRAUPEL
 
           enddo
 
-        ENDIF
+        endif
 
-    ELSE
+    else
 
         esl=min( prs*0.5 , 611.2*exp( 17.67 * ( tnew - 273.15 ) / ( tnew - 29.65 ) ) )
         qvs=ep_2*esl/(prs-esl)
@@ -6484,7 +6484,7 @@ END SUBROUTINE MP_GRAUPEL
         qcnew=qcnew-dqv
         tnew=tnew-dqv*lhv/(cp*(1.+0.887*qvnew))
 
-    ENDIF
+    endif
 
       if(iflag.ne.0)then
         print *
@@ -6501,10 +6501,10 @@ END SUBROUTINE MP_GRAUPEL
         call stopcm1
       endif
 
-      END subroutine satadj2
+      end subroutine satadj2
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-END MODULE module_mp_GRAUPEL
+end module module_mp_GRAUPEL

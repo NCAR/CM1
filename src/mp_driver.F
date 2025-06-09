@@ -1,4 +1,4 @@
-  MODULE mp_driver_module
+  module mp_driver_module
 
              !------  Microphysics Driver ------!
 
@@ -7,7 +7,7 @@
   private
   public :: mp_driver
 
-  CONTAINS
+  contains
 
   !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
   !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -93,8 +93,8 @@
           getdbz = .false.
         endif
 
-        IF( efall.eq.1 ) getvt = .true.
-        IF( dowriteout .and. output_fallvel.eq.1 ) getvt = .true.
+        if( efall.eq.1 ) getvt = .true.
+        if( dowriteout .and. output_fallvel.eq.1 ) getvt = .true.
 
         ! dum1 = T
         ! dum3 = appropriate rho for budget calculations
@@ -124,7 +124,7 @@
             enddo
           endif
 
-          IF(axisymm.eq.0)THEN
+          if(axisymm.eq.0)then
             ! for Cartesian grid:
             !$omp parallel do default(shared)  &
             !$omp private(i,j,k,n)
@@ -135,7 +135,7 @@
             enddo
             enddo
             enddo
-          ELSE
+          else
             ! for axisymmetric grid:
             !$omp parallel do default(shared)  &
             !$omp private(i,j,k,n)
@@ -146,7 +146,7 @@
             enddo
             enddo
             enddo
-          ENDIF
+          endif
 
           if( dotbud .and. td_mp.ge.1 )then
             !$omp parallel do default(shared)  &
@@ -187,7 +187,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
         ifptype:  &
-        IF(ptype.eq.1)THEN
+        if(ptype.eq.1)then
 
           call pdefq(    0.0,asq(1),ruh,rvh,rmh,rho,q3d(ib,jb,kb,1))
           call pdefq( qsmall,asq(2),ruh,rvh,rmh,rho,q3d(ib,jb,kb,2))
@@ -235,7 +235,7 @@
 !ccc   Goddard LFO scheme   cccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF(ptype.eq.2)THEN
+        elseif(ptype.eq.2)then
 
           call pdefq(    0.0,asq(1),ruh,rvh,rmh,rho,q3d(ib,jb,kb,1))
           call pdefq( qsmall,asq(2),ruh,rvh,rmh,rho,q3d(ib,jb,kb,2))
@@ -303,7 +303,7 @@
 !ccc   Thompson scheme   ccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF(ptype.eq.3)THEN
+        elseif(ptype.eq.3)then
 
           call pdefq(    0.0,asq(1),ruh,rvh,rmh,rho,q3d(ib,jb,kb,1))
           call pdefq( qsmall,asq(2),ruh,rvh,rmh,rho,q3d(ib,jb,kb,2))
@@ -370,7 +370,7 @@
 
           ! Get final values for th3d,pp3d,prs:
           ! Note:  dum1 stores temperature, thten stores old temperature:
-          IF( eqtset.eq.2 )THEN
+          if( eqtset.eq.2 )then
             !$omp parallel do default(shared)  &
             !$omp private(i,j,k)
             do k=1,nk
@@ -385,7 +385,7 @@
             enddo
             enddo
             enddo
-          ELSE
+          else
             !$omp parallel do default(shared)  &
             !$omp private(i,j,k)
             do k=1,nk
@@ -399,7 +399,7 @@
             enddo
             enddo
             enddo
-          ENDIF
+          endif
           if( radopt.eq.2 )then
             !$omp parallel do default(shared)  &
             !$omp private(i,j,k)
@@ -414,8 +414,8 @@
             enddo
           endif
 
-          IF( getvt )THEN
-          IF( dowriteout .or. dotdwrite .or. doazimwrite .or. dorestart )THEN
+          if( getvt )then
+          if( dowriteout .or. dotdwrite .or. doazimwrite .or. dorestart )then
           if( qd_vtc.ge.1 .or. qd_vtr.ge.1 .or. qd_vts.ge.1 .or. qd_vtg.ge.1 .or. qd_vti.ge.1 )then
             if(myid.eq.0) print *,'  Getting fall velocities for Thompson MP scheme '
               if( qd_vtc.ge.1 )then
@@ -474,8 +474,8 @@
                 enddo
               endif
           endif
-          ENDIF
-          ENDIF
+          endif
+          endif
 
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
 
@@ -483,7 +483,7 @@
 !ccc   GSR LFO scheme   cccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF(ptype.eq.4)THEN
+        elseif(ptype.eq.4)then
 
           call pdefq(    0.0,asq(1),ruh,rvh,rmh,rho,q3d(ib,jb,kb,1))
           call pdefq( qsmall,asq(2),ruh,rvh,rmh,rho,q3d(ib,jb,kb,2))
@@ -502,7 +502,7 @@
 !ccc   Morrison scheme   cccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF(ptype.eq.5)THEN
+        elseif(ptype.eq.5)then
 
 !          call pdefq(    0.0,asq(1),ruh,rvh,rmh,rho,q3d(ib,jb,kb,1))
 !          call pdefq( qsmall,asq(2),ruh,rvh,rmh,rho,q3d(ib,jb,kb,2))
@@ -529,7 +529,7 @@
           enddo
           enddo
           enddo
-          IF(numq.eq.11)THEN
+          if(numq.eq.11)then
             ! ppten stores ncc:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -540,7 +540,7 @@
             enddo
             enddo
             enddo
-          ENDIF
+          endif
           ! cm1r17:  get fall velocities (store in qten array)
           call MP_GRAUPEL(nstep,dum1,dum5,                            &
                           q3d(ib,jb,kb, 1),q3d(ib,jb,kb, 2),q3d(ib,jb,kb, 3), &
@@ -554,7 +554,7 @@
                           qten(ib,jb,kb,nqc),qten(ib,jb,kb,nqr),qten(ib,jb,kb,nqi),  &
                           qten(ib,jb,kb,nqs),qten(ib,jb,kb,nqg),getvt,dorad,  &
                           dotbud,doqbud,tdiag,qdiag,out3d)
-          IF(numq.eq.11)THEN
+          if(numq.eq.11)then
             ! ppten stores ncc:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -565,9 +565,9 @@
             enddo
             enddo
             enddo
-          ENDIF
+          endif
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
-          IF(efall.eq.1)THEN
+          if(efall.eq.1)then
             ! dum1 = T
             ! dum2 = cvm
             ! dum4 = T tendency
@@ -597,10 +597,10 @@
               enddo
               enddo
             endif
-          ENDIF
+          endif
           ! Get final values for th3d,pp3d,prs:
           ! Note:  dum1 stores temperature, thten stores old temperature:
-          IF( eqtset.eq.2 )THEN
+          if( eqtset.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
             do k=1,nk
@@ -615,7 +615,7 @@
             enddo
             enddo
             enddo
-          ELSE
+          else
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
             do k=1,nk
@@ -629,10 +629,10 @@
             enddo
             enddo
             enddo
-          ENDIF
+          endif
 
-          IF( getvt )THEN
-          IF( dowriteout .or. dotdwrite .or. doazimwrite .or. dorestart )THEN
+          if( getvt )then
+          if( dowriteout .or. dotdwrite .or. doazimwrite .or. dorestart )then
           if( qd_vtc.ge.1 .or. qd_vtr.ge.1 .or. qd_vts.ge.1 .or. qd_vtg.ge.1 .or. qd_vti.ge.1 )then
             if(myid.eq.0) print *,'  Getting fall velocities for Morrison MP scheme '
               if( qd_vtc.ge.1 )then
@@ -691,15 +691,15 @@
                 enddo
               endif
           endif
-          ENDIF
-          ENDIF
+          endif
+          endif
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccc   RE87-type scheme   cccccccccccccccccccccccccccccccccccccccccccccc
 !ccc   also:  reversible moist thermo. if v_t = 0   cccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF(ptype.eq.6)THEN
+        elseif(ptype.eq.6)then
 
           call pdefq(    0.0,asq(1),ruh,rvh,rmh,rho,q3d(ib,jb,kb,1))
           call pdefq( qsmall,asq(2),ruh,rvh,rmh,rho,q3d(ib,jb,kb,2))
@@ -751,7 +751,7 @@
           call satadj(4,dt,qbudget(1),qbudget(2),ruh,rvh,rmh,pi0,th0,   &
                       rho,dum3,pp3d,prs,th3d,q3d)
 
-          IF( v_t.lt.(-0.0001) )THEN
+          if( v_t.lt.(-0.0001) )then
             ! pseudoadiabatic approach of Bryan and Rotunno (2009, JAS, pg 3046)
             !$omp parallel do default(shared)  &
             !$omp private(i,j,k)
@@ -762,17 +762,17 @@
             enddo
             enddo
             enddo
-          ENDIF
+          endif
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !  Ziegler/Mansell (NSSL) two-moment scheme
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF( ptype.ge.26 .and. ptype.le.28 )THEN
+        elseif( ptype.ge.26 .and. ptype.le.28 )then
 
-          DO i = 1,numq
+          do i = 1,numq
             call pdefq(0.0,asq(i),ruh,rvh,rmh,rho,q3d(ib,jb,kb,i))
-          ENDDO
+          enddo
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -798,7 +798,7 @@
             has_reqs = 0
           endif
           
-          IF ( ptype .eq. 26 ) THEN  ! graupel only
+          if ( ptype .eq. 26 ) then  ! graupel only
              call nssl_2mom_driver(                          &
                                th  = dum4,                   &
                                qv  = q3d(ib,jb,kb, lv),      &
@@ -844,7 +844,7 @@
                   nout3d=nout3d,out3d=out3d,                                 &
                               ims = ib ,ime = ie , jms = jb ,jme = je, kms = kb,kme = ke,  &  
                               its = 1 ,ite = ni, jts = 1,jte = nj, kts = 1,kte = nk)
-         ELSEIF ( ptype .eq. 27 ) THEN
+         elseif ( ptype .eq. 27 ) then
              call nssl_2mom_driver(                          &
                                th  = dum4,                   &
                                qv  = q3d(ib,jb,kb, lv),      &
@@ -894,7 +894,7 @@
                   nout3d=nout3d,out3d=out3d,                                 &
                               ims = ib ,ime = ie , jms = jb ,jme = je, kms = kb,kme = ke,  &  
                               its = 1 ,ite = ni, jts = 1,jte = nj, kts = 1,kte = nk)
-          ELSEIF ( ptype .eq. 28 ) THEN  ! single moment
+          elseif ( ptype .eq. 28 ) then  ! single moment
              call nssl_2mom_driver(                          &
                                th  = dum4,                   &
                                qv  = q3d(ib,jb,kb, 1),       &
@@ -928,9 +928,9 @@
                               ims = ib ,ime = ie , jms = jb ,jme = je, kms = kb,kme = ke,  &  
                               its = 1 ,ite = ni, jts = 1,jte = nj, kts = 1,kte = nk)
 
-          ENDIF
+          endif
 
-        IF(eqtset.eq.2)THEN
+        if(eqtset.eq.2)then
           ! for mass conservation:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -946,7 +946,7 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           ! traditional thermodynamics:  p,pi remain unchanged
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -961,7 +961,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
 
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
 
@@ -970,12 +970,12 @@
 !ccc     P3 scheme      cccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF( ptype.eq.50 .or. ptype.eq.51 .or. ptype.eq.53 )THEN
+        elseif( ptype.eq.50 .or. ptype.eq.51 .or. ptype.eq.53 )then
 
           rdt = 1.0/dt
 
           p3jloop:  &
-          DO j=1,nj
+          do j=1,nj
 
             do k=1,nk
             do i=1,ni
@@ -1168,24 +1168,24 @@
             enddo
             enddo
 
-            IF( getdbz .and. qd_dbz.ge.1 )THEN
+            if( getdbz .and. qd_dbz.ge.1 )then
               do k=1,nk
               do i=1,ni
                 qdiag(i,j,k,qd_dbz) = p3a(i,k,12)
               enddo
               enddo
-            ENDIF
+            endif
 
-            IF( dorad )THEN
+            if( dorad )then
               do k=1,nk
               do i=1,ni
                 effc(i,j,k) = p3a(i,k,13)
                 effi(i,j,k) = p3a(i,k,14)
               enddo
               enddo
-            ENDIF
+            endif
 
-            IF( dowriteout .or. getdbz )THEN
+            if( dowriteout .or. getdbz )then
               do k=1,nk
               do i=1,ni
                 p3o(i,j,k,1) = p3a(i,k,15)
@@ -1193,9 +1193,9 @@
                 p3o(i,j,k,3) = p3a(i,k,17)
               enddo
               enddo
-            ENDIF
+            endif
 
-          ENDDO  p3jloop
+          enddo  p3jloop
 
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
 
@@ -1203,12 +1203,12 @@
 !ccc     P3 scheme, 2 ice     cccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF( ptype.eq.52 )THEN
+        elseif( ptype.eq.52 )then
 
           rdt = 1.0/dt
 
           p3jloop2:  &
-          DO j=1,nj
+          do j=1,nj
 
             do k=1,nk
             do i=1,ni
@@ -1326,24 +1326,24 @@
             enddo
             enddo
 
-            IF( getdbz .and. qd_dbz.ge.1 )THEN
+            if( getdbz .and. qd_dbz.ge.1 )then
               do k=1,nk
               do i=1,ni
                 qdiag(i,j,k,qd_dbz) = p3a(i,k,12)
               enddo
               enddo
-            ENDIF
+            endif
 
-            IF( dorad )THEN
+            if( dorad )then
               do k=1,nk
               do i=1,ni
                 effc(i,j,k) = p3a(i,k,13)
                 effi(i,j,k) = p3a(i,k,14)
               enddo
               enddo
-            ENDIF
+            endif
 
-            IF( dowriteout .or. getdbz )THEN
+            if( dowriteout .or. getdbz )then
               do k=1,nk
               do i=1,ni
                 p3o(i,j,k,1) = p3a(i,k,15)
@@ -1360,9 +1360,9 @@
                 enddo
                 enddo
               endif
-            ENDIF
+            endif
 
-          ENDDO  p3jloop2
+          enddo  p3jloop2
 
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
 
@@ -1371,7 +1371,7 @@
 !ccc   Jensen scheme   ccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-        ELSEIF(ptype.eq.55)THEN
+        elseif(ptype.eq.55)then
 
           call pdefq(    0.0,asq(1),ruh,rvh,rmh,rho,q3d(ib,jb,kb,1))
           call pdefq( qsmall,asq(2),ruh,rvh,rmh,rho,q3d(ib,jb,kb,2))
@@ -1469,7 +1469,7 @@
 !ccc     WSM6          ccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
                         
-        ELSEIF(ptype.eq.7)THEN 
+        elseif(ptype.eq.7)then 
 
           call pdefq(    0.0,asq(1),ruh,rvh,rmh,rho,q3d(ib,jb,kb,1))
           call pdefq( qsmall,asq(2),ruh,rvh,rmh,rho,q3d(ib,jb,kb,2))
@@ -1481,7 +1481,7 @@
       ! NOTE: need to OpenMPize !
                         
           wsmjloop:  &  
-          DO j=1,nj
+          do j=1,nj
 
             do k=1,nk
             do i=1,ni
@@ -1581,7 +1581,7 @@
             enddo
             enddo
 
-            IF( dorad .and. radopt.ge.1 )THEN
+            if( dorad .and. radopt.ge.1 )then
               if(myid.eq.0) print *,'  getting wsm6 effective radii for radiation '
               call mp_wsm6_effectRad_wrapper(          &
                          do_microp_re=.true.,          &
@@ -1614,9 +1614,9 @@
                 effs(i,j,k) = tmp2d(i,k,15)
               enddo
               enddo
-            ENDIF
+            endif
 
-            IF( getdbz .and. qd_dbz.ge.1 )THEN
+            if( getdbz .and. qd_dbz.ge.1 )then
               do i = 1,ni
                 do k = 1,nk
                   p1d(k) = prs(i,j,k)
@@ -1641,9 +1641,9 @@
                   qdiag(i,j,k,qd_dbz) = max(-35._sp,dBZ1d(k))
                 enddo
               enddo
-            ENDIF
+            endif
 
-          ENDDO  wsmjloop
+          enddo  wsmjloop
 
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
 
@@ -1655,12 +1655,12 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ! otherwise, stop for undefined ptype
 
-        ELSE
+        else
 
           print *,'  Undefined ptype!'
           call stopcm1
 
-        ENDIF  ifptype
+        endif  ifptype
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 !CC   END microphysics   CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -1703,4 +1703,4 @@
   !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-  END MODULE mp_driver_module
+  end module mp_driver_module

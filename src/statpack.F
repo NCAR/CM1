@@ -1,11 +1,11 @@
-  MODULE statpack_module
+  module statpack_module
 
   implicit none
 
   private
   public :: statpack,setup_stat_vars
 
-  CONTAINS
+  contains
 
       subroutine statpack(mtime,nrec,ndt,dt,dtlast,rtime,adt,acfl,cloudvar,   &
                           qname,budname,qbudget,asq,bsq,                      &
@@ -120,20 +120,20 @@
 !-----------------------------------------------------------------------
 
   dostats:  &
-  IF( stat_out.gt.0 )THEN
+  if( stat_out.gt.0 )then
 
       nstat = 1
 
       rstat(nstat) = mtime
 
-    IF( adapt_dt.eq.1 )THEN
+    if( adapt_dt.eq.1 )then
       nstat = nstat+1
       rstat(nstat) = sngl(  adt/float(max(1,ndt)) )
       if( .not. restarted )then
         acfl         = sngl( acfl/float(max(1,ndt)) )
         reset = .true.
       endif
-    ENDIF
+    endif
 
       if(stat_w.eq.1) call maxmin(ni,nj,nk+1,wa,nstat,rstat,kmin,kmax,'WMAX  ','WMIN  ')
 
@@ -170,7 +170,7 @@
           endif
           if( zlev.lt.sigmaf(nk+1) )then
             nkm = nk+1
-            IF(.not.terrain_flag)THEN
+            if(.not.terrain_flag)then
               ! without terrain:
               do while( sigmaf(nkm).gt.zlev .and. nkm.gt.1 )
                 nkm = nkm-1
@@ -185,7 +185,7 @@
                 dum1(i,j,1) = r1*wa(i,j,nkm)+r2*wa(i,j,nkm+1)
               enddo
               enddo
-            ELSE
+            else
               ! with terrain:
               do j=1,nj
               do i=1,ni
@@ -198,7 +198,7 @@
                 dum1(i,j,1) = r1*wa(i,j,nkm)+r2*wa(i,j,nkm+1)
               enddo
               enddo
-            ENDIF
+            endif
           else
             do j=1,nj
             do i=1,ni
@@ -294,7 +294,7 @@
     endif
 
       if(stat_div.eq.1)then
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do k=1,nk
@@ -310,7 +310,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do k=1,nk
@@ -324,11 +324,11 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
         call maxmin(ni,nj,nk,dum5,nstat,rstat,kmin,kmax,'DIVMAX','DIVMIN')
       endif
 
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
 
         if(stat_rh.eq.1 .or. stat_the.eq.1)then
 !$omp parallel do default(shared)  &
@@ -363,7 +363,7 @@
           call maxmin(ni,nj,nk,dum3,nstat,rstat,kmin,kmax,'RHIMAX','RHIMIN')
         endif
 
-      ENDIF
+      endif
 
         if(iptra.eq.1)then
           do n=1,npt
@@ -386,7 +386,7 @@
           enddo
         endif
 
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
 
         if(stat_the.eq.1)then
           call calcthe(zh,pi0,th0,dum4,dum2,prs,ppi,tha,qa)
@@ -419,7 +419,7 @@
           enddo
           call cloud(nstat,rstat,zh,dum1)
         endif
-      ENDIF
+      endif
 
       if(stat_sfcprs.eq.1)then
         call maxmin2d(ni,nj,prs(ib,jb,1),nstat,rstat,'SFPMAX','SFPMIN')
@@ -450,7 +450,7 @@
           rstat(nstat) = zh(1,1,kmin)
         endif
         call maxmin2d(ni,nj,dum1(ib,jb,1),nstat,rstat,'SWSPMX','SWSPMN')
-      IF(bbc.eq.3)THEN
+      if(bbc.eq.3)then
 !$omp parallel do default(shared)  &
 !$omp private(i,j)
         do j=1,nj
@@ -459,12 +459,12 @@
         enddo
         enddo
         call maxmin2d(ni,nj,dum1(ib,jb,1),nstat,rstat,'10MWMX','10MWMN')
-      ENDIF
+      endif
       endif
 
-      IF( bbc.eq.3 .and. sfcmodel.ge.1 )THEN
+      if( bbc.eq.3 .and. sfcmodel.ge.1 )then
         call maxmin2d(ni,nj,hpbl(ibl,jbl),nstat,rstat,'HPBLMX','HPBLMN')
-      ENDIF
+      endif
 
       if(stat_cfl.eq.1) call calccfl(nstat,rstat,dt,acfl,uh,vh,mh,ua,va,wa,1)
 
@@ -486,7 +486,7 @@
       enddo
       enddo
  
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -506,17 +506,17 @@
 
         if(stat_qmass.eq.1)then
           do n=1,numq
-            IF( (n.eq.nqv) .or.                                 &
+            if( (n.eq.nqv) .or.                                 &
                 (n.ge.nql1.and.n.le.nql2) .or.                  &
-                (n.ge.nqs1.and.n.le.nqs2.and.iice.eq.1) )THEN
+                (n.ge.nqs1.and.n.le.nqs2.and.iice.eq.1) )then
               text1='   MAS'
               write(text1(1:3),121) qname(n)
               call totq(nstat,rstat,ruh,rvh,rmh,qa(ib,jb,kb,n),rho,text1)
-            ENDIF
+            endif
           enddo
         endif
 
-      ENDIF
+      endif
 
         if(imoist.eq.1)then
           if(ptype.eq.1.or.ptype.eq.2)then
@@ -575,7 +575,7 @@
 
 !----------
 
-      IF(imoist.eq.1 .and. stat_pcn.eq.1)THEN
+      if(imoist.eq.1 .and. stat_pcn.eq.1)then
       if(myid.eq.0)then
 100     format(2x,a6,':',1x,e13.6)
         do n=1,nbudget
@@ -584,9 +584,9 @@
           rstat(nstat) = qbudget(n)
         enddo
       endif
-      ENDIF
+      endif
 
-      IF(imoist.eq.1 .and. stat_qsrc.eq.1)THEN
+      if(imoist.eq.1 .and. stat_qsrc.eq.1)then
       if(myid.eq.0)then
         do n=1,numq
           text1='as    '
@@ -603,9 +603,9 @@
           rstat(nstat) = bsq(n)
         enddo
       endif
-      ENDIF
+      endif
 
-  IF(myid.eq.0)THEN
+  if(myid.eq.0)then
 
     if( nstat.ne.stat_out )then
       print *,'  nstat,stat_out = ',nstat,stat_out
@@ -615,7 +615,7 @@
 !-----------------------------------------------------------------------
 !  writeitout:  GrADS format
 
-    IF(output_format.eq.1)THEN
+    if(output_format.eq.1)then
 
       if( stat_out.gt.0 )then
         ! write GrADS descriptor file:
@@ -641,7 +641,7 @@
 !  writeitout:  netcdf format
 
 #ifdef NETCDF
-    ELSEIF(output_format.eq.2)THEN
+    elseif(output_format.eq.2)then
 
       call writestat_nc(nrec,rtime,nstat,rstat,qname,budname,name_stat,desc_stat,unit_stat)
 
@@ -649,11 +649,11 @@
 
 !-----------------------------------------------------------------------
 
-    ENDIF
+    endif
 
-  ENDIF
+  endif
 
-  ENDIF  dostats
+  endif  dostats
 
       end subroutine statpack
 
@@ -908,7 +908,7 @@
 
     endif
 
-  IF(stat_tke.eq.1)THEN
+  if(stat_tke.eq.1)then
     if( idoles .and. sgsmodel.eq.1 )then
 
       stat_out = stat_out+1
@@ -950,7 +950,7 @@
 
     endif
     endif
-  ENDIF
+  endif
 
     if( stat_km.eq.1 )then
       stat_out = stat_out+1
@@ -1225,7 +1225,7 @@
       desc_stat(stat_out) = 'min grid-rel horiz wind speed at l.m.l.'
       unit_stat(stat_out) = 'm/s'
 
-      IF(bbc.eq.3)THEN
+      if(bbc.eq.3)then
       if( imove.ne.1 )then
         stat_out = stat_out+1
         name_stat(stat_out) = 'wsp10max'
@@ -1247,10 +1247,10 @@
         desc_stat(stat_out) = 'min ground-rel. horiz wind speed at 10m AGL'
         unit_stat(stat_out) = 'm/s'
       endif
-      ENDIF
+      endif
     endif
 
-    IF( bbc.eq.3 .and. sfcmodel.ge.1 )THEN
+    if( bbc.eq.3 .and. sfcmodel.ge.1 )then
         stat_out = stat_out+1
         name_stat(stat_out) = 'hpblmax'
         desc_stat(stat_out) = 'max diagnosed pbl depth'
@@ -1260,23 +1260,23 @@
         name_stat(stat_out) = 'hpblmin'
         desc_stat(stat_out) = 'min diagnosed pbl depth'
         unit_stat(stat_out) = 'm'
-    ENDIF
+    endif
 
     if( stat_cfl.eq.1 )then
 
-      IF( adapt_dt.eq.1 )THEN
+      if( adapt_dt.eq.1 )then
         stat_out = stat_out+1
         name_stat(stat_out) = 'cflmax'
         desc_stat(stat_out) = 'max Courant number (average)'
         unit_stat(stat_out) = 'nondimensional'
-      ELSE
+      else
         stat_out = stat_out+1
         name_stat(stat_out) = 'cflmax'
         desc_stat(stat_out) = 'max Courant number'
         unit_stat(stat_out) = 'nondimensional'
-      ENDIF
+      endif
 
-      IF( sgsmodel.ge.1 .or. ipbl.eq.2 .or. horizturb.eq.1 )THEN
+      if( sgsmodel.ge.1 .or. ipbl.eq.2 .or. horizturb.eq.1 )then
         stat_out = stat_out+1
         name_stat(stat_out) = 'kshmax'
         desc_stat(stat_out) = 'max horiz K stability factor'
@@ -1286,7 +1286,7 @@
         name_stat(stat_out) = 'ksvmax'
         desc_stat(stat_out) = 'max vert K stability factor'
         unit_stat(stat_out) = 'nondimensional'
-      ENDIF
+      endif
 
     endif
 
@@ -1338,9 +1338,9 @@
 
     if(stat_qmass  .eq.1)then
       do n=1,numq
-        IF( (n.eq.nqv) .or.                                 &
+        if( (n.eq.nqv) .or.                                 &
             (n.ge.nql1.and.n.le.nql2) .or.                  &
-            (n.ge.nqs1.and.n.le.nqs2.and.iice.eq.1) )THEN
+            (n.ge.nqs1.and.n.le.nqs2.and.iice.eq.1) )then
           text1='mass    '
           text2='total mass of                 '
           write(text1( 5: 7),156) qname(n)
@@ -1350,7 +1350,7 @@
           name_stat(stat_out) = text1
           desc_stat(stat_out) = text2
           unit_stat(stat_out) = 'kg'
-        ENDIF
+        endif
       enddo
     endif
 
@@ -1479,7 +1479,7 @@
       character(len=16) :: a16
 
     idcheck:  &
-    IF( myid.eq.0 )THEN
+    if( myid.eq.0 )then
 
       do i=1,maxstring
         string(i:i) = ' '
@@ -1500,20 +1500,20 @@
       write(50,307) nstatout
       write(50,308) stat_out
 
-      DO n = 1 , stat_out
+      do n = 1 , stat_out
         a16 = '                '
         nn = len(trim(unit_stat(n)))
         write(a16(2:15),214) unit_stat(n)
         write(a16(1:1),201 )       '('
         write(a16(nn+2:nn+2),201 ) ')'
         write(50,309) name_stat(n),desc_stat(n),a16
-      ENDDO
+      enddo
 
       write(50,310)
 
       close(unit=50)
 
-    ENDIF  idcheck
+    endif  idcheck
 
 201   format(a1)
 214   format(a14)
@@ -1536,4 +1536,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE statpack_module
+  end module statpack_module

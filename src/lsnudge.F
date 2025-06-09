@@ -1,4 +1,4 @@
-  MODULE lsnudge_module
+  module lsnudge_module
 
   ! code for large-scale nudging 
   ! (nudging of domain-average profiles of wind, temperature, and/or humidity)
@@ -32,7 +32,7 @@
     real :: lsnudgefac
     real, dimension(lsnudge_nmax) :: lsnudge_time1,lsnudge_time2
 
-  CONTAINS
+  contains
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -103,7 +103,7 @@
     ! GHB, 200214:  loop through all possible files at once. 
 
     doloop:  &
-    DO while( nloop.lt.10000 )
+    do while( nloop.lt.10000 )
 
       nloop = nloop+1
 
@@ -255,11 +255,11 @@
 
 9090  continue
 
-      IF( myid.eq.0 .and. ( .not. domore ) )THEN
+      if( myid.eq.0 .and. ( .not. domore ) )then
         print *
         print *,'  did not find fname = ',fname
         print *
-      ENDIF
+      endif
 
 #ifdef MPI
       call MPI_BCAST(domore,1,MPI_LOGICAL,0,MPI_COMM_WORLD,ierr)
@@ -268,7 +268,7 @@
 
 
     do_mas:  &
-    IF( domore ) THEN
+    if( domore ) then
 
 #ifdef MPI
       ! communicate the new variables to all processors:
@@ -294,7 +294,7 @@
 !!!      if( myid.eq.iprint ) print *
 !!!      if( myid.eq.iprint ) print *,'  myid,zk-1,z,zk,interp_frac:'
 
-        DO k=1,nk
+        do k=1,nk
 
           kk = 1
           do while( ztmp(kk) .lt. zh(i,j,k) )
@@ -303,12 +303,12 @@
           kdn = kk-1
           kup = kk
 
-          IF( kdn.lt.1 )THEN
+          if( kdn.lt.1 )then
 
             lsnudge_u(k,lsnudge_count) =  utmp(1)
             lsnudge_v(k,lsnudge_count) =  vtmp(1)
 
-          ELSE
+          else
 
             interp_frac = (   zh(1,1,k) - ztmp(kdn) )   &
                         / ( ztmp( kup ) - ztmp(kdn) )
@@ -318,11 +318,11 @@
             lsnudge_th(k,lsnudge_count) =  ttmp(kdn) + ( ttmp(kup)- ttmp(kdn))*interp_frac
             lsnudge_qv(k,lsnudge_count) =  qtmp(kdn) + ( qtmp(kup)- qtmp(kdn))*interp_frac
 
-          ENDIF
+          endif
 
 !!!          if(myid.eq.iprint) write(outfile,*) '       ',ztmp(kdn),zh(i,j,k),ztmp(kup),interp_frac
 
-        ENDDO
+        enddo
 
 
     if( do_lsnudge_u )then
@@ -370,17 +370,17 @@
     endif
 
 
-    ELSE
+    else
 
       nloop = 10000000
 
-    ENDIF  do_mas
+    endif  do_mas
 
 #ifdef MPI
       call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
 
-    ENDDO  doloop
+    enddo  doloop
 
       if( myid.eq.iprint ) print *
       if( myid.eq.iprint ) print *,'  loop ended.  lsnudge_count = ',lsnudge_count
@@ -435,4 +435,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE lsnudge_module
+  end module lsnudge_module

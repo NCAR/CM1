@@ -1,4 +1,4 @@
-  MODULE azimavg_module
+  module azimavg_module
 
   implicit none
 
@@ -12,7 +12,7 @@
 
   integer :: ncid,wloop
 
-  CONTAINS
+  contains
 
     subroutine azimavg(nstep,mtime,nwritea,arecs,arecw,qname,dt,dosfcflx,      &
                    icrs,icenter,jcenter,xcenter,ycenter,domainlocx,domainlocy, &
@@ -166,7 +166,7 @@
     savg2d = 0.0
     savg = 0.0
 
-      IF( imove.eq.1 )THEN
+      if( imove.eq.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -178,7 +178,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -189,7 +189,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
     !---------------------------------------------------------------------------
     !  Get center point:
@@ -204,7 +204,7 @@
 
       if(myid.eq.0) print *,'  nwritea = ',nwritea
 
-      IF( output_format.eq.1 )THEN
+      if( output_format.eq.1 )then
 
         ! grads-format
 
@@ -233,7 +233,7 @@
 
         wloopmax = 1
 
-      ELSEIF( output_format.eq.2 )THEN
+      elseif( output_format.eq.2 )then
 
         ! netcdf-format
 #ifdef NETCDF
@@ -251,7 +251,7 @@
         wloopmax = 2
 
 #endif
-      ENDIF
+      endif
 
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -285,7 +285,7 @@
   !-----------------------------------------------------------------------------
 
   bigwloop:  &
-  DO wloop = 1 , wloopmax
+  do wloop = 1 , wloopmax
 
       if( myid.eq.0 ) print *,'  wloop = ',wloop
 
@@ -371,7 +371,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 )THEN
+    if( imoist.eq.1 )then
       nvar = nvar+1
       varname(nvar) = 'rain'
       vardesc(nvar) = 'accumulated surface rainfall'
@@ -380,11 +380,11 @@
 
       call     getavg2d(rain(ib,jb,1),icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 .and. nrain.eq.2 )THEN
+    if( imoist.eq.1 .and. nrain.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'rain2'
       vardesc(nvar) = 'translated surface rainfall'
@@ -393,11 +393,11 @@
 
       call     getavg2d(rain(ib,jb,2),icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 .and. cuparam.ge.1 )THEN
+    if( imoist.eq.1 .and. cuparam.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'raincv'
       vardesc(nvar) = 'accumulated surface rainfall (convective, param.)'
@@ -406,11 +406,11 @@
 
       call     getavg2d(raincv(ib,jb,1),icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 .and. nrain.eq.2 .and. cuparam.ge.1 )THEN
+    if( imoist.eq.1 .and. nrain.eq.2 .and. cuparam.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'raincv2'
       vardesc(nvar) = 'translated surface rainfall (convective, param.)'
@@ -419,11 +419,11 @@
 
       call     getavg2d(raincv(ib,jb,2),icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 )THEN
+    if( imoist.eq.1 )then
       nvar = nvar+1
       varname(nvar) = 'prate'
       vardesc(nvar) = 'surface precipitation rate'
@@ -432,11 +432,11 @@
 
       call     getavg2d(prate,icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 .and. nqv.ge.1 )THEN
+    if( imoist.eq.1 .and. nqv.ge.1 )then
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -461,7 +461,7 @@
       call     getavg2d(dum1(ib,jb,1),icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -592,7 +592,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( ipbl.eq.1 .or. ipbl.eq.3 )THEN
+    if( ipbl.eq.1 .or. ipbl.eq.3 )then
 
       nvar = nvar+1
       varname(nvar) = 'br'
@@ -603,11 +603,11 @@
       call     getavg2d(br,icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( ipbl.ge.1 .or. sfcmodel.ge.1 )THEN
+    if( ipbl.ge.1 .or. sfcmodel.ge.1 )then
 
       nvar = nvar+1
       varname(nvar) = 'hpbl'
@@ -626,7 +626,7 @@
       call     getavg2d(hpbl,icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -752,7 +752,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( (cm1setup.eq.2.or.cm1setup.eq.4) .and. horizturb.eq.1 )THEN
+    if( (cm1setup.eq.2.or.cm1setup.eq.4) .and. horizturb.eq.1 )then
       nvar = nvar+1
       varname(nvar) = 'tlh'
       vardesc(nvar) = 'horiz lengthscale for turbulence scheme'
@@ -761,7 +761,7 @@
 
       call     getavg2d(tlh,icrs,savg2d,ir,rr,navg,area,ruh,rvh)
       call write2d(icrs,savg2d,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -1009,7 +1009,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( idoles .and. iusetke )THEN
+      if( idoles .and. iusetke )then
 
         ! tke interpolated to s levels:
         nvar = nvar+1
@@ -1028,7 +1028,7 @@
         call getavg3d(dum7(ib,jb,kb),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -1255,7 +1255,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'rh'
@@ -1273,11 +1273,11 @@
         call getavg3d(dum2,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'rh95frac'
@@ -1299,11 +1299,11 @@
         call getavg3d(dum7,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'rh99frac'
@@ -1313,11 +1313,11 @@
         call getavg3d(dum8,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. iice.ge.1 )THEN
+      if( imoist.eq.1 .and. iice.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'rhi'
@@ -1335,11 +1335,11 @@
         call getavg3d(dum2,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'qv'
@@ -1356,11 +1356,11 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. nqc.ge.1 )THEN
+      if( imoist.eq.1 .and. nqc.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'qc'
@@ -1370,11 +1370,11 @@
         call getavg3d(q3d(ibm,jbm,kbm,nqc),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. nqr.ge.1 )THEN
+      if( imoist.eq.1 .and. nqr.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'qr'
@@ -1384,11 +1384,11 @@
         call getavg3d(q3d(ibm,jbm,kbm,nqr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. nqi.ge.1 )THEN
+      if( imoist.eq.1 .and. nqi.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'qi'
@@ -1398,11 +1398,11 @@
         call getavg3d(q3d(ibm,jbm,kbm,nqi),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. nqs.ge.1 )THEN
+      if( imoist.eq.1 .and. nqs.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'qs'
@@ -1412,11 +1412,11 @@
         call getavg3d(q3d(ibm,jbm,kbm,nqs),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. nqg.ge.1 )THEN
+      if( imoist.eq.1 .and. nqg.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'qg'
@@ -1426,11 +1426,11 @@
         call getavg3d(q3d(ibm,jbm,kbm,nqg),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. output_dbz.eq.1 .and. qd_dbz.ge.1 )THEN
+      if( imoist.eq.1 .and. output_dbz.eq.1 .and. qd_dbz.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'dbz'
@@ -1440,7 +1440,7 @@
         call getavg3d(qdiag(ibdq,jbdq,kbdq,qd_dbz),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
   !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
@@ -1448,7 +1448,7 @@
 
       dorturb:  &
       if( doit )then
-        IF( cm1setup.eq.4 )THEN
+        if( cm1setup.eq.4 )then
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -1606,7 +1606,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-        IF(imoist.eq.1)THEN
+        if(imoist.eq.1)then
 
           nvar = nvar+1
           varname(nvar) = 'wpqp'
@@ -1628,7 +1628,7 @@
           call getavg3d(dum7,icrs,savg,ir,rr,navg,area,ruh,rvh)
           call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-        ENDIF
+        endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -1654,7 +1654,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-        IF(imoist.eq.1)THEN
+        if(imoist.eq.1)then
 
           nvar = nvar+1
           varname(nvar) = 'qpqp'
@@ -1676,11 +1676,11 @@
           call getavg3d(dum7,icrs,savg,ir,rr,navg,area,ruh,rvh)
           call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-        ENDIF
+        endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-        ENDIF
+        endif
       endif  dorturb
 
   !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1689,7 +1689,7 @@
 
       dovt = .true.
 
-      IF( imoist.eq.1 .and. dovt .and. qd_vtc.ge.1 )THEN
+      if( imoist.eq.1 .and. dovt .and. qd_vtc.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'vtc'
@@ -1699,11 +1699,11 @@
         call getavg3d(qdiag(ibdq,jbdq,kbdq,qd_vtc),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. dovt .and. qd_vtr.ge.1 )THEN
+      if( imoist.eq.1 .and. dovt .and. qd_vtr.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'vtr'
@@ -1713,11 +1713,11 @@
         call getavg3d(qdiag(ibdq,jbdq,kbdq,qd_vtr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. dovt .and. qd_vti.ge.1 )THEN
+      if( imoist.eq.1 .and. dovt .and. qd_vti.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'vti'
@@ -1727,11 +1727,11 @@
         call getavg3d(qdiag(ibdq,jbdq,kbdq,qd_vti),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. dovt .and. qd_vts.ge.1 )THEN
+      if( imoist.eq.1 .and. dovt .and. qd_vts.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'vts'
@@ -1741,11 +1741,11 @@
         call getavg3d(qdiag(ibdq,jbdq,kbdq,qd_vts),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. dovt .and. qd_vtg.ge.1 )THEN
+      if( imoist.eq.1 .and. dovt .and. qd_vtg.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'vtg'
@@ -1755,11 +1755,11 @@
         call getavg3d(qdiag(ibdq,jbdq,kbdq,qd_vtg),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )THEN
+      if( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )then
 
         nvar = nvar+1
         varname(nvar) = 'effc'
@@ -1769,11 +1769,11 @@
         call getavg3d(effc(ibr,jbr,kbr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )THEN
+      if( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )then
 
         nvar = nvar+1
         varname(nvar) = 'effi'
@@ -1783,11 +1783,11 @@
         call getavg3d(effi(ibr,jbr,kbr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )THEN
+      if( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )then
 
         nvar = nvar+1
         varname(nvar) = 'effr'
@@ -1797,11 +1797,11 @@
         call getavg3d(effr(ibr,jbr,kbr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )THEN
+      if( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )then
 
         nvar = nvar+1
         varname(nvar) = 'effg'
@@ -1811,11 +1811,11 @@
         call getavg3d(effg(ibr,jbr,kbr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )THEN
+      if( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )then
 
         nvar = nvar+1
         varname(nvar) = 'effs'
@@ -1825,11 +1825,11 @@
         call getavg3d(effs(ibr,jbr,kbr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )THEN
+      if( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5) .and. radopt.eq.2 )then
 
         nvar = nvar+1
         varname(nvar) = 'effis'
@@ -1839,14 +1839,14 @@
         call getavg3d(effis(ibr,jbr,kbr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'thv'
@@ -1882,11 +1882,11 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'the'
@@ -1914,11 +1914,11 @@
         call getavg3d(dum1,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'satfrac'
@@ -1927,7 +1927,7 @@
 
         dum1 = 0.0
 
-        IF( iice.eq.0 )THEN
+        if( iice.eq.0 )then
           do k=1,nk
           do j=1,nj
           do i=1,ni
@@ -1938,7 +1938,7 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           do k=1,nk
           do j=1,nj
           do i=1,ni
@@ -1964,16 +1964,16 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
 
         call getavg3d(dum1,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 .and. qd_dbz.ge.1 )THEN
+      if( imoist.eq.1 .and. qd_dbz.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'dbz20frac'
@@ -1995,11 +1995,11 @@
         call getavg3d(dum1,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'dbz40frac'
@@ -2009,12 +2009,12 @@
         call getavg3d(dum2,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
       radout:  &
-      IF( radopt.ge.1 )THEN
+      if( radopt.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'swten'
@@ -2044,7 +2044,7 @@
         call getavg3d(cldfra(ibr,jbr,kbr),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF  radout
+      endif  radout
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -2129,7 +2129,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( idoles .and. iusetke )THEN
+      if( idoles .and. iusetke )then
 
         nvar = nvar+1
         varname(nvar) = 'tke'
@@ -2140,11 +2140,11 @@
         call getavg3d(tke3d(ibt,jbt,kbt),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( iusekm.eq.1 )THEN
+      if( iusekm.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'kmh'
@@ -2155,11 +2155,11 @@
         call getavg3d(kmh(ibc,jbc,kbc),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( iusekm.eq.1 )THEN
+      if( iusekm.eq.1 )then
       if( sgsmodel.ge.1 .or. ipbl.eq.2 )then
 
         nvar = nvar+1
@@ -2172,11 +2172,11 @@
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
       endif
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( iusekh.eq.1 )THEN
+      if( iusekh.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'khh'
@@ -2187,11 +2187,11 @@
         call getavg3d(khh(ibc,jbc,kbc),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( iusekh.eq.1 )THEN
+      if( iusekh.eq.1 )then
       if( sgsmodel.ge.1 .or. ipbl.eq.2 )then
 
         nvar = nvar+1
@@ -2204,7 +2204,7 @@
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
       endif
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -2233,7 +2233,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( ipbl.eq.1 )THEN
+      if( ipbl.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'xkzh'
@@ -2266,11 +2266,11 @@
         call getavg3d(xkzm(ibb,jbb,kbb),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( ipbl.eq.3 )THEN
+      if( ipbl.eq.3 )then
 
         nvar = nvar+1
         varname(nvar) = 'dkt3d'
@@ -2292,11 +2292,11 @@
         call getavg3d(xkzm(ibb,jbb,kbb),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      if( ipbl.eq.4 .or. ipbl.eq.5 )then
 
         nvar = nvar+1
         varname(nvar) = 'qke'
@@ -2362,7 +2362,7 @@
         call getavg3d(edmf_a(ibmynn,jbmynn,kbmynn),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -2392,7 +2392,7 @@
 
         !--------!
 
-      IF( sgsmodel.ge.1 .or. output_nm.eq.1 .or. ipbl.ge.1 )THEN
+      if( sgsmodel.ge.1 .or. output_nm.eq.1 .or. ipbl.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'nm'
@@ -2403,12 +2403,12 @@
         call getavg3d(nm(ib,jb,kb),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
       sgshdiag:  &
-      IF( sgsmodel.ge.1 .and. ud_hturb.ge.1 .and. vd_hturb.ge.1 )THEN
+      if( sgsmodel.ge.1 .and. ud_hturb.ge.1 .and. vd_hturb.ge.1 )then
 
         do k=1,nk
         do j=1,nj
@@ -2446,12 +2446,12 @@
         call getavg3d(dum4,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF  sgshdiag
+      endif  sgshdiag
 
       !c-c-c-c-c-c-c-c-c-c
 
       sgsvdiag:  &
-      IF( sgsmodel.ge.1 .and. ud_vturb.ge.1 .and. vd_vturb.ge.1 )THEN
+      if( sgsmodel.ge.1 .and. ud_vturb.ge.1 .and. vd_vturb.ge.1 )then
 
         do k=1,nk
         do j=1,nj
@@ -2489,12 +2489,12 @@
         call getavg3d(dum4,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF  sgsvdiag
+      endif  sgsvdiag
 
       !c-c-c-c-c-c-c-c-c-c
 
       pblt:  &
-      IF( use_pbl )THEN
+      if( use_pbl )then
 
         do k=1,nk
         do j=1,nj
@@ -2532,13 +2532,13 @@
         call getavg3d(dum4,icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF  pblt
+      endif  pblt
 
       !c-c-c-c-c-c-c-c-c-c
 
         !--------!
 
-      IF( cm1setup.ge.1 .or. output_def.eq.1 .or. ipbl.ge.1 .or. horizturb.eq.1 )THEN
+      if( cm1setup.ge.1 .or. output_def.eq.1 .or. ipbl.ge.1 .or. horizturb.eq.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'defv'
@@ -2560,13 +2560,13 @@
         call getavg3d(defh(ib,jb,kb),icrs,savg,ir,rr,navg,area,ruh,rvh)
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
 
-      ENDIF
+      endif
 
         !--------!
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( cuparam.ge.1 )THEN
+      if( cuparam.ge.1 )then
 
         !--------!
 
@@ -2636,12 +2636,12 @@
 
         !--------!
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
 
         nvar = nvar+1
         varname(nvar) = 'pipb'
@@ -2683,7 +2683,7 @@
         call write3d(icrs,savg,arecs,arecw,nvar,varname,vardesc,varunit,vargrid)
       endif
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -2702,7 +2702,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
 
         nvar = nvar+1
         varname(nvar) = 'pgradb'
@@ -2803,11 +2803,11 @@
 
         !-----
 
-      ENDIF
+      endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-      IF( pdcomp .and. wd_buoy.ge.1 )THEN
+      if( pdcomp .and. wd_buoy.ge.1 )then
 
         nvar = nvar+1
         varname(nvar) = 'btot'
@@ -2839,12 +2839,12 @@
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     ! close output file:
 
-    id0:  IF( myid.eq.0 )THEN
+    id0:  if( myid.eq.0 )then
 
   !-----------------------------------------------------------------------------
 
       of3:  &
-      IF( output_format.eq.1 )THEN
+      if( output_format.eq.1 )then
 
 
         ! grads-format
@@ -2964,20 +2964,20 @@
   !-----------------------------------------------------------------------------
 
 #ifdef NETCDF
-      ELSEIF( output_format.eq.2 )THEN  of3
+      elseif( output_format.eq.2 )then  of3
 
         call     writeazim_nc(wloop,icrs,nvar,varmax,varname,vardesc,varunit,varlvls,vargrid,ncid,mtime,zh,zf,dat2(1,1),dum1(ib,jb,kb),dum2(ib,jb,kb))
 
 #endif
-      ENDIF  of3
+      endif  of3
 
-    ENDIF  id0
+    endif  id0
 
     if( myid.eq.0 ) print *
     if( myid.eq.0 ) print *,' ..... end azimavg code ..... '
     if( myid.eq.0 ) print *
 
-  ENDDO  bigwloop
+  enddo  bigwloop
 
     end subroutine azimavg
 
@@ -3595,13 +3595,13 @@
 
 !-----------------------------------------------------------------------
 
-  docenter:  IF(doit)THEN
+  docenter:  if(doit)then
 
     if(myid.eq.0) print *,'  Entering getcenter .... '
 
 
   centype:  &
-  IF( centertype.eq.1 .or. centertype.eq.2 )THEN
+  if( centertype.eq.1 .or. centertype.eq.2 )then
 
 
     !
@@ -3700,7 +3700,7 @@
       jctest = ny/2 + 1
 
     ct2:  &
-    IF( centertype.eq.2 )THEN
+    if( centertype.eq.2 )then
 
       imin = icenter
       imax = icenter
@@ -3710,7 +3710,7 @@
 
       ninc  =  1
 
-    ELSE  ct2
+    else  ct2
 
 
       imin = 1
@@ -3752,7 +3752,7 @@
 !      ninc = ninc*2
 !    endif
 
-    ENDIF  ct2
+    endif  ct2
 
     if(myid.eq.0)then
       print *,'    search box: '
@@ -3783,7 +3783,7 @@
           xcenter = xfref(ii)
           ycenter = yfref(jj)
         endif
-        checkit: IF( sqrt( (xfref(ii)-xcenter)**2 + (yfref(jj)-ycenter)**2 ) .le. search_radius )THEN
+        checkit: if( sqrt( (xfref(ii)-xcenter)**2 + (yfref(jj)-ycenter)**2 ) .le. search_radius )then
           ! Calculate azim-avg vt:
           do j=1,nj
           do i=1,ni
@@ -3820,7 +3820,7 @@
         endif
 #endif
 !-----------------------------------------------------------------------
-        IF(myid.eq.0)THEN
+        if(myid.eq.0)then
           ! Search for maximum value for this center point:
           vmax = 0.0
           do i=1,nr
@@ -3845,24 +3845,24 @@
             ictest = ii
             jctest = jj
           endif
-        ENDIF
-        ENDIF  checkit
+        endif
+        endif  checkit
       enddo  iloop
       enddo  jloop
 
-      IF(myid.eq.0)THEN
+      if(myid.eq.0)then
         xcenter = mostx
         ycenter = mosty
         icenter = ictest
         jcenter = jctest
-      ENDIF
+      endif
 
-  ELSE
+  else
 
     print *,'  87235:  unknown valye of centertype '
     call stopcm1
 
-  ENDIF  centype
+  endif  centype
 
     if(myid.eq.0) print *,'  New values: '
     if(myid.eq.0) print *,'    xcenter,ycenter = ',xcenter,ycenter
@@ -3870,7 +3870,7 @@
     if(myid.eq.0) print *,'    vmax,rmax,zmax  = ',mostmax,mostr,mostz
 
 
-  ELSE  docenter
+  else  docenter
 
     ! just use center of domain:
     icenter = nx/2 + 1
@@ -3878,7 +3878,7 @@
     xcenter = minx + 0.5*(maxx-minx)
     ycenter = miny + 0.5*(maxy-miny)
 
-  ENDIF  docenter
+  endif  docenter
 
 
 !-----------------------------------------------------------------------
@@ -3894,10 +3894,10 @@
 !-----------------------------------------------------------------------
 
   myid0:  &
-  IF(myid.eq.0)THEN
+  if(myid.eq.0)then
 
     of1:  &
-    IF( output_format.eq.1 )THEN
+    if( output_format.eq.1 )then
       ! grads format:
 
       print *,'  writing azimavg stats file'
@@ -3979,7 +3979,7 @@
 !-----------------------------------------------------------------------
 
 #ifdef NETCDF
-    ELSEIF( output_format.eq.2 )THEN  of1
+    elseif( output_format.eq.2 )then  of1
       ! netcdf format:
 
     ! 210203: bug fix
@@ -3988,9 +3988,9 @@
 !-----------------------------------------------------------------------
 #endif
 
-    ENDIF  of1
+    endif  of1
 
-  ENDIF  myid0
+  endif  myid0
 
 !-----------------------------------------------------------------------
 
@@ -4222,7 +4222,7 @@
 
   !---------------------------------------------------------------------
 
-    IF( type.eq.1 )THEN
+    if( type.eq.1 )then
 
       pminx =  1.0e30
       pmaxx = -1.0e30
@@ -4251,11 +4251,11 @@
       xcenter = 0.5*(pminx+pmaxx)
       ycenter = 0.5*(pminy+pmaxy)
 
-    ENDIF
+    endif
 
   !---------------------------------------------------------------------
 
-    IF( type.eq.2 )THEN
+    if( type.eq.2 )then
 
       if(myid.eq.0) print *,'  ... centroid ... '
 
@@ -4323,7 +4323,7 @@
       xcenter = cx
       ycenter = cy
 
-    ENDIF
+    endif
 
   !---------------------------------------------------------------------
 
@@ -4455,10 +4455,10 @@
   ! writeout:
 
     mid0:  &
-    IF( myid.eq.0 )THEN
+    if( myid.eq.0 )then
 
       of2:  &
-      IF( output_format.eq.1 )THEN
+      if( output_format.eq.1 )then
 
           open(unit=82,file='cm1out_move.dat',form='unformatted',access='direct',recl=4)
 
@@ -4516,14 +4516,14 @@
 
 
 #ifdef NETCDF
-      ELSEIF( output_format.eq.2 )THEN  of2
+      elseif( output_format.eq.2 )then  of2
 
         call     writemove_nc(nwritemv,ncid,mtime,icenter,jcenter,xcenter,ycenter,umove ,vmove )
 
 #endif
-      ENDIF  of2
+      endif  of2
 
-    ENDIF  mid0
+    endif  mid0
 
       end subroutine update_adapt_move
 
@@ -4641,4 +4641,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-  END MODULE azimavg_module
+  end module azimavg_module

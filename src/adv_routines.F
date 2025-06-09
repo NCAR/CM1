@@ -1,4 +1,4 @@
-  MODULE adv_routines
+  module adv_routines
 
   implicit none
 
@@ -20,7 +20,7 @@
     !-----------------------------------------------------!
 
 
-  CONTAINS
+  contains
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -48,11 +48,11 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,s1,s2,s3,s4,s5,bmax,doit)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -73,9 +73,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -92,7 +92,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -115,9 +115,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -134,7 +134,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -157,14 +157,14 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -191,9 +191,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_weno3
 
@@ -223,14 +223,14 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
   pdcheck:  &
   if( pdef.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,s1,s2,s3,s4,s5,bmax,doit)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -257,11 +257,11 @@
           endif
 
 
-        IF(doit)THEN
+        if(doit)then
           dumx(i,j,k) = rru(i,j,k)*weno5(s1,s2,s3,s4,s5,weps)
-        ELSE
+        else
           dumx(i,j,k) = 0.0
-        ENDIF
+        endif
 
         if(rrv(i,j,k).ge.0.0)then
           s1=a(i,j-3,k)
@@ -285,21 +285,21 @@
           endif
 
 
-        IF(doit)THEN
+        if(doit)then
           dumy(i,j,k) = rrv(i,j,k)*weno5(s1,s2,s3,s4,s5,weps)
-        ELSE
+        else
           dumy(i,j,k) = 0.0
-        ENDIF
+        endif
 
       enddo
       enddo
-    ENDDO
+    enddo
 
   else  pdcheck
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -318,11 +318,11 @@
 
       enddo
       enddo
-    ENDDO
+    enddo
 
   endif  pdcheck
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -339,7 +339,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj+1
       !dir$ vector always
       do i=(i1-1),i2
@@ -357,9 +357,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -376,7 +376,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=1,nk
+    do k=1,nk
       do j=(j1-1),j2
       !dir$ vector always
       do i=1,ni+1
@@ -394,14 +394,14 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -423,9 +423,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_weno5
 
@@ -455,11 +455,11 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,s1,s2,s3,s4,s5,s6,s7,bmax,doit)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -481,19 +481,19 @@
           s7=a(i-3,j,k)
         endif
         doit = .true.
-        IF( pdef.eq.1 )THEN
+        if( pdef.eq.1 )then
           bmax = max(abs(s1),abs(s2),abs(s3),abs(s4),abs(s5),abs(s6),abs(s7))
           if( bmax.gt.bmin )then
             doit = .true.
           else
             doit = .false.
           endif
-        ENDIF
-        IF(doit)THEN
+        endif
+        if(doit)then
           dumx(i,j,k) = rru(i,j,k)*weno7(s1,s2,s3,s4,s5,s6,s7,weps)
-        ELSE
+        else
           dumx(i,j,k) = 0.0
-        ENDIF
+        endif
       enddo
       enddo
       do j=1,nj+1
@@ -517,24 +517,24 @@
           s7=a(i,j-3,k)
         endif
         doit = .true.
-        IF( pdef.eq.1 )THEN
+        if( pdef.eq.1 )then
           bmax = max(abs(s1),abs(s2),abs(s3),abs(s4),abs(s5),abs(s6),abs(s7))
           if( bmax.gt.bmin )then
             doit = .true.
           else
             doit = .false.
           endif
-        ENDIF
-        IF(doit)THEN
+        endif
+        if(doit)then
           dumy(i,j,k) = rrv(i,j,k)*weno7(s1,s2,s3,s4,s5,s6,s7,weps)
-        ELSE
+        else
           dumy(i,j,k) = 0.0
-        ENDIF
+        endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -551,7 +551,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -574,9 +574,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -593,7 +593,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -616,14 +616,14 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -650,9 +650,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_weno7
 
@@ -682,11 +682,11 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,s1,s2,s3,s4,s5,s6,s7,s8,s9,bmax,doit)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -712,19 +712,19 @@
           s9=a(i-4,j,k)
         endif
         doit = .true.
-        IF( pdef.eq.1 )THEN
+        if( pdef.eq.1 )then
           bmax = max(abs(s1),abs(s2),abs(s3),abs(s4),abs(s5),abs(s6),abs(s7),abs(s8),abs(s9))
           if( bmax.gt.bmin )then
             doit = .true.
           else
             doit = .false.
           endif
-        ENDIF
-        IF(doit)THEN
+        endif
+        if(doit)then
           dumx(i,j,k) = rru(i,j,k)*weno9(s1,s2,s3,s4,s5,s6,s7,s8,s9,weps)
-        ELSE
+        else
           dumx(i,j,k) = 0.0
-        ENDIF
+        endif
       enddo
       enddo
       do j=1,nj+1
@@ -752,24 +752,24 @@
           s9=a(i,j-4,k)
         endif
         doit = .true.
-        IF( pdef.eq.1 )THEN
+        if( pdef.eq.1 )then
           bmax = max(abs(s1),abs(s2),abs(s3),abs(s4),abs(s5),abs(s6),abs(s7),abs(s8),abs(s9))
           if( bmax.gt.bmin )then
             doit = .true.
           else
             doit = .false.
           endif
-        ENDIF
-        IF(doit)THEN
+        endif
+        if(doit)then
           dumy(i,j,k) = rrv(i,j,k)*weno9(s1,s2,s3,s4,s5,s6,s7,s8,s9,weps)
-        ELSE
+        else
           dumy(i,j,k) = 0.0
-        ENDIF
+        endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -786,7 +786,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -809,9 +809,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -828,7 +828,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -851,14 +851,14 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -885,9 +885,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_weno9
 
@@ -910,11 +910,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -927,9 +927,9 @@
         dumy(i,j,k) = rrv(i,j,k)*0.5*(a(i,j-1,k)+a(i,j  ,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -946,7 +946,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -961,9 +961,9 @@
         dumy(i,j,k) = vbar*0.5*(a(i,j-1,k)+a(i,j  ,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -980,7 +980,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -995,13 +995,13 @@
         dumy(i,j,k) = vbar*0.5*(a(i,j  ,k)+a(i,j+1,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1020,9 +1020,9 @@
         dumy(i,j,k) = vbar*0.5*(a(i,j-1,k)+a(i,j  ,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx2
 
@@ -1045,11 +1045,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1070,9 +1070,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1089,7 +1089,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -1112,9 +1112,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -1131,7 +1131,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -1154,13 +1154,13 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1187,9 +1187,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx3
 
@@ -1212,11 +1212,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1229,9 +1229,9 @@
         dumy(i,j,k) = rrv(i,j,k)*flx4(a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1248,7 +1248,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -1263,9 +1263,9 @@
         dumy(i,j,k) = vbar*flx4(a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -1282,7 +1282,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -1297,13 +1297,13 @@
         dumy(i,j,k) = vbar*flx4(a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1322,9 +1322,9 @@
         dumy(i,j,k) = vbar*flx4(a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx4
 
@@ -1347,11 +1347,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -1367,9 +1367,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1386,7 +1386,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj+1
       !dir$ vector always
       do i=(i1-1),i2
@@ -1404,9 +1404,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -1423,7 +1423,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=(j1-1),j2
       !dir$ vector always
       do i=1,ni+1
@@ -1441,13 +1441,13 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -1469,9 +1469,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx5
 
@@ -1494,11 +1494,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1511,9 +1511,9 @@
         dumy(i,j,k) = rrv(i,j,k)*flx6(a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1530,7 +1530,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -1545,9 +1545,9 @@
         dumy(i,j,k) = vbar*flx6(a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -1564,7 +1564,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -1579,13 +1579,13 @@
         dumy(i,j,k) = vbar*flx6(a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1604,9 +1604,9 @@
         dumy(i,j,k) = vbar*flx6(a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx6
 
@@ -1629,11 +1629,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1654,9 +1654,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1673,7 +1673,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -1696,9 +1696,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -1715,7 +1715,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -1738,13 +1738,13 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1771,9 +1771,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx7
 
@@ -1796,11 +1796,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1813,9 +1813,9 @@
         dumy(i,j,k) = rrv(i,j,k)*flx8(a(i,j-4,k),a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1832,7 +1832,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -1847,9 +1847,9 @@
         dumy(i,j,k) = vbar*flx8(a(i,j-4,k),a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -1866,7 +1866,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -1881,13 +1881,13 @@
         dumy(i,j,k) = vbar*flx8(a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k),a(i,j+4,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1906,9 +1906,9 @@
         dumy(i,j,k) = vbar*flx8(a(i,j-4,k),a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx8
 
@@ -1931,11 +1931,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -1956,9 +1956,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1975,7 +1975,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -1998,9 +1998,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -2017,7 +2017,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -2040,13 +2040,13 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -2073,9 +2073,9 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx9
 
@@ -2098,11 +2098,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: ubar,vbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -2115,9 +2115,9 @@
         dumy(i,j,k) = rrv(i,j,k)*flx10(a(i,j-5,k),a(i,j-4,k),a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k),a(i,j+4,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -2134,7 +2134,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=(i1-1),i2
@@ -2149,9 +2149,9 @@
         dumy(i,j,k) = vbar*flx10(a(i,j-5,k),a(i,j-4,k),a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k),a(i,j+4,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -2168,7 +2168,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar)
-    DO k=1,nk
+    do k=1,nk
       do j=j1,j2
       !dir$ vector always
       do i=1,ni+1
@@ -2183,13 +2183,13 @@
         dumy(i,j,k) = vbar*flx10(a(i,j-4,k),a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k),a(i,j+4,k),a(i,j+5,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar,vbar,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni+1
@@ -2208,9 +2208,9 @@
         dumy(i,j,k) = vbar*flx10(a(i,j-5,k),a(i,j-4,k),a(i,j-3,k),a(i,j-2,k),a(i,j-1,k),a(i,j  ,k),a(i,j+1,k),a(i,j+2,k),a(i,j+3,k),a(i,j+4,k))
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine hadv_flx10
 
@@ -2239,11 +2239,11 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,s1,s2,s3,s4,s5,bmax,doit)
-    DO j=1,nj
+    do j=1,nj
       do k=3,nk-1
       !dir$ vector always
       do i=1,ni
@@ -2255,9 +2255,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -2274,7 +2274,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-1
       !dir$ vector always
@@ -2288,9 +2288,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -2307,7 +2307,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=3,nk-1
       !dir$ vector always
@@ -2321,14 +2321,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=2,nk-1
       !dir$ vector always
@@ -2342,9 +2342,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -2380,7 +2380,7 @@
 !ccccccccccccccccccccccccccccccccccc
 !  s-staggered variable:
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
   pdefs:  &
   if( pdefweno.eq.1 )then
@@ -2407,13 +2407,13 @@
         doit = .false.
         bmax = max(abs(s1),abs(s2),abs(s3),abs(s4),abs(s5))
         if( bmax.gt.bmin ) doit = .true.
-        IF( k.eq.3 .and. rrw(i,j,k).gt.0.0 ) doit = .false.
-        IF( k.eq.(nk-1) .and. rrw(i,j,k).lt.0.0 ) doit = .false.
-        IF(doit)THEN
+        if( k.eq.3 .and. rrw(i,j,k).gt.0.0 ) doit = .false.
+        if( k.eq.(nk-1) .and. rrw(i,j,k).lt.0.0 ) doit = .false.
+        if(doit)then
           dumz(i,j,k) = rrw(i,j,k)*weno5(s1,s2,s3,s4,s5,weps)
-        ELSE
+        else
           dumz(i,j,k) = 0.0
-        ENDIF
+        endif
       enddo
       enddo
       enddo
@@ -2449,7 +2449,7 @@
 !ccccccccccccccccccccccccccccccccccc
 !  u-staggered variable:
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -2466,7 +2466,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2
       !dir$ vector always
@@ -2480,12 +2480,12 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 !ccccccccccccccccccccccccccccccccccc
 !  v-staggered variable:
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -2502,7 +2502,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=4,nk-2
       !dir$ vector always
@@ -2516,16 +2516,16 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 !ccccccccccccccccccccccccccccccccccc
 !  w-staggered variable:
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-2
       !dir$ vector always
@@ -2539,20 +2539,20 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 !ccccccccccccccccccccccccccccccccccc
 
-  ENDIF
+  endif
 
-    IF( stag.ne.1 )THEN
+    if( stag.ne.1 )then
       ! Get lower-order fluxes near bottom/top of domain:
 
       call     vadv_lwr_weno_23(stag,ix,jy,kz,c1,c2,rrw,dumz,a,pdef,weps)
 
       call     vadv_lwr_weno_35(stag,ix,jy,kz,c1,c2,rrw,dumz,a,pdef,weps)
 
-    ENDIF
+    endif
 
     end subroutine vadv_weno5
 
@@ -2581,11 +2581,11 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,s1,s2,s3,s4,s5,s6,s7,bmax,doit)
-    DO j=1,nj
+    do j=1,nj
       do k=5,nk-3
       !dir$ vector always
       !dir$ vector always
@@ -2608,24 +2608,24 @@
           s7=a(i,j,k-3)
         endif
         doit = .true.
-        IF( pdef.eq.1 )THEN
+        if( pdef.eq.1 )then
           bmax = max(abs(s1),abs(s2),abs(s3),abs(s4),abs(s5),abs(s6),abs(s7))
           if( bmax.gt.bmin )then
             doit = .true.
           else
             doit = .false.
           endif
-        ENDIF
-        IF(doit)THEN
+        endif
+        if(doit)then
           dumz(i,j,k) = rrw(i,j,k)*weno7(s1,s2,s3,s4,s5,s6,s7,weps)
-        ELSE
+        else
           dumz(i,j,k) = 0.0
-        ENDIF
+        endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -2642,7 +2642,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-3
       !dir$ vector always
@@ -2656,9 +2656,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -2675,7 +2675,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=5,nk-3
       !dir$ vector always
@@ -2689,14 +2689,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-3
       !dir$ vector always
@@ -2710,9 +2710,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -2749,11 +2749,11 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,s1,s2,s3,s4,s5,s6,s7,s8,s9,bmax,doit)
-    DO j=1,nj
+    do j=1,nj
       do k=6,nk-4
       !dir$ vector always
       do i=1,ni
@@ -2779,24 +2779,24 @@
           s9=a(i,j,k-4)
         endif
         doit = .true.
-        IF( pdef.eq.1 )THEN
+        if( pdef.eq.1 )then
           bmax = max(abs(s1),abs(s2),abs(s3),abs(s4),abs(s5),abs(s6),abs(s7),abs(s8),abs(s9))
           if( bmax.gt.bmin )then
             doit = .true.
           else
             doit = .false.
           endif
-        ENDIF
-        IF(doit)THEN
+        endif
+        if(doit)then
           dumz(i,j,k) = rrw(i,j,k)*weno9(s1,s2,s3,s4,s5,s6,s7,s8,s9,weps)
-        ELSE
+        else
           dumz(i,j,k) = 0.0
-        ENDIF
+        endif
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -2813,7 +2813,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=6,nk-4
       !dir$ vector always
@@ -2827,9 +2827,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -2846,7 +2846,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=6,nk-4
       !dir$ vector always
@@ -2860,14 +2860,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-4
       !dir$ vector always
@@ -2881,9 +2881,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -2915,11 +2915,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=2,nk
       !dir$ vector always
@@ -2928,9 +2928,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -2947,7 +2947,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=2,nk
       !dir$ vector always
@@ -2959,9 +2959,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -2978,7 +2978,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=2,nk
       !dir$ vector always
@@ -2990,14 +2990,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=1,nk
       !dir$ vector always
@@ -3007,9 +3007,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_flx2
 
@@ -3031,11 +3031,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-1
       !dir$ vector always
@@ -3048,9 +3048,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -3067,7 +3067,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-1
       !dir$ vector always
@@ -3082,9 +3082,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -3101,7 +3101,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=3,nk-1
       !dir$ vector always
@@ -3115,14 +3115,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=2,nk-1
       !dir$ vector always
@@ -3136,9 +3136,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -3164,11 +3164,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,(nk-1)
       !dir$ vector always
@@ -3177,9 +3177,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -3196,7 +3196,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,(nk-1)
       !dir$ vector always
@@ -3206,9 +3206,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -3225,7 +3225,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=3,(nk-1)
       !dir$ vector always
@@ -3235,14 +3235,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=2,(nk-1)
       !dir$ vector always
@@ -3252,9 +3252,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -3280,7 +3280,7 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -3297,7 +3297,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -3328,7 +3328,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -3359,7 +3359,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k,wbar)
@@ -3377,7 +3377,7 @@
       enddo
       enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -3405,11 +3405,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2
       !dir$ vector always
@@ -3418,9 +3418,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -3437,7 +3437,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2
       !dir$ vector always
@@ -3447,9 +3447,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -3466,7 +3466,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=4,nk-2
       !dir$ vector always
@@ -3476,14 +3476,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-2
       !dir$ vector always
@@ -3493,9 +3493,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -3524,11 +3524,11 @@
     real :: wbar,cc1,cc2
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-3
       !dir$ vector always
@@ -3541,10 +3541,10 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -3561,7 +3561,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-3
       !dir$ vector always
@@ -3575,11 +3575,11 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -3596,7 +3596,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=5,nk-3
       !dir$ vector always
@@ -3610,15 +3610,15 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-3
       !dir$ vector always
@@ -3632,9 +3632,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -3664,11 +3664,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-3
       !dir$ vector always
@@ -3677,9 +3677,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -3696,7 +3696,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-3
       !dir$ vector always
@@ -3706,9 +3706,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -3725,7 +3725,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=5,nk-3
       !dir$ vector always
@@ -3735,14 +3735,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-3
       !dir$ vector always
@@ -3752,9 +3752,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -3785,11 +3785,11 @@
     real :: wbar,cc1,cc2
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=6,nk-4
       !dir$ vector always
@@ -3802,10 +3802,10 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -3822,7 +3822,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=6,nk-4
       !dir$ vector always
@@ -3836,11 +3836,11 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -3857,7 +3857,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=6,nk-4
       !dir$ vector always
@@ -3871,15 +3871,15 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-4
       !dir$ vector always
@@ -3893,9 +3893,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -3927,11 +3927,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=6,nk-4
       !dir$ vector always
@@ -3940,9 +3940,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -3959,7 +3959,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=6,nk-4
       !dir$ vector always
@@ -3969,9 +3969,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -3988,7 +3988,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=6,nk-4
       !dir$ vector always
@@ -3998,14 +3998,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-4
       !dir$ vector always
@@ -4015,9 +4015,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
       ! Get lower-order fluxes near bottom/top of domain:
 
@@ -4056,11 +4056,11 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,s1,s2,s3,s4,s5,s6,s7,s8,s9,bmax,doit)
-    DO j=1,nj
+    do j=1,nj
 
       k = 2
       !dir$ vector always
@@ -4082,9 +4082,9 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -4101,7 +4101,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       k = 2
       !dir$ vector always
@@ -4129,9 +4129,9 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -4148,7 +4148,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       k = 2
       !dir$ vector always
@@ -4176,14 +4176,14 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       k = 1
       !dir$ vector always
@@ -4207,9 +4207,9 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_weno_23
 
@@ -4238,7 +4238,7 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
       k = 3
       !$omp parallel do default(shared)   &
@@ -4268,7 +4268,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -4313,7 +4313,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -4359,7 +4359,7 @@
       enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
       k = 2
       !$omp parallel do default(shared)   &
@@ -4391,7 +4391,7 @@
       enddo
       enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_weno_35
 
@@ -4471,7 +4471,7 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
       k = 4
       !$omp parallel do default(shared)   &
@@ -4501,7 +4501,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -4546,7 +4546,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -4592,7 +4592,7 @@
       enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
       k = 3
       !$omp parallel do default(shared)   &
@@ -4624,7 +4624,7 @@
       enddo
       enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_weno_57
 
@@ -4653,7 +4653,7 @@
 
     bmin = weps
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
       k = 5
       !$omp parallel do default(shared)   &
@@ -4683,7 +4683,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -4728,7 +4728,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -4774,7 +4774,7 @@
       enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
       k = 4
       !$omp parallel do default(shared)   &
@@ -4806,7 +4806,7 @@
       enddo
       enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_weno_79
 
@@ -4828,7 +4828,7 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
       k = 2
       !$omp parallel do default(shared)   &
@@ -4858,7 +4858,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -4908,7 +4908,7 @@
       enddo
 
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -4958,7 +4958,7 @@
       enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
       k = 1
       !$omp parallel do default(shared)   &
@@ -4990,7 +4990,7 @@
       enddo
       enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_flx_23
 
@@ -5012,7 +5012,7 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
       k = 3
       !$omp parallel do default(shared)   &
@@ -5042,7 +5042,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -5087,7 +5087,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -5132,7 +5132,7 @@
       enddo
       enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
       k = 2
       !$omp parallel do default(shared)   &
@@ -5164,7 +5164,7 @@
       enddo
       enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_flx_35
 
@@ -5186,11 +5186,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       k = 4
       !dir$ vector always
@@ -5212,10 +5212,10 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -5232,7 +5232,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       k = 4
       !dir$ vector always
@@ -5256,11 +5256,11 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -5277,7 +5277,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       k = 4
       !dir$ vector always
@@ -5301,15 +5301,15 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       k = 3
       !dir$ vector always
@@ -5333,9 +5333,9 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_flx_57
 
@@ -5358,11 +5358,11 @@
     real :: wbar,cc1,cc2
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       k = 5
       !dir$ vector always
@@ -5384,10 +5384,10 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -5404,7 +5404,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       k = 5
       !dir$ vector always
@@ -5428,11 +5428,11 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -5449,7 +5449,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       k = 5
       !dir$ vector always
@@ -5473,15 +5473,15 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 
   !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       k = 4
       !dir$ vector always
@@ -5505,9 +5505,9 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_flx_79
 
@@ -5529,11 +5529,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=2,nk,(nk-2)
       !dir$ vector always
@@ -5542,9 +5542,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -5561,7 +5561,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=2,nk,(nk-2)
       !dir$ vector always
@@ -5573,9 +5573,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -5592,7 +5592,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=2,nk,(nk-2)
       !dir$ vector always
@@ -5604,14 +5604,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=1,nk,(nk-1)
       !dir$ vector always
@@ -5621,9 +5621,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_flx_2
 
@@ -5645,11 +5645,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,(nk-1),(nk-4)
       !dir$ vector always
@@ -5658,9 +5658,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -5677,7 +5677,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,(nk-1),(nk-4)
       !dir$ vector always
@@ -5687,9 +5687,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -5706,7 +5706,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=3,(nk-1),(nk-4)
       !dir$ vector always
@@ -5716,14 +5716,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=2,(nk-1),(nk-3)
       !dir$ vector always
@@ -5733,9 +5733,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_flx_4
 
@@ -5757,11 +5757,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2,(nk-6)
       !dir$ vector always
@@ -5770,9 +5770,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -5789,7 +5789,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2,(nk-6)
       !dir$ vector always
@@ -5799,9 +5799,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -5818,7 +5818,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=4,nk-2,(nk-6)
       !dir$ vector always
@@ -5828,14 +5828,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-2,(nk-5)
       !dir$ vector always
@@ -5845,9 +5845,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_flx_6
 
@@ -5869,11 +5869,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-3,(nk-8)
       !dir$ vector always
@@ -5882,9 +5882,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -5901,7 +5901,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=5,nk-3,(nk-8)
       !dir$ vector always
@@ -5911,9 +5911,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -5930,7 +5930,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=5,nk-3,(nk-8)
       !dir$ vector always
@@ -5940,14 +5940,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-3,(nk-7)
       !dir$ vector always
@@ -5957,9 +5957,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vadv_lwr_flx_8
 
@@ -6391,15 +6391,15 @@
         i2=ni+1
       endif
 
-      IF(ebc.eq.3.or.ebc.eq.4) i2 = ni
+      if(ebc.eq.3.or.ebc.eq.4) i2 = ni
 
   wenozu:  &
-  IF( doweno )THEN
+  if( doweno )then
 
     !-------------------------------------------------------------------
     !  begin weno section:
 
-    IF( weno_order.eq.3 )THEN
+    if( weno_order.eq.3 )then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
@@ -6415,7 +6415,7 @@
       enddo
       enddo
 
-    ELSEIF( weno_order.eq.5 )THEN
+    elseif( weno_order.eq.5 )then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
@@ -6431,7 +6431,7 @@
       enddo
       enddo
 
-    ELSEIF( weno_order.eq.7 )THEN
+    elseif( weno_order.eq.7 )then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
@@ -6447,7 +6447,7 @@
       enddo
       enddo
 
-    ELSEIF( weno_order.eq.9 )THEN
+    elseif( weno_order.eq.9 )then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
@@ -6463,16 +6463,16 @@
       enddo
       enddo
 
-    ELSE
+    else
 
       stop 23598
 
-    ENDIF
+    endif
 
     !----------------
     ! near boundaries:
 
-    IF( weno_order.eq.9 )THEN
+    if( weno_order.eq.9 )then
       k = 5
       !dir$ vector always
       do i=2,i2
@@ -6493,9 +6493,9 @@
           dumz(i,j,k) = wbar*weno7(a(i,j,k+3),a(i,j,k+2),a(i,j,k+1),a(i,j,k  ),a(i,j,k-1),a(i,j,k-2),a(i,j,k-3),weps)
         endif
       enddo
-    ENDIF
+    endif
 
-    IF( weno_order.eq.9 .or. weno_order.eq.7 )THEN
+    if( weno_order.eq.9 .or. weno_order.eq.7 )then
       k = 4
       !dir$ vector always
       do i=2,i2
@@ -6516,9 +6516,9 @@
           dumz(i,j,k) = wbar*weno5(a(i,j,k+2),a(i,j,k+1),a(i,j,k  ),a(i,j,k-1),a(i,j,k-2),weps)
         endif
       enddo
-    ENDIF
+    endif
 
-    IF( weno_order.eq.9 .or. weno_order.eq.7 .or. weno_order.eq.5 )THEN
+    if( weno_order.eq.9 .or. weno_order.eq.7 .or. weno_order.eq.5 )then
       k = 3
       !dir$ vector always
       do i=2,i2
@@ -6539,7 +6539,7 @@
           dumz(i,j,k) = wbar*upstrpd(a(i,j,k+1),a(i,j,k  ),a(i,j,k-1),weps)
         endif
       enddo
-    ENDIF
+    endif
 
     ! all weno orders do this:
       k = 2
@@ -6565,12 +6565,12 @@
 
     ! end of weno section
 
-  ELSE  wenozu
+  else  wenozu
 
     !-------------------------------------------------------------------
     ! begin not-weno section:
 
-    IF(     vadvordrv.eq.2 )THEN
+    if(     vadvordrv.eq.2 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=2,nk
@@ -6579,7 +6579,7 @@
         dumz(i,j,k) = wbar*0.5*(a(i,j,k-1)+a(i,j,k))
       enddo
       enddo
-    ELSEIF( vadvordrv.eq.3 )THEN
+    elseif( vadvordrv.eq.3 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=3,nk-1
@@ -6593,7 +6593,7 @@
         endif
       enddo
       enddo
-    ELSEIF( vadvordrv.eq.4 )THEN
+    elseif( vadvordrv.eq.4 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=3,nk-1
@@ -6603,7 +6603,7 @@
         dumz(i,j,k) = wbar*flx4(a(i,j,k-2),a(i,j,k-1),a(i,j,k  ),a(i,j,k+1))
       enddo
       enddo
-    ELSEIF( vadvordrv.eq.5 )THEN
+    elseif( vadvordrv.eq.5 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=4,nk-2
@@ -6617,7 +6617,7 @@
         endif
       enddo
       enddo
-    ELSEIF( vadvordrv.eq.6 )THEN
+    elseif( vadvordrv.eq.6 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=4,nk-2
@@ -6627,7 +6627,7 @@
         dumz(i,j,k) = wbar*flx6(a(i,j,k-3),a(i,j,k-2),a(i,j,k-1),a(i,j,k  ),a(i,j,k+1),a(i,j,k+2))
       enddo
       enddo
-    ELSEIF( vadvordrv.eq.7 )THEN
+    elseif( vadvordrv.eq.7 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=5,nk-3
@@ -6641,7 +6641,7 @@
         endif
       enddo
       enddo
-    ELSEIF( vadvordrv.eq.8 )THEN
+    elseif( vadvordrv.eq.8 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=5,nk-3
@@ -6651,7 +6651,7 @@
         dumz(i,j,k) = wbar*flx8(a(i,j,k-4),a(i,j,k-3),a(i,j,k-2),a(i,j,k-1),a(i,j,k  ),a(i,j,k+1),a(i,j,k+2),a(i,j,k+3))
       enddo
       enddo
-    ELSEIF( vadvordrv.eq.9 )THEN
+    elseif( vadvordrv.eq.9 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=6,nk-4
@@ -6665,7 +6665,7 @@
         endif
       enddo
       enddo
-    ELSEIF( vadvordrv.eq.10 )THEN
+    elseif( vadvordrv.eq.10 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,k,wbar)
       do k=6,nk-4
@@ -6675,12 +6675,12 @@
         dumz(i,j,k) = wbar*flx10(a(i,j,k-5),a(i,j,k-4),a(i,j,k-3),a(i,j,k-2),a(i,j,k-1),a(i,j,k  ),a(i,j,k+1),a(i,j,k+2),a(i,j,k+3),a(i,j,k+4))
       enddo
       enddo
-    ENDIF
+    endif
 
     !--------
     ! near boundaries (odd-ordered schemes):
 
-    IF( vadvordrv.eq.9 )THEN
+    if( vadvordrv.eq.9 )then
       k = 5
       !dir$ vector always
       do i=2,i2
@@ -6701,8 +6701,8 @@
           dumz(i,j,k) = wbar*flx7(a(i,j,k+3),a(i,j,k+2),a(i,j,k+1),a(i,j,k  ),a(i,j,k-1),a(i,j,k-2),a(i,j,k-3))
         endif
       enddo
-    ENDIF
-    IF( vadvordrv.eq.9 .or. vadvordrv.eq.7 )THEN
+    endif
+    if( vadvordrv.eq.9 .or. vadvordrv.eq.7 )then
       k = 4
       !dir$ vector always
       do i=2,i2
@@ -6723,8 +6723,8 @@
           dumz(i,j,k) = wbar*flx5(a(i,j,k+2),a(i,j,k+1),a(i,j,k  ),a(i,j,k-1),a(i,j,k-2))
         endif
       enddo
-    ENDIF
-    IF( vadvordrv.eq.9 .or. vadvordrv.eq.7 .or. vadvordrv.eq.5 )THEN
+    endif
+    if( vadvordrv.eq.9 .or. vadvordrv.eq.7 .or. vadvordrv.eq.5 )then
       k = 3
       !dir$ vector always
       do i=2,i2
@@ -6745,8 +6745,8 @@
           dumz(i,j,k) = wbar*flx3(a(i,j,k+1),a(i,j,k  ),a(i,j,k-1))
         endif
       enddo
-    ENDIF
-    IF( vadvordrv.eq.9 .or. vadvordrv.eq.7 .or. vadvordrv.eq.5 .or. vadvordrv.eq.3 )THEN
+    endif
+    if( vadvordrv.eq.9 .or. vadvordrv.eq.7 .or. vadvordrv.eq.5 .or. vadvordrv.eq.3 )then
       k = 2
       !dir$ vector always
       do i=2,i2
@@ -6767,13 +6767,13 @@
           dumz(i,j,k) = wbar*(c1(1,1,k)*a(i,j,k-1)+c2(1,1,k)*a(i,j,k))
         endif
       enddo
-    ENDIF
+    endif
 
 
     !--------
     ! near boundaries (even-ordered schemes):
 
-    IF( vadvordrv.eq.10 )THEN
+    if( vadvordrv.eq.10 )then
       do k=5,(nk-3),(nk-8)
       !dir$ vector always
       do i=2,i2
@@ -6781,8 +6781,8 @@
         dumz(i,j,k) = wbar*flx8(a(i,j,k-4),a(i,j,k-3),a(i,j,k-2),a(i,j,k-1),a(i,j,k  ),a(i,j,k+1),a(i,j,k+2),a(i,j,k+3))
       enddo
       enddo
-    ENDIF
-    IF( vadvordrv.eq.10 .or. vadvordrv.eq.8 )THEN
+    endif
+    if( vadvordrv.eq.10 .or. vadvordrv.eq.8 )then
       do k=4,(nk-2),(nk-6)
       !dir$ vector always
       do i=2,i2
@@ -6790,8 +6790,8 @@
         dumz(i,j,k) = wbar*flx6(a(i,j,k-3),a(i,j,k-2),a(i,j,k-1),a(i,j,k  ),a(i,j,k+1),a(i,j,k+2))
       enddo
       enddo
-    ENDIF
-    IF( vadvordrv.eq.10 .or. vadvordrv.eq.8 .or. vadvordrv.eq.6 )THEN
+    endif
+    if( vadvordrv.eq.10 .or. vadvordrv.eq.8 .or. vadvordrv.eq.6 )then
       do k=3,(nk-1),(nk-4)
       !dir$ vector always
       do i=2,i2
@@ -6799,8 +6799,8 @@
         dumz(i,j,k) = wbar*flx4(a(i,j,k-2),a(i,j,k-1),a(i,j,k  ),a(i,j,k+1))
       enddo
       enddo
-    ENDIF
-    IF( vadvordrv.eq.10 .or. vadvordrv.eq.8 .or. vadvordrv.eq.6 .or. vadvordrv.eq.4 )THEN
+    endif
+    if( vadvordrv.eq.10 .or. vadvordrv.eq.8 .or. vadvordrv.eq.6 .or. vadvordrv.eq.4 )then
       do k=2,nk,(nk-2)
       !dir$ vector always
       do i=2,i2
@@ -6808,11 +6808,11 @@
         dumz(i,j,k) = wbar*(c1(1,1,k)*a(i,j,k-1)+c2(1,1,k)*a(i,j,k))
       enddo
       enddo
-    ENDIF
+    endif
 
     !--------
 
-  ENDIF  wenozu
+  endif  wenozu
 
       end subroutine vadv_axiu
 
@@ -6868,7 +6868,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
@@ -6879,13 +6879,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.5 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
@@ -6896,13 +6896,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.7 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
@@ -6913,13 +6913,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.9 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
@@ -6930,7 +6930,7 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     else
 
@@ -6945,7 +6945,7 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*weno7(s(i-4,j,k),s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k),s(i+2,j,k),weps)
@@ -6953,13 +6953,13 @@
           dum(i,j,k) = rru(i,j,k)*weno9(s(i+4,j,k),s(i+3,j,k),s(i+2,j,k),s(i+1,j,k),s(i  ,j,k),s(i-1,j,k),s(i-2,j,k),s(i-3,j,k),s(i-4,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( weno_order.eq.9 .or. weno_order.eq.7 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*weno5(s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k),weps)
@@ -6967,13 +6967,13 @@
           dum(i,j,k) = rru(i,j,k)*weno7(s(i+3,j,k),s(i+2,j,k),s(i+1,j,k),s(i  ,j,k),s(i-1,j,k),s(i-2,j,k),s(i-3,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( weno_order.eq.9 .or. weno_order.eq.7 .or. weno_order.eq.5 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*upstrpd(s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),weps)
@@ -6981,13 +6981,13 @@
           dum(i,j,k) = rru(i,j,k)*weno5(s(i+2,j,k),s(i+1,j,k),s(i  ,j,k),s(i-1,j,k),s(i-2,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
 
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*s(i-1,j,k)
@@ -6996,13 +6996,13 @@
         endif
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
+      enddo
 
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*upstrpd(s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),weps)
@@ -7011,8 +7011,8 @@
         endif
         dum(ni+1,j,k) = 0.0
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
 
 
   else  wenochecksaxi
@@ -7021,7 +7021,7 @@
     if(hadvorder.eq.2)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       dum(1,j,k) = 0.0
       !dir$ vector always
@@ -7029,11 +7029,11 @@
         dum(i,j,k) = rru(i,j,k)*0.5*(s(i-1,j,k)+s(i,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadvorder.eq.3)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
@@ -7044,22 +7044,22 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadvorder.eq.4)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
         dum(i,j,k) = rru(i,j,k)*flx4(s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadvorder.eq.5)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
@@ -7070,22 +7070,22 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadvorder.eq.6)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
         dum(i,j,k) = rru(i,j,k)*flx6(s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k),s(i+2,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadvorder.eq.7)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
@@ -7096,22 +7096,22 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadvorder.eq.8)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
         dum(i,j,k) = rru(i,j,k)*flx8(s(i-4,j,k),s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k),s(i+2,j,k),s(i+3,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadvorder.eq.9)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
@@ -7122,18 +7122,18 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadvorder.eq.10)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
         dum(i,j,k) = rru(i,j,k)*flx10(s(i-5,j,k),s(i-4,j,k),s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k),s(i+2,j,k),s(i+3,j,k),s(i+4,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     else
       stop 34788
     endif
@@ -7145,7 +7145,7 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*flx7(s(i-4,j,k),s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k),s(i+2,j,k))
@@ -7153,13 +7153,13 @@
           dum(i,j,k) = rru(i,j,k)*flx9(s(i+4,j,k),s(i+3,j,k),s(i+2,j,k),s(i+1,j,k),s(i  ,j,k),s(i-1,j,k),s(i-2,j,k),s(i-3,j,k),s(i-4,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadvorder.eq.9 .or. hadvorder.eq.7 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*flx5(s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k))
@@ -7167,13 +7167,13 @@
           dum(i,j,k) = rru(i,j,k)*flx7(s(i+3,j,k),s(i+2,j,k),s(i+1,j,k),s(i  ,j,k),s(i-1,j,k),s(i-2,j,k),s(i-3,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadvorder.eq.9 .or. hadvorder.eq.7 .or. hadvorder.eq.5 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*flx3(s(i-2,j,k),s(i-1,j,k),s(i  ,j,k))
@@ -7181,13 +7181,13 @@
           dum(i,j,k) = rru(i,j,k)*flx5(s(i+2,j,k),s(i+1,j,k),s(i  ,j,k),s(i-1,j,k),s(i-2,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadvorder.eq.9 .or. hadvorder.eq.7 .or. hadvorder.eq.5 .or. hadvorder.eq.3 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*s(i-1,j,k)
@@ -7196,12 +7196,12 @@
         endif
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      enddo
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           if(rru(i,j,k).ge.0.0)then
             dum(i,j,k) = rru(i,j,k)*flx3(s(i-2,j,k),s(i-1,j,k),s(i  ,j,k))
@@ -7210,8 +7210,8 @@
           endif
           dum(ni+1,j,k) = 0.0
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
     endif
 
 
@@ -7219,66 +7219,66 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*flx8(s(i-4,j,k),s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k),s(i+2,j,k),s(i+3,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadvorder.eq.10 .or. hadvorder.eq.8 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*flx6(s(i-3,j,k),s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k),s(i+2,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadvorder.eq.10 .or. hadvorder.eq.8 .or. hadvorder.eq.6 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*flx4(s(i-2,j,k),s(i-1,j,k),s(i  ,j,k),s(i+1,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadvorder.eq.10 .or. hadvorder.eq.8 .or. hadvorder.eq.6 .or. hadvorder.eq.4 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*0.5*(s(i-1,j,k)+s(i,j,k))
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
+      enddo
     endif
 
     if( hadvorder.eq.10 .or. hadvorder.eq.8 .or. hadvorder.eq.6 .or. hadvorder.eq.4 .or. hadvorder.eq.2 )then
-    IF(ebc.eq.3.or.ebc.eq.4)THEN
+    if(ebc.eq.3.or.ebc.eq.4)then
       i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*0.5*(s(i-1,j,k)+s(i,j,k))
         dum(ni+1,j,k) = 0.0
       enddo
-      ENDDO
-    ENDIF
+      enddo
+    endif
     endif
 
   endif  wenochecksaxi
 
     !-------------------------------------
 
-      IF(ebc.eq.2 .and. ibe.eq.1)THEN
+      if(ebc.eq.2 .and. ibe.eq.1)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         i=ni+1
         if(rru(i,j,k).le.0.0)then
@@ -7286,32 +7286,32 @@
         endif
         budx(k) = budx(k)-dum(ni+1,j,k)*rvh(j)*rmh(ni+1,j,k)
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni
         advx(i,j,k) = -(arh2(i)*dum(i+1,j,k)-arh1(i)*dum(i,j,k))*rdx*uh(i)
       enddo
       enddo
-      ENDDO
+      enddo
 
-      IF(ebc.eq.2 .and. ibe.eq.1)THEN
+      if(ebc.eq.2 .and. ibe.eq.1)then
         i=ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           if(rru(ni+1,j,k).le.0.0)then
             advx(i,j,k) = advx(i,j,k)-s(i,j,k)*(arh2(i)*rru(i+1,j,k)-arh1(i)*rru(i,j,k))*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
 
 !----------------------------------------------------------------
@@ -7324,11 +7324,11 @@
 !        enddo
 !      ENDIF
 
-      IF(pdscheme.eq.1 .and. pdef.eq.1)THEN
+      if(pdscheme.eq.1 .and. pdef.eq.1)then
         if(timestats.ge.1) time_advs=time_advs+mytime()
         call pdefx1(xh,arh1,arh2,uh,rho0,gz,rgz,rru,advx,dum,mass,s0,s,dt,flag,sw31,sw32,se31,se32,reqsx)
         call pdefx2(xh,arh1,arh2,uh,rho0,gz,rgz,rru,advx,dum,mass,s0,s,dt,flag,sw31,sw32,se31,se32,reqsx)
-      ENDIF
+      endif
 
 !----------------------------------------------------------------
  
@@ -7394,7 +7394,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=2,id2
@@ -7406,13 +7406,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.5 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,id2
@@ -7424,13 +7424,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.7 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,id2
@@ -7442,13 +7442,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.9 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,id2
@@ -7460,7 +7460,7 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     endif
 
@@ -7471,7 +7471,7 @@
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7480,13 +7480,13 @@
           dum(i,j,k) = ubar*weno9(u3d(i+5,j,k),u3d(i+4,j,k),u3d(i+3,j,k),u3d(i+2,j,k),u3d(i+1,j,k),u3d(i  ,j,k),u3d(i-1,j,k),u3d(i-2,j,k),u3d(i-3,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( weno_order.eq.9 .or. weno_order.eq.7 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7495,13 +7495,13 @@
           dum(i,j,k) = ubar*weno7(u3d(i+4,j,k),u3d(i+3,j,k),u3d(i+2,j,k),u3d(i+1,j,k),u3d(i  ,j,k),u3d(i-1,j,k),u3d(i-2,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( weno_order.eq.9 .or. weno_order.eq.7 .or. weno_order.eq.5 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7510,13 +7510,13 @@
           dum(i,j,k) = ubar*weno5(u3d(i+3,j,k),u3d(i+2,j,k),u3d(i+1,j,k),u3d(i  ,j,k),u3d(i-1,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
 
       i = 1
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7525,13 +7525,13 @@
           dum(i,j,k) = ubar*upstrpd(u3d(i+2,j,k),u3d(i+1,j,k),u3d(i  ,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
 
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7540,8 +7540,8 @@
           dum(i,j,k) = ubar*u3d(i+1,j,k)
         endif
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
 
 
   else  wenocheckuaxi
@@ -7550,7 +7550,7 @@
     if(hadv.eq.2)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,id2
@@ -7558,11 +7558,11 @@
         dum(i,j,k) = ubar*0.5*(u3d(i,j,k)+u3d(i+1,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.3)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=2,id2
@@ -7574,11 +7574,11 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.4)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=2,id2
@@ -7586,11 +7586,11 @@
         dum(i,j,k) = ubar*flx4(u3d(i-1,j,k),u3d(i  ,j,k),u3d(i+1,j,k),u3d(i+2,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.5)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,id2
@@ -7602,11 +7602,11 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.6)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,id2
@@ -7614,11 +7614,11 @@
         dum(i,j,k) = ubar*flx6(u3d(i-2,j,k),u3d(i-1,j,k),u3d(i  ,j,k),u3d(i+1,j,k),u3d(i+2,j,k),u3d(i+3,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.7)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,id2
@@ -7630,11 +7630,11 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.8)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,id2
@@ -7642,11 +7642,11 @@
         dum(i,j,k) = ubar*flx8(u3d(i-3,j,k),u3d(i-2,j,k),u3d(i-1,j,k),u3d(i  ,j,k),u3d(i+1,j,k),u3d(i+2,j,k),u3d(i+3,j,k),u3d(i+4,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.9)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,id2
@@ -7658,11 +7658,11 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.10)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,id2
@@ -7670,7 +7670,7 @@
         dum(i,j,k) = ubar*flx10(u3d(i-4,j,k),u3d(i-3,j,k),u3d(i-2,j,k),u3d(i-1,j,k),u3d(i  ,j,k),u3d(i+1,j,k),u3d(i+2,j,k),u3d(i+3,j,k),u3d(i+4,j,k),u3d(i+5,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     else
       stop 34789
     endif
@@ -7682,7 +7682,7 @@
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7691,13 +7691,13 @@
           dum(i,j,k) = ubar*flx9(u3d(i+5,j,k),u3d(i+4,j,k),u3d(i+3,j,k),u3d(i+2,j,k),u3d(i+1,j,k),u3d(i  ,j,k),u3d(i-1,j,k),u3d(i-2,j,k),u3d(i-3,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7706,13 +7706,13 @@
           dum(i,j,k) = ubar*flx7(u3d(i+4,j,k),u3d(i+3,j,k),u3d(i+2,j,k),u3d(i+1,j,k),u3d(i  ,j,k),u3d(i-1,j,k),u3d(i-2,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 .or. hadv.eq.5 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7721,13 +7721,13 @@
           dum(i,j,k) = ubar*flx5(u3d(i+3,j,k),u3d(i+2,j,k),u3d(i+1,j,k),u3d(i  ,j,k),u3d(i-1,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 .or. hadv.eq.5 .or. hadv.eq.3 )then
       i = 1
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7736,12 +7736,12 @@
           dum(i,j,k) = ubar*flx3(u3d(i+2,j,k),u3d(i+1,j,k),u3d(i  ,j,k))
         endif
       enddo
-      ENDDO
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      enddo
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         if(ubar.ge.0.0)then
@@ -7750,8 +7750,8 @@
           dum(i,j,k) = ubar*u3d(i+1,j,k)
         endif
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
     endif
 
 
@@ -7759,58 +7759,58 @@
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         dum(i,j,k) = ubar*flx8(u3d(i-3,j,k),u3d(i-2,j,k),u3d(i-1,j,k),u3d(i  ,j,k),u3d(i+1,j,k),u3d(i+2,j,k),u3d(i+3,j,k),u3d(i+4,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         dum(i,j,k) = ubar*flx6(u3d(i-2,j,k),u3d(i-1,j,k),u3d(i  ,j,k),u3d(i+1,j,k),u3d(i+2,j,k),u3d(i+3,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         dum(i,j,k) = ubar*flx4(u3d(i-1,j,k),u3d(i  ,j,k),u3d(i+1,j,k),u3d(i+2,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 .or. hadv.eq.4 )then
       i = 1
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         dum(i,j,k) = ubar*0.5*(u3d(i+1,j,k)+u3d(i,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 .or. hadv.eq.4 .or. hadv.eq.2 )then
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         ubar = 0.5*(arh1(i)*rru(i,j,k)+arh2(i)*rru(i+1,j,k))
         dum(i,j,k) = ubar*0.5*(u3d(i+1,j,k)+u3d(i,j,k))
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
     endif
 
 
@@ -7821,7 +7821,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         advx(1,j,k)=0.0
         !dir$ vector always
@@ -7829,18 +7829,18 @@
           advx(i,j,k) = -(arf2(i)*dum(i,j,k)-arf1(i)*dum(i-1,j,k))*rdx*uf(i)
         enddo
       enddo
-      ENDDO
+      enddo
 
 
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      if(ebc.eq.3.or.ebc.eq.4)then
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           advx(ni+1,j,k)=0.0
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
 !----------------------------------------------------------------
  
@@ -7892,7 +7892,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
@@ -7903,13 +7903,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.5 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
@@ -7920,13 +7920,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.7 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
@@ -7937,13 +7937,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.9 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
@@ -7954,7 +7954,7 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     endif
 
@@ -7965,7 +7965,7 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*weno7(v3d(i-4,j,k),v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k),v3d(i+2,j,k),weps)
@@ -7973,13 +7973,13 @@
           dum(i,j,k) = rru(i,j,k)*weno9(v3d(i+4,j,k),v3d(i+3,j,k),v3d(i+2,j,k),v3d(i+1,j,k),v3d(i  ,j,k),v3d(i-1,j,k),v3d(i-2,j,k),v3d(i-3,j,k),v3d(i-4,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( weno_order.eq.9 .or. weno_order.eq.7 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*weno5(v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k),weps)
@@ -7987,13 +7987,13 @@
           dum(i,j,k) = rru(i,j,k)*weno7(v3d(i+3,j,k),v3d(i+2,j,k),v3d(i+1,j,k),v3d(i  ,j,k),v3d(i-1,j,k),v3d(i-2,j,k),v3d(i-3,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( weno_order.eq.9 .or. weno_order.eq.7 .or. weno_order.eq.5 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*upstrpd(v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),weps)
@@ -8001,13 +8001,13 @@
           dum(i,j,k) = rru(i,j,k)*weno5(v3d(i+2,j,k),v3d(i+1,j,k),v3d(i  ,j,k),v3d(i-1,j,k),v3d(i-2,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
 
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*v3d(i-1,j,k)
@@ -8016,13 +8016,13 @@
         endif
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
+      enddo
 
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*upstrpd(v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),weps)
@@ -8031,8 +8031,8 @@
         endif
         dum(ni+1,j,k) = 0.0
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
 
 
   else  wenocheckvaxi
@@ -8041,7 +8041,7 @@
     if(hadv.eq.2)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       dum(1,j,k) = 0.0
       !dir$ vector always
@@ -8049,11 +8049,11 @@
         dum(i,j,k) = rru(i,j,k)*0.5*(v3d(i-1,j,k)+v3d(i,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.3)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
@@ -8064,22 +8064,22 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.4)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
         dum(i,j,k) = rru(i,j,k)*flx4(v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.5)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
@@ -8090,22 +8090,22 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.6)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
         dum(i,j,k) = rru(i,j,k)*flx6(v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k),v3d(i+2,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.7)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
@@ -8116,22 +8116,22 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.8)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
         dum(i,j,k) = rru(i,j,k)*flx8(v3d(i-4,j,k),v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k),v3d(i+2,j,k),v3d(i+3,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.9)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
@@ -8142,18 +8142,18 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.10)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
         dum(i,j,k) = rru(i,j,k)*flx10(v3d(i-5,j,k),v3d(i-4,j,k),v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k),v3d(i+2,j,k),v3d(i+3,j,k),v3d(i+4,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     else
       stop 34790
     endif
@@ -8165,7 +8165,7 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*flx7(v3d(i-4,j,k),v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k),v3d(i+2,j,k))
@@ -8173,13 +8173,13 @@
           dum(i,j,k) = rru(i,j,k)*flx9(v3d(i+4,j,k),v3d(i+3,j,k),v3d(i+2,j,k),v3d(i+1,j,k),v3d(i  ,j,k),v3d(i-1,j,k),v3d(i-2,j,k),v3d(i-3,j,k),v3d(i-4,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*flx5(v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k))
@@ -8187,13 +8187,13 @@
           dum(i,j,k) = rru(i,j,k)*flx7(v3d(i+3,j,k),v3d(i+2,j,k),v3d(i+1,j,k),v3d(i  ,j,k),v3d(i-1,j,k),v3d(i-2,j,k),v3d(i-3,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 .or. hadv.eq.5 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*flx3(v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k))
@@ -8201,13 +8201,13 @@
           dum(i,j,k) = rru(i,j,k)*flx5(v3d(i+2,j,k),v3d(i+1,j,k),v3d(i  ,j,k),v3d(i-1,j,k),v3d(i-2,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 .or. hadv.eq.5 .or. hadv.eq.3 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         if(rru(i,j,k).ge.0.0)then
           dum(i,j,k) = rru(i,j,k)*v3d(i-1,j,k)
@@ -8216,12 +8216,12 @@
         endif
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      enddo
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           if(rru(i,j,k).ge.0.0)then
             dum(i,j,k) = rru(i,j,k)*flx3(v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k))
@@ -8230,8 +8230,8 @@
           endif
           dum(ni+1,j,k) = 0.0
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
     endif
 
 
@@ -8239,66 +8239,66 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*flx8(v3d(i-4,j,k),v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k),v3d(i+2,j,k),v3d(i+3,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*flx6(v3d(i-3,j,k),v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k),v3d(i+2,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*flx4(v3d(i-2,j,k),v3d(i-1,j,k),v3d(i  ,j,k),v3d(i+1,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 .or. hadv.eq.4 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*0.5*(v3d(i-1,j,k)+v3d(i,j,k))
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
+      enddo
     endif
 
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 .or. hadv.eq.4 .or. hadv.eq.2 )then
-    IF(ebc.eq.3.or.ebc.eq.4)THEN
+    if(ebc.eq.3.or.ebc.eq.4)then
       i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         dum(i,j,k) = rru(i,j,k)*0.5*(v3d(i-1,j,k)+v3d(i,j,k))
         dum(ni+1,j,k) = 0.0
       enddo
-      ENDDO
-    ENDIF
+      enddo
+    endif
     endif
 
   endif  wenocheckvaxi
 
     !-------------------------------------
 
-      IF(ebc.eq.2 .and. ibe.eq.1)THEN
+      if(ebc.eq.2 .and. ibe.eq.1)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
         i=ni+1
         if(rru(i,j,k).le.0.0)then
@@ -8306,12 +8306,12 @@
           dum(ni+1,j,k)=arh1(i)*arh1(i)*dum(i,j,k)/(arh2(i)*arh2(i))
         endif
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni
@@ -8322,20 +8322,20 @@
                +0.5*fcor*(xf(i+1)*rru(i+1,j,k)-xf(i)*rru(i,j,k))*rdx*uh(i)
       enddo
       enddo
-      ENDDO
+      enddo
 
-      IF(ebc.eq.2 .and. ibe.eq.1)THEN
+      if(ebc.eq.2 .and. ibe.eq.1)then
         i=ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           if(rru(ni+1,j,k).le.0.0)then
             advx(i,j,k) = advx(i,j,k)-v3d(i,j,k)*(arh2(i)*rru(i+1,j,k)-arh1(i)*rru(i,j,k))*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
 
 !----------------------------------------------------------------
@@ -8386,7 +8386,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
@@ -8398,13 +8398,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.5 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
@@ -8416,13 +8416,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.7 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
@@ -8434,13 +8434,13 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     elseif( weno_order.eq.9 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
@@ -8452,7 +8452,7 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
 
     endif
 
@@ -8463,7 +8463,7 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8472,13 +8472,13 @@
           dum(i,j,k) = ubar*weno9(w3d(i+4,j,k),w3d(i+3,j,k),w3d(i+2,j,k),w3d(i+1,j,k),w3d(i  ,j,k),w3d(i-1,j,k),w3d(i-2,j,k),w3d(i-3,j,k),w3d(i-4,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( weno_order.eq.9 .or. weno_order.eq.7 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8487,13 +8487,13 @@
           dum(i,j,k) = ubar*weno7(w3d(i+3,j,k),w3d(i+2,j,k),w3d(i+1,j,k),w3d(i  ,j,k),w3d(i-1,j,k),w3d(i-2,j,k),w3d(i-3,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( weno_order.eq.9 .or. weno_order.eq.7 .or. weno_order.eq.5 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8502,13 +8502,13 @@
           dum(i,j,k) = ubar*weno5(w3d(i+2,j,k),w3d(i+1,j,k),w3d(i  ,j,k),w3d(i-1,j,k),w3d(i-2,j,k),weps)
         endif
       enddo
-      ENDDO
+      enddo
     endif
 
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8518,13 +8518,13 @@
         endif
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
+      enddo
 
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8534,8 +8534,8 @@
         endif
         dum(ni+1,j,k) = 0.0
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
 
 
   else  wenocheckwaxi
@@ -8544,7 +8544,7 @@
     if(hadv.eq.2)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       dum(1,j,k) = 0.0
       !dir$ vector always
@@ -8553,11 +8553,11 @@
         dum(i,j,k) = ubar*0.5*(w3d(i-1,j,k)+w3d(i,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.3)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
@@ -8569,11 +8569,11 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.4)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=3,ni+1
@@ -8581,11 +8581,11 @@
         dum(i,j,k) = ubar*flx4(w3d(i-2,j,k),w3d(i-1,j,k),w3d(i  ,j,k),w3d(i+1,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.5)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
@@ -8597,11 +8597,11 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.6)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=4,ni+1
@@ -8609,11 +8609,11 @@
         dum(i,j,k) = ubar*flx6(w3d(i-3,j,k),w3d(i-2,j,k),w3d(i-1,j,k),w3d(i  ,j,k),w3d(i+1,j,k),w3d(i+2,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.7)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
@@ -8625,11 +8625,11 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.8)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=5,ni+1
@@ -8637,11 +8637,11 @@
         dum(i,j,k) = ubar*flx8(w3d(i-4,j,k),w3d(i-3,j,k),w3d(i-2,j,k),w3d(i-1,j,k),w3d(i  ,j,k),w3d(i+1,j,k),w3d(i+2,j,k),w3d(i+3,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.9)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
@@ -8653,11 +8653,11 @@
         endif
       enddo
       enddo
-      ENDDO
+      enddo
     elseif(hadv.eq.10)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=6,ni+1
@@ -8665,7 +8665,7 @@
         dum(i,j,k) = ubar*flx10(w3d(i-5,j,k),w3d(i-4,j,k),w3d(i-3,j,k),w3d(i-2,j,k),w3d(i-1,j,k),w3d(i  ,j,k),w3d(i+1,j,k),w3d(i+2,j,k),w3d(i+3,j,k),w3d(i+4,j,k))
       enddo
       enddo
-      ENDDO
+      enddo
     else
       stop 34791
     endif
@@ -8677,7 +8677,7 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8686,13 +8686,13 @@
           dum(i,j,k) = ubar*flx9(w3d(i+4,j,k),w3d(i+3,j,k),w3d(i+2,j,k),w3d(i+1,j,k),w3d(i  ,j,k),w3d(i-1,j,k),w3d(i-2,j,k),w3d(i-3,j,k),w3d(i-4,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8701,13 +8701,13 @@
           dum(i,j,k) = ubar*flx7(w3d(i+3,j,k),w3d(i+2,j,k),w3d(i+1,j,k),w3d(i  ,j,k),w3d(i-1,j,k),w3d(i-2,j,k),w3d(i-3,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 .or. hadv.eq.5 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8716,13 +8716,13 @@
           dum(i,j,k) = ubar*flx5(w3d(i+2,j,k),w3d(i+1,j,k),w3d(i  ,j,k),w3d(i-1,j,k),w3d(i-2,j,k))
         endif
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.9 .or. hadv.eq.7 .or. hadv.eq.5 .or. hadv.eq.3 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         if(ubar.ge.0.0)then
@@ -8732,12 +8732,12 @@
         endif
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      enddo
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
           ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
           if(ubar.ge.0.0)then
@@ -8747,8 +8747,8 @@
           endif
           dum(ni+1,j,k) = 0.0
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
     endif
 
 
@@ -8757,61 +8757,61 @@
       i = 5
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         dum(i,j,k) = ubar*flx8(w3d(i-4,j,k),w3d(i-3,j,k),w3d(i-2,j,k),w3d(i-1,j,k),w3d(i  ,j,k),w3d(i+1,j,k),w3d(i+2,j,k),w3d(i+3,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 )then
       i = 4
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         dum(i,j,k) = ubar*flx6(w3d(i-3,j,k),w3d(i-2,j,k),w3d(i-1,j,k),w3d(i  ,j,k),w3d(i+1,j,k),w3d(i+2,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 )then
       i = 3
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         dum(i,j,k) = ubar*flx4(w3d(i-2,j,k),w3d(i-1,j,k),w3d(i  ,j,k),w3d(i+1,j,k))
       enddo
-      ENDDO
+      enddo
     endif
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 .or. hadv.eq.4 )then
       i = 2
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
         dum(i,j,k) = ubar*0.5*(w3d(i-1,j,k)+w3d(i,j,k))
         dum(1,j,k) = 0.0
       enddo
-      ENDDO
+      enddo
     endif
 
     if( hadv.eq.10 .or. hadv.eq.8 .or. hadv.eq.6 .or. hadv.eq.4 .or. hadv.eq.2 )then
-      IF(ebc.eq.3.or.ebc.eq.4)THEN
+      if(ebc.eq.3.or.ebc.eq.4)then
         i = ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
           ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
           dum(i,j,k) = ubar*0.5*(w3d(i-1,j,k)+w3d(i,j,k))
           dum(ni+1,j,k) = 0.0
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
     endif
 
 
@@ -8820,10 +8820,10 @@
 
     !-------------------------------------
 
-      IF(ebc.eq.2 .and. ibe.eq.1)THEN
+      if(ebc.eq.2 .and. ibe.eq.1)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
         i=ni+1
         ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
@@ -8832,26 +8832,26 @@
           dum(i+1,j,k)=dum(i,j,k)*arh1(i)/arh2(i)
         endif
       enddo
-      ENDDO
-      ENDIF
+      enddo
+      endif
 
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       !dir$ vector always
       do i=1,ni
         advx(i,j,k) = -(arh2(i)*dum(i+1,j,k)-arh1(i)*dum(i,j,k))*rdx*uh(i)
       enddo
       enddo
-      ENDDO
+      enddo
 
 
-      IF(ebc.eq.2 .and. ibe.eq.1)THEN
+      if(ebc.eq.2 .and. ibe.eq.1)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,ubar)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
           i=ni+1
           ubar = c2(1,1,k)*rru(i,j,k)+c1(1,1,k)*rru(i,j,k-1)
@@ -8862,8 +8862,8 @@
                    +c2(1,1,k)*(arh2(i)*rru(i+1,j,k  )-arh1(i)*rru(i,j,k  )) )*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
 !----------------------------------------------------------------
  
@@ -8922,7 +8922,7 @@
     enddo
 
     rkloop:  &
-    DO nrk=1,3
+    do nrk=1,3
 
 !-------------------------
 !  set boundary conditions
@@ -9161,7 +9161,7 @@
 
 !-------------------------
 
-    ENDDO  rkloop
+    enddo  rkloop
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j)
@@ -9203,7 +9203,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,div)
-    DO j=1,jy
+    do j=1,jy
       !-----
       do k=2,(nk-1)
         if( wprof(k).le.0.0 )then
@@ -9242,7 +9242,7 @@
         enddo
       enddo
       !-----
-    ENDDO
+    enddo
 
     end subroutine wsub
 
@@ -9327,4 +9327,4 @@
 !-----------------------------------------------------------------------------------------------
 
 
-  END MODULE adv_routines
+  end module adv_routines

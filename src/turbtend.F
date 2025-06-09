@@ -1,4 +1,4 @@
-  MODULE turbtend_module
+  module turbtend_module
 
   implicit none
 
@@ -7,7 +7,7 @@
 
   real :: fac,fac2
 
-  CONTAINS
+  contains
 
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -55,11 +55,11 @@
 !---------------------------------------------------------------
 
   dohoriz:  &
-  IF( dohturb )THEN
+  if( dohturb )then
 
-  IF(.not.terrain_flag)THEN
+  if(.not.terrain_flag)then
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
       ! Cartesian without terrain:
 
 !$omp parallel do default(shared)   &
@@ -81,27 +81,27 @@
         enddo
         enddo
 
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           do j=1,nj
             dumx(1,j,k) = dumx(2,j,k)
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           do j=1,nj
             dumx(ni+1,j,k) = dumx(ni,j,k)
           enddo
-        ENDIF
+        endif
 
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           do i=1,ni
             dumy(i,1,k) = dumy(i,2,k)
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           do i=1,ni
             dumy(i,nj+1,k) = dumy(i,nj,k)
           enddo
-        ENDIF
+        endif
 
         do j=1,nj
         do i=1,ni
@@ -112,7 +112,7 @@
 
       enddo
 
-    ELSE
+    else
       ! axisymmetric:
 
 !$omp parallel do default(shared)   &
@@ -127,9 +127,9 @@
                              *(    s(i,j,k)-   s(i-1,j,k) )*rdx*uf(i)
         enddo
 
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           dumx(ni+1,j,k) = arh1(ni)*dumx(ni,j,k)/arh2(ni)
-        ENDIF
+        endif
 
         !-----
         if(wbc.eq.3.or.wbc.eq.4)then
@@ -150,11 +150,11 @@
       enddo
       enddo
 
-    ENDIF   ! endif for axisymm check
+    endif   ! endif for axisymm check
 
 !---------------------------------------------------------------
 
-  ELSE
+  else
       ! Cartesian with terrain:
 
       ! use turbz as a temporary array for s at w-pts:
@@ -272,42 +272,42 @@
 
       enddo
 
-  ENDIF  ! endif for terrain check
+  endif  ! endif for terrain check
 
 !-----------------------------------------------------------------
 !  open boundary conditions:
 
-    IF( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )THEN
+    if( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
 
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           do j=1,nj
             turbx(1,j,k) = 0.0
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           do j=1,nj
             turbx(ni,j,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           do i=1,ni
             turby(i,1,k) = 0.0
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           do i=1,ni
             turby(i,nj,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-      ENDDO
-    ENDIF
+      enddo
+    endif
 
-  ELSE  dohoriz
+  else  dohoriz
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -320,18 +320,18 @@
       enddo
       enddo
 
-  ENDIF  dohoriz
+  endif  dohoriz
 
 !---------------------------------------------------------------------
 !  z-direction
 
   dovert:  &
-  IF( dovturb )THEN
+  if( dovturb )then
 
       call       turbsz(iflux,dt,dosfcflx,sflux,mh,mf,  &
                        turbz,dumx,dumy,dumz,rho,rr,rf,s,khv,dum7,dum8,ivar)
 
-  ELSE  dovert
+  else  dovert
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -343,15 +343,15 @@
       enddo
       enddo
 
-  ENDIF  dovert
+  endif  dovert
 
 
 !---------------------------------------------------------------------
 !  Tendencies:
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
 
-      IF( cm1setup.eq.4 )THEN
+      if( cm1setup.eq.4 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -368,7 +368,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -379,9 +379,9 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
-    ELSE
+    else
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -393,12 +393,12 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !---------------------------------------------------------------------
 !  Diagnostics:
 
-      IF( dobud )THEN
+      if( dobud )then
       if( sd_hturb.ge.1 .and. sd_vturb.ge.1 )then
         if( axisymm.eq.0 )then
           !$omp parallel do default(shared)   &
@@ -424,7 +424,7 @@
           enddo
         endif
       endif
-      ENDIF
+      endif
 
 !---------------------------------------------------------------------
 
@@ -482,12 +482,12 @@
     endif
 
   ifimpls:  &
-  IF( doimpl.eq.0 )THEN
+  if( doimpl.eq.0 )then
       ! explicit vertical turbulence:
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO j=1,nj
+      do j=1,nj
 
         do k=2,nk
         do i=1,ni
@@ -495,24 +495,24 @@
         enddo
         enddo
 
-        IF( cm1setup.eq.1 .or. cm1setup.eq.2 .or. cm1setup.eq.4 )THEN
+        if( cm1setup.eq.1 .or. cm1setup.eq.2 .or. cm1setup.eq.4 )then
           ! LES or mesoscale modeling:
 
-          IF(bcturbs.eq.1)THEN
+          if(bcturbs.eq.1)then
  
             do i=1,ni
               dumz(i,j,1)=0.0
               dumz(i,j,nk+1)=0.0
             enddo
 
-          ELSEIF(bcturbs.eq.2)THEN
+          elseif(bcturbs.eq.2)then
  
             do i=1,ni
               dumz(i,j,1)=dumz(i,j,2)
               dumz(i,j,nk+1)=dumz(i,j,nk)
             enddo
 
-          ENDIF
+          endif
 
           if(iflux.eq.1 .and. dosfcflx)then
             do i=1,ni
@@ -520,7 +520,7 @@
             enddo
           endif
 
-        ELSEIF( cm1setup.eq.3 )THEN
+        elseif( cm1setup.eq.3 )then
 
           if(bc_temp.eq.1)then
             ! specified theta at boundary
@@ -540,12 +540,12 @@
 
           endif
 
-        ELSE
+        else
 
           print *,'  21086 '
           call stopcm1
 
-        ENDIF
+        endif
 
         do k=1,nk
         do i=1,ni
@@ -553,9 +553,9 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
-  ELSE  ifimpls
+  else  ifimpls
 
       ! implicit vertical turbulence:
 
@@ -565,9 +565,9 @@
       temc = dt*rdz
 
       ! boundary conditions:
-      IF( cm1setup.eq.1 .or. cm1setup.eq.2 .or. cm1setup.eq.4 )THEN
+      if( cm1setup.eq.1 .or. cm1setup.eq.2 .or. cm1setup.eq.4 )then
         ! LES or mesoscale modeling:
-        IF(bcturbs.eq.1)THEN
+        if(bcturbs.eq.1)then
           !$omp parallel do default(shared)   &
           !$omp private(i,j)
           do j=1,nj
@@ -576,7 +576,7 @@
             dumz(i,j,nk+1)=0.0
           enddo
           enddo
-        ELSEIF(bcturbs.eq.2)THEN
+        elseif(bcturbs.eq.2)then
           !$omp parallel do default(shared)   &
           !$omp private(i,j)
           do j=1,nj
@@ -585,7 +585,7 @@
             dumz(i,j,nk+1) = -khv(i,j,nk)*(s(i,j,nk)-s(i,j,nk-1))*rdz*mf(i,j,nk)*rf(i,j,nk)
           enddo
           enddo
-        ENDIF
+        endif
         if(iflux.eq.1 .and. dosfcflx)then
           ! surface heat/moisture flux:
           !$omp parallel do default(shared)   &
@@ -596,7 +596,7 @@
           enddo
           enddo
         endif
-      ELSEIF( cm1setup.eq.3 )THEN
+      elseif( cm1setup.eq.3 )then
         ! DNS bc:
         if(bc_temp.eq.1)then
           ! specified theta at boundary
@@ -619,14 +619,14 @@
           enddo
           enddo
         endif
-      ENDIF
+      endif
 
       k = 1
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,r1,r2,cfa,cfb,cfc,cfd,tem)
       do j=1,nj
-      DO i=1,ni
+      do i=1,ni
           r2 = dum8(i,j,k)
           cfc = tema*r2
           cfb = 1.0 - cfc
@@ -635,7 +635,7 @@
         tem = 1.0/cfb
         dum1(i,j,1)=-cfc*tem
         dum2(i,j,1)= cfd*tem
-      ENDDO
+      enddo
       enddo
 
         do k=2,nk-1
@@ -679,15 +679,15 @@
       !$omp parallel do default(shared)   &
       !$omp private(i,j)
         do j=1,nj
-        DO i=1,ni
+        do i=1,ni
           dumz(i,j,k)=dum1(i,j,k)*dumz(i,j,k+1)+dum2(i,j,k)
           turbz(i,j,k) = rho(i,j,k)*(dumz(i,j,k)-s(i,j,k))*rdt
-        ENDDO
+        enddo
         enddo
 
         enddo
 
-  ENDIF  ifimpls
+  endif  ifimpls
 
       end subroutine turbsz
 
@@ -726,7 +726,7 @@
 
 !---------------------------------------------------------------
 
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
       ! Cartesian without terrain:
 
 !$omp parallel do default(shared)   &
@@ -748,27 +748,27 @@
         enddo
         enddo
 
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           do j=1,nj
             dumx(1,j,k) = dumx(2,j,k)
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           do j=1,nj
             dumx(ni+1,j,k) = dumx(ni,j,k)
           enddo
-        ENDIF
+        endif
 
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           do i=1,ni
             dumy(i,1,k) = dumy(i,2,k)
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           do i=1,ni
             dumy(i,nj+1,k) = dumy(i,nj,k)
           enddo
-        ENDIF
+        endif
 
         do j=1,nj
         do i=1,ni
@@ -782,7 +782,7 @@
 !---------------------------------------------------------------
 !  Cartesian with terrain:
 
-    ELSE
+    else
 
       ! turbz stores t at s-pts:
 !$omp parallel do default(shared)   &
@@ -879,46 +879,46 @@
 
       enddo
 
-    ENDIF  ! endif for terrain check
+    endif  ! endif for terrain check
 
 !-----------------------------------------------------------------
 !  open boundary conditions:
 
-    IF( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )THEN
+    if( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=2,nk
+      do k=2,nk
 
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           do j=1,nj
             turbx(1,j,k) = 0.0
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           do j=1,nj
             turbx(ni,j,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           do i=1,ni
             turby(i,1,k) = 0.0
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           do i=1,ni
             turby(i,nj,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-      ENDDO
-    ENDIF
+      enddo
+    endif
 
 !---------------------------------------------------------------------
 !  z-direction
 
   ifimplt:  &
-  IF( doimpl.eq.0 )THEN
+  if( doimpl.eq.0 )then
       ! explicit vertical turbulence:
 
       !$omp parallel do default(shared)   &
@@ -952,7 +952,7 @@
       enddo
       enddo
 
-  ELSE
+  else
 
       ! implicit vertical turbulence:
 
@@ -1034,7 +1034,7 @@
 
         enddo
 
-  ENDIF  ifimplt
+  endif  ifimplt
 
 !---------------------------------------------------------------------
 
@@ -1090,11 +1090,11 @@
 !---------------------------------------------------------------
 
   dohoriz:  &
-  IF( dohturb )THEN
+  if( dohturb )then
 
-  IF(.not.terrain_flag)THEN
+  if(.not.terrain_flag)then
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -1111,7 +1111,7 @@
 
       enddo
 
-    ELSE
+    else
 
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
@@ -1122,19 +1122,19 @@
         do i=2,ni+1
           turbx(i,j,k) = ( arf2(i)*arf2(i)*t11(i,j,k) - arf1(i)*arf1(i)*t11(i-1,j,k) )*rdx*uf(i)
         enddo
-        IF(ebc.eq.3.or.ebc.eq.4)THEN
+        if(ebc.eq.3.or.ebc.eq.4)then
           turbx(ni+1,j,k)=0.0
-        ENDIF
+        endif
         enddo
 
       enddo
 
-    ENDIF
+    endif
 
 !---------------------------------------------------------------
 !  Terrain:
 
-  ELSE
+  else
 
       ! dum1 stores t11 at w-pts:
       ! dum2 stores t12 at w-pts:
@@ -1193,42 +1193,42 @@
 
       enddo
 
-  ENDIF  ! endif for terrain check
+  endif  ! endif for terrain check
 
 !-----------------------------------------------------------------
 !  open boundary conditions:
 
-    IF( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )THEN
+    if( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
 
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           do j=1,nj
             turbx(1,j,k) = 0.0
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           do j=1,nj
             turbx(ni+1,j,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           do i=1,ni+1
             turby(i,1,k) = 0.0
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           do i=1,ni+1
             turby(i,nj,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-      ENDDO
-    ENDIF
+      enddo
+    endif
 
-  ELSE  dohoriz
+  else  dohoriz
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -1241,20 +1241,20 @@
       enddo
       enddo
 
-  ENDIF  dohoriz
+  endif  dohoriz
 
 !-----------------------------------------------------------------
 !  z-direction
 
   dovert:  &
-  IF( dovturb )THEN
+  if( dovturb )then
 
       call       turbuz(dt,xh,ruh,xf,rxf,arf1,arf2,uf,vh,mh,mf,rmf,rho,rf,  &
                        zs,gz,rgz,gzu,gzv,rds,sigma,rdsf,sigmaf,gxu,     &
                        turbz,dum1,dum2,dum3,dum7,dum9,u ,w ,t11,t12,t13,t22,kmv, &
                        kmw,ufw,u1b,u2pt,ufwk)
 
-  ELSE  dovert
+  else  dovert
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -1266,15 +1266,15 @@
       enddo
       enddo
 
-  ENDIF  dovert
+  endif  dovert
 
 
 !-----------------------------------------------------------------
 !  Tendencies:
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
 
-      IF( cm1setup.eq.4 )THEN
+      if( cm1setup.eq.4 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,rru0)
         do k=1,nk
@@ -1291,7 +1291,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,rru0)
         do k=1,nk
@@ -1302,9 +1302,9 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
-    ELSE
+    else
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k,rru0)
@@ -1317,12 +1317,12 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !---------------------------------------------------------------------
 !  Diagnostics:
 
-      IF( doubud )THEN
+      if( doubud )then
       if( ud_hturb.ge.1 .and. ud_vturb.ge.1 )then
         if( axisymm.eq.0 )then
           !$omp parallel do default(shared)   &
@@ -1350,7 +1350,7 @@
           enddo
         endif
       endif
-      ENDIF
+      endif
 
 !-------------------------------------------------------------------
 !  All done
@@ -1401,7 +1401,7 @@
       real :: cfa,cfb,cfc,cfd
 
   ifimplu:  &
-  IF( doimpl.eq.0 )THEN
+  if( doimpl.eq.0 )then
       ! explicit vertical turbulence:
 
       tem = rdz*0.5
@@ -1419,12 +1419,12 @@
       enddo
       enddo
 
-  ELSE
+  else
 
       ! implicit vertical turbulence:
 
     check_grid:  &
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
       ! Cartesian grid:
 
       rdt = 0.5/dt
@@ -1435,7 +1435,7 @@
       i1 = 1
       i2 = ni+1
 
-      IF( .not. terrain_flag )THEN
+      if( .not. terrain_flag )then
         ! without terrain:
 
         !--------
@@ -1527,20 +1527,20 @@
 
         enddo
 
-      ELSE
+      else
         ! with terrain:
 
         ! dum9 stores w at scalar-pts:
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=0,nj+1
         do i=0,ni+1
           dum9(i,j,k)=0.5*(w(i,j,k)+w(i,j,k+1))
         enddo
         enddo
-        ENDDO
+        enddo
 
         !--------
         k = 1
@@ -1637,13 +1637,13 @@
 
         enddo
 
-      ENDIF
+      endif
 
       !------------------------------------------------------------
       !------------------------------------------------------------
       !------------------------------------------------------------
 
-    ELSEIF(axisymm.eq.1)THEN
+    elseif(axisymm.eq.1)then
       ! axisymmetric grid:
 
       rdt = 0.5/dt
@@ -1743,32 +1743,32 @@
 
         enddo
 
-    ENDIF  check_grid
+    endif  check_grid
 
     !------------------------------------------------------------
 
 
-  ENDIF  ifimplu
+  endif  ifimplu
 
-      IF(axisymm.eq.1)THEN
+      if(axisymm.eq.1)then
         !$omp parallel do default(shared)   &
         !$omp private(k)
-        DO k=1,nk
+        do k=1,nk
           turbz(1,1,k) = 0.0
-        ENDDO
-        IF( ebc.eq.3 .or. ebc.eq.4 )THEN
+        enddo
+        if( ebc.eq.3 .or. ebc.eq.4 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             turbz(ni+1,1,k)=0.0
           enddo
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 !-----------------------------------------------------------------
 !  2nd part of 2-part model:
 
-      IF( dot2p )THEN
+      if( dot2p )then
 
         do k=2,ntwk
 !!!          tem = 0.5*rdz*mf(1,1,k)
@@ -1800,7 +1800,7 @@
           enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------
 
@@ -1855,11 +1855,11 @@
 !---------------------------------------------------------------
 
   dohoriz:  &
-  IF( dohturb )THEN
+  if( dohturb )then
 
-  IF(.not.terrain_flag)THEN
+  if(.not.terrain_flag)then
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -1876,7 +1876,7 @@
 
       enddo
 
-    ELSE
+    else
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -1896,12 +1896,12 @@
 
       enddo
 
-    ENDIF
+    endif
 
 !---------------------------------------------------------------
 !  Terrain:
 
-  ELSE
+  else
 
       ! dum1 stores t12 at w-pts:
       ! dum2 stores t22 at w-pts:
@@ -1960,42 +1960,42 @@
 
       enddo
 
-  ENDIF  ! endif for terrain check
+  endif  ! endif for terrain check
 
 !-----------------------------------------------------------------
 !  open boundary conditions:
 
-    IF( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )THEN
+    if( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
 
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           do j=1,nj+1
             turbx(1,j,k) = 0.0
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           do j=1,nj+1
             turbx(ni,j,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           do i=1,ni
             turby(i,1,k) = 0.0
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           do i=1,ni
             turby(i,nj+1,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-      ENDDO
-    ENDIF
+      enddo
+    endif
 
-  ELSE  dohoriz
+  else  dohoriz
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -2008,20 +2008,20 @@
       enddo
       enddo
 
-  ENDIF  dohoriz
+  endif  dohoriz
 
 !-----------------------------------------------------------------
 !  z-direction
 
   dovert:  &
-  IF( dovturb )THEN
+  if( dovturb )then
 
       call       turbvz(dt,xh,rxh,arh1,arh2,uh,xf,rvh,vf,mh,mf,rho,rr,rf,   &
                        zs,gz,rgz,gzu,gzv,rds,sigma,rdsf,sigmaf,gyv,  &
                        turbz,dum1,dum2,dum3,dum7,dum9,v ,w ,t12,t22,t23,kmv, &
                        kmw,vfw,v1b,v2pt,vfwk)
 
-  ELSE  dovert
+  else  dovert
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -2033,15 +2033,15 @@
       enddo
       enddo
 
-  ENDIF  dovert
+  endif  dovert
 
 
 !-----------------------------------------------------------------
 !  Tendencies:
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
 
-      IF( cm1setup.eq.4 )THEN
+      if( cm1setup.eq.4 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,rrv0)
         do k=1,nk
@@ -2058,7 +2058,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,rrv0)
         do k=1,nk
@@ -2069,9 +2069,9 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
-    ELSE
+    else
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -2083,12 +2083,12 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !---------------------------------------------------------------------
 !  Diagnostics:
 
-      IF( dovbud )THEN
+      if( dovbud )then
       if( vd_hturb.ge.1 .and. vd_vturb.ge.1 )then
         if( axisymm.eq.0 )then
           !$omp parallel do default(shared)   &
@@ -2117,7 +2117,7 @@
           enddo
         endif
       endif
-      ENDIF
+      endif
 
 !-------------------------------------------------------------------
 !  All done
@@ -2169,7 +2169,7 @@
       real :: cfa,cfb,cfc,cfd
 
   ifimplv:  &
-  IF( doimpl.eq.0 )THEN
+  if( doimpl.eq.0 )then
       ! explicit vertical turbulence:
 
       tem = rdz*0.5
@@ -2187,11 +2187,11 @@
       enddo
       enddo
 
-  ELSE
+  else
 
       ! implicit vertical turbulence:
 
-      IF( .not. terrain_flag )THEN
+      if( .not. terrain_flag )then
 
         ! without terrain:
 
@@ -2299,7 +2299,7 @@
 
     !------------------------------------------------------------
 
-      ELSE
+      else
 
         ! with terrain:
 
@@ -2307,13 +2307,13 @@
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=0,nj+1
         do i=0,ni+1
           dum9(i,j,k)=0.5*(w(i,j,k)+w(i,j,k+1))
         enddo
         enddo
-        ENDDO
+        enddo
 
         rdt = 0.5/dt
         tema = -0.0625*dt*vialpha*rdz*rdz
@@ -2418,14 +2418,14 @@
 
         enddo
 
-      ENDIF
+      endif
 
-  ENDIF  ifimplv
+  endif  ifimplv
 
 !-----------------------------------------------------------------
 !  2nd part of 2-part model:
 
-      IF( dot2p )THEN
+      if( dot2p )then
 
         do k=2,ntwk
 !!!          tem = 0.5*rdz*mf(1,1,k)
@@ -2457,7 +2457,7 @@
           enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------
 
@@ -2503,11 +2503,11 @@
 !----------------------------------------------------------------
 
   dohoriz:  &
-  IF( dohturb )THEN
+  if( dohturb )then
 
-  IF(.not.terrain_flag)THEN
+  if(.not.terrain_flag)then
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
       ! Cartesian without terrain:
 
 !$omp parallel do default(shared)   &
@@ -2525,7 +2525,7 @@
 
       enddo
 
-    ELSE
+    else
       ! axisymmetric:
 
 !$omp parallel do default(shared)   &
@@ -2547,11 +2547,11 @@
 
       enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 
-  ELSE
+  else
       ! Cartesian with terrain:
 
 !$omp parallel do default(shared)   &
@@ -2598,42 +2598,42 @@
 
       enddo
 
-  ENDIF  ! endif for terrain check
+  endif  ! endif for terrain check
 
 !-----------------------------------------------------------------
 !  open boundary conditions:
 
-    IF( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )THEN
+    if( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=2,nk
+      do k=2,nk
 
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           do j=1,nj
             turbx(1,j,k) = 0.0
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           do j=1,nj
             turbx(ni,j,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           do i=1,ni
             turby(i,1,k) = 0.0
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           do i=1,ni
             turby(i,nj,k) = 0.0
           enddo
-        ENDIF
+        endif
 
-      ENDDO
-    ENDIF
+      enddo
+    endif
 
-  ELSE  dohoriz
+  else  dohoriz
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -2646,16 +2646,16 @@
       enddo
       enddo
 
-  ENDIF  dohoriz
+  endif  dohoriz
 
 !-----------------------------------------------------------------
 !  z-direction
 
   dovert:  &
-  IF( dovturb .or. ( cm1setup.eq.2 .and. ipbl.eq.2 ) )THEN
+  if( dovturb .or. ( cm1setup.eq.2 .and. ipbl.eq.2 ) )then
 
   ifimplw:  &
-  IF( doimpl.eq.0 )THEN
+  if( doimpl.eq.0 )then
       ! explicit vertical turbulence:
 
 !$omp parallel do default(shared)   &
@@ -2668,7 +2668,7 @@
       enddo
       enddo
 
-  ELSE
+  else
 
       ! implicit vertical turbulence:
 
@@ -2715,7 +2715,7 @@
 
         enddo
 
-      IF( axisymm.eq.0 )THEN
+      if( axisymm.eq.0 )then
         k = nk
       !$omp parallel do default(shared)   &
       !$omp private(i,j,r1,r2,cfa,cfb,cfc,cfd,tem,rrf)
@@ -2746,7 +2746,7 @@
 
         enddo
 
-      ELSE
+      else
 
         k = nk
       !$omp parallel do default(shared)   &
@@ -2778,11 +2778,11 @@
 
         enddo
 
-      ENDIF
+      endif
 
-  ENDIF  ifimplw
+  endif  ifimplw
 
-  ELSE  dovert
+  else  dovert
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -2794,14 +2794,14 @@
       enddo
       enddo
 
-  ENDIF  dovert
+  endif  dovert
 
 !---------------------------------------------------------------------
 !  Tendencies:
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
 
-      IF( cm1setup.eq.4 )THEN
+      if( cm1setup.eq.4 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=2,nk
@@ -2818,7 +2818,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=2,nk
@@ -2829,9 +2829,9 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
-    ELSE
+    else
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -2843,12 +2843,12 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !---------------------------------------------------------------------
 !  Diagnostics:
 
-      IF( dowbud )THEN
+      if( dowbud )then
       if( wd_hturb.ge.1 .and. wd_vturb.ge.1 )then
         if( axisymm.eq.0 )then
           !$omp parallel do default(shared)   &
@@ -2874,7 +2874,7 @@
           enddo
         endif
       endif
-      ENDIF
+      endif
 
 !-------------------------------------------------------------------
 !  All done
@@ -2889,4 +2889,4 @@
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-  END MODULE turbtend_module
+  end module turbtend_module

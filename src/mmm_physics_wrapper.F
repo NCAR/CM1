@@ -1,4 +1,4 @@
-  MODULE mmm_physics_wrapper_module
+  module mmm_physics_wrapper_module
 
   use ccpp_kind_types,only: kind_phys
   implicit none
@@ -6,7 +6,7 @@
   private
   public :: ysu_wrapper,sf_sfclayrev_wrapper,cu_ntiedtke_wrapper,mp_wsm6_wrapper,mp_wsm6_effectRad_wrapper
 
-  CONTAINS
+  contains
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -585,4 +585,4 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE mmm_physics_wrapper_module
+  end module mmm_physics_wrapper_module

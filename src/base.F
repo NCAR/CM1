@@ -1,11 +1,11 @@
-  MODULE base_module
+  module base_module
 
   implicit none
 
   private
   public :: base
 
-  CONTAINS
+  contains
 
 !-----------------------------------------------------------------------------
 !
@@ -131,7 +131,7 @@
 !  isnd = 1
 !  Dry adiabatic base state
 
-      IF(isnd.eq.1)THEN
+      if(isnd.eq.1)then
 
         ! Set these two variables for dry adiabatic sounding
 
@@ -166,7 +166,7 @@
 !  isnd = 2
 !  Dry isothermal base state
             
-      ELSEIF(isnd.eq.2)THEN
+      elseif(isnd.eq.2)then
           
         ! Set these two variables for dry isothermal sounding
 
@@ -212,7 +212,7 @@
 !  Dry, constant dT/dz sounding.
 !  Lapse rate of 0.0065  =  standard dry atmosphere.
 
-      ELSEIF(isnd.eq.3)THEN
+      elseif(isnd.eq.3)then
 
         ! Set these three variables for dry constant lapse rate sounding
 
@@ -260,7 +260,7 @@
 !  Saturated, neutrally-stable sounding for moist benchmark simulation.
 !  reference:  Bryan and Fritsch, 2002, MWR, 130, 2917-2928.
 
-      ELSEIF(isnd.eq.4)THEN
+      elseif(isnd.eq.4)then
 
         ! these two parameters define the sounding
 
@@ -360,7 +360,7 @@
 !  Weisman-Klemp analytic sounding.
 !  reference:  Weisman and Klemp, 1982, MWR, 110, 504-520.
 
-      ELSEIF(isnd.eq.5)THEN
+      elseif(isnd.eq.5)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  WK sounding'
@@ -439,20 +439,20 @@
 
         psurf = prs_sfc
         tsurf = th_sfc*((psurf*rp00)**rovcp)
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
         if( qv0(1,1,1).lt.qv_pbl )then
           qsurf = cgs1*qv0(1,1,1)+cgs2*qv0(1,1,2)+cgs3*qv0(1,1,3)
         else
           qsurf = qv_pbl
         endif
-      ELSE
+      else
         qsurf = 0.0
-      ENDIF
+      endif
 
 !------------------------------------------------------------------
 !  isnd = 6
 
-      ELSEIF(isnd.eq.6)THEN
+      elseif(isnd.eq.6)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' isnd = 6 code has been removed (for now)'
@@ -492,7 +492,7 @@
 !         (which is nz * dz when stretch_z=0, or ztop when stretch_z=1,  etc)
 !
 
-      ELSEIF( isnd.eq.7 .or. isnd.eq.17 )then
+      elseif( isnd.eq.7 .or. isnd.eq.17 )then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' Reading sounding from external file, input_sounding'
@@ -537,7 +537,7 @@
         rhinterp = 0.0
 
       prc0:  &
-      IF( myid.eq.0 )THEN
+      if( myid.eq.0 )then
         ! only processor 0 does this:
 
         open(unit=40,file='input_sounding',status='old',err=9009)
@@ -575,7 +575,7 @@
           call stopcm1
         endif
 
-      ENDIF  prc0
+      endif  prc0
 
 #ifdef MPI
         call MPI_BCAST(nsnd    ,  1 ,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
@@ -646,7 +646,7 @@
 !--------------------------------------------------------------------
 
         if(dowr) write(outfile,*)
-        if(dowr) write(outfile,*) ' Data from input_sounding file: '
+        if(dowr) write(outfile,*) ' data from input_sounding file: '
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '    k,z,th,qv:'
         do k=1,nsnd
@@ -672,8 +672,8 @@
         if(dowr) write(outfile,*) 'interpolating sounding to grid: '
         if(dowr) write(outfile,*)
 
-      DO j=jb,je
-      DO i=ib,ie
+      do j=jb,je
+      do i=ib,ie
 
         if (zsnd(nsnd) .lt. zh(i,j,nk)) then
           if(dowr) write(outfile,*) 'zmax of sounding < zmax of grid!'
@@ -682,7 +682,7 @@
           call stopcm1
         endif
 
-        DO k=1,nk
+        do k=1,nk
 
             kk = 1
             do while( zsnd(kk) .lt. zh(i,j,k) )
@@ -714,7 +714,7 @@
 
             if(i.eq.1.and.j.eq.1.and.dowr) write(outfile,*) '       ',zsnd(kdn),zh(i,j,k),zsnd(kup),interp_frac
 
-        ENDDO
+        enddo
         if(i.eq.1.and.j.eq.1.and.dowr) write(outfile,*)
 
         do k=1,nk
@@ -756,8 +756,8 @@
         enddo
       endif
 
-      ENDDO    ! enddo for i loop
-      ENDDO    ! enddo for j loop
+      enddo    ! enddo for i loop
+      enddo    ! enddo for j loop
 
 
         ! deallocate temporary 1D arrays
@@ -784,7 +784,7 @@
 !  isnd = 8
 !  Dry, constant d(theta)/dz sounding
 
-      ELSEIF(isnd.eq.8)THEN
+      elseif(isnd.eq.8)then
 
         ! Set these three variables for dry, constant d(theta)/dz sounding
 
@@ -794,17 +794,17 @@
 
         rhval = 0.0
 
-        IF( testcase.eq.6 .or. testcase.eq.10 )THEN
+        if( testcase.eq.6 .or. testcase.eq.10 )then
           !  hurricane boundary layer (Bryan et al, 2017, BLM)
           lapse  =  0.005
-        ENDIF
-        IF( testcase.eq.10 )THEN
+        endif
+        if( testcase.eq.10 )then
           rhval = 0.90
-        ENDIF
-        IF( testcase.eq.15 )THEN
+        endif
+        if( testcase.eq.15 )then
           lapse = 0.005
           rhval = 0.80
-        ENDIF
+        endif
 
 
         do k=kb,ke
@@ -839,7 +839,7 @@
 !  isnd = 9
 !  Constant Brunt-Vaisala frequency
 
-      ELSEIF(isnd.eq.9)then
+      elseif(isnd.eq.9)then
 
         ns1 =  0.0001
         ns2 =  0.0000
@@ -910,7 +910,7 @@
 !  Moist, constant Brunt-Vaisala frequency
 !    (assuming reversible moist microphysics)
 
-      ELSEIF(isnd.eq.10)then
+      elseif(isnd.eq.10)then
 
         if(dowr) write(outfile,*) '  isnd = 10'
 
@@ -1182,16 +1182,16 @@
 !  constant theta-e, saturated
 !  Reference:  Bryan and Rotunno, 2009, JAS, v10, pp. 3042-3060
 
-      ELSEIF(isnd.eq.11)THEN
+      elseif(isnd.eq.11)then
 
-        IF(imoist.eq.0)THEN
+        if(imoist.eq.0)then
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '  isnd=11 requires imoist=1'
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '  stopping model ...'
           if(dowr) write(outfile,*)
           call stopcm1
-        ENDIF
+        endif
 
         zl1 = 15000.0    ! tropopause height
 
@@ -1200,8 +1200,8 @@
 
         psurf = 101510.0    ! surface pressure (Pa)
 
-      DO j=jb,je
-      DO i=ib,ie
+      do j=jb,je
+      do i=ib,ie
 
         ! use psurf:
         pi_sfc   =  (psurf*rp00)**rovcp
@@ -1334,15 +1334,15 @@
 
         enddo
 
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 
         qsurf = cgs1*qv0(1,1,1)+cgs2*qv0(1,1,2)+cgs3*qv0(1,1,3)
 
 !------------------------------------------------------------------
 !  PBL simulation:  assumed dry
 
-      ELSEIF(isnd.eq.12)THEN
+      elseif(isnd.eq.12)then
 
         pi_sfc = 1.0
         th_sfc = 300.0
@@ -1354,13 +1354,13 @@
         do k=1,nk
         do j=jb,je
         do i=ib,ie
-          IF(zh(i,j,k).le.zl1)THEN
+          if(zh(i,j,k).le.zl1)then
             th0(i,j,k) = th_sfc
             pi0(i,j,k)=pi_sfc-g*zh(i,j,k)/(cp*th_sfc)
-          ELSE
+          else
             th0(i,j,k) = th_sfc+lapse*(zh(i,j,k)-zl1)
             pi0(i,j,k)=pisfc-(g/(cp*lapse))*alog(th0(i,j,k)/th_sfc)
-          ENDIF
+          endif
           prs0(i,j,k)=p00*(pi0(i,j,k)**(cp/rd))
           t0(i,j,k)=th0(i,j,k)*pi0(i,j,k)
           rh0(i,j,k)=0.0
@@ -1373,7 +1373,7 @@
 !------------------------------------------------------------------
 !  from Klemp (2011)
 
-      ELSEIF(isnd.eq.13)then
+      elseif(isnd.eq.13)then
 
         ns1 =  0.0001
         ns2 =  0.0004
@@ -1445,7 +1445,7 @@
 !------------------------------------------------------------------
 !  Convective boundary layer  (Sullivan and Patton, 2011, JAS)
 
-      ELSEIF(isnd.eq.14)THEN
+      elseif(isnd.eq.14)then
 
         pi_sfc = 1.0
         th_sfc = 300.0
@@ -1459,16 +1459,16 @@
         do k=1,nk
         do j=jb,je
         do i=ib,ie
-          IF(zh(i,j,k).le.zl1)THEN
+          if(zh(i,j,k).le.zl1)then
             th0(i,j,k) = th_sfc
             pi0(i,j,k) = pi_sfc-g*zh(i,j,k)/(cp*th_sfc)
-          ELSEIF(zh(i,j,k).le.zl2)THEN
+          elseif(zh(i,j,k).le.zl2)then
             th0(i,j,k) = th_sfc + (zh(i,j,k)-zl1)*lr1
             pi0(i,j,k) = pi0(i,j,k-1)-g*(zh(i,j,k)-zh(i,j,k-1))/(cp*0.5*(th0(i,j,k)+th0(i,j,k-1)))
-          ELSE
+          else
             th0(i,j,k) = th_sfc + (zl2-zl1)*lr1 + (zh(i,j,k)-zl2)*lr2
             pi0(i,j,k) = pi0(i,j,k-1)-g*(zh(i,j,k)-zh(i,j,k-1))/(cp*0.5*(th0(i,j,k)+th0(i,j,k-1)))
-          ENDIF
+          endif
           prs0(i,j,k)=p00*(pi0(i,j,k)**(cp/rd))
           t0(i,j,k)=th0(i,j,k)*pi0(i,j,k)
           thv0(i,j,k)=th0(i,j,k)
@@ -1488,7 +1488,7 @@
       ! and DYCOMS-II RF02
       ! drizzling stratocumulus (Ackerman et al, 2009, MWR)
 
-      ELSEIF( isnd.eq.15 )THEN
+      elseif( isnd.eq.15 )then
 
         if( testcase.lt.4 .or. testcase.gt.5 )then
           if( myid.eq.0 )then
@@ -1618,7 +1618,7 @@
 !------------------------------------------------------------------
 !   Moeng and Sullivan (1994, JAS) PBL
 
-      ELSEIF(isnd.eq.18)THEN
+      elseif(isnd.eq.18)then
 
         pi_sfc = 1.0
         th_sfc = 300.0
@@ -1634,16 +1634,16 @@
         do k=1,nk
         do j=jb,je
         do i=ib,ie
-          IF(zh(i,j,k).le.zl1)THEN
+          if(zh(i,j,k).le.zl1)then
             th0(i,j,k) = th_sfc
             pi0(i,j,k) = pi_sfc-g*zh(i,j,k)/(cp*th_sfc)
-          ELSEIF(zh(i,j,k).le.zl2)THEN
+          elseif(zh(i,j,k).le.zl2)then
             th0(i,j,k) = th_sfc + (zh(i,j,k)-zl1)*lr1
             pi0(i,j,k) = pi0(i,j,k-1)-g*(zh(i,j,k)-zh(i,j,k-1))/(cp*0.5*(th0(i,j,k)+th0(i,j,k-1)))
-          ELSE
+          else
             th0(i,j,k) = th_sfc + (zl2-zl1)*lr1 + (zh(i,j,k)-zl2)*lr2
             pi0(i,j,k) = pi0(i,j,k-1)-g*(zh(i,j,k)-zh(i,j,k-1))/(cp*0.5*(th0(i,j,k)+th0(i,j,k-1)))
-          ENDIF
+          endif
           prs0(i,j,k)=p00*(pi0(i,j,k)**(cp/rd))
           t0(i,j,k)=th0(i,j,k)*pi0(i,j,k)
           thv0(i,j,k)=th0(i,j,k)
@@ -1657,7 +1657,7 @@
 !------------------------------------------------------------------
 !   Siebesma et al (2003, JAS) shallow Cu case:
 
-      ELSEIF(isnd.eq.19)THEN
+      elseif(isnd.eq.19)then
 
         ! (m)
         z1   =     0.0
@@ -1683,7 +1683,7 @@
 
         prs_sfc  =  101500.0   ! (Pa)
 
-      IF( testcase.eq.11 )THEN
+      if( testcase.eq.11 )then
         ! SAS convective PBL:
         ! (m)
         z1   =     0.0
@@ -1708,7 +1708,7 @@
         qv5  =  qv3 - 0.004e-3*(z5-z3)
 
         prs_sfc  =  100000.0   ! (Pa)
-      ENDIF
+      endif
 
         pi_sfc   =  (prs_sfc*rp00)**(rovcp)
         thv_sfc  = th1*(1.0+reps*qv1)/(1.0+qv1)
@@ -1751,20 +1751,20 @@
 
         psurf = prs_sfc
         tsurf = th1*((psurf*rp00)**rovcp)
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
         if( qv0(1,1,1).lt.qv1 )then
           qsurf = cgs1*qv0(1,1,1)+cgs2*qv0(1,1,2)+cgs3*qv0(1,1,3)
         else
           qsurf = qv1
         endif
-      ELSE
+      else
         qsurf = 0.0
-      ENDIF
+      endif
 
 !------------------------------------------------------------------
 !   RICO, precipitating shallow Cu  (VanZanten et al 2011, JAMES)
 
-      ELSEIF(isnd.eq.20)THEN
+      elseif(isnd.eq.20)then
 
         ! (m)
         z1   =     0.0
@@ -1826,20 +1826,20 @@
 
         psurf = prs_sfc
         tsurf = th1*((psurf*rp00)**rovcp)
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
         if( qv0(1,1,1).lt.qv1 )then
           qsurf = cgs1*qv0(1,1,1)+cgs2*qv0(1,1,2)+cgs3*qv0(1,1,3)
         else
           qsurf = qv1
         endif
-      ELSE
+      else
         qsurf = 0.0
-      ENDIF
+      endif
 
 !------------------------------------------------------------------
 !   RCEMIP  (Wing et al. 2018, GMD)
 
-      ELSEIF(isnd.eq.21)THEN
+      elseif(isnd.eq.21)then
 
         ztrop = 15000.0
 
@@ -1893,7 +1893,7 @@
 !------------------------------------------------------------------
 !   stable boundary layer test case (Beare et al. 2006, BLM, pg 247)
 
-      ELSEIF( isnd.eq.22 )THEN
+      elseif( isnd.eq.22 )then
 
         pi_sfc = 1.0
         th_sfc = 265.0
@@ -1903,13 +1903,13 @@
         do k=1,nk
         do j=jb,je
         do i=ib,ie
-          IF(zh(i,j,k).le.zl1)THEN
+          if(zh(i,j,k).le.zl1)then
             th0(i,j,k) = th_sfc
             pi0(i,j,k) = pi_sfc-g*zh(i,j,k)/(cp*th_sfc)
-          ELSE
+          else
             th0(i,j,k) = th_sfc + (zh(i,j,k)-zl1)*lr1
             pi0(i,j,k) = pi0(i,j,k-1)-g*(zh(i,j,k)-zh(i,j,k-1))/(cp*0.5*(th0(i,j,k)+th0(i,j,k-1)))
-          ENDIF
+          endif
           prs0(i,j,k)=p00*(pi0(i,j,k)**(cp/rd))
           t0(i,j,k)=th0(i,j,k)*pi0(i,j,k)
           thv0(i,j,k)=th0(i,j,k)
@@ -1923,7 +1923,7 @@
 !------------------------------------------------------------------
 !   Diurnal cycle of shallow cumulus (Brown et al, 2002, QJRMS)
 
-      ELSEIF( isnd.eq.23 )THEN
+      elseif( isnd.eq.23 )then
 
         pi_sfc = 1.0
         th_sfc = 299.0
@@ -2019,19 +2019,19 @@
 
         psurf = prs_sfc
         tsurf = th1*((psurf*rp00)**rovcp)
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
         if( qv0(1,1,1).lt.qv1 )then
           qsurf = cgs1*qv0(1,1,1)+cgs2*qv0(1,1,2)+cgs3*qv0(1,1,3)
         else
           qsurf = qv1
         endif
-      ELSE
+      else
         qsurf = 0.0
-      ENDIF
+      endif
 
 !------------------------------------------------------------------
 
-      ENDIF
+      endif
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cc  End definition of base state sounding (isnd opton)  cccccccccc
@@ -2144,7 +2144,7 @@
 #endif
       call extrapbcs(rho0)
 
-      IF( psolver.eq.5 .or. psolver.eq.6 )THEN   
+      if( psolver.eq.5 .or. psolver.eq.6 )then   
         ! incompressible or compressible-Boussinesq:  set rho0 to a constant
 
         do k=kb,ke
@@ -2155,7 +2155,7 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
       do k=kb,ke
       do j=jb,je
@@ -2209,7 +2209,7 @@
 
       ! Get surface p/T/q (for surface models and for CAPE calculation):
 
-      IF( psurf.ge.tsmall .and. tsurf.ge.tsmall .and. (.not.terrain_flag) )THEN
+      if( psurf.ge.tsmall .and. tsurf.ge.tsmall .and. (.not.terrain_flag) )then
         ! this section of code only if no terrain
 #ifdef MPI
         call MPI_BCAST(psurf,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
@@ -2224,7 +2224,7 @@
           rth0s(i,j) = thsurf**(-1)
         enddo
         enddo
-      ELSE
+      else
         do j=jb,je
         do i=ib,ie
           thsurf = cgs1*th0(i,j,1)+cgs2*th0(i,j,2)+cgs3*th0(i,j,3)
@@ -2236,7 +2236,7 @@
           rth0s(i,j) = thsurf**(-1)
         enddo
         enddo
-      ENDIF
+      endif
 
       i = 1
       j = 1
@@ -2260,7 +2260,7 @@
 ! already been retrieved from the input_sounding file
 !--------------------------
 
-    IF(isnd.ne.7)THEN
+    if(isnd.ne.7)then
 
       do k=1,nk
       do j=1,nj
@@ -2329,14 +2329,14 @@
         do j=1,nj
         do i=1,ni+1
           zu=0.5*(zh(i-1,j,k)+zh(i,j,k))
-          if(zu.le.udep1)THEN
+          if(zu.le.udep1)then
             ANGLE=90.0*(zu/udep1)*(pi/180.0)
             u0(i,j,k)=umax1-umax1*cos(ANGLE)
-          elseif(zu.gt.udep1 .and. zu.le.udep2)THEN
+          elseif(zu.gt.udep1 .and. zu.le.udep2)then
             u0(i,j,k)=umax1+(zu-udep1)*(umax2-umax1)/(udep2-udep1)
-          ELSE
+          else
             u0(i,j,k)=umax2
-          ENDIF
+          endif
         enddo
         enddo
         enddo
@@ -2347,14 +2347,14 @@
         do j=1,nj+1
         do i=1,ni
           zv=0.5*(zh(i,j-1,k)+zh(i,j,k))
-          if(zv.le.udep1)THEN
+          if(zv.le.udep1)then
             ANGLE=90.0*(zv/udep1)*(pi/180.0)
             v0(i,j,k)=vmax1*SIN(ANGLE)
-          elseif(zv.gt.udep1 .and. zv.le.udep2)THEN
+          elseif(zv.gt.udep1 .and. zv.le.udep2)then
             v0(i,j,k)=vmax1
-          ELSE
+          else
             v0(i,j,k)=vmax1
-          ENDIF
+          endif
         enddo
         enddo
         enddo
@@ -2464,7 +2464,7 @@
 !  iwnd = 6
 !  constant wind
 
-      ELSEIF(iwnd.eq.6)THEN
+      elseif(iwnd.eq.6)then
 
         if( testcase.eq.1 )then
           ! Sullivan and Patton (2011, JAS)
@@ -2522,7 +2522,7 @@
 !  Wind speed decreasing with height
 !  Simple hurricane boundary layer (Bryan et al 2017, BLM)
 
-      ELSEIF(iwnd.eq.8)THEN
+      elseif(iwnd.eq.8)then
 
 !!!        vmax = 40.0        ! this is now set in namelist.input
                               ! (see hurr_vg in param21 section)
@@ -2554,7 +2554,7 @@
 !  iwnd = 9
 !  Siebesma et al (2003, JAS) shallow Cu case:
 
-      ELSEIF(iwnd.eq.9)THEN
+      elseif(iwnd.eq.9)then
 
         udep1   =   700.0    ! height of bottom of shear layer (m)
         udep2   =  3000.0    ! height of top of shear layer (m)
@@ -2590,7 +2590,7 @@
 !  iwnd = 10
 !  Ackerman et al (2009, MWR) drizzling Sc case
 
-      ELSEIF(iwnd.eq.10)THEN
+      elseif(iwnd.eq.10)then
 
         do k=1,nk
 
@@ -2614,7 +2614,7 @@
 !  iwnd = 11
 !   RICO, precipitating shallow Cu  (VanZanten et al 2011, JAMES)
 
-      ELSEIF(iwnd.eq.11)THEN
+      elseif(iwnd.eq.11)then
 
         udep1   =      0.0   ! height of bottom of shear layer (m)
         udep2   =   4000.0   ! height of top of shear layer (m)
@@ -2647,9 +2647,9 @@
 
 !-----------------------------------------------------------------------
 
-      ENDIF    ! endif for iwnd options
+      endif    ! endif for iwnd options
 
-    ENDIF   ! endif for isnd=7 check
+    endif   ! endif for isnd=7 check
 
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -2730,7 +2730,7 @@
 !
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase .eq. 3 )THEN
+    if( testcase .eq. 3 )then
 
       ! shallow Cu case  (Siebesma et al, 2003, JAS)
 
@@ -2794,11 +2794,11 @@
       enddo
       if( myid.eq.0 ) print *
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase .eq. 4 )THEN
+    if( testcase .eq. 4 )then
 
       ! nonprecipitating stratoCu (Stevens et al, 2005, MWR)
 
@@ -2807,11 +2807,11 @@
         wprof(k) = -3.75e-6 * zf(1,1,k)
       enddo
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase .eq. 5 )THEN
+    if( testcase .eq. 5 )then
 
       ! drizzling stratoCu (Ackerman et al, 2009, MWR)
 
@@ -2820,11 +2820,11 @@
         wprof(k) = -3.75e-6 * zf(1,1,k)
       enddo
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase.eq.6 .or. testcase.eq.10 .or. testcase.eq.15 )THEN
+    if( testcase.eq.6 .or. testcase.eq.10 .or. testcase.eq.15 )then
 
       ! hurricane boundary layer (Bryan et al, 2017, BLM)
 
@@ -2864,11 +2864,11 @@
       enddo
       if( dowr ) write(outfile,*)
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase .eq. 7 )THEN
+    if( testcase .eq. 7 )then
 
       !   RICO, precipitating shallow Cu  
       !   (VanZanten et al 2011, JAMES)
@@ -2921,18 +2921,18 @@
       enddo
       if( myid.eq.0 ) print *
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase .eq. 9 .or. testcase.eq.14 )THEN
+    if( testcase .eq. 9 .or. testcase.eq.14 )then
 
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase.eq.11 )THEN
+    if( testcase.eq.11 )then
       ! SAS NCAR PBL intercomparison
 
 !!!      ug = 2.0
@@ -2954,22 +2954,22 @@
       qvfrc = 0.0
       wprof = 0.0
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase.eq.12 )THEN
+    if( testcase.eq.12 )then
 
       ! Martinuzzi and Tropea (1993, JFE) wind tunnel case:
 
         ulspg = 36.0
         vlspg = 0.0
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-    IF( testcase.eq.13 )THEN
+    if( testcase.eq.13 )then
 
       ! UF Boundary Layer Wind Tunnel case:
 
@@ -2983,7 +2983,7 @@
       ulspg = 0.000545
       vlspg = 0.0
 
-    ENDIF
+    endif
 
     !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
@@ -3140,7 +3140,7 @@
 !------------------------------------------------------------------
 !  Get CAPE,CIN,etc:
 
-  IF(imoist.eq.1)THEN
+  if(imoist.eq.1)then
 
     allocate(  pfoo(nk+1) )
     allocate(  tfoo(nk+1) )
@@ -3158,9 +3158,9 @@
 
     if(dowr) write(outfile,*)
     if(dowr) write(outfile,*) '  Thermodynamic properties of base-state sounding:'
-  IF(terrain_flag)THEN
+  if(terrain_flag)then
     if(dowr) write(outfile,*) '    (for lower-left corner of domain:  i=1,j=1)  '
-  ENDIF
+  endif
     if(dowr) write(outfile,*)
     do n=1,3
       call getcape( n , nk+1 , pfoo , tfoo , qvfoo , cape , cin ,   &
@@ -3186,7 +3186,7 @@
     deallocate(  tfoo )
     deallocate( qvfoo )
 
-  ENDIF
+  endif
 
 !------------------------------------------------------------------
 
@@ -3245,8 +3245,8 @@
       if(dowr) write(outfile,*)
 
       dothis = .false.
-      IF( dothis )THEN
-      IF( myid.eq.0 )THEN
+      if( dothis )then
+      if( myid.eq.0 )then
 
         open(unit=21,file='input_sounding_grid')
         i = 1
@@ -3264,14 +3264,14 @@
                         cgt1*v0(i,j,nk)+cgt2*v0(i,j,nk-1)+cgt3*v0(i,j,nk-2)
         close(unit=21)
 
-      ENDIF
-      ENDIF
+      endif
+      endif
 
 !--------------------------------------------------------------
 
       dothis = .false.
-      IF( dothis )THEN
-      IF( myid.eq.0 )THEN
+      if( dothis )then
+      if( myid.eq.0 )then
 
         open(unit=21,file='lsnudge_0001.dat')
         write(21,*) '*  Header:   lsnudge_time1 (s)   lsnudge_time2 (s)'
@@ -3291,8 +3291,8 @@
                         cgt1*v0(i,j,nk)+cgt2*v0(i,j,nk-1)+cgt3*v0(i,j,nk-2)
         close(unit=21)
 
-      ENDIF
-      ENDIF
+      endif
+      endif
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
@@ -3363,15 +3363,15 @@
 
     getthe = 0.0
 
-  IF(ttype.eq.1)THEN
+  if(ttype.eq.1)then
     pd=p/(1.0+reps*qv)
     cpm=cp+cpl*qt
     lhv=lv1-lv2*t
     getthe=t*((p00/pd)**(rd/cpm))*exp(lhv*qv/(cpm*t))
-  ELSEIF(ttype.eq.2)THEN
+  elseif(ttype.eq.2)then
     getthe=t*( (p00/p)**(0.2854*(1.0-0.28*qv)) )   &
             *exp( ((3376.0/t)-2.54)*qv*(1.0+0.81*qv) )
-  ENDIF
+  endif
     end function getthe
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -3398,15 +3398,15 @@
 250 continue
       t=tlast+tinc
       qv=rslf(p,t)
-    IF(ttype.eq.1)THEN
+    if(ttype.eq.1)then
       pd=p/(1.0+reps*qv)
       cpm=cp+cpl*qt
       lhv=lv1-lv2*t
       thx=t*((p00/pd)**(rd/cpm))*exp(lhv*qv/(cpm*t))
-    ELSEIF(ttype.eq.2)THEN
+    elseif(ttype.eq.2)then
       thx=t*( (p00/p)**(0.2854*(1.0-0.28*qv)) )   &
            *exp( ((3376.0/t)-2.54)*qv*(1.0+0.81*qv) )
-    ENDIF
+    endif
 
       diff=the-thx
       if(n.ge.40) print *,n,p,the,thx
@@ -3425,4 +3425,4 @@
     return
     end subroutine revthe
 
-  END MODULE base_module
+  end module base_module

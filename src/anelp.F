@@ -1,11 +1,11 @@
-  MODULE anelp_module
+  module anelp_module
 
   implicit none
 
   private
   public :: anelp
 
-  CONTAINS
+  contains
 
       subroutine anelp(xh,uh,ruh,xf,uf,yh,vh,rvh,yf,vf,             &
                        zh,mh,rmh,mf,rmf,zf,pi0,thv0,rho0,prs0,rf0,  &
@@ -79,7 +79,7 @@
 !-----------------------------------------------------------------------
 !  Open boundary conditions:
 
-        IF( (wbc.eq.2.and.ibw.eq.1) .or. (ebc.eq.2.and.ibe.eq.1) )THEN
+        if( (wbc.eq.2.and.ibw.eq.1) .or. (ebc.eq.2.and.ibe.eq.1) )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -88,19 +88,19 @@
             u3d(ni+1,j,k)=ua(ni+1,j,k)
           enddo
           enddo
-        ENDIF
+        endif
 
-        IF(wbc.eq.2.and.ibw.eq.1)THEN
+        if(wbc.eq.2.and.ibw.eq.1)then
           ! west open bc tendency:
           call   ssopenbcw(uh,rds,sigma,rdsf,sigmaf,gz,rgzu,gx,radbcw,dum1,u3d,uten,dttmp)
-        ENDIF
-        IF(ebc.eq.2.and.ibe.eq.1)THEN
+        endif
+        if(ebc.eq.2.and.ibe.eq.1)then
           ! east open bc tendency:
           call   ssopenbce(uh,rds,sigma,rdsf,sigmaf,gz,rgzu,gx,radbce,dum1,u3d,uten,dttmp)
-        ENDIF
+        endif
 
 
-        IF( (wbc.eq.2.and.ibw.eq.1) .or. (ebc.eq.2.and.ibe.eq.1) )THEN
+        if( (wbc.eq.2.and.ibw.eq.1) .or. (ebc.eq.2.and.ibe.eq.1) )then
 
           call restrict_openbc_we(rvh,rmh,rho0,u3d)
 
@@ -114,13 +114,13 @@
           enddo
           enddo
 
-        ENDIF
+        endif
 
 !-----
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
 
-        IF( (sbc.eq.2.and.ibs.eq.1) .or. (nbc.eq.2.and.ibn.eq.1) )THEN
+        if( (sbc.eq.2.and.ibs.eq.1) .or. (nbc.eq.2.and.ibn.eq.1) )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -129,19 +129,19 @@
             v3d(i,nj+1,k)=va(i,nj+1,k)
           enddo
           enddo
-        ENDIF
+        endif
 
-        IF(sbc.eq.2.and.ibs.eq.1)THEN
+        if(sbc.eq.2.and.ibs.eq.1)then
           ! south open bc tendency:
           call   ssopenbcs(vh,rds,sigma,rdsf,sigmaf,gz,rgzv,gy,radbcs,dum1,v3d,vten,dttmp)
-        ENDIF
-        IF(nbc.eq.2.and.ibn.eq.1)THEN
+        endif
+        if(nbc.eq.2.and.ibn.eq.1)then
           ! north open bc tendency:
           call   ssopenbcn(vh,rds,sigma,rdsf,sigmaf,gz,rgzv,gy,radbcn,dum1,v3d,vten,dttmp)
-        ENDIF
+        endif
 
 
-        IF( (sbc.eq.2.and.ibs.eq.1) .or. (nbc.eq.2.and.ibn.eq.1) )THEN
+        if( (sbc.eq.2.and.ibs.eq.1) .or. (nbc.eq.2.and.ibn.eq.1) )then
 
           call restrict_openbc_sn(ruh,rmh,rho0,v3d)
 
@@ -155,15 +155,15 @@
           enddo
           enddo
 
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 
 !---------------------------------------------------------------------
 !  convergence forcing:
 
-        IF( convinit.eq.1 )THEN
-          IF( rtime.le.convtime .and. nx.gt.1 )THEN
+        if( convinit.eq.1 )then
+          if( rtime.le.convtime .and. nx.gt.1 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
             do k=1,nk
@@ -186,8 +186,8 @@
             enddo
             enddo
             enddo
-          ENDIF
-          IF( rtime.le.convtime .and. ny.gt.1 )THEN
+          endif
+          if( rtime.le.convtime .and. ny.gt.1 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
             do k=1,nk
@@ -210,14 +210,14 @@
             enddo
             enddo
             enddo
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !----------------------------------------------
 !  updraft nudging:
 
-      IF( wnudge.eq.1 )THEN
-        IF( (mtime+dttmp).le.t2_wnudge )THEN
+      if( wnudge.eq.1 )then
+        if( (mtime+dttmp).le.t2_wnudge )then
           call get_wnudge(mtime,dttmp,xh,yh,zf,w3d,dum1)
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
@@ -228,8 +228,8 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ENDIF
+        endif
+      endif
 
         if(timestats.ge.1) time_sound=time_sound+mytime()
 
@@ -265,7 +265,7 @@
 
 !-------------------------------------------------------------------- 
 
-      IF( nrk.eq.nrkmax )THEN
+      if( nrk.eq.nrkmax )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -277,7 +277,7 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
         if(timestats.ge.1) time_sound=time_sound+mytime()
 
@@ -285,4 +285,4 @@
 
       end subroutine anelp
 
-  END MODULE anelp_module
+  end module anelp_module

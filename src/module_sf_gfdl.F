@@ -1,13 +1,13 @@
 !-- XLV         latent heat of vaporization for water (J/kg)
 !
-MODULE module_sf_gfdl
+module module_sf_gfdl
 
 !real, dimension(-100:2000,-100:2000), save :: z00
 
-CONTAINS
+contains
 
 !-------------------------------------------------------------------
-   SUBROUTINE SF_GFDL(U3D,V3D,T3D,QV3D,P3D,                     &
+   subroutine SF_GFDL(U3D,V3D,T3D,QV3D,P3D,                     &
                      CP,ROVCP,R,XLV,PSFC,CHS,CHS2,CQS2, CPM,    &
                      DT, SMOIS,num_soil_layers,ISLTYP,ZNT,      &
 !!!#if (HWRF==1)
@@ -26,11 +26,11 @@ CONTAINS
                      ims,ime, jms,jme, kms,kme,                 &
                      its,ite, jts,jte, kts,kte                  )
 !-------------------------------------------------------------------
-      USE MODULE_GFS_MACHINE, ONLY : kind_phys
-      USE MODULE_GFS_FUNCPHYS , ONLY : gfuncphys,fpvs
-      USE MODULE_GFS_PHYSCONS, grav => con_g
+      use MODULE_GFS_MACHINE, ONLY : kind_phys
+      use MODULE_GFS_FUNCPHYS , ONLY : gfuncphys,fpvs
+      use MODULE_GFS_PHYSCONS, grav => con_g
 !-------------------------------------------------------------------
-      IMPLICIT NONE
+      implicit none
 !-------------------------------------------------------------------
 !-- U3D    	3D u-velocity interpolated to theta points (m/s)
 !-- V3D    	3D v-velocity interpolated to theta points (m/s)
@@ -90,18 +90,18 @@ CONTAINS
 !-- kte         end index for k in tile
 !-------------------------------------------------------------------
       character*255 :: message
-      INTEGER, INTENT(IN) ::            ids,ide, jds,jde, kds,kde,      &
+      integer, intent(in) ::            ids,ide, jds,jde, kds,kde,      &
                                         ims,ime, jms,jme, kms,kme,      &
                                         its,ite, jts,jte, kts,kte,      &
                                         ISFFLX,NUM_SOIL_LAYERS,NTSFLG
-      INTEGER, INTENT(IN) ::            ICOEF_SF
-      INTEGER, INTENT(IN) ::            IWAVECPL
-      LOGICAL, INTENT(IN) ::            LCURR_SF
+      integer, intent(in) ::            ICOEF_SF
+      integer, intent(in) ::            IWAVECPL
+      logical, intent(in) ::            LCURR_SF
       logical,intent(in)  :: pert_Cd 
       integer,intent(in)  :: ens_random_seed
       real,intent(in)     :: ens_Cdamp
 
-      REAL,    INTENT(IN) ::                                            &
+      real,    intent(in) ::                                            &
                                         CP,                             &
                                         EP1,                            &
                                         EP2,                            &
@@ -112,26 +112,26 @@ CONTAINS
                                         SFENTH,                         &
                                         XLV 
 
-      REAL,    DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(IN) ::      & 
+      real,    dimension(ims:ime, jms:jme, kms:kme), intent(in) ::      & 
                                         P3D,                            &
                                         QV3D,                           &
                                         T3D,                            &
                                         U3D,                            &
                                         V3D
-      INTEGER, DIMENSION( ims:ime , jms:jme ), INTENT(IN )::   ISLTYP
-      REAL, DIMENSION( ims:ime , jms:jme , 1:num_soil_layers ), INTENT(INOUT)::   SMOIS
+      integer, dimension( ims:ime , jms:jme ), intent(in )::   ISLTYP
+      real, dimension( ims:ime , jms:jme , 1:num_soil_layers ), intent(inout)::   SMOIS
 
-      REAL,    DIMENSION(ims:ime, jms:jme), INTENT(IN) ::               &
+      real,    dimension(ims:ime, jms:jme), intent(in) ::               &
                                         PSFC,                           &
                                         GLW,                            &
                                         GSW,                            &
                                         XLAND                           
-      REAL,    DIMENSION(ims:ime, jms:jme), INTENT(IN) ::               &
+      real,    dimension(ims:ime, jms:jme), intent(in) ::               &
                                         CHARN,                          &
                                         MSANG,                          &
                                         SCURX,                          &
                                         SCURY
-      REAL,    DIMENSION(ims:ime, jms:jme), INTENT(INOUT) ::            & 
+      real,    dimension(ims:ime, jms:jme), intent(inout) ::            & 
                                         TSK,                            &
                                         BR,                             &
                                         ZKMAX,                          &
@@ -165,23 +165,23 @@ CONTAINS
                                         TAUX,                           & ! gopal's doing for Ocean coupling
                                         TAUY
 
-      REAL, DIMENSION(ims:ime, jms:jme), INTENT(INOUT) ::               &
+      real, dimension(ims:ime, jms:jme), intent(inout) ::               &
                                         U10,                            &
                                         V10                            
 
 !--------------------------- LOCAL VARS ------------------------------
 
-      REAL ::                           ESAT,                           &
+      real ::                           ESAT,                           &
                                         cpcgs,                          &
                                         smc,                            &
                                         smcdry,                         &
                                         smcmax
 
-      REAL     (kind=kind_phys) ::                                      &
+      real     (kind=kind_phys) ::                                      &
                                         RHOX
-      REAL, DIMENSION(1:30)    ::       MAXSMC, &
+      real, dimension(1:30)    ::       MAXSMC, &
                                         DRYSMC
-      REAL     (kind=kind_phys), DIMENSION(its:ite) ::                  &
+      real     (kind=kind_phys), dimension(its:ite) ::                  &
                                         CH,                             &
                                         CM,                             &
                                         DDVEL,                          &
@@ -221,13 +221,13 @@ CONTAINS
                                         Z0RL,                           &
                                         Z1                              
 
-      REAL,    DIMENSION(kms:kme, ims:ime) ::                           &
+      real,    dimension(kms:kme, ims:ime) ::                           &
                                         rpc,                            &
                                         tpc,                            &
                                         upc,                            &
                                         vpc
     
-     REAL,    DIMENSION(ims:ime) ::                                     &
+     real,    dimension(ims:ime) ::                                     &
                                         pspc,                           &
                                         pkmax,                          &
                                         tstrc,                          &
@@ -254,7 +254,7 @@ CONTAINS
                                         xcur,                           &
                                         ycur
 
-      INTEGER ::                                                        &
+      integer ::                                                        &
                                         I,                              &
                                         II,                             &
                                         IGPVS,                          &
@@ -265,18 +265,18 @@ CONTAINS
 
       real :: tmp9,zhalf  ! wang, height of the first half level
 
-        DATA MAXSMC/0.339, 0.421, 0.434, 0.476, 0.476, 0.439,  &
+        data MAXSMC/0.339, 0.421, 0.434, 0.476, 0.476, 0.439,  &
                     0.404, 0.464, 0.465, 0.406, 0.468, 0.468,  &
                     0.439, 1.000, 0.200, 0.421, 0.000, 0.000,  &
                     0.000, 0.000, 0.000, 0.000, 0.000, 0.000,  &
                     0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
 
-        DATA DRYSMC/0.010, 0.028, 0.047, 0.084, 0.084, 0.066,     &
+        data DRYSMC/0.010, 0.028, 0.047, 0.084, 0.084, 0.066,     &
                     0.067, 0.120, 0.103, 0.100, 0.126, 0.138,     &
                     0.066, 0.000, 0.006, 0.028, 0.000, 0.000,     &
                     0.000, 0.000, 0.000, 0.000, 0.000, 0.000,     &
                     0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
-      DATA IGPVS/0/
+      data IGPVS/0/
       save igpvs
 
 
@@ -288,14 +288,14 @@ CONTAINS
    IM=ITE-ITS+1
    KM=KTE-KTS+1
 
-   WRITE(message,*)'WITHIN THE GFDL SCHEME, NTSFLG=1 FOR GFDL SLAB  2010 UPGRADS',NTSFLG
+   write(message,*)'WITHIN THE GFDL SCHEME, NTSFLG=1 FOR GFDL SLAB  2010 UPGRADS',NTSFLG
    call wrf_debug(2,message)
 
 !!     write(0,*)'icoef_sf,lcurr_sf=',icoef_sf,lcurr_sf
 
-   DO J=jts,jte
+   do J=jts,jte
 
-      DO i=its,ite
+      do i=its,ite
         DDVEL(I)=0.
         RCL(i)=1.
         PRSL1(i)=P3D(i,j,kts)*.001
@@ -361,15 +361,15 @@ CONTAINS
 !         endif
         !
 
-      ENDDO
+      enddo
 
-      DO i=its,ite
+      do i=its,ite
          PRSLKI(i)=(PS(I)/PRSL1(I))**ROVCP
          THGB(I)=TSKIN(i)*(100./PS(I))**ROVCP
          THX(I)=T1(i)*(100./PRSL1(I))**ROVCP
          RHO1(I)=PRSL1(I)*1000./(R*T1(I)*(1.+EP1*Q1(I)))
          Q1(I)=Q1(I)/(1.+Q1(I))
-      ENDDO
+      enddo
 
 !     if(j==2)then
 !       write(0,*)'--------------------------------------------'
@@ -382,7 +382,7 @@ CONTAINS
 !                    pkmax(i),pspc(i),wetc(i),tjloc(i),zoc(i),tstrc(i)
 !     enddo
 
-     CALL MFLUX2(  fxh,fxe,fxmx,fxmy,cdm,rib,xxfh,zoc,mzoc,tstrc,   &    !mzoc for momentum Zo KWON
+     call MFLUX2(  fxh,fxe,fxmx,fxmy,cdm,rib,xxfh,zoc,mzoc,tstrc,   &    !mzoc for momentum Zo KWON
                    pspc,pkmax,wetc,slwdc,tjloc,                &
                    icoef_sf,iwavecpl,lcurr_sf,alpha,gamma,xcur,ycur,           &
                    pert_Cd, ens_random_seed, ens_Cdamp,        &
@@ -422,10 +422,10 @@ CONTAINS
 !GFDL             PM,PH,FH2,QSS,Z1                                      )
 
 
-      DO i=its,ite
+      do i=its,ite
 !       update skin temp only when using GFDL slab...
 
-        IF(NTSFLG==1)    then
+        if(NTSFLG==1)    then
         tsk(i,j) = tstrc(i)      ! gopal's doing 
 !bugfix 4
 !       bob's doing patch tsk with neigboring values... are grid boundaries
@@ -535,46 +535,46 @@ CONTAINS
         zol_out(i,j)=zetaout(i)
         mol_out(i,j)=zkmax(i,j)/(1.0e-20+zetaout(i))
         z0t_out(i,j)=0.01*abs(tzot(i))
-      ENDDO
+      enddo
 
 !       write(0,*)'fm,fh,cm,ch(125)', fm(125),fh(125),cm(125),ch(125)
 
-      DO i=its,ite
+      do i=its,ite
         FLHC(i,j)=CPM(I,J)*RHO1(I)*CHS(I,J)
         FLQC(i,j)=RHO1(I)*CHS(I,J)
 !       GZ1OZ0(i,j)=LOG(Z1(I)/(Z0RL(I)*.01))
         CQS2(i,j)=CHS2(I,J)
-      ENDDO
+      enddo
 
-      IF (ISFFLX.EQ.0) THEN
-        DO i=its,ite
+      if (ISFFLX.EQ.0) then
+        do i=its,ite
           HFX(i,j)=0.
           LH(i,j)=0.
           QFX(i,j)=0.
-        ENDDO
-      ELSE
-        DO i=its,ite
-          IF(XLAND(I,J)-1.5.GT.0.)THEN
+        enddo
+      else
+        do i=its,ite
+          if(XLAND(I,J)-1.5.GT.0.)then
 !           HFX(I,J)=FLHC(I,J)*(THGB(I)-THX(I))
 !           cpcgs  = 1.00464e7
 !       convert from ergs/gram/K to J/kg/K  cpmks=1004
 !           hfx   (i,j)=-0.001*cpcgs*fxh(i)
             hfx   (i,j)=       -10.*CP*fxh(i)    !  Bob: hfx   (i,1)= -10.*CP*fxh(i)
-          ELSEIF(XLAND(I,J)-1.5.LT.0.)THEN
+          elseif(XLAND(I,J)-1.5.LT.0.)then
 !           HFX(I,J)=FLHC(I,J)*(THGB(I)-THX(I))
 !           cpcgs  = 1.00464e7
 !       convert from ergs/gram/K to J/kg/K  cpmks=1004
 !           hfx   (i,j)=-0.001*cpcgs*fxh(i)
             hfx   (i,j)=       -10.*CP*fxh(i)    ! Bob: hfx   (i,j)=  -10.*CP*fxh(i) 
             HFX(I,J)=AMAX1(HFX(I,J),-250.)
-          ENDIF
+          endif
 !         QFX(I,J)=FLQC(I,J)*(QSFC(I,J)-Q1(I))
 !       convert from g/(cm*cm*sec) to kg/(m*m*sec)
           qfx(i,j)=-10.*fxe(i)
           QFX(I,J)=AMAX1(QFX(I,J),0.)
           LH(I,J)=XLV*QFX(I,J)
-        ENDDO
-      ENDIF
+        enddo
+      endif
 !       if(j.eq.2) write(0,*) 'u3d ,ustar,cdm at end of gfdlsfcmod'
 !       write(0,*) j,(u3d(ii,1,j),ii=70,90)
 !       write(0,*) j,(ustar(ii),ii=70,90)
@@ -588,7 +588,7 @@ CONTAINS
 !!!    call wrf_debug(1,message)
 !!!    endif
 
-   ENDDO            ! FOR THE J LOOP I PRESUME
+   enddo            ! FOR THE J LOOP I PRESUME
 !      if(100.ge.its.and.100.le.ite.and.100.ge.jts.and.100.le.jte) then 
 !       write(0,*) 'output vars of sf_gfdl at i,j=100'
 !       write(0,*) 'TSK',TSK(100,100)                  
@@ -620,10 +620,10 @@ CONTAINS
 !      endif 
 
 
-   END SUBROUTINE SF_GFDL
+   end subroutine SF_GFDL
 
 !-------------------------------------------------------------------
-       SUBROUTINE MFLUX2( fxh,fxe,fxmx,fxmy,cdm,rib,xxfh,zoc,mzoc,tstrc,       &    !mzoc KWON
+       subroutine MFLUX2( fxh,fxe,fxmx,fxmy,cdm,rib,xxfh,zoc,mzoc,tstrc,       &    !mzoc KWON
                           pspc,pkmax,wetc,slwdc,tjloc,                    &
                           icoef_sf,iwavecpl,lcurr_sf,alpha,gamma,xcur,ycur,                &
                           pert_Cd, ens_random_seed, ens_Cdamp,            &
@@ -643,8 +643,8 @@ CONTAINS
 !
 !------------------------------------------------------------------------
 
-      USE module_sf_exchcoef
-      IMPLICIT NONE
+      use module_sf_exchcoef
+      implicit none
 !     use allocate_mod
 !     use module_TLDATA , ONLY : tab,table,cp,g,rgas,og 
 
@@ -926,7 +926,7 @@ CONTAINS
       real*8 :: gasdev               !zhang
       real :: rr                     !zhang
       logical,save :: pert_Cd_local            !zhang
-      CHARACTER(len=3) :: env_memb,env_pp
+      character(len=3) :: env_memb,env_pp
       integer,save :: ens_random_seed_local,env_pp_local         !zhang
       integer :: ensda_physics_pert !zhang
       real,save :: ens_Cdamp_local         !zhang
@@ -1072,7 +1072,7 @@ CONTAINS
 !     where necessary modify zo values over ocean.
 !------------------------------------------------------------------------
 !
-      mzoc(i) = zoc(i)                !FOR SAVE MOMENTUM Zo
+      mzoc(i) = zoc(i)                !FOR save MOMENTUM Zo
       tzot(i) = zot(i)                 !output wang
       enddo
 
@@ -1296,7 +1296,7 @@ CONTAINS
           if (fmzo .GE. 5.0e-5) then
             sq        = (sgz - sgzm(i))/(szeta(i) - szetam(i))
             if(sq .EQ. 1) then
-             write(message,*)'NCO ERROR DIVIDE BY ZERO IN MFLUX2 (STABLE CASE)'
+             write(message,*)'NCO ERROR DIVIDE BY ZERO in MFLUX2 (STABLE case)'
              call wrf_message(message)
              write(message,*)'sq is 1 ',fmzo,sgz,sgzm(i),szeta(i),szetam(i)
              call wrf_message(message)
@@ -1320,7 +1320,7 @@ CONTAINS
 110   continue
 
       write(6,120)
-120   format(2X, ' NON-CONVERGENCE FOR STABLE ZETA IN ROW ')
+120   format(2X, ' NON-CONVERGENCE FOR STABLE ZETA in ROW ')
 !     call MPI_CLOSE(1,routine)
 
 !------------------------------------------------------------------------
@@ -1502,7 +1502,7 @@ CONTAINS
             uq        = (ugz - ugzm(i))/(uzeta(i) - uzetam(i))
             uzetam(i) = uzeta(i)
             if(uq .EQ. 1) then
-             call wrf_message('NCO ERROR DIVIDE BY ZERO IN MFLUX2 (UNSTABLE CASE)')
+             call wrf_message('NCO ERROR DIVIDE BY ZERO in MFLUX2 (UNSTABLE case)')
              write(message,*)'uq is 1 ',ux2,ugz,ugzm(i),uzeta(i),uzetam(i) 
              call wrf_message(message)
             endif
@@ -1525,7 +1525,7 @@ CONTAINS
 230   continue
       write(message,240)
       call wrf_message(message)
-240   format(2X, ' NON-CONVERGENCE FOR UNSTABLE ZETA IN ROW ')
+240   format(2X, ' NON-CONVERGENCE FOR UNSTABLE ZETA in ROW ')
 !     call MPI_CLOSE(1,routine)
 
 !------------------------------------------------------------------------
@@ -1813,7 +1813,7 @@ CONTAINS
       return
       end subroutine MFLUX2
 
-  SUBROUTINE hwrfsfcinit(isn,XICE,VEGFRA,SNOW,SNOWC,CANWAT,SMSTAV,       &
+  subroutine hwrfsfcinit(isn,XICE,VEGFRA,SNOW,SNOWC,CANWAT,SMSTAV,       &
                         SMSTOT, SFCRUNOFF,UDRUNOFF,GRDFLX,ACSNOW,       &
                         ACSNOM,IVGTYP,ISLTYP,TSLB,SMOIS,DZS,SFCEVP,     & !  STEMP
                         TMN,                                            &
@@ -1823,23 +1823,23 @@ CONTAINS
                         ims,ime, jms,jme, kms,kme,                      &
                         its,ite, jts,jte, kts,kte                     )
 
-   IMPLICIT NONE 
+   implicit none 
 
 ! Arguments
-   INTEGER,  INTENT(IN   )   ::     ids,ide, jds,jde, kds,kde,  &
+   integer,  intent(in   )   ::     ids,ide, jds,jde, kds,kde,  &
                                     ims,ime, jms,jme, kms,kme,  &
                                     its,ite, jts,jte, kts,kte
 
-   INTEGER, INTENT(IN)       ::     num_soil_layers
+   integer, intent(in)       ::     num_soil_layers
 
-   REAL,    DIMENSION( num_soil_layers), INTENT(IN) :: DZS
+   real,    dimension( num_soil_layers), intent(in) :: DZS
 
-   REAL,    DIMENSION( ims:ime, num_soil_layers, jms:jme )    , &
-            INTENT(INOUT)    ::                          SMOIS, & 
+   real,    dimension( ims:ime, num_soil_layers, jms:jme )    , &
+            intent(inout)    ::                          SMOIS, & 
                                                          TSLB      !STEMP
 
-   REAL,    DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(INOUT)    ::                           SNOW, & 
+   real,    dimension( ims:ime, jms:jme )                     , &
+            intent(inout)    ::                           SNOW, & 
                                                          SNOWC, & 
                                                         CANWAT, &
                                                         SMSTAV, &
@@ -1854,18 +1854,18 @@ CONTAINS
                                                         TMN, &
                                                         ACSNOM
 
-   INTEGER, DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(INOUT)    ::                         IVGTYP, &
+   integer, dimension( ims:ime, jms:jme )                     , &
+            intent(inout)    ::                         IVGTYP, &
                                                         ISLTYP
 
 !
 
-  INTEGER, INTENT(IN) :: isn
-  LOGICAL, INTENT(IN) :: allowed_to_read
+  integer, intent(in) :: isn
+  logical, intent(in) :: allowed_to_read
 ! Local
-  INTEGER             :: iseason
-  INTEGER :: icm,jcm,itf,jtf
-  INTEGER ::  I,J,L
+  integer             :: iseason
+  integer :: icm,jcm,itf,jtf
+  integer ::  I,J,L
 
 
    itf=min0(ite,ide-1)
@@ -1876,8 +1876,8 @@ CONTAINS
 
    iseason=isn
 
-   DO J=jts,jtf
-       DO I=its,itf
+   do J=jts,jtf
+       do I=its,itf
 !      SNOW(i,j)=0.
        SNOWC(i,j)=0.
 !      SMSTAV(i,j)=
@@ -1887,13 +1887,13 @@ CONTAINS
 !      GRDFLX(i,j)=
 !      ACSNOW(i,j)=
 !      ACSNOM(i,j)=
-    ENDDO
-   ENDDO
+    enddo
+   enddo
 
-  END SUBROUTINE hwrfsfcinit
+  end subroutine hwrfsfcinit
 
 ! GHB, 200126: from module_cu_sas.F
-     FUNCTION ran1(idum)
+     function ran1(idum)
       implicit none
       integer idum,ia,im,iq,ir,ntab,ndiv
       real*8 am,eps,rnmx
@@ -1921,6 +1921,6 @@ CONTAINS
       iv(j)=idum
       ran1=min(am*iy,rnmx)
       return
-      END FUNCTION ran1
+      end function ran1
 
-END MODULE module_sf_gfdl
+end module module_sf_gfdl

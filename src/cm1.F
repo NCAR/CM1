@@ -486,16 +486,16 @@
 
 !----------------------------------------------------------------------
 
-      IF( procfiles )THEN
+      if( procfiles )then
 #ifdef MPI
         outfile=10
 #endif
         dowr = .true.
-      ELSE
+      else
         dowr = .false.
-      ENDIF
+      endif
 
-      IF( myid.eq.0 ) dowr = .true.
+      if( myid.eq.0 ) dowr = .true.
 
 !----------------------------------------------------------------------
 #ifdef MPI
@@ -506,7 +506,7 @@
       minval = 1.0e30
       open(unit=10,file='proc.info',status='unknown')
       write(10,*)
-    IF( nx.eq.1 .and. ny.eq.1 )THEN
+    if( nx.eq.1 .and. ny.eq.1 )then
       print *
       print *,'  nx = ',nx
       print *,'  ny = ',ny
@@ -514,13 +514,13 @@
       print *,'  Cannot use MPI when nx = ny = 1 '
       print *
       call stopcm1
-    ELSEIF( nx.le.3 )THEN
+    elseif( nx.le.3 )then
       nodex = 1
       nodey = numprocs
-    ELSEIF( ny.le.3 )THEN
+    elseif( ny.le.3 )then
       nodex = numprocs
       nodey = 1
-    ELSE
+    else
       do n = numprocs , 1 , -1
         temy = float(n)
         temx = float(numprocs)/temy
@@ -547,7 +547,7 @@
       write(10,*)
       write(10,*) '  nodex,nodey = ',nodex,nodey,nodex*nodey,numprocs
       write(10,*)
-    ENDIF
+    endif
     endif
 
     ! just to be sure:
@@ -1869,17 +1869,17 @@
       allocate(   zir(ibr:ier,jbr:jer) )
       zir = 0.0
 
-      IF( radopt .eq. 1 )THEN
+      if( radopt .eq. 1 )then
         nir = 1
         njr = 1
         nkr = nk+3
         rbufsz = n2d_radiat*nir*njr + n3d_radiat*nir*njr*nkr
-      ELSE
+      else
         nir = 1
         njr = 1
         nkr = 1
         rbufsz = 1
-      ENDIF
+      endif
 
       allocate(    radsw(ni,nj) )
       radsw = 0.0
@@ -2240,14 +2240,14 @@
       allocate( kbdy(ibib:ieib,jbib:jeib) )
       kbdy = 1
 
-      IF( do_ib )THEN
+      if( do_ib )then
 
         call   init_immersed_boundaries(                                          &
                        xh,yh,xf,yf,sigma,sigmaf,zs,zh,bndy,kbdy,out3d,            &
                        ww31(1,1,1),ww32(1,1,1),we31(1,1,1),we32(1,1,1),           &
                        ws31(1,1,1),ws32(1,1,1),wn31(1,1,1),wn32(1,1,1),reqs_p)
 
-      ENDIF
+      endif
 
       allocate( hflxw(ibib:ieib,jbib:jeib,kmaxib) )
       hflxw = 0
@@ -2258,22 +2258,22 @@
       allocate( hflxn(ibib:ieib,jbib:jeib,kmaxib) )
       hflxn = 0
 
-      IF( do_ib )THEN
+      if( do_ib )then
 
         call   ib_flx_init(bndy,hflxw,hflxe,hflxs,hflxn,dum1,dum2,     &
                            uw31,uw32,ue31,ue32,us31,us32,un31,un32,    &
                            vw31,vw32,ve31,ve32,vs31,vs32,vn31,vn32,reqs_u,reqs_v)
 
-      ENDIF
+      endif
 
 !----------------------------------------------------------------------
 !  allocate arrays and initialize some variables for large-scale nudging:
 
-      IF( do_lsnudge )THEN
+      if( do_lsnudge )then
         lsnudge_maxlevels = max( nk , 1000 )
-      ELSE
+      else
         lsnudge_maxlevels = 1
-      ENDIF
+      endif
 
       lsnudge_unit = 74
       lsnudge_count = 0
@@ -2529,7 +2529,7 @@
       xcenter = minx + 0.5*(maxx-minx)
       ycenter = miny + 0.5*(maxy-miny)
 
-      IF( doazimavg )THEN
+      if( doazimavg )then
 
         ! check that ddr is positive and non-zero
         if( ddr.lt.smeps )then
@@ -2572,7 +2572,7 @@
         if( myid.eq.0 ) print *
         if( myid.eq.0 ) print *,'  ddr,rlen,icrs,maxr = ',ddr,rlen,icrs,xhref(nx/2+icrs)
         if( myid.eq.0 ) print *
-      ENDIF
+      endif
 
       allocate( crref(icrs) )
       crref = 0.0
@@ -2657,7 +2657,7 @@
                         emiss,thc,albd,znt,rznt,mavail,dsxy,prs0s,prs0,   &
                         tmn,tml,t0ml,hml,h0ml,huml,hvml,tmoml,z0base)
 
-      IF(irst.eq.1)THEN
+      if(irst.eq.1)then
 
         startup = .false.
         restarted = .true.
@@ -2708,11 +2708,11 @@
         if(dowr) write(outfile,*) '  restart_read time = ',time_misc
         if(dowr) write(outfile,*)
         !  In case user wants to change values on a restart:
-        IF( restart_reset_frqtim )THEN 
+        if( restart_reset_frqtim )then 
           if( statfrq.gt.1.0e-6 ) stattim = mtime + statfrq
           if(  tapfrq.gt.1.0e-6 ) taptim  = mtime + tapfrq
           if(  rstfrq.gt.1.0e-6 ) rsttim  = mtime + rstfrq
-        ENDIF
+        endif
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  Using the following: '
         if(dowr) write(outfile,*)
@@ -2735,55 +2735,55 @@
         ! (see subroutine in misclibs.F for more details)
 !!!        call randpert(xfref,yfref,xh,yh,zh,zf,tha)
 
-      ELSE
+      else
 
         restarted = .false.
         restart_prcl = .false.
 
-      ENDIF
+      endif
 
 
-      IF( dodomaindiag )THEN
-        IF( restarted .and. diagfrq.gt.1.0e-6 )THEN
+      if( dodomaindiag )then
+        if( restarted .and. diagfrq.gt.1.0e-6 )then
           diagtim = mtime + diagfrq
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '   diagtim = ',diagtim
           if(dowr) write(outfile,*)
-        ELSE
+        else
           diagtim = 0.0
-        ENDIF
-      ELSE
+        endif
+      else
         diagtim = 1.0d60
-      ENDIF
+      endif
 
-      IF( doazimavg )THEN
-        IF( restarted .and. azimavgfrq.gt.1.0e-6 )THEN
+      if( doazimavg )then
+        if( restarted .and. azimavgfrq.gt.1.0e-6 )then
           azimavgtim = mtime + azimavgfrq
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '   azimavgtim = ',azimavgtim
           if(dowr) write(outfile,*)
-        ELSE
+        else
           azimavgtim = 0.0
-        ENDIF
-      ELSE
+        endif
+      else
         azimavgtim = 1.0d60
-      ENDIF
+      endif
 
-      IF( dohifrq )THEN
-        IF( restarted .and. hifrqfrq.ge.1.0e-6 )THEN
+      if( dohifrq )then
+        if( restarted .and. hifrqfrq.ge.1.0e-6 )then
           hifrqtim = mtime + hifrqfrq
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '   hifrqtim = ',hifrqtim
           if(dowr) write(outfile,*)
-        ELSE
+        else
           hifrqtim = 0.0
-        ENDIF
-      ELSE
+        endif
+      else
         hifrqtim = 1.0d60
-      ENDIF
+      endif
 
 
-      IF( run_time .gt. 0.0 )THEN
+      if( run_time .gt. 0.0 )then
         timax = mtime + run_time
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  Detected positive value for run_time. '
@@ -2791,7 +2791,7 @@
         if(dowr) write(outfile,*) '        run_time = ',run_time
         if(dowr) write(outfile,*) '        timax    = ',timax
         if(dowr) write(outfile,*)
-      ENDIF
+      endif
 
 
 !----------------------------------------------------------------------
@@ -2908,7 +2908,7 @@
 !  get info for large-scale nudging:
 !  (190724, GHB: moved this after restart_read)
 
-      IF( do_lsnudge )THEN
+      if( do_lsnudge )then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*)
@@ -2936,7 +2936,7 @@
         if( myid.eq.0 ) print *,'  lsnudge_end    =  ',lsnudge_end
         if( myid.eq.0 ) print *
 
-      ENDIF
+      endif
 
 
 !----------------------------------------------------------------------
@@ -2974,7 +2974,7 @@
 
         !..........  check for diffusion stability ..........!
 
-        IF( cm1setup.ge.1 )THEN
+        if( cm1setup.ge.1 )then
 
           call calcksquick(dt,uh,vh,mf,kmh,kmv,khh,khv,reqk)
 #ifdef MPI
@@ -3002,7 +3002,7 @@
 
           adtlast = dbldt
 
-        ENDIF
+        endif
 
         !..........  should be ready to go ..........!
 
@@ -3083,7 +3083,7 @@
       nstep0 = nstep
 
 
-      IF( startup )THEN
+      if( startup )then
         ! starting from t=0:  skip solve and write initial conditions
         dosolve     = .false.
         dorad       = .true.
@@ -3093,7 +3093,7 @@
         dotdwrite   = .true.
         doazimwrite = .true.
         dohifrqwrite = .true.
-      ELSE
+      else
         ! call solve
         dosolve     = .true.
         dorad       = .false.
@@ -3104,30 +3104,30 @@
         doazimwrite = .false.
         dohifrqwrite = .false.
         if( .not. restart_prcl ) doprclout = .true.
-      ENDIF
+      endif
 
 
-      IF( abs(rstfrq).lt.1.0e-10 )THEN
+      if( abs(rstfrq).lt.1.0e-10 )then
         ! 150820:  Write restart file if rstfrq=0 and stop
         dorestart = .true.
         dosolve = .false.
         nrst = 0
-      ELSE
+      else
         dorestart = .false.
-      ENDIF
+      endif
 
-      IF( restarted )THEN
+      if( restarted )then
         dostat = .true.
         dosolve = .false.
         if( doazimavg .and. nwritea.eq.1 ) doazimwrite = .true.
         if( dodomaindiag .and. nwritet.eq.1 ) dotdwrite = .true.
         if( dohifrq .and. nwriteh.eq.1 ) dohifrqwrite = .true.
-      ENDIF
+      endif
 
       getvt = .false.
-      IF( dowriteout .and. output_fallvel.eq.1 ) getvt = .true.
-      IF( imoist.eq.1 .and. dodomaindiag .and. (ptype.eq.3.or.ptype.eq.5) ) getvt = .true.
-      IF( imoist.eq.1 .and. dodomaindiag .and. testcase.eq.5 ) getvt = .true.
+      if( dowriteout .and. output_fallvel.eq.1 ) getvt = .true.
+      if( imoist.eq.1 .and. dodomaindiag .and. (ptype.eq.3.or.ptype.eq.5) ) getvt = .true.
+      if( imoist.eq.1 .and. dodomaindiag .and. testcase.eq.5 ) getvt = .true.
 
 
       if( interp_on_restart )then
@@ -3162,7 +3162,7 @@
 
     !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c!
     timeloop:  &
-    DO WHILE( mtime.lt.timax )
+    do WHILE( mtime.lt.timax )
 
       ifsolve:  &
       if( dosolve )then
@@ -3175,7 +3175,7 @@
         !   (needed for some diagnostic calculations in solve)
         dowriteout = .false.
         if( (mtime+dbldt).ge.(taptim-0.1d0*dbldt) .or. tapfrq.lt.0.0 ) dowriteout = .true.
-        IF( myid.eq.0 .and. dowriteout ) print *,'  dowriteout = ',dowriteout
+        if( myid.eq.0 .and. dowriteout ) print *,'  dowriteout = ',dowriteout
 
 
         dostat = .false.
@@ -3184,7 +3184,7 @@
 
         dorestart  =  .false.
         if( (mtime+dbldt).ge.(rsttim-0.1d0*dbldt) .and. rstfrq.gt.0.0 ) dorestart  =  .true.
-        IF( myid.eq.0 .and. dorestart ) print *,'  dorestart = ',dorestart
+        if( myid.eq.0 .and. dorestart ) print *,'  dorestart = ',dorestart
 
 
         doprclout  =  .false.
@@ -3194,24 +3194,24 @@
 
 
         dorad = .false.
-        IF( radopt.ge.1 )THEN
+        if( radopt.ge.1 )then
           ! use time at end of timestep:
-          IF( (mtime+dbldt).ge.(radtim-0.1d0*dbldt) ) dorad = .true.
-          IF( myid.eq.0 .and. dorad ) print *,'  dorad = ',dorad
-        ENDIF
+          if( (mtime+dbldt).ge.(radtim-0.1d0*dbldt) ) dorad = .true.
+          if( myid.eq.0 .and. dorad ) print *,'  dorad = ',dorad
+        endif
 
 
         getvt = .false.
-        IF( dodomaindiag )THEN
-        IF( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5.or.testcase.eq.5) )THEN
+        if( dodomaindiag )then
+        if( imoist.eq.1 .and. (ptype.eq.3.or.ptype.eq.5.or.testcase.eq.5) )then
           if( (mtime+dbldt).ge.(diagtim-0.1d0*dbldt) ) getvt = .true.
           if( getvt .and. myid.eq.0 ) print *,'  getvt = ',getvt
-        ENDIF
-        ENDIF
+        endif
+        endif
 
 
         getdbz = .false.
-        IF(output_dbz.eq.1)THEN
+        if(output_dbz.eq.1)then
           if( ((mtime+dbldt).ge.(taptim-0.1d0*dbldt)) .or. tapfrq.le.0.0 )then
             getdbz = .true.
           endif
@@ -3230,39 +3230,39 @@
               getdbz = .true.
             endif
           endif
-        ENDIF
-        IF( restart_file_dbz )THEN
+        endif
+        if( restart_file_dbz )then
           if( ((mtime+dbldt).ge.(rsttim-0.1d0*dbldt)) .and. rstfrq.gt.0.0001 )then
             getdbz = .true.
           endif
-        ENDIF
-        IF( iprcl.eq.1 .and. prcl_dbz.eq.1 )THEN
+        endif
+        if( iprcl.eq.1 .and. prcl_dbz.eq.1 )then
           if( ((mtime+dbldt).ge.(prcltim-0.1d0*dbldt)) .or. prclfrq.le.0.0 )then
             getdbz = .true.
           endif
-        ENDIF
+        endif
         if(getdbz)then
           if(dowr) write(outfile,*) '  Getting dbz ... '
         endif
 
 
-        IF( dodomaindiag )THEN
+        if( dodomaindiag )then
           if( (mtime+dbldt).ge.(diagtim-0.1d0*dbldt) .or. diagfrq.le.0.0 )then
             dotdwrite = .true.
           endif
-        ENDIF
+        endif
 
-        IF( doazimavg )THEN
+        if( doazimavg )then
           if( (mtime+dbldt).ge.(azimavgtim-0.1d0*dbldt) .or. azimavgfrq.le.0.0 )then
             doazimwrite = .true.
           endif
-        ENDIF
+        endif
 
-        IF( dohifrq )THEN
+        if( dohifrq )then
           if( (mtime+dbldt).ge.(hifrqtim-0.1d0*dbldt) .or. hifrqfrq.le.0.0 )then
             dohifrqwrite = .true.
           endif
-        ENDIF
+        endif
 
         dotbud = .false.
         doqbud = .false.
@@ -3270,28 +3270,28 @@
         dovbud = .false.
         dowbud = .false.
 
-        IF( dowriteout .or. dotdwrite .or. doazimwrite )THEN
-          if( output_thbudget.eq.1 .or. dodomaindiag )THEN
+        if( dowriteout .or. dotdwrite .or. doazimwrite )then
+          if( output_thbudget.eq.1 .or. dodomaindiag )then
             dotbud = .true.
             if(myid.eq.0) print *,'  dotbud = ',dotbud
           endif
-          if( output_qvbudget.eq.1 .or. dodomaindiag )THEN
+          if( output_qvbudget.eq.1 .or. dodomaindiag )then
             doqbud = .true.
             if(myid.eq.0) print *,'  doqbud = ',doqbud
           endif
-          if( output_ubudget.eq.1 .or. dodomaindiag )THEN
+          if( output_ubudget.eq.1 .or. dodomaindiag )then
             doubud = .true.
             if(myid.eq.0) print *,'  doubud = ',doubud
           endif
-          if( output_vbudget.eq.1 .or. dodomaindiag )THEN
+          if( output_vbudget.eq.1 .or. dodomaindiag )then
             dovbud = .true.
             if(myid.eq.0) print *,'  dovbud = ',dovbud
           endif
-          if( output_wbudget.eq.1 .or. dodomaindiag )THEN
+          if( output_wbudget.eq.1 .or. dodomaindiag )then
             dowbud = .true.
             if(myid.eq.0) print *,'  dowbud = ',dowbud
           endif
-        ENDIF
+        endif
 
         donudge = .false.
 
@@ -3402,7 +3402,7 @@
         ! end_solve2
 
 
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
 
         ! microphysics:
 
@@ -3424,7 +3424,7 @@
                          getdbz,getvt,dotbud,doqbud)
       endif
 
-      ENDIF
+      endif
 
 
         ! solve3: finish primary dynamical solver
@@ -3481,8 +3481,8 @@
         !  (NOT COMMON)
 
         ifpdcomp:  &
-        IF( pdcomp )THEN
-        IF( dowriteout .or. doazimwrite )THEN
+        if( pdcomp )then
+        if( dowriteout .or. doazimwrite )then
 
           if(myid.eq.0) print *,'  Getting pressure diagnostics ... '
 
@@ -3499,8 +3499,8 @@
 
           if(timestats.ge.1) time_poiss=time_poiss+mytime()
 
-        ENDIF
-        ENDIF  ifpdcomp
+        endif
+        endif  ifpdcomp
 
 
         !--------------------------------
@@ -3524,16 +3524,16 @@
         ! note: ntim,rtim are set in param.F
 
         tavgcode:  &
-        IF( dotimeavg )THEN
+        if( dotimeavg )then
 
           ntavg(ntim) = ntavg(ntim) + 1
 
           rtavg(ntim) = rtavg(ntim) + dbldt
 
-          IF( ntim.eq.5 )THEN
+          if( ntim.eq.5 )then
             ntot = ntavg(1) + ntavg(2) + ntavg(3) + ntavg(4) + ntavg(5)
             rtot = rtavg(1) + rtavg(2) + rtavg(3) + rtavg(4) + rtavg(5)
-          ELSE
+          else
             ntot = 0
             qtem = 0.0
             do n=1,ntim
@@ -3541,7 +3541,7 @@
               qtem = qtem+rtavg(n)
             enddo
             rtot = qtem
-          ENDIF
+          endif
           rdenom = 1.0d0/max( 1.0d-10 , rtot )
 
           printit = .true.
@@ -3626,7 +3626,7 @@
 
           if(timestats.ge.1) time_tavg=time_tavg+mytime()
 
-        ENDIF  tavgcode
+        endif  tavgcode
 
         !--------------------------------
 
@@ -3638,9 +3638,9 @@
       !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-      IF( axisymm.eq.0 .and. doazimavg .or. do_adapt_move )THEN
-        IF( do_adapt_move .and. mtime.ge.adaptmovetim )THEN
-        IF( dowriteout .or. dohifrqwrite .or. doazimwrite )THEN
+      if( axisymm.eq.0 .and. doazimavg .or. do_adapt_move )then
+        if( do_adapt_move .and. mtime.ge.adaptmovetim )then
+        if( dowriteout .or. dohifrqwrite .or. doazimwrite )then
         if( nstep.ge.1 )then
 
           if( .not. restarted )then
@@ -3652,9 +3652,9 @@
           call   getrangle(xh,yh,xcenter,ycenter,cir,crr,cangle,icrs,crref,xhref,xfref)
 
         endif
-        ENDIF
-        ENDIF
-      ENDIF
+        endif
+        endif
+      endif
 
 
       !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -3666,9 +3666,9 @@
         ! Uses a smoothed field of pressure at the lowest model level to determine
         ! the position of a TC.
 
-      IF( do_adapt_move )THEN
+      if( do_adapt_move )then
 
-        IF( mtime.ge.adaptmovetim )then
+        if( mtime.ge.adaptmovetim )then
 
           call   update_adapt_move(nstep,mtime,xh,yh,xfref,yfref,ug,vg,psmth,     &
                                    dum1,pp3d,u0,ua,u3d,v0,va,v3d,mvrec,nwritemv,  &
@@ -3678,9 +3678,9 @@
           nwritemv = nwritemv+1
           adaptmovetim = adaptmovetim + adapt_move_frq
 
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 
 
       !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -3688,7 +3688,7 @@
       !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-      IF( radopt.ge.1 .and. dorad )THEN
+      if( radopt.ge.1 .and. dorad )then
 
         call     radiation_driver(mtime,radtim,dt,rbufsz,xh,yh,xf,yf,zf,rmh,c1,c2,     &
                    swten,lwten,swtenc,lwtenc,cldfra,o30,thraten,                       &
@@ -3712,7 +3712,7 @@
         enddo
         if(timestats.ge.1) time_rad=time_rad+mytime()
 
-      ENDIF
+      endif
 
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -3788,11 +3788,11 @@
         ! end_sfc_and_turb
 
 
-      IF( (idiff.ge.1).and.(difforder.eq.2) )THEN
+      if( (idiff.ge.1).and.(difforder.eq.2) )then
         !  get stress terms for explicit diffusion scheme:
         call diff2def(uh,arh1,arh2,uf,arf1,arf2,vh,vf,mh,c1,c2,mf,ust,zntmp,u1,v1,s1,  &
                       divx,rho,rr,rf,t11,t12,t13,t22,t23,t33,u3d,v3d,w3d,dissten)
-      ENDIF
+      endif
 
 #ifdef MPI
       if( cm1setup.ge.1 .and. adapt_dt.eq.1 )then
@@ -3810,14 +3810,14 @@
         !  Adaptive timestepping:
         !   (assumes cflmax and ksmax have already been calculated)
 
-        IF( adapt_dt.eq.1 .and. ( dosolve .or. interp_on_restart ) )THEN
+        if( adapt_dt.eq.1 .and. ( dosolve .or. interp_on_restart ) )then
 
           call   getnewdt(ndt,dt,dtlast,adt,acfl,dbldt,                                 &
                           mtime,stattim,taptim,rsttim,prcltim,diagtim,azimavgtim,       &
                           dorestart,dowriteout,dostat,doprclout,dotdwrite,doazimwrite,  &
                           hifrqtim,dohifrqwrite,.false.)
 
-        ENDIF
+        endif
 
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
@@ -3835,7 +3835,7 @@
           if(dowr) write(outfile,*) '  initial conditions:'
           if(dowr) write(outfile,*)
         endif
-        IF(axisymm.eq.0)THEN
+        if(axisymm.eq.0)then
           ! for Cartesian grid:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -3846,7 +3846,7 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           ! for axisymmetric grid:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -3857,7 +3857,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
         call     statpack(mtime,nrec,ndt,dt,dtlast,rtime,adt,acfl,cloudvar,   &
                           qname,budname,qbudget,asq,bsq,                      &
                           name_stat,desc_stat,unit_stat,                      &
@@ -3919,10 +3919,10 @@
 
       if( dowriteout )then
       otype:  &
-      IF(output_format.eq.1.or.output_format.eq.2)THEN
+      if(output_format.eq.1.or.output_format.eq.2)then
         nn = 1
         if(terrain_flag .and. output_interp.eq.1) nn = 2
-        DO n=1,nn
+        do n=1,nn
           if(n.eq.1)then
             fnum = 51
             frec = srec
@@ -3930,7 +3930,7 @@
             fnum = 71
             frec = sirec
           endif
-          IF( stopit )THEN
+          if( stopit )then
             ! diag code does not account for stopit, so just set arrays to zero
             ! to avoid confusion
             tdiag = 0.0
@@ -3939,7 +3939,7 @@
             vdiag = 0.0
             wdiag = 0.0
             kdiag = 0.0
-          ENDIF
+          endif
           call          writeout(frec,urec,vrec,wrec,mrec,rtime,dt,fnum,nwrite,qname,qunit,    &
                         nstep,mtime,adt,ndt,domainlocx,domainlocy,                             &
                         name_output,desc_output,unit_output,grid_output,levs_output,cmpr_output, &
@@ -3980,11 +3980,11 @@
           else
             sirec = frec
           endif
-        ENDDO
-      ELSE  otype
+        enddo
+      else  otype
         print *,'  09832 '
         call stopcm1
-      ENDIF  otype
+      endif  otype
         nwrite=nwrite+1
         if(tapfrq.gt.0.0)then
           doit = .true.
@@ -4006,7 +4006,7 @@
 
 
       if(iprcl.eq.1)then
-      IF( doprclout )THEN
+      if( doprclout )then
         call     parcel_interp(dt,mtime,xh,uh,ruh,xf,uf,yh,vh,rvh,yf,vf, &
                                zh,mh,rmh,zf,mf,zntmp,ust,c1,c2,        &
                                zs,sigma,sigmaf,rds,gz,                 &
@@ -4032,13 +4032,13 @@
         endif
         if(myid.eq.0) print *,'  next prcltim = ',prcltim
         if(timestats.ge.1) time_parcels=time_parcels+mytime()
-      ELSE
+      else
         if( startup )then
           if(myid.eq.0) print *
           if(myid.eq.0) print *,'  NOTE:  skipping parcel_write '
           if(myid.eq.0) print *
         endif
-      ENDIF
+      endif
       endif
 
 
@@ -4054,7 +4054,7 @@
 !      endif
 
 
-    IF( dodomaindiag )THEN
+    if( dodomaindiag )then
       if( dotdwrite )then
 
         call   domaindiag(nstep,mtime,nwritet,trecs,trecw,qname,qunit,dt,dosfcflx, &
@@ -4114,7 +4114,7 @@
         if(timestats.ge.1) time_diag = time_diag+mytime()
 
       endif
-    ENDIF
+    endif
 
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
@@ -4122,7 +4122,7 @@
       !cccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
 
 
-    IF( dohifrq )THEN
+    if( dohifrq )then
       if( dohifrqwrite )then
 
         call   writeout_hifrq(                                                 &
@@ -4172,7 +4172,7 @@
         if(timestats.ge.1) time_hifrq = time_hifrq+mytime()
 
       endif
-    ENDIF
+    endif
 
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
@@ -4187,7 +4187,7 @@
 !      endif
 
 
-    IF( doazimavg )THEN
+    if( doazimavg )then
       if( doazimwrite )then
 
         call   azimavg(nstep,mtime,nwritea,arecs,arecw,qname,dt,dosfcflx,      &
@@ -4235,7 +4235,7 @@
         if(timestats.ge.1) time_azimavg = time_azimavg+mytime()
 
       endif
-    ENDIF
+    endif
 
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
@@ -4293,7 +4293,7 @@
                                dum1,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p)
           ! end_restart_write
         if(myid.eq.0) print *,'  next rsttim = ',rsttim
-        IF( nrst.eq.0 )THEN
+        if( nrst.eq.0 )then
           ! 150820:  Write restart file if rstfrq=0 and stop
           !          (useful for ensemble DA)
           if(dowr) write(outfile,*)
@@ -4306,7 +4306,7 @@
           call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
           stop 55556
-        ENDIF
+        endif
         nrst = nrst+1
         if(timestats.ge.1) time_restart=time_restart+mytime()
       endif
@@ -4353,12 +4353,12 @@
         endif
 
 
-      IF( adapt_dt.eq.1 .and. reset .and. (.not. interp_on_restart) )THEN
+      if( adapt_dt.eq.1 .and. reset .and. (.not. interp_on_restart) )then
         adtlast  = adt/dble(max(1,ndt))
         ndt  = 0
         adt  = 0.0
         acfl = 0.0
-      ENDIF
+      endif
 
         if( convinit.eq.1 )then
           if( mtime.gt.convtime ) convinit = 0
@@ -4404,7 +4404,7 @@
       restarted = .false.
 
 
-    ENDDO  timeloop
+    enddo  timeloop
     !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c!
 
 
@@ -4424,11 +4424,11 @@
 #endif
 !----------------------------------------------------------------------
 
-    IF(timestats.ge.1)THEN
+    if(timestats.ge.1)then
 
 #ifdef MPI
       ! for MPI runs without procfiles, average the timestat terms:
-      IF(.not.procfiles)THEN
+      if(.not.procfiles)then
         sum = 0.0
         call MPI_REDUCE(time_sound   ,sum,1,MPI_REAL,MPI_SUM,0,MPI_COMM_WORLD,ierr)
         time_sound = sum/float(numprocs)
@@ -4591,7 +4591,7 @@
         sum = 0.0
         call MPI_REDUCE(time_mpb     ,sum,1,MPI_REAL,MPI_SUM,0,MPI_COMM_WORLD,ierr)
         time_mpb = sum/float(numprocs)
-      ENDIF
+      endif
 #endif
 
       time_solve=time_sound+time_poiss+time_buoyan+time_turb+             &
@@ -4623,7 +4623,7 @@
       time_solve=0.01*time_solve
       if(time_solve.lt.0.0001) time_solve=1.
 
-    IF(dowr)THEN
+    if(dowr)then
       write(outfile,100) 'sound   ',time_sound,time_sound/time_solve
       write(outfile,100) 'poiss   ',time_poiss,time_poiss/time_solve
       write(outfile,100) 'advs    ',time_advs,time_advs/time_solve
@@ -4689,7 +4689,7 @@
       write(outfile,100) 'mpb     ',time_mpb,time_mpb/time_solve
 #endif
       write(outfile,*)
-    ENDIF
+    endif
 
 100   format(3x,a8,' :  ',f10.2,2x,f6.2,'%')
 
@@ -4703,7 +4703,7 @@
       call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
 
-    ENDIF
+    endif
 
 !  End time loop
 !----------------------------------------------------------------------
@@ -4718,11 +4718,11 @@
 
 #ifdef MPI
       if(myid.eq.0)then
-        print *,'Program terminated normally:  myid=',myid
+        print *,'program terminated normally:  myid=',myid
         do n=1,(numprocs-1)
           call MPI_IRECV(doit,1,mpi_logical,n,999,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(reqs,status,ierr)
-          print *,'Program terminated normally:  myid=',n
+          print *,'program terminated normally:  myid=',n
         enddo
         call MPI_FINALIZE(rc)
       else
@@ -4732,7 +4732,7 @@
         call MPI_FINALIZE(rc)
       endif
 #else
-      print *,'Program terminated normally'
+      print *,'program terminated normally'
 #endif
 
       stop

@@ -1,8 +1,8 @@
-  MODULE init_physics_module
+  module init_physics_module
 
   implicit none
 
-  CONTAINS
+  contains
 
       subroutine init_physics(prs0,rf0,dum1,dum2,dum3,u0,ua,v0,va,o30,   &
                              lu_index,xland,emiss,thc,albd,znt,mavail,tsk,u1,v1,s1, &
@@ -70,7 +70,7 @@
         tng  = foo6
       endif
 
-      IF( radopt.eq.2 )then
+      if( radopt.eq.2 )then
 
 !!!             aclwalloc = .false.
 !!!             acswalloc = .false.
@@ -82,7 +82,7 @@
 #ifdef MPI
              call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
-             CALL rrtmg_lwinit(                                             &
+             call rrtmg_lwinit(                                             &
                   p_top=p_top,                                              &
                   allowed_to_read = .true.         ,                        &
                    myid = myid ,                                            &
@@ -99,7 +99,7 @@
 #ifdef MPI
              call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
-             CALL rrtmg_swinit(                                              &
+             call rrtmg_swinit(                                              &
                    allowed_to_read = .true.         ,                        &
                    myid = myid ,                                             &
                   ids=1  ,ide=ni+1 , jds= 1 ,jde=nj+1 , kds=1  ,kde=nk+1 ,   &
@@ -115,9 +115,9 @@
 
 !!!             acswalloc = .true.
 
-      ENDIF
+      endif
 
-      IF( isfcflx.eq.1 )THEN
+      if( isfcflx.eq.1 )then
         if( sfcmodel.eq.2 )then
           call sfclayinit
         endif
@@ -136,7 +136,7 @@
                   ims=ib ,ime=ie   , jms=jb ,jme=je   , kms=kb ,kme=ke ,                       &
                   its=1  ,ite=ni   , jts=1  ,jte=nj   , kts=1  ,kte=nk  )
         endif
-      ENDIF
+      endif
 
       if( cuparam.eq.1 )then
       if(myid.eq.0) print *
@@ -170,14 +170,14 @@
       real, intent(inout) :: foo1,foo2,foo3,foo4,foo5,foo6
       integer, intent(in) :: ptype
 
-    IF(ptype.eq.2)THEN
+    if(ptype.eq.2)then
       foo1 = roqr
       foo2 = tnw
       foo3 = roqs
       foo4 = tnss
       foo5 = roqg
       foo6 = tng
-    ELSE
+    else
       ! 130903: set to reasonable values to prevent divide-by-zeros
       ! if goodard microphysics scheme is not being used
       foo1 = 1.
@@ -186,7 +186,7 @@
       foo4 = 1.
       foo5 = .4
       foo6 = .04
-    ENDIF
+    endif
 
       end subroutine getgoddardvars
 
@@ -212,11 +212,11 @@
 
 !----------------------------------------------------------------------
 
-  IF ( rlwopt == 0 ) THEN
+  if ( rlwopt == 0 ) then
     high = .false.
-  ELSE
+  else
     high = .true.
-  END IF
+  end if
 
   if(myid.eq.0) print *,'  high = ',high
 
@@ -231,11 +231,11 @@
           + FLOAT(minute)/60.0                                          &
           + FLOAT(second)/3600.0
 
-    IF ( MOD(year, 4) == 0 ) THEN
+    if ( MOD(year, 4) == 0 ) then
       yrday = 366.
-    ELSE
+    else
       yrday = 365.
-    END IF
+    end if
 
 !!! not using arps MPI code:  GHB, 100720
 !!! hard-wire these in, just in case:
@@ -248,34 +248,34 @@
 
 !-----tables co2 and h2o are only used with 'high' option
 
-    IF (high) THEN
+    if (high) then
 
-      DO iw=1,nh
-        DO ip=1,nx
+      do iw=1,nh
+        do ip=1,nx
           h11(ip,iw,1)=1.0-h11(ip,iw,1)
           h21(ip,iw,1)=1.0-h21(ip,iw,1)
           h71(ip,iw,1)=1.0-h71(ip,iw,1)
-        END DO
-      END DO
+        end do
+      end do
 
-      DO iw=1,nc
-        DO ip=1,nx
+      do iw=1,nc
+        do ip=1,nx
           c1(ip,iw,1)=1.0-c1(ip,iw,1)
-        END DO
-      END DO
+        end do
+      end do
 
 !-----tables are replicated to avoid memory bank conflicts
 
-      DO it=2,nt
-        DO iw=1,nc
-          DO ip=1,nx
+      do it=2,nt
+        do iw=1,nc
+          do ip=1,nx
             c1 (ip,iw,it)= c1(ip,iw,1)
             c2 (ip,iw,it)= c2(ip,iw,1)
             c3 (ip,iw,it)= c3(ip,iw,1)
-          END DO
-        END DO
-        DO iw=1,nh
-          DO ip=1,nx
+          end do
+        end do
+        do iw=1,nh
+          do ip=1,nx
             h11(ip,iw,it)=h11(ip,iw,1)
             h12(ip,iw,it)=h12(ip,iw,1)
             h13(ip,iw,it)=h13(ip,iw,1)
@@ -285,31 +285,31 @@
             h71(ip,iw,it)=h71(ip,iw,1)
             h72(ip,iw,it)=h72(ip,iw,1)
             h73(ip,iw,it)=h73(ip,iw,1)
-          END DO
-        END DO
-      END DO
+          end do
+        end do
+      end do
 
-    END IF
+    end if
 
 !-----always use table look-up for ozone transmittance
 
-    DO iw=1,no
-      DO ip=1,nx
+    do iw=1,no
+      do ip=1,nx
         o1(ip,iw,1)=1.0-o1(ip,iw,1)
-      END DO
-    END DO
+      end do
+    end do
 
-    DO it=2,nt
-      DO iw=1,no
-        DO ip=1,nx
+    do it=2,nt
+      do iw=1,no
+        do ip=1,nx
           o1 (ip,iw,it)= o1(ip,iw,1)
           o2 (ip,iw,it)= o2(ip,iw,1)
           o3 (ip,iw,it)= o3(ip,iw,1)
-        END DO
-      END DO
-    END DO
+        end do
+      end do
+    end do
 
       return
       end subroutine initrad
 
-  END MODULE init_physics_module
+  end module init_physics_module

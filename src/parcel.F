@@ -1,11 +1,11 @@
-  MODULE parcel_module
+  module parcel_module
 
   implicit none
 
   private
   public :: parcel_driver,parcel_interp,parcel_write,setup_parcel_vars,getparcelzs
 
-  CONTAINS
+  contains
 
       subroutine parcel_driver(dt,xh,uh,ruh,xf,yh,vh,rvh,yf,zh,mh,rmh,zf,mf,zs,    &
                                sigma,sigmaf,znt,rho,ua,va,wa,pdata)
@@ -58,76 +58,76 @@
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j)
-  DO j=jb,je+1
+  do j=jb,je+1
 
-    IF(bbc.eq.1)THEN
+    if(bbc.eq.1)then
       ! free slip ... extrapolate:
-      IF(j.le.je)THEN
+      if(j.le.je)then
       do i=ib,ie+1
         ua(i,j,0) = cgs1*ua(i,j,1)+cgs2*ua(i,j,2)+cgs3*ua(i,j,3)
       enddo
-      ENDIF
+      endif
       do i=ib,ie
         va(i,j,0) = cgs1*va(i,j,1)+cgs2*va(i,j,2)+cgs3*va(i,j,3)
       enddo
-    ELSEIF(bbc.eq.2)THEN
+    elseif(bbc.eq.2)then
       ! no slip:
       if( imove.eq.1 )then
-        IF(j.le.je)THEN
+        if(j.le.je)then
         do i=ib,ie+1
           ua(i,j,0) = 0.0 - umove
         enddo
-        ENDIF
+        endif
         do i=ib,ie
           va(i,j,0) = 0.0 - vmove
         enddo
       else
-        IF(j.le.je)THEN
+        if(j.le.je)then
         do i=ib,ie+1
           ua(i,j,0) = 0.0
         enddo
-        ENDIF
+        endif
         do i=ib,ie
           va(i,j,0) = 0.0
         enddo
       endif
-    ELSEIF(bbc.eq.3)THEN
+    elseif(bbc.eq.3)then
       ! u,v near sfc are determined below using log-layer equations
-    ENDIF
+    endif
 
 !----------
 
-    IF(tbc.eq.1)THEN
+    if(tbc.eq.1)then
       ! free slip ... extrapolate:
-      IF(j.le.je)THEN
+      if(j.le.je)then
       do i=ib,ie+1
         ua(i,j,nk+1) = cgt1*ua(i,j,nk)+cgt2*ua(i,j,nk-1)+cgt3*ua(i,j,nk-2)
       enddo
-      ENDIF
+      endif
       do i=ib,ie
         va(i,j,nk+1) = cgt1*va(i,j,nk)+cgt2*va(i,j,nk-1)+cgt3*va(i,j,nk-2)
       enddo
-    ELSEIF(tbc.eq.2)THEN
+    elseif(tbc.eq.2)then
       ! no slip:
-      IF(j.le.je)THEN
+      if(j.le.je)then
       do i=ib,ie+1
         ua(i,j,nk+1) = 0.0
       enddo
-      ENDIF
+      endif
       do i=ib,ie
         va(i,j,nk+1) = 0.0
       enddo
-    ENDIF
+    endif
 
 !----------
 
-      IF(j.le.je)THEN
+      if(j.le.je)then
       do i=ib,ie
         wa(i,j,nk+1) = 0.0
       enddo
-      ENDIF
+      endif
 
-  ENDDO
+  enddo
 
 !----------------------------------------------------------------------
 !  Loop through all parcels:  if you have it, update it's location:
@@ -135,7 +135,7 @@
     dt2 = dt/2.0
 
     nploop:  &
-    DO np=1,nparcels
+    do np=1,nparcels
 
       x3d = pdata(np,prx)
       y3d = pdata(np,pry)
@@ -151,12 +151,12 @@
 
   ! cm1r19:  skip if we already know this processor doesnt have this parcel
   haveit1:  &
-  IF( x3d.ge.xf(1) .and. x3d.le.xf(ni+1) .and.  &
-      y3d.ge.yf(1) .and. y3d.le.yf(nj+1) )THEN
+  if( x3d.ge.xf(1) .and. x3d.le.xf(ni+1) .and.  &
+      y3d.ge.yf(1) .and. y3d.le.yf(nj+1) )then
 
-    IF(nx.eq.1)THEN
+    if(nx.eq.1)then
       iflag = 1
-    ELSE
+    else
       ! cm1r19:
       i = ni+1
       do while( iflag.lt.0 .and. i.gt.1 )
@@ -165,11 +165,11 @@
           iflag = i
         endif
       enddo
-    ENDIF
+    endif
 
-    IF(axisymm.eq.1.or.ny.eq.1)THEN
+    if(axisymm.eq.1.or.ny.eq.1)then
       jflag = 1
-    ELSE
+    else
       ! cm1r19:
       j = nj+1
       do while( jflag.lt.0 .and. j.gt.1 )
@@ -178,33 +178,33 @@
           jflag = j
         endif
       enddo
-    ENDIF
+    endif
 
-  ENDIF  haveit1
+  endif  haveit1
 
 #ifdef MPI
       ! check for conflict:
-    IF( (iflag.ge.1.and.iflag.le.ni) .and.   &
-        (jflag.ge.1.and.jflag.le.nj) )THEN
-      IF( iflag.eq.ni .and. pdata(np,prx).eq.xf(iflag+1) .and. nodex.gt.1 .and.  myi.ne.nodex ) iflag = -1
-      IF( jflag.eq.nj .and. pdata(np,pry).eq.yf(jflag+1) .and. nodey.gt.1 .and.  myj.ne.nodey ) jflag = -1
-    ENDIF
+    if( (iflag.ge.1.and.iflag.le.ni) .and.   &
+        (jflag.ge.1.and.jflag.le.nj) )then
+      if( iflag.eq.ni .and. pdata(np,prx).eq.xf(iflag+1) .and. nodex.gt.1 .and.  myi.ne.nodex ) iflag = -1
+      if( jflag.eq.nj .and. pdata(np,pry).eq.yf(jflag+1) .and. nodey.gt.1 .and.  myj.ne.nodey ) jflag = -1
+    endif
 #endif
 
-      myparcel:  IF( (iflag.ge.1.and.iflag.le.ni) .and.   &
-                     (jflag.ge.1.and.jflag.le.nj) )THEN
+      myparcel:  if( (iflag.ge.1.and.iflag.le.ni) .and.   &
+                     (jflag.ge.1.and.jflag.le.nj) )then
 
-      rkloop:  DO nrkp = 1,2
+      rkloop:  do nrkp = 1,2
 
-      IF( nrkp.eq.1 )THEN
+      if( nrkp.eq.1 )then
         i=iflag
         j=jflag
-      ELSE
+      else
         iflag = -100
         jflag = -100
-        IF(nx.eq.1)THEN
+        if(nx.eq.1)then
           iflag = 1
-        ELSE
+        else
           ! cm1r19:
           i = ni+2
           do while( iflag.lt.0 .and. i.gt.0 )
@@ -213,10 +213,10 @@
               iflag = i
             endif
           enddo
-        ENDIF
-        IF(axisymm.eq.1.or.ny.eq.1)THEN
+        endif
+        if(axisymm.eq.1.or.ny.eq.1)then
           jflag = 1
-        ELSE
+        else
           do j=0,nj+1
             if( y3d.ge.yf(j) .and. y3d.le.yf(j+1) ) jflag=j
           enddo
@@ -228,12 +228,12 @@
               jflag = j
             endif
           enddo
-        ENDIF
+        endif
         i=iflag
         j=jflag
-      ENDIF
+      endif
 
-        IF(debug)THEN
+        if(debug)then
         if( i.lt.0 .or. i.gt.(ni+1) .or. j.lt.0 .or. j.gt.(nj+1) )then
           print *,'  myid,i,j = ',myid,i,j
           print *,'  x,x1     = ',x3d,pdata(np,prx)
@@ -246,7 +246,7 @@
           enddo
           call stopcm1
         endif
-        ENDIF
+        endif
 
         kflag = 1
         if( .not. terrain_flag )then
@@ -259,7 +259,7 @@
           enddo
         endif
 
-        IF(debug)THEN
+        if(debug)then
         if( kflag.le.0 .or. kflag.ge.(nk+1) )then
           print *,myid,nrkp
           print *,iflag,jflag,kflag
@@ -270,7 +270,7 @@
           print *,'  16667 '
           call stopcm1
         endif
-        ENDIF
+        endif
 
 !----------------------------------------------------------------------
 !  Data on u points
@@ -311,7 +311,7 @@
         w7=rx*ry*(1.0-rz)
         w8=rx*ry*rz
 
-        IF(debug)THEN
+        if(debug)then
         wsum = w1+w2+w3+w4+w5+w6+w7+w8
         if( rx.lt.-0.0001 .or. rx.gt.1.0001 .or.  &
             ry.lt.-0.0001 .or. ry.gt.1.0001 .or.  &
@@ -333,7 +333,7 @@
           print *
           call stopcm1
         endif
-        ENDIF
+        endif
 
         call tri_interp(ni+1,nj,nk,i,j,k,w1,w2,w3,w4,w5,w6,w7,w8,ua,uval)
 
@@ -374,7 +374,7 @@
         w7=rx*ry*(1.0-rz)
         w8=rx*ry*rz
 
-        IF(debug)THEN
+        if(debug)then
         wsum = w1+w2+w3+w4+w5+w6+w7+w8
         if( rx.lt.-0.0001 .or. rx.gt.1.0001 .or.  &
             ry.lt.-0.0001 .or. ry.gt.1.0001 .or.  &
@@ -396,7 +396,7 @@
           print *
           call stopcm1
         endif
-        ENDIF
+        endif
 
         call tri_interp(ni,nj+1,nk,i,j,k,w1,w2,w3,w4,w5,w6,w7,w8,va,vval)
 
@@ -434,7 +434,7 @@
         w7=rx*ry*(1.0-rz)
         w8=rx*ry*rz
 
-        IF(debug)THEN
+        if(debug)then
         wsum = w1+w2+w3+w4+w5+w6+w7+w8
         if( rx.lt.-0.0001 .or. rx.gt.1.0001 .or.  &
             ry.lt.-0.0001 .or. ry.gt.1.0001 .or.  &
@@ -456,7 +456,7 @@
           print *
           call stopcm1
         endif
-        ENDIF
+        endif
 
         call tri_interp(ni,nj,nk+1,i,j,k,w1,w2,w3,w4,w5,w6,w7,w8,wa,wval)
 
@@ -469,7 +469,7 @@
 !----------------------------------------------------------------------
 !  uv for parcels below lowest model level:
 
-      IF( bbc.eq.3 )THEN
+      if( bbc.eq.3 )then
         ! semi-slip lower boundary condition:
         if( z3d.lt.zh(1,1,1) )then
           ! re-calculate velocities if parcel is below lowest model level:
@@ -512,24 +512,24 @@
             vval = vval*var
           endif
         endif
-      ENDIF
+      endif
 
 !-----------------------------------------------------
 !  Update parcel positions:
 !-----------------------------------------------------
 
       ! RK2 scheme:
-      IF(nrkp.eq.1)THEN
-        IF(nx.eq.1)THEN
+      if(nrkp.eq.1)then
+        if(nx.eq.1)then
           x3d=0.0
-        ELSE
+        else
           x3d=pdata(np,prx)+dt*uval
-        ENDIF
-        IF(axisymm.eq.1.or.ny.eq.1)THEN
+        endif
+        if(axisymm.eq.1.or.ny.eq.1)then
           y3d=0.0
-        ELSE
+        else
           y3d=pdata(np,pry)+dt*vval
-        ENDIF
+        endif
         if( terrain_flag )then
           sig3d = pdata(np,prsig) + dt*sigdot
           sig1 = sigdot
@@ -539,36 +539,36 @@
         endif
         uu1=uval
         vv1=vval
-      ELSE
-        IF(nx.eq.1)THEN
+      else
+        if(nx.eq.1)then
           x3d=0.0
-        ELSE
+        else
           x3d=pdata(np,prx)+dt2*(uu1+uval)
-        ENDIF
-        IF(axisymm.eq.1.or.ny.eq.1)THEN
+        endif
+        if(axisymm.eq.1.or.ny.eq.1)then
           y3d=0.0
-        ELSE
+        else
           y3d=pdata(np,pry)+dt2*(vv1+vval)
-        ENDIF
+        endif
         if( terrain_flag )then
           sig3d = pdata(np,prsig) + dt2*(sig1+sigdot)
-          IF( sig3d.lt.0.0 )THEN
+          if( sig3d.lt.0.0 )then
             print *,'  parcel is below surface:  np,x3d,y3d,sig3d = ',np,x3d,y3d,sig3d
             sig3d=1.0e-6
-          ENDIF
+          endif
           sig3d=min(sig3d,maxz)
         else
           z3d = pdata(np,prz)+dt2*(ww1+wval)
-          IF( z3d.lt.0.0 )THEN
+          if( z3d.lt.0.0 )then
             print *,'  parcel is below surface:  np,x3d,y3d,z3d = ',np,x3d,y3d,z3d
             z3d=1.0e-6
-          ENDIF
+          endif
           z3d=min(z3d,maxz)
         endif
-      ENDIF
+      endif
 
 
-      ENDDO  rkloop
+      enddo  rkloop
 
 !-----------------------------------------------------
 !  Account for boundary conditions (if necessary)
@@ -602,7 +602,7 @@
 
 #ifdef MPI
 
-      ELSE
+      else
 
         ! set to really small number (so we can use the allreduce command below)
         pdata(np,prx) = -1.0e30
@@ -614,9 +614,9 @@
         endif
 #endif
 
-      ENDIF  myparcel
+      endif  myparcel
 
-    ENDDO  nploop
+    enddo  nploop
 
 !----------------------------------------------------------------------
 !  communicate data  (for MPI runs)
@@ -635,12 +635,12 @@
 
       if( terrain_flag )then
             call getparcelzs(xh,uh,ruh,xf,yh,vh,rvh,yf,zs,pdata)
-            DO np=1,nparcels
+            do np=1,nparcels
               ! get z from sigma:
               ! (see Section 3 of "The governing equations for CM1", 
               !  http://www2.mmm.ucar.edu/people/bryan/cm1/cm1_equations.pdf)
               pdata(np,prz) = pdata(np,przs) + pdata(np,prsig)*((zt-pdata(np,przs))*rzt)
-            ENDDO
+            enddo
       endif
 
 !----------------------------------------------------------------------
@@ -729,7 +729,7 @@
 !----------------------------------------------------------------------
 !  Get derived variables:
 
-    IF(imoist.eq.1)THEN
+    if(imoist.eq.1)then
       ! with moisture:
 
 !$omp parallel do default(shared)  &
@@ -748,7 +748,7 @@
         enddo
         enddo
       enddo
-      IF(iice.eq.1)THEN
+      if(iice.eq.1)then
         do n=nqs1,nqs2
         do j=1,nj
         do i=1,ni
@@ -756,16 +756,16 @@
         enddo
         enddo
         enddo
-      ENDIF
-      IF( prth.ge.1 .or. prt.ge.1 .or. prqsl.ge.1 .or. prqsi.ge.1 .or.  prvpg.ge.1 )THEN
+      endif
+      if( prth.ge.1 .or. prt.ge.1 .or. prqsl.ge.1 .or. prqsi.ge.1 .or.  prvpg.ge.1 )then
         do j=1,nj
         do i=1,ni
           th(i,j,k) = (th0(i,j,k)+th3d(i,j,k))
           t(i,j,k) = th(i,j,k)*(pi0(i,j,k)+pp3d(i,j,k))
         enddo
         enddo
-      ENDIF
-      IF( prb.ge.1 .or. prvpg.ge.1 )THEN
+      endif
+      if( prb.ge.1 .or. prvpg.ge.1 )then
         do j=1,nj
         do i=1,ni
           dum7(i,j,k) = g*( th3d(i,j,k)*rth0(i,j,k)             &
@@ -773,53 +773,53 @@
                            -(qt(i,j,k)-q3d(i,j,k,nqv)-qc0(i,j,k)-qi0(i,j,k))   )
         enddo
         enddo
-      ENDIF
-      IF( prvpg.ge.1 )THEN
+      endif
+      if( prvpg.ge.1 )then
         do j=1,nj
         do i=1,ni
           dum8(i,j,k) = th(i,j,k)*(1.0+reps*q3d(i,j,k,nqv))/(1.0+qt(i,j,k))
         enddo
         enddo
-      ENDIF
+      endif
 
     enddo
 
-    ELSE
+    else
       ! dry:
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
     do k=1,nk
 
-      IF( prth.ge.1 .or. prt.ge.1 .or. prvpg.ge.1 )THEN
+      if( prth.ge.1 .or. prt.ge.1 .or. prvpg.ge.1 )then
         do j=1,nj
         do i=1,ni
           th(i,j,k)= (th0(i,j,k)+th3d(i,j,k))
           t(i,j,k) = th(i,j,k)*(pi0(i,j,k)+pp3d(i,j,k))
         enddo
         enddo
-      ENDIF
-      IF( prb.ge.1 .or. prvpg.ge.1 )THEN
+      endif
+      if( prb.ge.1 .or. prvpg.ge.1 )then
         do j=1,nj
         do i=1,ni
           dum7(i,j,k) = g*( th3d(i,j,k)*rth0(i,j,k) )
         enddo
         enddo
-      ENDIF
-      IF( prvpg.ge.1 )THEN
+      endif
+      if( prvpg.ge.1 )then
         do j=1,nj
         do i=1,ni
           dum8(i,j,k) = th(i,j,k)
         enddo
         enddo
-      ENDIF
+      endif
 
     enddo
 
-    ENDIF
+    endif
 
 
-    IF( prb.ge.1 .or. prvpg.ge.1 )THEN
+    if( prb.ge.1 .or. prvpg.ge.1 )then
       do k=2,nk
       do j=1,nj
       do i=1,ni
@@ -840,8 +840,8 @@
                                      /(  zf(i,j,nk  )-  zf(i,j,nk-1))
       enddo
       enddo
-    ENDIF
-    IF( prvpg.ge.1 )THEN
+    endif
+    if( prvpg.ge.1 )then
     if( .not. terrain_flag )then
       do k=2,nk
       tem1 = rdz*cp*mf(1,1,k)
@@ -873,7 +873,7 @@
         vpg(i,j,nk+1) = -buoy(i,j,nk+1)
       enddo
       enddo
-    ENDIF
+    endif
 
     if(timestats.ge.1) time_parcels=time_parcels+mytime()
 
@@ -897,76 +897,76 @@
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j)
-  DO j=jb,je+1
+  do j=jb,je+1
 
-    IF(bbc.eq.1)THEN
+    if(bbc.eq.1)then
       ! free slip ... extrapolate:
-      IF(j.le.je)THEN
+      if(j.le.je)then
       do i=ib,ie+1
         u3d(i,j,0) = cgs1*u3d(i,j,1)+cgs2*u3d(i,j,2)+cgs3*u3d(i,j,3)
       enddo
-      ENDIF
+      endif
       do i=ib,ie
         v3d(i,j,0) = cgs1*v3d(i,j,1)+cgs2*v3d(i,j,2)+cgs3*v3d(i,j,3)
       enddo
-    ELSEIF(bbc.eq.2)THEN
+    elseif(bbc.eq.2)then
       ! no slip:
       if( imove.eq.1 )then
-        IF(j.le.je)THEN
+        if(j.le.je)then
         do i=ib,ie+1
           u3d(i,j,0) = 0.0 - umove
         enddo
-        ENDIF
+        endif
         do i=ib,ie
           v3d(i,j,0) = 0.0 - vmove
         enddo
       else
-        IF(j.le.je)THEN
+        if(j.le.je)then
         do i=ib,ie+1
           u3d(i,j,0) = 0.0
         enddo
-        ENDIF
+        endif
         do i=ib,ie
           v3d(i,j,0) = 0.0
         enddo
       endif
-    ELSEIF(bbc.eq.3)THEN
+    elseif(bbc.eq.3)then
       ! u,v near sfc are determined below using log-layer equations
-    ENDIF
+    endif
 
 !----------
 
-    IF(tbc.eq.1)THEN
+    if(tbc.eq.1)then
       ! free slip ... extrapolate:
-      IF(j.le.je)THEN
+      if(j.le.je)then
       do i=ib,ie+1
         u3d(i,j,nk+1) = cgt1*u3d(i,j,nk)+cgt2*u3d(i,j,nk-1)+cgt3*u3d(i,j,nk-2)
       enddo
-      ENDIF
+      endif
       do i=ib,ie
         v3d(i,j,nk+1) = cgt1*v3d(i,j,nk)+cgt2*v3d(i,j,nk-1)+cgt3*v3d(i,j,nk-2)
       enddo
-    ELSEIF(tbc.eq.2)THEN
+    elseif(tbc.eq.2)then
       ! no slip:
-      IF(j.le.je)THEN
+      if(j.le.je)then
       do i=ib,ie+1
         u3d(i,j,nk+1) = 0.0
       enddo
-      ENDIF
+      endif
       do i=ib,ie
         v3d(i,j,nk+1) = 0.0
       enddo
-    ENDIF
+    endif
 
 !----------
 
-      IF(j.le.je)THEN
+      if(j.le.je)then
       do i=ib,ie
         w3d(i,j,nk+1) = 0.0
       enddo
-      ENDIF
+      endif
 
-  ENDDO
+  enddo
 
       if(timestats.ge.1) time_parcels=time_parcels+mytime()
 
@@ -1026,7 +1026,7 @@
 
 !----------------------------------------------------------------------
 
-    IF( prqsl.ge.1 )THEN
+    if( prqsl.ge.1 )then
       do k=1,nk
       do j=1,nj
       do i=1,ni
@@ -1037,8 +1037,8 @@
       if(timestats.ge.1) time_parcels=time_parcels+mytime()
       call prepcorners(dum1,nw1(1),nw2(1),ne1(1),ne2(1),sw1(1),sw2(1),se1(1),se2(1), &
                             pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p,1)
-    ENDIF
-    IF( prqsi.ge.1 )THEN
+    endif
+    if( prqsi.ge.1 )then
       do k=1,nk
       do j=1,nj
       do i=1,ni
@@ -1049,7 +1049,7 @@
       if(timestats.ge.1) time_parcels=time_parcels+mytime()
       call prepcorners(dum2,nw1(1),nw2(1),ne1(1),ne2(1),sw1(1),sw2(1),se1(1),se2(1), &
                             pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p,1)
-    ENDIF
+    endif
 
 !----------------------------------------------------------------------
 !  Get zvort at appropriate C-grid location:
@@ -1058,7 +1058,7 @@
 !           Use extrapolated velocities for bbc=1,2
 !           Use log-layer equations for bbc=3 (see below)
 
-    IF( przv.ge.1)THEN
+    if( przv.ge.1)then
 
       do k=0,nk+1
       do j=1,nj+1
@@ -1069,7 +1069,7 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------------
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1077,7 +1077,7 @@
 !  Loop through all parcels:  if you have it, get interpolated info:
 
     nploop2:  &
-    DO np=1,nparcels
+    do np=1,nparcels
 
       pdata(np,prtime) = mtime
 
@@ -1091,12 +1091,12 @@
 
   ! cm1r19:  skip if we already know this processor doesnt have this parcel
   haveit2:  &
-  IF( x3d.ge.xf(1) .and. x3d.le.xf(ni+1) .and.  &
-      y3d.ge.yf(1) .and. y3d.le.yf(nj+1) )THEN
+  if( x3d.ge.xf(1) .and. x3d.le.xf(ni+1) .and.  &
+      y3d.ge.yf(1) .and. y3d.le.yf(nj+1) )then
 
-    IF(nx.eq.1)THEN
+    if(nx.eq.1)then
       iflag = 1
-    ELSE
+    else
       ! cm1r19:
       i = ni+1
       do while( iflag.lt.0 .and. i.gt.1 )
@@ -1105,11 +1105,11 @@
           iflag = i
         endif
       enddo
-    ENDIF
+    endif
 
-    IF(axisymm.eq.1.or.ny.eq.1)THEN
+    if(axisymm.eq.1.or.ny.eq.1)then
       jflag = 1
-    ELSE
+    else
       ! cm1r19:
       j = nj+1
       do while( jflag.lt.0 .and. j.gt.1 )
@@ -1118,21 +1118,21 @@
           jflag = j
         endif
       enddo
-    ENDIF
+    endif
 
-  ENDIF  haveit2
+  endif  haveit2
 
 #ifdef MPI
       ! check for conflict:
-    IF( (iflag.ge.1.and.iflag.le.ni) .and.   &
-        (jflag.ge.1.and.jflag.le.nj) )THEN
-      IF( iflag.eq.ni .and. pdata(np,prx).eq.xf(iflag+1) .and. nodex.gt.1 .and.  myi.ne.nodex ) iflag = -1
-      IF( jflag.eq.nj .and. pdata(np,pry).eq.yf(jflag+1) .and. nodey.gt.1 .and.  myj.ne.nodey ) jflag = -1
-    ENDIF
+    if( (iflag.ge.1.and.iflag.le.ni) .and.   &
+        (jflag.ge.1.and.jflag.le.nj) )then
+      if( iflag.eq.ni .and. pdata(np,prx).eq.xf(iflag+1) .and. nodex.gt.1 .and.  myi.ne.nodex ) iflag = -1
+      if( jflag.eq.nj .and. pdata(np,pry).eq.yf(jflag+1) .and. nodey.gt.1 .and.  myj.ne.nodey ) jflag = -1
+    endif
 #endif
 
-      myprcl:  IF( (iflag.ge.1.and.iflag.le.ni) .and.   &
-                   (jflag.ge.1.and.jflag.le.nj) )THEN
+      myprcl:  if( (iflag.ge.1.and.iflag.le.ni) .and.   &
+                   (jflag.ge.1.and.jflag.le.nj) )then
 
         i=iflag
         j=jflag
@@ -1191,7 +1191,7 @@
         w7=rx*ry*(1.0-rz)
         w8=rx*ry*rz
 
-        IF(debug)THEN
+        if(debug)then
         wsum = w1+w2+w3+w4+w5+w6+w7+w8
         if( rx.lt.-0.0001 .or. rx.gt.1.0001 .or.  &
             ry.lt.-0.0001 .or. ry.gt.1.0001 .or.  &
@@ -1213,7 +1213,7 @@
           print *
           call stopcm1
         endif
-        ENDIF
+        endif
 
         call tri_interp(ni+1,nj,nk,i,j,k,w1,w2,w3,w4,w5,w6,w7,w8,u3d,uval)
 
@@ -1254,7 +1254,7 @@
         w7=rx*ry*(1.0-rz)
         w8=rx*ry*rz
 
-        IF(debug)THEN
+        if(debug)then
         wsum = w1+w2+w3+w4+w5+w6+w7+w8
         if( rx.lt.-0.0001 .or. rx.gt.1.0001 .or.  &
             ry.lt.-0.0001 .or. ry.gt.1.0001 .or.  &
@@ -1276,7 +1276,7 @@
           print *
           call stopcm1
         endif
-        ENDIF
+        endif
 
         call tri_interp(ni,nj+1,nk,i,j,k,w1,w2,w3,w4,w5,w6,w7,w8,v3d,vval)
 
@@ -1316,7 +1316,7 @@
         w7=rx*ry*(1.0-rz)
         w8=rx*ry*rz
 
-        IF(debug)THEN
+        if(debug)then
         wsum = w1+w2+w3+w4+w5+w6+w7+w8
         if( rx.lt.-0.0001 .or. rx.gt.1.0001 .or.  &
             ry.lt.-0.0001 .or. ry.gt.1.0001 .or.  &
@@ -1338,7 +1338,7 @@
           print *
           call stopcm1
         endif
-        ENDIF
+        endif
 
         call tri_interp(ni,nj,nk+1,i,j,k,w1,w2,w3,w4,w5,w6,w7,w8,w3d ,wval)
       if(prkm.ge.1)then
@@ -1395,7 +1395,7 @@
         w7=rx*ry*(1.0-rz)
         w8=rx*ry*rz
 
-        IF(debug)THEN
+        if(debug)then
         wsum = w1+w2+w3+w4+w5+w6+w7+w8
         if( rx.lt.-0.0001 .or. rx.gt.1.0001 .or.  &
             ry.lt.-0.0001 .or. ry.gt.1.0001 .or.  &
@@ -1414,7 +1414,7 @@
           print *
           call stopcm1
         endif
-        ENDIF
+        endif
 
       if(imoist.eq.1)then
         if( prdbz.ge.1 .and. qd_dbz.ge.1 )  &
@@ -1455,7 +1455,7 @@
 !----------------------------------------------------------------------
 !  Data on zvort points
 
-      IF( przv.ge.1 )THEN
+      if( przv.ge.1 )then
 
         i=iflag
         j=jflag
@@ -1484,7 +1484,7 @@
         w7=rx*ry*(1.0-rz)
         w8=rx*ry*rz
 
-        IF(debug)THEN
+        if(debug)then
         wsum = w1+w2+w3+w4+w5+w6+w7+w8
         if( rx.lt.-0.0001 .or. rx.gt.1.0001 .or.  &
             ry.lt.-0.0001 .or. ry.gt.1.0001 .or.  &
@@ -1503,16 +1503,16 @@
           print *
           call stopcm1
         endif
-        ENDIF
+        endif
 
         call tri_interp(ni,nj,nk,i,j,k,w1,w2,w3,w4,w5,w6,w7,w8,zv,pdata(np,przv))
 
-      ENDIF
+      endif
 
 !----------------------------------------------------------------------
 !  surface variables  and  uv for parcels below lowest model level:
 
-      IF( prznt.ge.1 .or. prust.ge.1 .or. bbc.eq.3 )THEN
+      if( prznt.ge.1 .or. prust.ge.1 .or. bbc.eq.3 )then
         i=iflag
         j=jflag
         if( x3d.lt.xh(i) )then
@@ -1525,9 +1525,9 @@
         if( prznt.ge.1 ) pdata(np,prznt) = z0
         if( prust.ge.1 )  &
         call get2d(i,j,x3d,y3d,xh,xf,yh,yf, 0, 0, 0, 0,ust,pdata(np,prust))
-      ENDIF
+      endif
 
-      IF( bbc.eq.3 )THEN
+      if( bbc.eq.3 )then
         ! semi-slip lower boundary condition:
         if( z3d.lt.zh(1,1,1) )then
           ! re-calculate velocities if parcel is below lowest model level:
@@ -1554,7 +1554,7 @@
           uval = (uval+umove)*var
           vval = (vval+vmove)*var
           !------
-          IF( przv.ge.1 )THEN
+          if( przv.ge.1 )then
             do j=jflag-1,jflag+1
             do i=iflag  ,iflag+1
               z0 = 0.5*(znt(i-1,j)+znt(i,j))
@@ -1578,9 +1578,9 @@
             i=iflag
             j=jflag
             call get2d(i,j,x3d,y3d,xh,xf,yh,yf, 1, 1, 0, 0,dum7(ib,jb,1),pdata(np,przv))
-          ENDIF
+          endif
         endif
-      ENDIF
+      endif
 
 
 !----------------------------------------------------------------------
@@ -1590,7 +1590,7 @@
         pdata(np,prw)=wval
 
 #ifdef MPI
-      ELSE
+      else
 
         ! set to really small number (so we can use the allreduce command below)
         do n=4,npvals
@@ -1598,9 +1598,9 @@
         enddo
 #endif
 
-      ENDIF  myprcl
+      endif  myprcl
 
-    ENDDO  nploop2
+    enddo  nploop2
 
 !----------------------------------------------------------------------
 !  communicate data
@@ -1642,9 +1642,9 @@
 !----------------------------------------------------------------------
 !  write out data
 
-    IF(myid.eq.0)THEN
+    if(myid.eq.0)then
 
-      IF(output_format.eq.1)THEN
+      if(output_format.eq.1)then
         ! GrADS format:
 
         ! write GrADS descriptor file:
@@ -1671,15 +1671,15 @@
         close(unit=61)
 
 #ifdef NETCDF
-      ELSEIF(output_format.eq.2)THEN
+      elseif(output_format.eq.2)then
 
         call     writepdata_nc(prec,rtime,qname,name_prcl,desc_prcl,unit_prcl,pdata,ploc(1,1))
 
 #endif
-      ENDIF
+      endif
       if(dowr) write(outfile,*)
 
-    ENDIF   ! endif for myid=0
+    endif   ! endif for myid=0
 
       return
       end subroutine parcel_write
@@ -1744,24 +1744,24 @@
 !-----------------------------------------------------------------------
       ! tri-linear interp:
 
-      IF(xs.eq.1)THEN
+      if(xs.eq.1)then
         rx = ( x3d-xf(i) )/( xf(i+1)-xf(i) )
-      ELSE
+      else
         rx = ( x3d-xh(i) )/( xh(i+1)-xh(i) )
-      ENDIF
+      endif
 
-      IF(ys.eq.1)THEN
+      if(ys.eq.1)then
         ry = ( y3d-yf(j) )/( yf(j+1)-yf(j) )
-      ELSE
+      else
         ry = ( y3d-yh(j) )/( yh(j+1)-yh(j) )
-      ENDIF
+      endif
 
         w1=(1.0-rx)*(1.0-ry)
         w2=rx*(1.0-ry)
         w3=(1.0-rx)*ry
         w7=rx*ry
 
-      IF( debug )THEN
+      if( debug )then
         if( rx.lt.-0.000001 .or. rx.gt.1.000001 .or.        &
             ry.lt.-0.000001 .or. ry.gt.1.000001 .or.        &
             (w1+w2+w3+w7).lt.0.999999 .or.  &
@@ -1775,7 +1775,7 @@
           print *,' 22346 '
           call stopcm1
         endif
-      ENDIF
+      endif
 
       sval =s(i  ,j  )*w1    &
            +s(i+1,j  )*w2    &
@@ -1810,7 +1810,7 @@
       real :: x3d,y3d
 
     zsnploop:  &
-    DO np=1,nparcels
+    do np=1,nparcels
 
       x3d = pdata(np,prx)
       y3d = pdata(np,pry)
@@ -1820,12 +1820,12 @@
 
   ! cm1r19:  skip if we already know this processor doesnt have this parcel
   zshaveit1:  &
-  IF( x3d.ge.xf(1) .and. x3d.le.xf(ni+1) .and.  &
-      y3d.ge.yf(1) .and. y3d.le.yf(nj+1) )THEN
+  if( x3d.ge.xf(1) .and. x3d.le.xf(ni+1) .and.  &
+      y3d.ge.yf(1) .and. y3d.le.yf(nj+1) )then
 
-    IF(nx.eq.1)THEN
+    if(nx.eq.1)then
       iflag = 1
-    ELSE
+    else
       ! cm1r19:
       i = ni+1
       do while( iflag.lt.0 .and. i.gt.1 )
@@ -1834,11 +1834,11 @@
           iflag = i
         endif
       enddo
-    ENDIF
+    endif
 
-    IF(axisymm.eq.1.or.ny.eq.1)THEN
+    if(axisymm.eq.1.or.ny.eq.1)then
       jflag = 1
-    ELSE
+    else
       ! cm1r19:
       j = nj+1
       do while( jflag.lt.0 .and. j.gt.1 )
@@ -1847,21 +1847,21 @@
           jflag = j
         endif
       enddo
-    ENDIF
+    endif
 
-  ENDIF  zshaveit1
+  endif  zshaveit1
 
 #ifdef MPI
       ! check for conflict:
-    IF( (iflag.ge.1.and.iflag.le.ni) .and.   &
-        (jflag.ge.1.and.jflag.le.nj) )THEN
-      IF( iflag.eq.ni .and. pdata(np,prx).eq.xf(iflag+1) .and. nodex.gt.1 .and.  myi.ne.nodex ) iflag = -1
-      IF( jflag.eq.nj .and. pdata(np,pry).eq.yf(jflag+1) .and. nodey.gt.1 .and.  myj.ne.nodey ) jflag = -1
-    ENDIF
+    if( (iflag.ge.1.and.iflag.le.ni) .and.   &
+        (jflag.ge.1.and.jflag.le.nj) )then
+      if( iflag.eq.ni .and. pdata(np,prx).eq.xf(iflag+1) .and. nodex.gt.1 .and.  myi.ne.nodex ) iflag = -1
+      if( jflag.eq.nj .and. pdata(np,pry).eq.yf(jflag+1) .and. nodey.gt.1 .and.  myj.ne.nodey ) jflag = -1
+    endif
 #endif
 
-      zsmyparcel:  IF( (iflag.ge.1.and.iflag.le.ni) .and.   &
-                       (jflag.ge.1.and.jflag.le.nj) )THEN
+      zsmyparcel:  if( (iflag.ge.1.and.iflag.le.ni) .and.   &
+                       (jflag.ge.1.and.jflag.le.nj) )then
 
         i=iflag
         j=jflag
@@ -1875,13 +1875,13 @@
 
         call get2d(i,j,x3d,y3d,xh,xf,yh,yf, 0, 0, 0, 0,zs,pdata(np,przs))
 
-      ELSE  zsmyparcel
+      else  zsmyparcel
 
         pdata(np,przs) = -1.0e30
 
-      ENDIF  zsmyparcel
+      endif  zsmyparcel
 
-    ENDDO  zsnploop
+    enddo  zsnploop
 
 #ifdef MPI
     call MPI_ALLREDUCE(MPI_IN_PLACE,pdata(1,przs) ,nparcels,MPI_REAL,MPI_MAX,MPI_COMM_WORLD,ierr)
@@ -2157,7 +2157,7 @@
       !---------------------------------------------------------------
 
     idcheck:  &
-    IF( myid.eq.0 )THEN
+    if( myid.eq.0 )then
 
       do i=1,maxstring
         string(i:i) = ' '
@@ -2179,20 +2179,20 @@
 
       write(50,408) prcl_out
 
-      DO n = 1 , prcl_out
+      do n = 1 , prcl_out
         a16 = '                '
         nn = len(trim(unit_prcl(n)))
         write(a16(2:15),214) unit_prcl(n)
         write(a16(1:1),201 )       '('
         write(a16(nn+2:nn+2),201 ) ')'
         write(50,409) name_prcl(n),desc_prcl(n),a16
-      ENDDO
+      enddo
 
       write(50,410)
 
       close(unit=50)
 
-    ENDIF  idcheck
+    endif  idcheck
 
 201   format(a1)
 214   format(a14)
@@ -2215,4 +2215,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE parcel_module
+  end module parcel_module

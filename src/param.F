@@ -1,11 +1,11 @@
-  MODULE param_module
+  module param_module
 
   implicit none
 
   private
   public :: param,wenocheck
 
-  CONTAINS
+  contains
 
       subroutine param(dt,dtlast,stattim,taptim,rsttim,radtim,prcltim,  &
                        cloudvar,rhovar,qmag,qname,qunit,budname,        &
@@ -155,12 +155,12 @@
 !--------------------------------------------------------------
 
 #ifdef MPI
-      IF(procfiles)THEN
+      if(procfiles)then
         fname='procXXXXXX.print.out'
         write(fname(5:10),100) myid
 100     format(i6.6)
         open(unit=10,file=fname,status='unknown')
-      ENDIF
+      endif
 #endif
 
       if(dowr) write(outfile,*) 'Inside PARAM'
@@ -252,11 +252,11 @@
 715   continue
       rewind(20)
 
-      IF ( ptype.eq.26 .or. ptype.eq.27 .or. ptype.eq.28 ) THEN
+      if ( ptype.eq.26 .or. ptype.eq.27 .or. ptype.eq.28 ) then
          read(20,nml=nssl2mom_params,end=751)
 751      continue
          rewind(20)
-      ENDIF
+      endif
 
       read(20,nml=param17,end=717)
 717   continue
@@ -637,7 +637,7 @@
       call MPI_BCAST( hurr_vgpl       ,1,MPI_REAL   ,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST( hurr_rotate     ,1,MPI_REAL   ,0,MPI_COMM_WORLD,ierr)
 
-      IF ( ptype.eq.26 .or. ptype.eq.27 .or. ptype.eq.28 ) THEN
+      if ( ptype.eq.26 .or. ptype.eq.27 .or. ptype.eq.28 ) then
       call MPI_BCAST(ccn       ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(rho_qr    ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(cnor      ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
@@ -666,7 +666,7 @@
       call MPI_BCAST(ihlcnh    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(nssl_3moment,1,MPI_LOGICAL,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(nssl_density_on,1,MPI_LOGICAL,0,MPI_COMM_WORLD,ierr)
-      ENDIF
+      endif
 #endif
 
 !-----------------------------------------------------------------------
@@ -739,13 +739,13 @@
         testcase = 0
       endif
 
-      IF( do_lsnudge )THEN
+      if( do_lsnudge )then
         ! for diagnostic purposes:
         if( .not. dodomaindiag )then
           dodomaindiag = .true.
           diagfrq = tapfrq
         endif
-      ENDIF
+      endif
 
       ramp_time = max( ramp_time , 1.0e-10 )
 
@@ -754,7 +754,7 @@
 
       !------------
 
-      IF( nk.lt.8 )THEN
+      if( nk.lt.8 )then
         if(myid.eq.0)then
         print *
         print *,'  nk   = ',nk
@@ -766,13 +766,13 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
 
       !------------
 
       vadv = max( hadvordrv , vadvordrv )
 
-      IF( (vadv.eq.3.or.vadv.eq.4) .and. nk.lt.4 )THEN
+      if( (vadv.eq.3.or.vadv.eq.4) .and. nk.lt.4 )then
         if(myid.eq.0)then
         print *
         print *,'  nk   = ',nk
@@ -785,8 +785,8 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      IF( (vadv.eq.5.or.vadv.eq.6) .and. nk.lt.6 )THEN
+      endif
+      if( (vadv.eq.5.or.vadv.eq.6) .and. nk.lt.6 )then
         if(myid.eq.0)then
         print *
         print *,'  nk   = ',nk
@@ -799,8 +799,8 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      IF( (vadv.eq.7.or.vadv.eq.8) .and. nk.lt.8 )THEN
+      endif
+      if( (vadv.eq.7.or.vadv.eq.8) .and. nk.lt.8 )then
         if(myid.eq.0)then
         print *
         print *,'  nk   = ',nk
@@ -813,8 +813,8 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      IF( (vadv.eq.9.or.vadv.eq.10) .and. nk.lt.10 )THEN
+      endif
+      if( (vadv.eq.9.or.vadv.eq.10) .and. nk.lt.10 )then
         if(myid.eq.0)then
         print *
         print *,'  nk   = ',nk
@@ -827,14 +827,14 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
 
 !------------------------------------------------
 !  begin non-fatal checks:
 
       !-----
-      IF( isnd.eq.7 )THEN
-        IF( iwnd.gt.0 )THEN
+      if( isnd.eq.7 )then
+        if( iwnd.gt.0 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -850,11 +850,11 @@
         print *,'  -------------------------------- '
         endif
         iwnd = 0
-        ENDIF
-      ENDIF
+        endif
+      endif
       !-----
-      IF( sfcmodel.ge.1 )THEN
-        IF( oceanmodel.le.0 )THEN
+      if( sfcmodel.ge.1 )then
+        if( oceanmodel.le.0 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -867,11 +867,11 @@
         print *,'  -------------------------------- '
         endif
         oceanmodel = 1
-        ENDIF
-      ENDIF
+        endif
+      endif
       !-----
-      IF( (sfcmodel.ge.1) .or. (oceanmodel.eq.2) .or. (ipbl.ge.1) )then
-        IF( bbc.ne.3 )THEN
+      if( (sfcmodel.ge.1) .or. (oceanmodel.eq.2) .or. (ipbl.ge.1) )then
+        if( bbc.ne.3 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -885,10 +885,10 @@
         print *,'  -------------------------------- '
         endif
         bbc = 3
-        ENDIF
-      ENDIF
+        endif
+      endif
       !-----
-      IF( irst.eq.1 .and. iinit.ne.0 )THEN
+      if( irst.eq.1 .and. iinit.ne.0 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -901,9 +901,9 @@
         print *,'  -------------------------------- '
         endif
         iinit = 0
-      ENDIF
+      endif
       !-----
-      IF( (sfcmodel.eq.2.or.sfcmodel.eq.3.or.sfcmodel.eq.4.or.sfcmodel.eq.5.or.sfcmodel.eq.6.or.sfcmodel.eq.7) .and. isfcflx.eq.0 )THEN
+      if( (sfcmodel.eq.2.or.sfcmodel.eq.3.or.sfcmodel.eq.4.or.sfcmodel.eq.5.or.sfcmodel.eq.6.or.sfcmodel.eq.7) .and. isfcflx.eq.0 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -916,9 +916,9 @@
         print *,'  -------------------------------- '
         endif
         isfcflx = 1
-      ENDIF
+      endif
       !-----
-      IF( (psolver.eq.4.or.psolver.eq.5.or.psolver.eq.6.or.psolver.eq.7) .and. eqtset.eq.2 )THEN
+      if( (psolver.eq.4.or.psolver.eq.5.or.psolver.eq.6.or.psolver.eq.7) .and. eqtset.eq.2 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -931,9 +931,9 @@
         print *,'  -------------------------------- '
         endif
         eqtset = 1
-      ENDIF
+      endif
       !-----
-      IF( (ptype.eq.4.or.ptype.eq.7.or.ptype.eq.50.or.ptype.eq.51.or.ptype.eq.52.or.ptype.eq.53.or.ptype.eq.55) .and. eqtset.eq.2 )THEN
+      if( (ptype.eq.4.or.ptype.eq.7.or.ptype.eq.50.or.ptype.eq.51.or.ptype.eq.52.or.ptype.eq.53.or.ptype.eq.55) .and. eqtset.eq.2 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -947,9 +947,9 @@
         print *,'  -------------------------------- '
         endif
         eqtset = 1
-      ENDIF
+      endif
       !-----
-      IF( (psolver.eq.4.or.psolver.eq.5.or.psolver.eq.6.or.psolver.eq.7) .and. apmasscon.eq.1 )THEN
+      if( (psolver.eq.4.or.psolver.eq.5.or.psolver.eq.6.or.psolver.eq.7) .and. apmasscon.eq.1 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -962,10 +962,10 @@
         print *,'  -------------------------------- '
         endif
         apmasscon = 0
-      ENDIF
+      endif
       !-----
-      IF( restart_use_theta )THEN
-      IF( .not. restart_file_theta )THEN
+      if( restart_use_theta )then
+      if( .not. restart_file_theta )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -976,11 +976,11 @@
         print *,'  -------------------------------- '
         endif
         restart_file_theta = .true.
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
 #ifndef MPI
-      IF( restart_filetype.ge.3 )THEN
+      if( restart_filetype.ge.3 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -993,10 +993,10 @@
         print *,'  -------------------------------- '
         endif
         restart_filetype = 2
-      ENDIF
+      endif
 #endif
       !-----
-      IF( restart_format.eq.1 .and. restart_filetype.eq.1 )THEN
+      if( restart_format.eq.1 .and. restart_filetype.eq.1 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1009,10 +1009,10 @@
         print *,'  -------------------------------- '
         endif
         restart_filetype = 2
-      ENDIF
+      endif
       !-----
 #ifdef NETCDF
-      IF( restart_format.eq.2 .and. restart_filetype.ge.3 )THEN
+      if( restart_format.eq.2 .and. restart_filetype.ge.3 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1025,10 +1025,10 @@
         print *,'  -------------------------------- '
         endif
         restart_filetype = 2
-      ENDIF
+      endif
 #endif
       !-----
-      IF( idopbl .and. (ipbl.eq.1.or.ipbl.eq.3.or.ipbl.eq.4.or.ipbl.eq.5.or.ipbl.eq.6) .and. abs(l_inf).gt.1.0e-6 )THEN
+      if( idopbl .and. (ipbl.eq.1.or.ipbl.eq.3.or.ipbl.eq.4.or.ipbl.eq.5.or.ipbl.eq.6) .and. abs(l_inf).gt.1.0e-6 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1039,9 +1039,9 @@
         print *,'  -------------------------------- '
         endif
         l_inf = 0.0
-      ENDIF
+      endif
       !-----
-      IF( testcase.eq.1 .or. testcase.eq.2 )THEN
+      if( testcase.eq.1 .or. testcase.eq.2 )then
         if( imoist.ne.0 )then
           if(myid.eq.0)then
           print *,'  -------------------------------- '
@@ -1054,9 +1054,9 @@
           endif
           imoist = 0
         endif
-      ENDIF
+      endif
       !-----
-      IF( testcase.eq.3 .or. testcase.eq.4 .or. testcase.eq.5 .or. testcase.eq.7 .or. testcase.eq.8 )THEN
+      if( testcase.eq.3 .or. testcase.eq.4 .or. testcase.eq.5 .or. testcase.eq.7 .or. testcase.eq.8 )then
         if( imoist.ne.1 )then
           if(myid.eq.0)then
           print *,'  -------------------------------- '
@@ -1069,9 +1069,9 @@
           endif
           imoist = 1
         endif
-      ENDIF
+      endif
       !-----
-      IF( ( .not. idoles ) .and. sgsmodel.ge.1 )THEN
+      if( ( .not. idoles ) .and. sgsmodel.ge.1 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1082,9 +1082,9 @@
         print *,'  -------------------------------- '
         endif
         sgsmodel = 0
-      ENDIF
+      endif
       !-----
-      IF( cm1setup.ge.1 .and. idiff.ge.1 .and. difforder.eq.2 )THEN
+      if( cm1setup.ge.1 .and. idiff.ge.1 .and. difforder.eq.2 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1099,9 +1099,9 @@
         print *,'  -------------------------------- '
         endif
         idiff = 0
-      ENDIF
+      endif
       !-----
-      IF( (ipbl.eq.3.or.ipbl.eq.4.or.ipbl.eq.5) .and. idiss.ge.1 .and. cm1setup.ne.4  )THEN
+      if( (ipbl.eq.3.or.ipbl.eq.4.or.ipbl.eq.5) .and. idiss.ge.1 .and. cm1setup.ne.4  )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1115,9 +1115,9 @@
         print *,'  -------------------------------- '
         endif
         idiss = 0
-      ENDIF
+      endif
       !-----
-      IF( ( sgsmodel.eq.5 .or. sgsmodel.eq.6 ) .and. doimpl.ge.1 )THEN
+      if( ( sgsmodel.eq.5 .or. sgsmodel.eq.6 ) .and. doimpl.ge.1 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1131,9 +1131,9 @@
         print *,'  -------------------------------- '
         endif
         doimpl = 0
-      ENDIF
+      endif
       !-----
-      IF( do_lsnudge .and. (do_lsnudge_u .or. do_lsnudge_v .or. do_lsnudge_th) .and. irdamp.eq.1 )THEN
+      if( do_lsnudge .and. (do_lsnudge_u .or. do_lsnudge_v .or. do_lsnudge_th) .and. irdamp.eq.1 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1150,9 +1150,9 @@
         print *,'  -------------------------------- '
         endif
         irdamp = 2
-      ENDIF
+      endif
       !-----
-      IF( testcase.eq.11 .and. imoist.eq.0 )THEN
+      if( testcase.eq.11 .and. imoist.eq.0 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1166,7 +1166,7 @@
         print *,'  -------------------------------- '
         endif
         imoist = 1
-      ENDIF
+      endif
       !-----
 
 !  end non-fatal checks:
@@ -1174,7 +1174,7 @@
 !  begin fatal checks  (ie, model stops)
 
       !-----
-      IF( cm1setup.lt.0 .or. cm1setup.gt.4 )THEN
+      if( cm1setup.lt.0 .or. cm1setup.gt.4 )then
         if(myid.eq.0)then
         print *
         print *,'  cm1setup = ',cm1setup
@@ -1188,9 +1188,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( hadvordrs.lt.2 .or. hadvordrs.gt.10 )THEN
+      if( hadvordrs.lt.2 .or. hadvordrs.gt.10 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1204,9 +1204,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( hadvordrv.lt.2 .or. hadvordrv.gt.10 )THEN
+      if( hadvordrv.lt.2 .or. hadvordrv.gt.10 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1220,9 +1220,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( vadvordrs.lt.2 .or. vadvordrs.gt.10 )THEN
+      if( vadvordrs.lt.2 .or. vadvordrs.gt.10 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1236,9 +1236,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( vadvordrv.lt.2 .or. vadvordrv.gt.10 )THEN
+      if( vadvordrv.lt.2 .or. vadvordrv.gt.10 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -1252,10 +1252,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( advwenos.ge.1 .or. advwenov.ge.1 )THEN
-      IF( weno_order.ne.3 .and. weno_order.ne.5 .and. weno_order.ne.7 .and. weno_order.ne.9 )THEN
+      if( advwenos.ge.1 .or. advwenov.ge.1 )then
+      if( weno_order.ne.3 .and. weno_order.ne.5 .and. weno_order.ne.7 .and. weno_order.ne.9 )then
         if(myid.eq.0)then
         print *
         print *,'  weno_order = ',weno_order
@@ -1271,10 +1271,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF( psolver.lt.1 .or. psolver.gt.7 )THEN
+      if( psolver.lt.1 .or. psolver.gt.7 )then
         if(myid.eq.0)then
         print *
         print *,'  psolver  = ',psolver
@@ -1288,9 +1288,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( psolver.eq.1 .and. adapt_dt.eq.1 )THEN
+      if( psolver.eq.1 .and. adapt_dt.eq.1 )then
         if(myid.eq.0)then
         print *
         print *,'  psolver  = ',psolver
@@ -1305,7 +1305,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
 !      IF( sfcmodel.eq.1 .or. sfcmodel.eq.5 )THEN
 !      IF( set_znt.eq.1 .and. set_ust.eq.1 )THEN
@@ -1327,8 +1327,8 @@
 !      ENDIF
 !      ENDIF
       !-----
-      IF( sfcmodel.eq.1 .or. sfcmodel.eq.5 )THEN
-      IF( set_znt.gt.1 .or. set_ust.gt.1 )THEN
+      if( sfcmodel.eq.1 .or. sfcmodel.eq.5 )then
+      if( set_znt.gt.1 .or. set_ust.gt.1 )then
         if(myid.eq.0)then
         print *
         print *,'  set_znt = ',set_znt
@@ -1343,11 +1343,11 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF(sfcmodel.eq.1)THEN
-      IF(cecd.lt.1.or.cecd.gt.3)THEN
+      if(sfcmodel.eq.1)then
+      if(cecd.lt.1.or.cecd.gt.3)then
         if(myid.eq.0)then
         print *
         print *,'  cecd  = ',cecd
@@ -1361,11 +1361,11 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
       !-----
-      IF( tbc.eq.3 .and. sfcmodel.ne.1 )THEN
+      if( tbc.eq.3 .and. sfcmodel.ne.1 )then
         if(myid.eq.0)then
         print *
         print *,'  tbc       = ',tbc
@@ -1380,10 +1380,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( idoles )THEN
-      IF( sgsmodel.lt.0 .or. sgsmodel.gt.6 )THEN
+      if( idoles )then
+      if( sgsmodel.lt.0 .or. sgsmodel.gt.6 )then
         if(myid.eq.0)then
         print *
         print *,'  idoles   = ',idoles
@@ -1399,12 +1399,12 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF( idoles )THEN
-      IF( sgsmodel.ge.3 .and. sgsmodel.le.6 )THEN
-      IF( terrain_flag )THEN
+      if( idoles )then
+      if( sgsmodel.ge.3 .and. sgsmodel.le.6 )then
+      if( terrain_flag )then
         if(myid.eq.0)then
         print *
         print *,'  idoles        = ',idoles
@@ -1420,12 +1420,12 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
-      ENDIF
+      endif
+      endif
+      endif
       !-----
-      IF( horizturb.ge.1 )THEN
-      IF( .not. idopbl )THEN
+      if( horizturb.ge.1 )then
+      if( .not. idopbl )then
         if(myid.eq.0)then
         print *
         print *,'  horizturb = ',horizturb
@@ -1440,11 +1440,11 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF( idopbl )THEN
-      IF( ipbl.le.0 )THEN
+      if( idopbl )then
+      if( ipbl.le.0 )then
         if(myid.eq.0)then
         print *
         print *,'  idopbl   = ',idopbl
@@ -1459,11 +1459,11 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF( ipbl.ge.1 )THEN
-      IF( .not. idopbl )THEN
+      if( ipbl.ge.1 )then
+      if( .not. idopbl )then
         if(myid.eq.0)then
         print *
         print *,'  ipbl     = ',ipbl
@@ -1479,10 +1479,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF(bcturbs.lt.1.or.bcturbs.gt.2)THEN
+      if(bcturbs.lt.1.or.bcturbs.gt.2)then
         if(myid.eq.0)then
         print *
         print *,'  bcturbs = ',bcturbs
@@ -1496,9 +1496,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(imoist.eq.1 .and. ( isnd.eq.2 .or. isnd.eq.3 ) )THEN
+      if(imoist.eq.1 .and. ( isnd.eq.2 .or. isnd.eq.3 ) )then
         if(myid.eq.0)then
         print *
         print *,'  imoist = ',imoist
@@ -1513,9 +1513,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( bbc.lt.1 .or. bbc.gt.3 )THEN
+      if( bbc.lt.1 .or. bbc.gt.3 )then
         if(myid.eq.0)then
         print *
         print *,'  bbc = ',bbc
@@ -1529,9 +1529,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( tbc.lt.1 .or. tbc.gt.3 )THEN
+      if( tbc.lt.1 .or. tbc.gt.3 )then
         if(myid.eq.0)then
         print *
         print *,'  tbc = ',tbc
@@ -1545,9 +1545,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(cm1setup.eq.3 .and. (bc_temp.le.0 .or. bc_temp.ge.3))THEN
+      if(cm1setup.eq.3 .and. (bc_temp.le.0 .or. bc_temp.ge.3))then
         if(myid.eq.0)then
         print *
         print *,'  cm1setup = ',cm1setup
@@ -1562,9 +1562,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(ihail.lt.0.or.ihail.gt.1)THEN
+      if(ihail.lt.0.or.ihail.gt.1)then
         if(myid.eq.0)then
         print *
         print *,'  ihail   = ',ihail
@@ -1578,9 +1578,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(imoist.eq.1.and.output_dbz.eq.1.and.ptype.ne.2.and.ptype.ne.3.and.ptype.ne.5.and.ptype.ne.7  &
+      if(imoist.eq.1.and.output_dbz.eq.1.and.ptype.ne.2.and.ptype.ne.3.and.ptype.ne.5.and.ptype.ne.7  &
           .and. (.not. ptype.ge.26))then
         if(myid.eq.0)then
         print *
@@ -1590,19 +1590,19 @@
         print *,'  output_dbz is only available for ptype=2,3,5,7,26,27,28,50-55'
         print *
         endif
-        IF(ptype.eq.4)THEN
+        if(ptype.eq.4)then
           print *,'   stopping model .... '
           print *
 #ifdef MPI
           call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
           call stopcm1
-        ELSE
+        else
           output_dbz = 0
-        ENDIF
-      ENDIF
+        endif
+      endif
       !-----
-      IF( imoist.eq.1 .and. eqtset.ge.2 .and. (ptype.eq.4) )THEN
+      if( imoist.eq.1 .and. eqtset.ge.2 .and. (ptype.eq.4) )then
         if(myid.eq.0)then
         print *
         print *,'  eqtset  = ',eqtset
@@ -1617,10 +1617,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(imoist.eq.1 .and. efall.eq.1)THEN
-      IF(ptype.ne.1.and.ptype.ne.2.and.ptype.ne.5.and.ptype.ne.6)THEN
+      if(imoist.eq.1 .and. efall.eq.1)then
+      if(ptype.ne.1.and.ptype.ne.2.and.ptype.ne.5.and.ptype.ne.6)then
         if(myid.eq.0)then
         print *
         print *,'  efall   = ',efall
@@ -1635,10 +1635,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF((imoist.eq.1).and.(ptype.eq.4).and.terrain_flag)THEN
+      if((imoist.eq.1).and.(ptype.eq.4).and.terrain_flag)then
         if(myid.eq.0)then
         print *
         print *,'  ptype   = ',ptype
@@ -1653,9 +1653,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF((sfcmodel.eq.5).and.terrain_flag)THEN
+      if((sfcmodel.eq.5).and.terrain_flag)then
         if(myid.eq.0)then
         print *
         print *,'  sfcmodel     = ',sfcmodel
@@ -1670,9 +1670,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( idopbl .and. ipbl.eq.6 .and. sfcmodel.ne.7 )THEN
+      if( idopbl .and. ipbl.eq.6 .and. sfcmodel.ne.7 )then
         if(myid.eq.0)then
         print *
         print *,'  ipbl         = ',ipbl
@@ -1687,9 +1687,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(imoist.eq.1 .and. ptype.eq.5 .and. ndcnst.le.1.0e-6)THEN
+      if(imoist.eq.1 .and. ptype.eq.5 .and. ndcnst.le.1.0e-6)then
         if(myid.eq.0)then
         print *
         print *,'  imoist  = ',imoist
@@ -1706,9 +1706,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(imoist.eq.1 .and. ptype.eq.3 .and. nt_c.le.1.0e-6)THEN
+      if(imoist.eq.1 .and. ptype.eq.3 .and. nt_c.le.1.0e-6)then
         if(myid.eq.0)then
         print *
         print *,'  imoist  = ',imoist
@@ -1725,9 +1725,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( terrain_flag .and. (irdamp.eq.2 .or. hrdamp.eq.2) )THEN
+      if( terrain_flag .and. (irdamp.eq.2 .or. hrdamp.eq.2) )then
         if(myid.eq.0)then
         print *
         print *,'  terrain_flag = ',terrain_flag
@@ -1743,9 +1743,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(terrain_flag .and. (psolver.eq.4.or.psolver.eq.5) )THEN
+      if(terrain_flag .and. (psolver.eq.4.or.psolver.eq.5) )then
         if(myid.eq.0)then
         print *
         print *,'  terrain_flag = ',terrain_flag
@@ -1760,9 +1760,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( terrain_flag .and. ( ibalance.eq.2 .or. pdcomp ) )THEN
+      if( terrain_flag .and. ( ibalance.eq.2 .or. pdcomp ) )then
         if(myid.eq.0)then
         print *
         print *,'  terrain_flag = ',terrain_flag
@@ -1778,10 +1778,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( axisymm.eq.1 )THEN
-      IF( psolver.eq.4 .or. psolver.eq.5 .or. ibalance.eq.2 .or. pdcomp )THEN
+      if( axisymm.eq.1 )then
+      if( psolver.eq.4 .or. psolver.eq.5 .or. ibalance.eq.2 .or. pdcomp )then
         if(myid.eq.0)then
         print *
         print *,'  axisymm      = ',axisymm
@@ -1799,11 +1799,11 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF( stretch_x.ge.1 .or. stretch_y.ge.1 )THEN
-      IF( psolver.eq.4 .or. psolver.eq.5 .or. ibalance.eq.2 .or. pdcomp )THEN
+      if( stretch_x.ge.1 .or. stretch_y.ge.1 )then
+      if( psolver.eq.4 .or. psolver.eq.5 .or. ibalance.eq.2 .or. pdcomp )then
         if(myid.eq.0)then
         print *
         print *,'  stretch_x    = ',stretch_x
@@ -1822,10 +1822,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
-      IF(iinit.eq.6)THEN
+      if(iinit.eq.6)then
         if(myid.eq.0)then
         print *
         print *,'  iinit        = ',iinit
@@ -1837,9 +1837,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (output_format.le.0) .or. (output_format.ge.3) )THEN
+      if( (output_format.le.0) .or. (output_format.ge.3) )then
         if(myid.eq.0)then
         print *
         print *,'  output_format = ',output_format
@@ -1853,9 +1853,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (axisymm.eq.1) .and. (iorigin.ne.1) )THEN
+      if( (axisymm.eq.1) .and. (iorigin.ne.1) )then
         if(myid.eq.0)then
         print *
         print *,'  iorigin = ',iorigin
@@ -1869,9 +1869,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (axisymm.eq.1) .and. (imove.ne.0) )THEN
+      if( (axisymm.eq.1) .and. (imove.ne.0) )then
         if(myid.eq.0)then
         print *
         print *,'  imove = ',imove
@@ -1885,9 +1885,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( terrain_flag .and. (imove.ne.0) )THEN
+      if( terrain_flag .and. (imove.ne.0) )then
         if(myid.eq.0)then
         print *
         print *,'  imove = ',imove
@@ -1901,9 +1901,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( imove.eq.1 .and. abs(umove).ge.1.0e-10 )THEN
+      if( imove.eq.1 .and. abs(umove).ge.1.0e-10 )then
       if( wbc.eq.3 .or. wbc.eq.4 .or. ebc.eq.3 .or. ebc.eq.4 )then
         if(myid.eq.0)then
         print *
@@ -1924,9 +1924,9 @@
 #endif
         call stopcm1
       endif
-      ENDIF
+      endif
       !-----
-      IF( imove.eq.1 .and. abs(vmove).ge.1.0e-10 )THEN
+      if( imove.eq.1 .and. abs(vmove).ge.1.0e-10 )then
       if( sbc.eq.3 .or. sbc.eq.4 .or. nbc.eq.3 .or. nbc.eq.4 )then
         if(myid.eq.0)then
         print *
@@ -1947,9 +1947,9 @@
 #endif
         call stopcm1
       endif
-      ENDIF
+      endif
       !-----
-      IF( imove.eq.1 .and. initsfc.ne.1 )THEN
+      if( imove.eq.1 .and. initsfc.ne.1 )then
         if(myid.eq.0)then
         print *
         print *,'  imove   = ',imove
@@ -1964,9 +1964,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (axisymm.eq.1) .and. terrain_flag )THEN
+      if( (axisymm.eq.1) .and. terrain_flag )then
         if(myid.eq.0)then
         print *
         print *,'  terrain_flag = ',terrain_flag
@@ -1980,11 +1980,11 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( icor.eq.0 ) fcor = 0.0
+      if( icor.eq.0 ) fcor = 0.0
       !-----
-      IF( (axisymm.eq.1) .and. (wbc.ne.3) )THEN
+      if( (axisymm.eq.1) .and. (wbc.ne.3) )then
         if(myid.eq.0)then
         print *
         print *,'  wbc = ',wbc
@@ -1998,9 +1998,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (axisymm.eq.1) .and. ( (sbc.ne.1).or.(nbc.ne.1) ) )THEN
+      if( (axisymm.eq.1) .and. ( (sbc.ne.1).or.(nbc.ne.1) ) )then
         if(myid.eq.0)then
         print *
         print *,'  sbc = ',sbc
@@ -2015,9 +2015,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (axisymm.eq.1).and.(ny.gt.1) )THEN
+      if( (axisymm.eq.1).and.(ny.gt.1) )then
         if(myid.eq.0)then
         print *
         print *,'  ny = ',ny
@@ -2031,9 +2031,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( axisymm.eq.1 .and. idoles )THEN
+      if( axisymm.eq.1 .and. idoles )then
         if(myid.eq.0)then
         print *
         print *,'  cm1setup = ',cm1setup
@@ -2047,9 +2047,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( axisymm.eq.1.and.(psolver.eq.1.or.psolver.eq.4.or.psolver.eq.5) )THEN
+      if( axisymm.eq.1.and.(psolver.eq.1.or.psolver.eq.4.or.psolver.eq.5) )then
         if(myid.eq.0)then
         print *
         print *,'  psolver    = ',psolver
@@ -2063,14 +2063,14 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( axisymm.eq.1 .and. idiff.eq.1 .and. difforder.eq.6 )THEN
+      if( axisymm.eq.1 .and. idiff.eq.1 .and. difforder.eq.6 )then
         idiff = 0
         difforder = 0
-      ENDIF
+      endif
       !-----
-      IF( (bbc.eq.3) .and. (sfcmodel.le.0) )THEN
+      if( (bbc.eq.3) .and. (sfcmodel.le.0) )then
         if(myid.eq.0)then
         print *
         print *,'  bbc      = ',bbc
@@ -2085,10 +2085,10 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( isfcflx.ne.0 )THEN
-      IF( sfcmodel.lt.1 .or. sfcmodel.gt.7 )THEN
+      if( isfcflx.ne.0 )then
+      if( sfcmodel.lt.1 .or. sfcmodel.gt.7 )then
         if(myid.eq.0)then
         print *
         print *,'  sfcmodel   = ',sfcmodel
@@ -2102,8 +2102,8 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
-      ENDIF
+      endif
+      endif
       !-----
 !      IF( (sfcmodel.eq.2.or.sfcmodel.eq.3.or.sfcmodel.eq.4.or.oceanmodel.eq.2).and.imove.ne.0 )THEN
 !        if(myid.eq.0)then
@@ -2123,7 +2123,7 @@
 !        call stopcm1
 !      ENDIF
       !-----
-      IF( (sfcmodel.eq.2.or.sfcmodel.eq.3.or.sfcmodel.eq.4.or.sfcmodel.eq.6.or.sfcmodel.eq.7).and.(season.le.0.or.season.ge.3) )THEN
+      if( (sfcmodel.eq.2.or.sfcmodel.eq.3.or.sfcmodel.eq.4.or.sfcmodel.eq.6.or.sfcmodel.eq.7).and.(season.le.0.or.season.ge.3) )then
         if(myid.eq.0)then
         print *
         print *,'  sfcmodel = ',sfcmodel
@@ -2138,9 +2138,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( pertflx.eq.1 .and. sfcmodel.ge.2 )THEN
+      if( pertflx.eq.1 .and. sfcmodel.ge.2 )then
         if(myid.eq.0)then
         print *
         print *,'  pertflx  = ',pertflx
@@ -2155,9 +2155,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( pertflx.eq.1 .and. imove.ge.1 )THEN
+      if( pertflx.eq.1 .and. imove.ge.1 )then
         if(myid.eq.0)then
         print *
         print *,'  pertflx  = ',pertflx
@@ -2172,9 +2172,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( sfcmodel.eq.1 .and. oceanmodel.ne.1 )THEN
+      if( sfcmodel.eq.1 .and. oceanmodel.ne.1 )then
         if(myid.eq.0)then
         print *
         print *,'  sfcmodel   = ',sfcmodel
@@ -2190,9 +2190,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( ( testcase.eq.4 .or. testcase.eq.5 ) .and. radopt.ge.1 )THEN
+      if( ( testcase.eq.4 .or. testcase.eq.5 ) .and. radopt.ge.1 )then
         if(myid.eq.0)then
         print *
         print *,'  testcase = ',radopt
@@ -2208,9 +2208,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( cuparam.lt.0 .or. cuparam.gt.1 )THEN
+      if( cuparam.lt.0 .or. cuparam.gt.1 )then
         if(myid.eq.0)then
         print *
         print *,'  cuparam  = ',cuparam
@@ -2224,9 +2224,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( radopt.lt.0 .or. radopt.gt.2 )THEN
+      if( radopt.lt.0 .or. radopt.gt.2 )then
         if(myid.eq.0)then
         print *
         print *,'  radopt   = ',radopt
@@ -2240,9 +2240,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (radopt.eq.1.or.radopt.eq.2) .and. imoist.eq.0 )THEN
+      if( (radopt.eq.1.or.radopt.eq.2) .and. imoist.eq.0 )then
         if(myid.eq.0)then
         print *
         print *,'  radopt   = ',radopt
@@ -2257,7 +2257,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
 !      IF( ipbl.eq.1 .and. imoist.eq.0 )THEN
 !        if(myid.eq.0)then
@@ -2276,7 +2276,7 @@
 !        call stopcm1
 !      ENDIF
       !-----
-      IF( (radopt.eq.1.or.radopt.eq.2) .and. rterm.eq.1 )THEN
+      if( (radopt.eq.1.or.radopt.eq.2) .and. rterm.eq.1 )then
         if(myid.eq.0)then
         print *
         print *,'  radopt   = ',radopt
@@ -2291,11 +2291,11 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( radopt.eq.2 .and. ( ptype.ne.3 .and. ptype.ne.5 .and. ptype.ne.7 .and. ptype.ne.50 .and.  &
+      if( radopt.eq.2 .and. ( ptype.ne.3 .and. ptype.ne.5 .and. ptype.ne.7 .and. ptype.ne.50 .and.  &
                               ptype.ne.51 .and. ptype.ne.52 .and. ptype.ne.53 .and.&
-                              ptype.ne.55 .and. ptype.ne.26 .and. ptype.ne.27)  )THEN
+                              ptype.ne.55 .and. ptype.ne.26 .and. ptype.ne.27)  )then
         if(myid.eq.0)then
         print *
         print *,'  radopt   = ',radopt
@@ -2310,9 +2310,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (radopt.eq.1.or.radopt.eq.2) .and. (ptype.eq.1.or.ptype.eq.6)  )THEN
+      if( (radopt.eq.1.or.radopt.eq.2) .and. (ptype.eq.1.or.ptype.eq.6)  )then
         if(myid.eq.0)then
         print *
         print *,'  radopt   = ',radopt
@@ -2327,9 +2327,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( (radopt.eq.1.or.radopt.eq.2) .and. sfcmodel.eq.0 )THEN
+      if( (radopt.eq.1.or.radopt.eq.2) .and. sfcmodel.eq.0 )then
         if(myid.eq.0)then
         print *
         print *,'  radopt   = ',radopt
@@ -2344,7 +2344,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
 !      IF( (sfcmodel.eq.2.or.sfcmodel.eq.3.or.sfcmodel.eq.4) .and. imoist.eq.0 )THEN
 !        if(myid.eq.0)then
@@ -2365,7 +2365,7 @@
       !-----
 #ifndef NETCDF
       !-----
-      IF(output_format.eq.2)THEN
+      if(output_format.eq.2)then
         if(myid.eq.0)then
         print *
         print *,'  output_format = ',output_format
@@ -2379,9 +2379,9 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(restart_format.eq.2)THEN
+      if(restart_format.eq.2)then
         if(myid.eq.0)then
         print *
         print *,'  restart_format = ',restart_format
@@ -2395,7 +2395,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
       !-----
 #endif
 !#ifdef NETCDF
@@ -2417,7 +2417,7 @@
 !#endif
 #ifdef MPI
       !-----
-      IF(psolver.eq.4.or.psolver.eq.5)THEN
+      if(psolver.eq.4.or.psolver.eq.5)then
         if(myid.eq.0)then
         print *
         print *,'  psolver = ',psolver
@@ -2429,9 +2429,9 @@
         endif
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF( output_pdcomp.ge.1 )THEN
+      if( output_pdcomp.ge.1 )then
         if(myid.eq.0)then
         print *
         print *,'  output_pdcomp = ',output_pdcomp
@@ -2443,9 +2443,9 @@
         endif
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(axisymm.eq.1)THEN
+      if(axisymm.eq.1)then
         if(myid.eq.0)then
         print *
         print *,'  axisymm = ',axisymm
@@ -2457,9 +2457,9 @@
         endif
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
         call stopcm1
-      ENDIF
+      endif
       !-----
-      IF(ny.lt.3)THEN
+      if(ny.lt.3)then
         if(myid.eq.0)then
         print *
         print *,'  ny = ',ny
@@ -2471,7 +2471,7 @@
         endif
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
         call stopcm1
-      ENDIF
+      endif
       !-----
 #endif
 
@@ -2518,7 +2518,7 @@
 !          call stopcm1
 !        endif
 
-        IF( (ni.lt.3).or.(nj.lt.3) )THEN
+        if( (ni.lt.3).or.(nj.lt.3) )then
           if(myid.eq.0)then
           print *
           print *,'  myid = ',myid
@@ -2530,7 +2530,7 @@
           ! bug fix, cm1r20.3: do not wait for all processors
 !!!          call MPI_BARRIER (MPI_COMM_WORLD,ierr)
           call stopcm1
-        ENDIF
+        endif
 
         ppnode = min( ppnode , nodex*nodey )
 
@@ -2606,9 +2606,9 @@
 !-----
 
       if(stretch_z.lt.1) ztop = dz*float(nk)
-      IF ( stretch_z == 2 ) dz = ztop/float(nk) ! nk is the number of scalar levels
+      if ( stretch_z == 2 ) dz = ztop/float(nk) ! nk is the number of scalar levels
 
-      IF( advwenos.lt.0 .or. advwenos.gt.2 )THEN
+      if( advwenos.lt.0 .or. advwenos.gt.2 )then
         print *
         print *,'  advwenos = ',advwenos
         print *
@@ -2620,11 +2620,11 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
 
       !-----
 
-      IF( advwenov.lt.0 .or. advwenov.gt.2 )THEN
+      if( advwenov.lt.0 .or. advwenov.gt.2 )then
         print *
         print *,'  advwenov = ',advwenov
         print *
@@ -2636,7 +2636,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
@@ -2663,12 +2663,12 @@
       doit = .false.
 #endif
 
-    IF( .not. doit )THEN
+    if( .not. doit )then
       if(dowr) write(outfile,*) 'ni    =',ni
       if(dowr) write(outfile,*) 'nj    =',nj
       if(dowr) write(outfile,*) 'nk    =',nk
 #ifdef MPI
-    ELSE
+    else
       if(myid.eq.0)then
         do n=0,(numprocs-1)
           if(n.eq.0)then
@@ -2699,7 +2699,7 @@
         call MPI_WAIT(reqs4,status,ierr)
       endif
 #endif
-    ENDIF
+    endif
       if(dowr) write(outfile,*)
 
 !--------------------------------------------------------------
@@ -3015,7 +3015,7 @@
       if(dowr) write(outfile,*)
 
 
-      IF ( ptype >= 26 .and. dowr ) THEN
+      if ( ptype >= 26 .and. dowr ) then
         write(outfile,NML=nssl2mom_params)
 !        write(outfile,*) 'alphah    =',alphah
 !        write(outfile,*) 'alphahl   =',alphahl
@@ -3032,7 +3032,7 @@
 !        write(outfile,*) 'ehlw0     =',ehlw0
 !        write(outfile,*) 'dmrauto   =',dmrauto
 !        write(outfile,*) 'ioldlimiter=',ioldlimiter
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
@@ -3128,7 +3128,7 @@
       ntmp1d=1
       !--- end: define defaults ----------------------------------
 
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
 
 !-----------------------------------------------------------------------
 !-------   BEGIN:  modify stuff below here -----------------------------
@@ -3138,7 +3138,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        IF(ptype.eq.0)THEN        ! water vapor only
+        if(ptype.eq.0)then        ! water vapor only
 
           numq = 1
           nqv = 1
@@ -3166,7 +3166,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF(ptype.eq.1)THEN        ! Kessler scheme
+        elseif(ptype.eq.1)then        ! Kessler scheme
 
           numq = 3    ! there are 3 q variables
 
@@ -3219,7 +3219,7 @@
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
-        ELSEIF((ptype.eq.2).or.(ptype.eq.4))THEN    ! Goddard-LFO or 
+        elseif((ptype.eq.2).or.(ptype.eq.4))then    ! Goddard-LFO or 
                                                     ! GSR-LFO scheme
 
           iice = 1    ! this means that ptype=2,4 are ice schemes
@@ -3279,7 +3279,7 @@
 
           !----- initialize the Goddard or GSR LFO scheme -----
 
-          if(ptype.eq.2)THEN
+          if(ptype.eq.2)then
 
             if(dowr) write(outfile,*)
             if(dowr) write(outfile,*) 'Calling CONSAT'
@@ -3319,7 +3319,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF(ptype.eq.3)THEN    ! Thompson scheme
+        elseif(ptype.eq.3)then    ! Thompson scheme
 
           iice = 1    ! this means that ptype=3 is an ice scheme
           idm  = 1    ! this means that ptype=3 has at least one double moment
@@ -3397,7 +3397,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF(ptype.eq.5)THEN    ! Morrison scheme
+        elseif(ptype.eq.5)then    ! Morrison scheme
 
           !----- initialize the Morrison scheme -----
 
@@ -3581,7 +3581,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF(ptype.eq.6)THEN        ! Rotunno-Emanuel scheme
+        elseif(ptype.eq.6)then        ! Rotunno-Emanuel scheme
 
           numq = 2    ! there are 2 q variables
 
@@ -3629,7 +3629,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF(ptype.eq.7)THEN    !  WSM6
+        elseif(ptype.eq.7)then    !  WSM6
 
           ibtmp  = max( ibtmp  ,  1 )
           ietmp  = max( ietmp  , ni )
@@ -3711,7 +3711,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF ( ptype .eq. 26 .or. ptype .eq. 27) THEN    ! NSSL variable density scheme (with no hail category)
+        elseif ( ptype .eq. 26 .or. ptype .eq. 27) then    ! NSSL variable density scheme (with no hail category)
 !        ELSEIF ( ptype .eq. 26 ) THEN    ! NSSL variable density scheme (with no hail category)
 
           lv = 1
@@ -3724,14 +3724,14 @@
           lccn = 7
           lvh = 0
 
-          IF ( ptype .eq. 26 ) THEN
+          if ( ptype .eq. 26 ) then
             nssl_hail_on = .false.
             lhab = lgh
-          ELSE
+          else
             nssl_hail_on = .true.
             lhl = 7
             lhab = lhl
-          ENDIF
+          endif
           
           iice = 1    ! this means that ptype=26 is an ice scheme
           idm  = 1    ! this means that ptype=26 has at least one double moment
@@ -3739,22 +3739,22 @@
 
           ! inucopt is not used yet
           i = 0
-          IF ( inucopt == 1 .or. inucopt == 3 ) THEN
+          if ( inucopt == 1 .or. inucopt == 3 ) then
            i = i + 1
-          ENDIF
-          IF ( inucopt == 2 .or. inucopt == 3 ) THEN
+          endif
+          if ( inucopt == 2 .or. inucopt == 3 ) then
            i = i + 1
-          ENDIF
+          endif
           
           j = 0
-          IF ( nssl_3moment ) THEN
+          if ( nssl_3moment ) then
            j = 2 ! three extra variables for 3moment
-          ENDIF
+          endif
           
           k = 0
-          IF ( nssl_density_on ) THEN
+          if ( nssl_density_on ) then
             k = 1
-          ENDIF
+          endif
 
           nqv  = 1    ! qv is the first array
           nql1 = 2    ! the first liquid variable
@@ -3772,40 +3772,40 @@
           lns = nnc1+4+i
           lnh = nnc1+5+i
 
-          IF ( nssl_hail_on ) THEN
+          if ( nssl_hail_on ) then
             lnhl = nnc1+6+i
             ltmp = lnhl
-          ELSE
+          else
             ltmp = lnh
-          ENDIF
+          endif
           
           nnc2 = ltmp
 
           
-          IF ( nssl_density_on ) THEN
+          if ( nssl_density_on ) then
             ltmp = ltmp + 1
             lvh  = ltmp
             nvl1 = ltmp ! the first particle volume var
-            IF ( nssl_hail_on ) THEN
+            if ( nssl_hail_on ) then
               ltmp = ltmp + 1
               lvhl = ltmp
-            ENDIF
+            endif
             nvl2 = ltmp ! the last particle volume var
-          ENDIF
+          endif
           
-          IF ( nssl_3moment ) THEN
+          if ( nssl_3moment ) then
             lzr = ltmp+1
             nzl1 = lzr    ! the first reflectivity var (rain)
             lzh = ltmp+2
             ltmp = lzh
             
-            IF ( nssl_hail_on ) THEN
+            if ( nssl_hail_on ) then
               ltmp = ltmp + 1
               lzhl = ltmp
-            ENDIF
+            endif
             
             nzl2 = ltmp   ! the last reflectivity var
-          ENDIF
+          endif
 
           numq = ltmp   ! number of variables
 
@@ -3825,52 +3825,52 @@
           qname(li) = 'qi '
           qname(ls) = 'qs '
           qname(lgh) = 'qg '
-          IF ( nssl_hail_on ) qname(lhl) = 'qhl'
+          if ( nssl_hail_on ) qname(lhl) = 'qhl'
           qname(lccn) = 'ccn' ! CCN concentration
 
           i = 0
           lccna = 1
           lcina = 1
-          IF ( inucopt == 1 .or. inucopt == 3 ) THEN
+          if ( inucopt == 1 .or. inucopt == 3 ) then
            i = i + 1
           qname(lccn+i) = 'cna' ! activated CCN concentration
           lccna = lccn+i
           f_ccna = .true.
-          ENDIF
-          IF ( inucopt == 2 .or. inucopt == 3 ) THEN
+          endif
+          if ( inucopt == 2 .or. inucopt == 3 ) then
            i = i + 1
           qname(lccn+i) = 'cia' ! activated CIN concentration
           lcina = lccn+i
           f_cina = .true.
-          ENDIF
+          endif
           
           qname(lnc) = 'ccw' ! droplet conc
           qname(lnr) = 'crw' ! rain conc
           qname(lni) = 'cci' ! ice crystal conc
           qname(lns) = 'csw' ! snow conc
           qname(lnh) = 'chw' ! graupel conc
-          IF ( nssl_hail_on ) qname(lnhl) = 'chl' ! graupel conc
+          if ( nssl_hail_on ) qname(lnhl) = 'chl' ! graupel conc
           
-          IF ( nssl_density_on ) THEN
+          if ( nssl_density_on ) then
            qname(lvh) = 'vhw' ! graupel volume
-           IF ( nssl_hail_on ) qname(lvhl) = 'vhl' ! hail volume
-          ENDIF
+           if ( nssl_hail_on ) qname(lvhl) = 'vhl' ! hail volume
+          endif
           
-          IF ( nssl_3moment ) THEN
+          if ( nssl_3moment ) then
             qname(lzr) = 'zrw' ! rain reflectivity moment
             qname(lzh) = 'zhw' ! graupel reflectivity moment
-            IF ( nssl_hail_on ) qname(lzhl) = 'zhl' ! hail reflectivity
-          ENDIF
+            if ( nssl_hail_on ) qname(lzhl) = 'zhl' ! hail reflectivity
+          endif
 
           qunit(lv:lhab) = 'kg/kg'
 
           qunit(nnc1:nnc2) = '#/kg'
-          IF ( nssl_density_on ) THEN
+          if ( nssl_density_on ) then
             qunit(nvl1:nvl2) = 'm^3/kg'
-          ENDIF
-          IF ( nssl_3moment ) THEN
+          endif
+          if ( nssl_3moment ) then
             qunit(nzl1:nzl2) = 'Z/m^3/kg'
-          ENDIF
+          endif
 
           rhovar(lv:lhab) = .false.
           rhovar(lhab+1:numq) = .true.
@@ -3886,8 +3886,8 @@
           qmag(nnc1:nnc2) = 1.e8
           qmag( lnc) = 1.0e10
           qmag( lni) = 3.0e9
-          IF ( nssl_3moment ) qmag(nzl1:nzl2) = 1.0e-12
-          IF ( nssl_density_on ) qmag(nvl1:nvl2) = 1.0e-5
+          if ( nssl_3moment ) qmag(nzl1:nzl2) = 1.0e-12
+          if ( nssl_density_on ) qmag(nvl1:nvl2) = 1.0e-5
           qmag(:) = 1.e-12
 
 
@@ -3914,15 +3914,15 @@
           if(dowr) write(outfile,*) 'Calling nssl_2mom_init'
           if(dowr) write(outfile,*)
 
-         IF ( nssl_3moment ) THEN
+         if ( nssl_3moment ) then
 !           CALL nssl_2mom_init(ipctmp=8,mixphase=0,ihvol=-1,eqtset_tmp=eqtset,myrank=myid,mpiroot=0)
-           CALL nssl_2mom_init(ipctmp=8,mixphase=0,nssl_hail_on=nssl_hail_on,nssl_density_on=nssl_density_on, &
+           call nssl_2mom_init(ipctmp=8,mixphase=0,nssl_hail_on=nssl_hail_on,nssl_density_on=nssl_density_on, &
                      eqtset_tmp=eqtset,myrank=myid,mpiroot=0)
-         ELSE
+         else
 !           CALL nssl_2mom_init(ipctmp=5,mixphase=0,ihvol=-1,eqtset_tmp=eqtset,myrank=myid,mpiroot=0)
-           CALL nssl_2mom_init(ipctmp=5,mixphase=0,nssl_hail_on=nssl_hail_on,nssl_density_on=nssl_density_on, &
+           call nssl_2mom_init(ipctmp=5,mixphase=0,nssl_hail_on=nssl_hail_on,nssl_density_on=nssl_density_on, &
                      eqtset_tmp=eqtset,myrank=myid,mpiroot=0)
-         ENDIF
+         endif
 
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) 'Returned from nssl_2mom_init'
@@ -3930,20 +3930,20 @@
 
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) ' ----------------------------------------------- '
-          IF ( nssl_3moment ) THEN
+          if ( nssl_3moment ) then
           if(dowr) write(outfile,*) '  using NSSL 3-moment scheme  '
-          ELSE
+          else
           if(dowr) write(outfile,*) '  using NSSL 2-moment scheme  '
-          ENDIF
+          endif
 
-          IF ( nssl_hail_on ) THEN
+          if ( nssl_hail_on ) then
           if(dowr) write(outfile,*) '  (with hail ) '
-          ELSE
+          else
           if(dowr) write(outfile,*) '  (graupel-only, no hail ) '
-          ENDIF
-          IF ( nssl_density_on ) THEN
+          endif
+          if ( nssl_density_on ) then
           if(dowr) write(outfile,*) '  (graupel/hail density predicted ) '
-          ENDIF
+          endif
           if(dowr) write(outfile,*) ' ----------------------------------------------- '
           if(dowr) write(outfile,*)
 
@@ -3952,7 +3952,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF ( ptype .eq. 28 ) THEN    ! single moment NSSL scheme (without hail)
+        elseif ( ptype .eq. 28 ) then    ! single moment NSSL scheme (without hail)
 
           iice = 1    ! this means that ptype=28 is an ice scheme
           idm  = 0    ! this means that ptype=28 has at least one double moment
@@ -4027,7 +4027,7 @@
 !          if(dowr) write(outfile,*) 'Calling graupel_init'
 !          if(dowr) write(outfile,*)
 
-         CALL nssl_2mom_init(ipctmp=0,mixphase=0,ihvol=-1,eqtset_tmp=eqtset)
+         call nssl_2mom_init(ipctmp=0,mixphase=0,ihvol=-1,eqtset_tmp=eqtset)
 
 
 !          if(dowr) write(outfile,*)
@@ -4045,7 +4045,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF( ptype.eq.50 .or. ptype.eq.51 .or. ptype.eq.52 .or. ptype.eq.53 )THEN    ! P3
+        elseif( ptype.eq.50 .or. ptype.eq.51 .or. ptype.eq.52 .or. ptype.eq.53 )then    ! P3
 
           !----- initialize the P3 scheme -----
 
@@ -4097,7 +4097,7 @@
 
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccc!
-        IF( ptype.eq.50 )THEN
+        if( ptype.eq.50 )then
 
           numq = 8    ! there are 8 q variables
 
@@ -4150,7 +4150,7 @@
           np3o =  3
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccc!
-        ELSEIF( ptype.eq.51 )THEN
+        elseif( ptype.eq.51 )then
 
           numq = 9    ! there are 9 q variables
 
@@ -4207,7 +4207,7 @@
           np3o =  3
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccc!
-        ELSEIF( ptype.eq.52 )THEN
+        elseif( ptype.eq.52 )then
 
           numq = 13   ! there are 13 q variables
 
@@ -4281,7 +4281,7 @@
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccc!
 
-        ELSEIF( ptype.eq.53 )THEN
+        elseif( ptype.eq.53 )then
 
           numq = 10   ! there are 9 q variables
 
@@ -4341,7 +4341,7 @@
           np3a = 24
           np3o =  3
 
-        ENDIF
+        endif
 
       !cccccccccccccccccccccccccccccccccccccccccccccccccccc!
 
@@ -4373,7 +4373,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSEIF(ptype.eq.55)THEN        ! Jensen_ISHMAEL
+        elseif(ptype.eq.55)then        ! Jensen_ISHMAEL
 
           !----- initialize the Jensen_AHAB scheme -----
 
@@ -4512,9 +4512,9 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-        ELSE
+        else
 
-          IF(myid.eq.0)THEN
+          if(myid.eq.0)then
             print *
             print *,'  ptype = ',ptype
             print *
@@ -4522,22 +4522,22 @@
             print *
             print *,'  ... stopping cm1 ... '
             print *
-          ENDIF
+          endif
 
 #ifdef MPI
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
           call stopcm1
 
-        ENDIF    ! endif for ptype
+        endif    ! endif for ptype
 
-      ENDIF    ! endif for imoist=1
+      endif    ! endif for imoist=1
 
 !-----------------------------------------------------------------------
 !-------   END:  modify stuff above here -------------------------------
 !-----------------------------------------------------------------------
 
-      IF( (radopt.eq.1.or.radopt.eq.2) .and. iice.ne.1 )THEN
+      if( (radopt.eq.1.or.radopt.eq.2) .and. iice.ne.1 )then
         print *
         print *,'  radopt   = ',radopt
         print *,'  iice     = ',iice
@@ -4550,7 +4550,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 
@@ -4859,11 +4859,11 @@
 
       dolsw = .false.
 
-      IF( testcase.eq.3 ) dolsw = .true.
-      IF( testcase.eq.4 ) dolsw = .true.
-      IF( testcase.eq.5 ) dolsw = .true.
-      IF( testcase.eq.6 ) dolsw = .true.
-      IF( testcase.eq.7 ) dolsw = .true.
+      if( testcase.eq.3 ) dolsw = .true.
+      if( testcase.eq.4 ) dolsw = .true.
+      if( testcase.eq.5 ) dolsw = .true.
+      if( testcase.eq.6 ) dolsw = .true.
+      if( testcase.eq.7 ) dolsw = .true.
 
       if( dolsw )then
         if( terrain_flag  .or.  axisymm.eq.1  )then
@@ -4876,13 +4876,13 @@
         endif
       endif
 
-      IF( dolsw )THEN
+      if( dolsw )then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  dolsw      = ',dolsw
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  ... Including large-scale vertical velocity ... '
         if(dowr) write(outfile,*)
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 !  Define dimensions for allocatable arrays
@@ -5027,7 +5027,7 @@
         bl_mynn_cloudmix   =   1      ! 1 activates mixing of qc and qi in MYNN
         bl_mynn_mixscalars =   0      ! activate mixing of scalars (qnx, qnxfa) in MYNN
         bl_mynn_mixqt      =   0      ! 0:mix moisture species separate,1: mix total water
-        bl_mynn_output     =   1      ! 1:Allocate and output extra 3D arrays
+        bl_mynn_output     =   1      ! 1:allocate and output extra 3D arrays
         bl_mynn_tkeadvect  =  .true.  ! tke advection?  (T=yes)
         if( ipbl.eq.4 )then
           bl_mynn_closure    =  2.50_sp   ! flag to determine the closure level for the mynn
@@ -5299,7 +5299,7 @@
       td_melt  = 0
       td_frz   = 0
 
-      IF( output_thbudget.eq.1 )THEN
+      if( output_thbudget.eq.1 )then
         ibdt = ib
         iedt = ie
         jbdt = jb
@@ -5412,7 +5412,7 @@
           ntdiag = ntdiag + 1
           td_frz = ntdiag
         endif
-      ENDIF
+      endif
 
       nqdiag   = 0
       qd_dbz   = 0
@@ -5441,7 +5441,7 @@
       qd_subl  = 0
 
       ! dbz (new for cm1r19)
-      IF( output_dbz.eq.1 .or. restart_file_dbz .or. (imoist.eq.1.and.ptype.eq.3) )THEN
+      if( output_dbz.eq.1 .or. restart_file_dbz .or. (imoist.eq.1.and.ptype.eq.3) )then
         ibdq = ib
         iedq = ie
         jbdq = jb
@@ -5450,15 +5450,15 @@
         kedq = ke
         nqdiag = nqdiag+1
         qd_dbz = nqdiag
-      ENDIF
+      endif
 
       getvt = .false.
-      IF( efall.eq.1 ) getvt = .true.
-      IF( output_fallvel.eq.1 ) getvt = .true.
-      IF( imoist.eq.1 .and. dodomaindiag .and. ( ptype.eq.3 .or. ptype.eq.5 ) ) getvt = .true.
-      IF( imoist.eq.1 .and. dodomaindiag .and. testcase.eq.5 ) getvt = .true.
+      if( efall.eq.1 ) getvt = .true.
+      if( output_fallvel.eq.1 ) getvt = .true.
+      if( imoist.eq.1 .and. dodomaindiag .and. ( ptype.eq.3 .or. ptype.eq.5 ) ) getvt = .true.
+      if( imoist.eq.1 .and. dodomaindiag .and. testcase.eq.5 ) getvt = .true.
 
-      IF( getvt )THEN
+      if( getvt )then
         if( imoist.eq.1 .and. ( ptype.eq.3 .or. ptype.eq.5 ) )then
           ! Thompson and Morrison schemes only (for now):
           ibdq = ib
@@ -5484,8 +5484,8 @@
           qd_vti = nqdiag
 
         endif
-      ENDIF
-      IF( output_qvbudget.eq.1 .and. imoist.eq.1 )THEN
+      endif
+      if( output_qvbudget.eq.1 .and. imoist.eq.1 )then
         ibdq = ib
         iedq = ie
         jbdq = jb
@@ -5567,7 +5567,7 @@
           nqdiag = nqdiag + 1
           qd_subl = nqdiag
         endif
-      ENDIF
+      endif
 
       nudiag     = 0
       ud_hadv    = 0
@@ -5587,7 +5587,7 @@
       ud_lsw     = 0
       nutk       = 0
 
-      IF( output_ubudget.eq.1 )THEN
+      if( output_ubudget.eq.1 )then
         ! 170721: to more easily calculate rtke budget, save budget terms
 
         ibdv = ib
@@ -5672,7 +5672,7 @@
           nutk = nudiag
         endif
 
-      ENDIF
+      endif
 
       nvdiag     = 0
       vd_hadv    = 0
@@ -5692,7 +5692,7 @@
       vd_lsw     = 0
       nvtk       = 0
 
-      IF( output_vbudget.eq.1 )THEN
+      if( output_vbudget.eq.1 )then
         ! 170721: to more easily calculate rtke budget, save budget terms
 
         ibdv = ib
@@ -5777,7 +5777,7 @@
           nvtk = nvdiag
         endif
 
-      ENDIF
+      endif
 
 
       nwdiag     = 0
@@ -5794,7 +5794,7 @@
       wd_buoy    = 0
       nwtk       = 0
 
-      IF( output_wbudget.eq.1 )THEN
+      if( output_wbudget.eq.1 )then
         ! 170721: to more easily calculate rtke budget, save budget terms
 
         ibdv = ib
@@ -5857,7 +5857,7 @@
           nwtk = nwdiag
         endif
 
-      ENDIF
+      endif
 
       !-----
 
@@ -5874,7 +5874,7 @@
       kd_turb  = 0
 
       ! cm1r21.1: add idoles
-      IF( (idopbl.or.idoles) .and. dodomaindiag .and. iusetke )THEN
+      if( (idopbl.or.idoles) .and. dodomaindiag .and. iusetke )then
 
         ibdk = ib
         iedk = ie
@@ -5889,7 +5889,7 @@
         nkdiag = nkdiag + 1
         kd_turb = nkdiag
 
-      ENDIF
+      endif
 
       !-----
 
@@ -5903,7 +5903,7 @@
 
       npdiag   = 0
 
-      IF( pdcomp )THEN
+      if( pdcomp )then
 
         ibdp = ib
         iedp = ie
@@ -5916,7 +5916,7 @@
 
         if( icor.eq.1 ) npdiag = npdiag+1
 
-      ENDIF
+      endif
 
       !-----
 
@@ -5935,12 +5935,12 @@
       jb2d = 1
       je2d = 1
 
-      IF( nout2d .gt. 0 )THEN
+      if( nout2d .gt. 0 )then
         ib2d = ib
         ie2d = ie
         jb2d = jb
         je2d = je
-      ENDIF
+      endif
 
       nout2d = max( nout2d , 1 )
 
@@ -5953,14 +5953,14 @@
       kb3d = 1
       ke3d = 1
 
-      IF( nout3d .gt. 0 )THEN
+      if( nout3d .gt. 0 )then
         ib3d = ib
         ie3d = ie
         jb3d = jb
         je3d = je
         kb3d = kb
         ke3d = ke
-      ENDIF
+      endif
 
       nout3d = max( nout3d , 1 )
 
@@ -6000,9 +6000,9 @@
       d3n = 1
       d3t = 1
 
-    IF( output_filetype.eq.1 .or. output_filetype.eq.2 )THEN
+    if( output_filetype.eq.1 .or. output_filetype.eq.2 )then
 
-      IF( myid.eq.nodeleader )THEN
+      if( myid.eq.nodeleader )then
 
         d2i   = (ni+1)*nodex
         d2is  = nx
@@ -6018,9 +6018,9 @@
 
         d3t = max( ppnode-1 + nodes-1 , 1 )
 
-      ENDIF
+      endif
 
-    ELSEIF( output_filetype.eq.3 )THEN
+    elseif( output_filetype.eq.3 )then
 
         d2i   = ni+1
         d2is  = ni
@@ -6036,7 +6036,7 @@
 
         d3t = 1
 
-    ELSE
+    else
 
         if( myid.eq.0 )then
         print *
@@ -6050,12 +6050,12 @@
 #endif
         call stopcm1
 
-    ENDIF
+    endif
 
-    IF( rstfrq.gt.0.0 .and. rstfrq.le.timax )THEN
-    IF( restart_filetype.eq.1 .or. restart_filetype.eq.2 .or. restart_filetype.eq.3 )THEN
+    if( rstfrq.gt.0.0 .and. rstfrq.le.timax )then
+    if( restart_filetype.eq.1 .or. restart_filetype.eq.2 .or. restart_filetype.eq.3 )then
 
-      IF( myid.eq.nodeleader )THEN
+      if( myid.eq.nodeleader )then
 
         d2i   = (ni+1)*nodex
         d2is  = nx
@@ -6071,10 +6071,10 @@
 
         d3t = max( ppnode-1 + nodes-1 , 1 )
 
-      ENDIF
+      endif
 
-    ENDIF
-    ENDIF
+    endif
+    endif
 
 
         d3i   = nimax+1
@@ -6150,7 +6150,7 @@
       stat_u       = max(0,min(1,stat_u))
       stat_v       = max(0,min(1,stat_v))
       stat_rmw     = max(0,min(1,stat_rmw))
-      IF(axisymm.ne.1) stat_rmw = 0
+      if(axisymm.ne.1) stat_rmw = 0
       stat_pipert  = max(0,min(1,stat_pipert))
       stat_prspert = max(0,min(1,stat_prspert))
       stat_thpert  = max(0,min(1,stat_thpert))
@@ -6303,22 +6303,22 @@
 
 !------------------------------------------------------------------
 
-    IF( dodomaindiag )THEN
+    if( dodomaindiag )then
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) 'dodomaindiag = ',dodomaindiag
       if(dowr) write(outfile,*) 'diagfrq      = ',diagfrq
       if(dowr) write(outfile,*)
-    ENDIF
+    endif
 
 !------------------------------------------------------------------
 !  "constants" in subgrid turbulence schemes:
 
-      IF( dowr .and. ( sgsmodel.ge.1 ) )THEN
+      if( dowr .and. ( sgsmodel.ge.1 ) )then
         write(outfile,*)
         write(outfile,*) '  c_m,c_l,ri_c  = ',c_m,c_l,ri_c
         write(outfile,*) '  c_e1,c_e2,sum = ',c_e1,c_e2,c_e1+c_e2
         write(outfile,*) '  c_s,rcs       = ',c_s,rcs
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
@@ -6643,7 +6643,7 @@
     allocate( xfdp(1-ngxy:nx+ngxy+1) )
     allocate( yfdp(1-ngxy:ny+ngxy+1) )
 
-    IF(iorigin.eq.1)THEN
+    if(iorigin.eq.1)then
 
       do i=1-ngxy,nx+ngxy+1
         xfdp(i)=dble(dx)*(i-1)
@@ -6653,7 +6653,7 @@
         yfdp(j)=dble(dy)*(j-1)
       enddo
 
-    ELSEIF(iorigin.eq.2)THEN
+    elseif(iorigin.eq.2)then
 
       do i=1-ngxy,nx+ngxy+1
         xfdp(i)=dble(dx)*(i-1)-0.5d0*dble(dx)*nx
@@ -6663,7 +6663,7 @@
         yfdp(j)=dble(dy)*(j-1)-0.5d0*dble(dy)*ny
       enddo
 
-    ELSE
+    else
 
       print *,'  invalid option for iorigin'
 #ifdef MPI
@@ -6671,7 +6671,7 @@
 #endif
       call stopcm1
 
-    ENDIF
+    endif
 
 
     ! cm1r20:
@@ -7081,7 +7081,7 @@
         uf(i)=1.0
       enddo
 
-      strx:  IF(stretch_x.ge.1)THEN
+      strx:  if(stretch_x.ge.1)then
 
 !!!        ibw=0
 !!!        ibe=0
@@ -7095,7 +7095,7 @@
 
         nominal_dx = 0.5*( dx_inner + dx_outer )
 
-      IF(stretch_x.eq.1)THEN
+      if(stretch_x.eq.1)then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' stretch_x = 1 ... stretching on both west and east sides of domain:'
         if(dowr) write(outfile,*)
@@ -7105,7 +7105,7 @@
         if(dowr) write(outfile,*) '  ni1,ni2,ni3 = ',(tot_x_len-nos_x_len)*0.5/nominal_dx,   &
                          nos_x_len/dx_inner,(tot_x_len-nos_x_len)*0.5/nominal_dx
         if(dowr) write(outfile,*) '    (note:  ni1,ni2,ni3 need to be exact integers for this to work correctly)'
-      ELSEIF(stretch_x.eq.2)THEN
+      elseif(stretch_x.eq.2)then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' stretch_x = 2 ... stretching on east side of domain only:'
         if(dowr) write(outfile,*)
@@ -7114,11 +7114,11 @@
         ni3 = nint( (tot_x_len-nos_x_len)/nominal_dx )
         if(dowr) write(outfile,*) '  ni1,ni2,ni3 = ',0.0,nos_x_len/dx_inner,(tot_x_len-nos_x_len)/nominal_dx
         if(dowr) write(outfile,*) '    (note:  ni1,ni2,ni3 need to be exact integers for this to work correctly)'
-      ELSEIF(stretch_x.eq.3)THEN
+      elseif(stretch_x.eq.3)then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' stretch_x = 3 ... grid is specified in file input_grid_x '
         if(dowr) write(outfile,*)
-      ELSE
+      else
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' stretch_x must be 1,2,3'
         if(dowr) write(outfile,*)
@@ -7126,7 +7126,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
 
       if( stretch_x.eq.1 .or. stretch_x.eq.2 )then
         c2=(nominal_dx-dx_inner)/(nominal_dx*nominal_dx*float(ni3-1))
@@ -7138,7 +7138,7 @@
       endif
 
         ! Test to see if stretched-grid settings all make sense:
-      IF(stretch_x.eq.1)THEN
+      if(stretch_x.eq.1)then
         test_len = dx_inner*ni2 + (ni1+ni3)*0.5*(dx_inner+dx_outer)
         if( nx.ne.(ni1+ni2+ni3) .or. ni1.lt.0 .or. ni2.lt.0 .or. ni3.lt.0 .or.  &
               abs(tot_x_len-test_len).gt.1.0e-6*tot_x_len )then
@@ -7150,7 +7150,7 @@
           if(dowr) write(outfile,*) '       ni1,ni2,ni3 = ',ni1,ni2,ni3
           if(dowr) write(outfile,*) '       ni1+ni2+ni3 = ',ni1+ni2+ni3
           if(dowr) write(outfile,*)
-          if(dowr) write(outfile,*) '  Value needed for these settings ...'
+          if(dowr) write(outfile,*) '  value needed for these settings ...'
           if(dowr) write(outfile,*) '       dx_inner  = ',dx_inner
           if(dowr) write(outfile,*) '       dx_outer  = ',dx_outer
           if(dowr) write(outfile,*) '       nos_x_len = ',nos_x_len
@@ -7170,7 +7170,7 @@
 #endif
           call stopcm1
         endif
-      ELSEIF(stretch_x.eq.2)THEN
+      elseif(stretch_x.eq.2)then
         test_len = dx_inner*ni2 + ni3*0.5*(dx_inner+dx_outer)
         if( nx.ne.(ni1+ni2+ni3) .or. ni1.lt.0 .or. ni2.lt.0 .or. ni3.lt.0 .or.  &
               abs(tot_x_len-test_len).gt.1.0e-6*tot_x_len )then
@@ -7182,7 +7182,7 @@
           if(dowr) write(outfile,*) '       ni1,ni2,ni3 = ',ni1,ni2,ni3
           if(dowr) write(outfile,*) '       ni1+ni2+ni3 = ',ni1+ni2+ni3
           if(dowr) write(outfile,*)
-          if(dowr) write(outfile,*) '  Value for these settings ...'
+          if(dowr) write(outfile,*) '  value for these settings ...'
           if(dowr) write(outfile,*) '       dx_inner  = ',dx_inner
           if(dowr) write(outfile,*) '       dx_outer  = ',dx_outer
           if(dowr) write(outfile,*) '       nos_x_len = ',nos_x_len
@@ -7202,12 +7202,12 @@
 #endif
           call stopcm1
         endif
-      ENDIF
+      endif
 
         mult = 0.0
         if(iorigin.eq.2) mult = 0.5
 
-      IF(stretch_x.eq.1)THEN
+      if(stretch_x.eq.1)then
 
         do i=ni1+1,ni1+ni2+1
             xfdp(i)=ni1*nominal_dx+(i-ni1-1)*dx_inner - mult*tot_x_len
@@ -7223,7 +7223,7 @@
                  *dble(ni1+1-i)*nominal_dx - mult*tot_x_len
         enddo
 
-      ELSEIF(stretch_x.eq.2)THEN
+      elseif(stretch_x.eq.2)then
 
         do i=ni1+1,ni1+ni2+1
             xfdp(i)=ni1*nominal_dx+(i-ni1-1)*dx_inner - mult*tot_x_len
@@ -7239,7 +7239,7 @@
                  *dble(ni1+1-i)*nominal_dx - mult*tot_x_len
         enddo
 
-      ELSEIF( stretch_x.eq.3 )THEN
+      elseif( stretch_x.eq.3 )then
 
         ! New for cm1r19:
         ! User specifies scalar points in a file called "input_grid_x"
@@ -7280,20 +7280,20 @@
         call MPI_BCAST(xfdp(1),(nx+1),MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr)
 #endif
 
-      ENDIF
+      endif
 
 !!!        if( xf(ib).lt.0.0  .and. wbc.ne.1 ) ibw=1
 !!!        if( xf(ie).gt.maxx .and. ebc.ne.1 ) ibe=1
 
-        IF(stretch_x.eq.1)THEN
+        if(stretch_x.eq.1)then
           do i=1,ngxy
             xfdp(1-i)=xfdp(1)-i*dx_outer
           enddo
-        ELSEIF(stretch_x.eq.2)THEN
+        elseif(stretch_x.eq.2)then
           do i=1,ngxy
             xfdp(1-i)=xfdp(1)-i*dx_inner
           enddo
-        ENDIF
+        endif
 
           do i=1,ngxy
             xfdp(nx+1+i)=xfdp(nx+1)+i*dx_outer
@@ -7321,7 +7321,7 @@
 !
 !-----------------------------------------------------------------------
 
-      ENDIF  strx
+      endif  strx
 
 
         do i=ib,ie+1
@@ -7338,7 +7338,7 @@
         arf1 = 1.0
         arf2 = 1.0
 
-      IF(axisymm.eq.1)THEN
+      if(axisymm.eq.1)then
 
         print *
         do i=ib,ie
@@ -7360,7 +7360,7 @@
         enddo
         print *
 
-      ENDIF
+      endif
 
         do i=ib+1,ie
           uf(i)=dble(dx)/( 0.5d0*(xfdp(i+myi1-1)+xfdp(i+myi1)) &
@@ -7417,7 +7417,7 @@
       if(dowr) write(outfile,125)
 #ifdef MPI
     ! for MPI runs without procfiles, print the entire domain info:
-    IF(.not.procfiles)THEN
+    if(.not.procfiles)then
       do i=1-ngxy,1-1
         if(dowr) write(outfile,122) i,xfref(i),xhref(i),xfref(i+1)-xfref(i),dx/(0.5*(xfref(1)+xfref(2))-0.5*(xfref(0)+xfref(1))),dx/(xfref(i+1)-xfref(i)),'   x'
       enddo
@@ -7428,7 +7428,7 @@
         if(dowr) write(outfile,122) i,xfref(i),xhref(i),xfref(i+1)-xfref(i),dx/(0.5*(xfref(nx+1)+xfref(nx+2))-0.5*(xfref(nx)+xfref(nx+1))),dx/(xfref(i+1)-xfref(i)),'   x'
       enddo
       if(dowr) write(outfile,123) nx+1+ngxy,xfref(nx+1+ngxy),dx/(0.5*(xfref(nx+1)+xfref(nx+2))-0.5*(xfref(nx)+xfref(nx+1)))
-    ELSE
+    else
 #endif
       do i=1-ngxy,0
         if(dowr) write(outfile,122) i,xf(i),xh(i),xf(i+1)-xf(i),uf(i),uh(i),'   x'
@@ -7441,7 +7441,7 @@
       enddo
       if(dowr) write(outfile,123) ie+1,xf(ie+1),uf(ie+1)
 #ifdef MPI
-    ENDIF
+    endif
 #endif
       if(dowr) write(outfile,*)
 
@@ -7463,7 +7463,7 @@
         vf(j)=1.0
       enddo
 
-      stry:  IF(stretch_y.ge.1)THEN
+      stry:  if(stretch_y.ge.1)then
 
 !!!        ibs=0
 !!!        ibn=0
@@ -7477,7 +7477,7 @@
 
         nominal_dy = 0.5*( dy_inner + dy_outer )
 
-      IF(stretch_y.eq.1)THEN
+      if(stretch_y.eq.1)then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' stretch_y = 1 ... stretching on both south and north sides of domain:'
         if(dowr) write(outfile,*)
@@ -7487,7 +7487,7 @@
         if(dowr) write(outfile,*) '  nj1,nj2,nj3 = ',(tot_y_len-nos_y_len)*0.5/nominal_dy,   &
                          nos_y_len/dy_inner,(tot_y_len-nos_y_len)*0.5/nominal_dy
         if(dowr) write(outfile,*) '    (note:  nj1,nj2,nj3 need to be exact integers for this to work correctly)'
-      ELSEIF(stretch_y.eq.2)THEN
+      elseif(stretch_y.eq.2)then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' stretch_y = 2 ... stretching on north side of domain only:'
         if(dowr) write(outfile,*)
@@ -7496,11 +7496,11 @@
         nj3 = nint( (tot_y_len-nos_y_len)/nominal_dy )
         if(dowr) write(outfile,*) '  nj1,nj2,nj3 = ',0.0,nos_y_len/dy_inner,(tot_y_len-nos_y_len)/nominal_dy
         if(dowr) write(outfile,*) '    (note:  nj1,nj2,nj3 need to be exact integers for this to work correctly)'
-      ELSEIF(stretch_y.eq.3)THEN
+      elseif(stretch_y.eq.3)then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' stretch_y = 3 ... grid is specified in file input_grid_y '
         if(dowr) write(outfile,*)
-      ELSE
+      else
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) ' stretch_y must be 1,2,3'
         if(dowr) write(outfile,*)
@@ -7508,7 +7508,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
 
       if( stretch_y.eq.1 .or. stretch_y.eq.2 )then
         c2=(nominal_dy-dy_inner)/(nominal_dy*nominal_dy*float(nj3-1))
@@ -7520,7 +7520,7 @@
       endif
 
         ! Test to see if stretched-grid settings all make sense:
-      IF(stretch_y.eq.1)THEN
+      if(stretch_y.eq.1)then
         test_len = dy_inner*nj2 + (nj1+nj3)*0.5*(dy_inner+dy_outer)
         if( ny.ne.(nj1+nj2+nj3) .or. nj1.lt.0 .or. nj2.lt.0 .or. nj3.lt.0 .or.  &
               abs(tot_y_len-test_len).gt.1.0e-6*tot_y_len )then
@@ -7532,7 +7532,7 @@
           if(dowr) write(outfile,*) '       nj1,nj2,nj3 = ',nj1,nj2,nj3
           if(dowr) write(outfile,*) '       nj1+nj2+nj3 = ',nj1+nj2+nj3
           if(dowr) write(outfile,*)
-          if(dowr) write(outfile,*) '  Value needed for these settings ...'
+          if(dowr) write(outfile,*) '  value needed for these settings ...'
           if(dowr) write(outfile,*) '       dy_inner  = ',dy_inner
           if(dowr) write(outfile,*) '       dy_outer  = ',dy_outer
           if(dowr) write(outfile,*) '       nos_y_len = ',nos_y_len
@@ -7552,7 +7552,7 @@
 #endif
           call stopcm1
         endif
-      ELSEIF(stretch_y.eq.2)THEN
+      elseif(stretch_y.eq.2)then
         if( ny.ne.(nj1+nj2+nj3) .or. nj1.lt.0 .or. nj2.lt.0 .or. nj3.lt.0 )then
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '  There is a problem with the settings for horizontal grid stretching'
@@ -7561,7 +7561,7 @@
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '       nj1,nj2,nj3 = ',nj1,nj2,nj3
           if(dowr) write(outfile,*)
-          if(dowr) write(outfile,*) '  Value for these settings ...'
+          if(dowr) write(outfile,*) '  value for these settings ...'
           if(dowr) write(outfile,*) '       dy_inner  = ',dy_inner
           if(dowr) write(outfile,*) '       dy_outer  = ',dy_outer
           if(dowr) write(outfile,*) '       nos_y_len = ',nos_y_len
@@ -7579,7 +7579,7 @@
           call stopcm1
         endif
 
-      ELSEIF( stretch_y.eq.3 )THEN
+      elseif( stretch_y.eq.3 )then
 
         ! New for cm1r19:
         ! User specifies scalar points in a file called "input_grid_y"
@@ -7612,12 +7612,12 @@
         call MPI_BCAST(yfdp(1),(ny+1),MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr)
 #endif
 
-      ENDIF
+      endif
 
         mult = 0.0
         if(iorigin.eq.2) mult = 0.5
 
-      IF(stretch_y.eq.1)THEN
+      if(stretch_y.eq.1)then
 
         do j=nj1+1,nj1+nj2+1
             yfdp(j)=nj1*nominal_dy+(j-nj1-1)*dy_inner - mult*tot_y_len
@@ -7633,7 +7633,7 @@
                  *dble(nj1+1-j)*nominal_dy - mult*tot_y_len
         enddo
 
-      ELSEIF(stretch_y.eq.2)THEN
+      elseif(stretch_y.eq.2)then
 
         do j=nj1+1,nj1+nj2+1
             yfdp(j)=nj1*nominal_dy+(j-nj1-1)*dy_inner - mult*tot_y_len
@@ -7649,20 +7649,20 @@
                  *dble(nj1+1-j)*nominal_dy - mult*tot_y_len
         enddo
 
-      ENDIF
+      endif
 
 !!!        if( yf(jb).lt.0.0  .and. sbc.ne.1 ) ibs=1
 !!!        if( yf(je).gt.maxy .and. nbc.ne.1 ) ibn=1
 
-        IF(stretch_y.eq.1)THEN
+        if(stretch_y.eq.1)then
           do j=1,ngxy
             yfdp(1-j)=yfdp(1)-j*dy_outer
           enddo
-        ELSEIF(stretch_y.eq.2)THEN
+        elseif(stretch_y.eq.2)then
           do j=1,ngxy
             yfdp(1-j)=yfdp(1)-j*dy_inner
           enddo
-        ENDIF
+        endif
 
           do j=1,ngxy
             yfdp(ny+1+j)=yfdp(ny+1)+j*dy_outer
@@ -7690,7 +7690,7 @@
 !
 !-----------------------------------------------------------------------
 
-      ENDIF  stry
+      endif  stry
 
         do j=jb,je+1
           yf(j)=yfdp(j+myj1-1)
@@ -7754,7 +7754,7 @@
       if(dowr) write(outfile,125)
 #ifdef MPI
     ! for MPI runs without procfiles, print the entire domain info:
-    IF(.not.procfiles)THEN
+    if(.not.procfiles)then
       do j=1-ngxy,1-1
         if(dowr) write(outfile,122) j,yfref(j),yhref(j),yfref(j+1)-yfref(j),dy/(0.5*(yfref(1)+yfref(2))-0.5*(yfref(0)+yfref(1))),dy/(yfref(j+1)-yfref(j)),'   x'
       enddo
@@ -7765,7 +7765,7 @@
         if(dowr) write(outfile,122) j,yfref(j),yhref(j),yfref(j+1)-yfref(j),dy/(0.5*(yfref(ny+1)+yfref(ny+2))-0.5*(yfref(ny)+yfref(ny+1))),dy/(yfref(j+1)-yfref(j)),'   x'
       enddo
       if(dowr) write(outfile,123) ny+1+ngxy,yfref(ny+1+ngxy),dy/(0.5*(yfref(ny+1)+yfref(ny+2))-0.5*(yfref(ny)+yfref(ny+1)))
-    ELSE
+    else
 #endif
       do j=1-ngxy,0
         if(dowr) write(outfile,122) j,yf(j),yh(j),yf(j+1)-yf(j),vf(j),vh(j),'   x'
@@ -7778,7 +7778,7 @@
       enddo
       if(dowr) write(outfile,123) je+1,yf(je+1),vf(je+1)
 #ifdef MPI
-    ENDIF
+    endif
 #endif
       if(dowr) write(outfile,*)
 
@@ -7811,12 +7811,12 @@
         sigma(k)=0.5*(sigmaf(k)+sigmaf(k+1))
       enddo
 
-    IF(stretch_z.ge.1)THEN
+    if(stretch_z.ge.1)then
 
 !-----------------------------------------------------------------------
 !  Begin hard-wired analytic stretching function
 
-      strz:  IF ( stretch_z == 1 ) THEN
+      strz:  if ( stretch_z == 1 ) then
 
         nominal_dz = 0.5*(dz_bot+dz_top)
 
@@ -7893,7 +7893,7 @@
           if(dowr) write(outfile,*) '       nk1,nk2,nk3 = ',nk1,nk2,nk3
           if(dowr) write(outfile,*) '       nk1+nk2+nk3 = ',nk1+nk2+nk3
           if(dowr) write(outfile,*)
-          if(dowr) write(outfile,*) '  Value needed for these settings:'
+          if(dowr) write(outfile,*) '  value needed for these settings:'
           if(dowr) write(outfile,*) '       ztop      = ',ztop
           if(dowr) write(outfile,*) '       str_bot   = ',str_bot
           if(dowr) write(outfile,*) '       str_top   = ',str_top
@@ -7956,7 +7956,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-      ELSEIF ( stretch_z .eq. 2 ) THEN ! geometric stretching from COMMAS
+      elseif ( stretch_z .eq. 2 ) then ! geometric stretching from COMMAS
 
 ! nz is ke (number of w points)
 ! kb = 0
@@ -7964,23 +7964,23 @@
 ! SUBROUTINE ZGRID(dz, dz_stretch, nz, nbndlyr, gzc, gze, ng, dzmax,ztopstr,rtop,dzmaxtop)
        
        nbndlyr = Max(0,Int( str_bot/dz_bot + 0.01) - 1)
-       CALL ZGRID(dz, dz_bot, ke, nbndlyr, gzc, gze, 1, dz_top,ztopstr,rtop,dzmaxtop,myid)
+       call ZGRID(dz, dz_bot, ke, nbndlyr, gzc, gze, 1, dz_top,ztopstr,rtop,dzmaxtop,myid)
        
-         IF ( myid == 0 ) THEN
-           DO k = 1,ke
+         if ( myid == 0 ) then
+           do k = 1,ke
              write(6,*) 'k,gzc,gze = ',k,gzc(k),gze(k)
-           ENDDO
-         ENDIF
+           enddo
+         endif
          gze(0) = -gze(2)
          gze(ke+1) = gze(ke) + (gze(ke) - gze(ke-1))
 
-        DO k = kb,ke+1
-         DO j = jb,je
-          DO i = ib,ie
+        do k = kb,ke+1
+         do j = jb,je
+          do i = ib,ie
            zf(i,j,k) = gze(k)
-          ENDDO
-         ENDDO
-        ENDDO
+          enddo
+         enddo
+        enddo
 
         if(terrain_flag)then
           write(0,*) 'terrain not yet compatible with stretch_z == 2'
@@ -7988,7 +7988,7 @@
           call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
           call stopcm1
-        ENDIF
+        endif
 
         do k=kb,ke+1
           sigmaf(k)=zf(1,1,k)
@@ -8002,7 +8002,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-      ELSEIF ( stretch_z .eq. 3 ) THEN
+      elseif ( stretch_z .eq. 3 ) then
 
         ! New for cm1r19:
         ! User specifies scalar levels in a file called "input_grid_z"
@@ -8069,7 +8069,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-      ELSEIF ( stretch_z .eq. 4 ) THEN
+      elseif ( stretch_z .eq. 4 ) then
 
         ! New for cm1r19.8
         ! User specifies w levels in a file called "input_grid_z"
@@ -8136,7 +8136,7 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-      ENDIF  strz
+      endif  strz
 
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -8181,7 +8181,7 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 ! end vertical stretching section
 !-----------------------------------------------------------------------
@@ -8303,7 +8303,7 @@
       gy=0.0
       gyv=0.0
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  Terrain included!'
@@ -8321,7 +8321,7 @@
                           ww31(1,1,1),ww32(1,1,1),we31(1,1,1),we32(1,1,1), &
                           ws31(1,1,1),ws32(1,1,1),wn31(1,1,1),wn32(1,1,1))
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 !  180212:  immersed boundary stuff
@@ -8355,7 +8355,7 @@
         call stopcm1
       endif
       !-----
-      IF( do_ib .and. doimpl.eq.1 )THEN
+      if( do_ib .and. doimpl.eq.1 )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -8369,11 +8369,11 @@
         print *,'  -------------------------------- '
         endif
         doimpl = 0
-      ENDIF
+      endif
       !-----
-      IF( do_ib .and. ( hadvordrs.gt.5 .or. vadvordrs.gt.5 .or.  &
+      if( do_ib .and. ( hadvordrs.gt.5 .or. vadvordrs.gt.5 .or.  &
                         hadvordrv.gt.5 .or. vadvordrv.gt.5 .or.  &
-                        weno_order.gt.5 ) )THEN
+                        weno_order.gt.5 ) )then
         if(myid.eq.0)then
         print *,'  -------------------------------- '
         print *
@@ -8392,7 +8392,7 @@
         hadvordrv = 5
         vadvordrv = 5
         weno_order = 5
-      ENDIF
+      endif
       !-----
       if( do_ib .and. ( sgsmodel.eq.3 .or. sgsmodel.eq.4 ) )then
         if(myid.eq.0)then
@@ -8580,7 +8580,7 @@
       maxk = nk
 
       doit = .false.
-      IF( doit )THEN
+      if( doit )then
 
         max_z_out = 8000.0   ! max depth of 3d writeout
 
@@ -8588,7 +8588,7 @@
           if( sigma(k).le.max_z_out ) maxk = k
         enddo
 
-      ENDIF
+      endif
 
       ! check:
       maxk = min( maxk , nk )
@@ -8632,7 +8632,7 @@
 
       if( (irdamp.ge.1).and.(zd.lt.maxz) )then
 
-        IF( zd.lt.(0.5*maxz) )THEN
+        if( zd.lt.(0.5*maxz) )then
           if(myid.eq.0)then
           print *
           print *,'  Warning:  with these settings, Rayleigh damping would  '
@@ -8647,7 +8647,7 @@
           call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
           call stopcm1
-        ENDIF
+        endif
 
         do j=jb,je
         do i=ib,ie
@@ -8684,10 +8684,10 @@
 !--------------------------------------------------------------
 !  Rayleigh damping near lateral boundaries:
 
-      IF(hrdamp.ge.1)THEN
+      if(hrdamp.ge.1)then
 
-        IF( nx.gt.1 )THEN
-        IF( xhd.gt.(0.5*(maxx-minx)) )THEN
+        if( nx.gt.1 )then
+        if( xhd.gt.(0.5*(maxx-minx)) )then
           if(myid.eq.0)then
           print *
           print *,'  Warning:  with these settings, Rayleigh damping would  '
@@ -8702,10 +8702,10 @@
           call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
           call stopcm1
-        ENDIF
-        ENDIF
-        IF( ny.gt.1 )THEN
-        IF( xhd.gt.(0.5*(maxy-miny)) )THEN
+        endif
+        endif
+        if( ny.gt.1 )then
+        if( xhd.gt.(0.5*(maxy-miny)) )then
           if(myid.eq.0)then
           print *
           print *,'  Warning:  with these settings, Rayleigh damping would  '
@@ -8720,8 +8720,8 @@
           call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
           call stopcm1
-        ENDIF
-        ENDIF
+        endif
+        endif
 
         ! 170803:  If you do not want/need the horizontal Rayleigh damper
         !          on certain sides of the domain, then set the 
@@ -8738,46 +8738,46 @@
         do j=jb,je
         do i=ib,ie
           ! skip this section of code for 2d simulations:
-          IF(nx.gt.1)THEN
-          IF( hrdamp_west )THEN
+          if(nx.gt.1)then
+          if( hrdamp_west )then
             ! west boundary:
-            IF( axisymm.ne.1 )THEN
+            if( axisymm.ne.1 )then
               x1 = (xhd+minx)-xh(i)
               if( x1.gt.0.0 )then
                 tauf(i,j,k) = max( tauf(i,j,k) , 0.5*(1.0-cos(pi*x1/xhd)) )
               endif
-            ENDIF
-          ENDIF
-          IF( hrdamp_east )THEN
+            endif
+          endif
+          if( hrdamp_east )then
             ! east boundary:
             x2 = xh(i)-(maxx-xhd)
             if( x2.gt.0.0 )then
               tauf(i,j,k) = max( tauf(i,j,k) , 0.5*(1.0-cos(pi*x2/xhd)) )
             endif
-          ENDIF
-          ENDIF
+          endif
+          endif
           ! skip this section of code for 2d simulations:
-          IF(ny.gt.1)THEN
-          IF( hrdamp_south )THEN
+          if(ny.gt.1)then
+          if( hrdamp_south )then
             ! south boundary:
             y1 = (xhd+miny)-yh(j)
             if( y1.gt.0.0 )then
               tauf(i,j,k) = max( tauf(i,j,k) , 0.5*(1.0-cos(pi*y1/xhd)) )
             endif
-          ENDIF
-          IF( hrdamp_north )THEN
+          endif
+          if( hrdamp_north )then
             ! north boundary:
             y2 = yh(j)-(maxy-xhd)
             if( y2.gt.0.0 )then
               tauf(i,j,k) = max( tauf(i,j,k) , 0.5*(1.0-cos(pi*y2/xhd)) )
             endif
-          ENDIF
-          ENDIF
+          endif
+          endif
         enddo
         enddo
         enddo
 
-        IF( nx.gt.1 )THEN
+        if( nx.gt.1 )then
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '  ------ tauf for horizontal Rayleigh damping (W-to-E) -----'
           j = nint(0.5*float(nj))
@@ -8788,9 +8788,9 @@
             if(dowr) write(outfile,*) i,xh(i),tauf(i,j,1)
           enddo
           if(dowr) write(outfile,*)
-        ENDIF
+        endif
 
-        IF( ny.gt.1 )THEN
+        if( ny.gt.1 )then
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '  ------ tauf for horizontal Rayleigh damping (S-to-N) -----'
           i = nint(0.5*float(ni))
@@ -8801,9 +8801,9 @@
             if(dowr) write(outfile,*) j,yh(j),tauf(i,j,1)
           enddo
           if(dowr) write(outfile,*)
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 !  vertically implicit turbulent diffusion:
@@ -8864,7 +8864,7 @@
 
         if( idoles .and. ( sgsmodel.eq.3 .or. sgsmodel.eq.4 ) ) dot2p = .true.
 
-        IF( idoles .and. dot2p )THEN
+        if( idoles .and. dot2p )then
 
           gam_cp     =    150.0        ! centerpoint of transition zone (m ASL)
 
@@ -8930,7 +8930,7 @@
           enddo
           if(dowr) write(outfile,*)
 
-        ELSE
+        else
 
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) '      dot2p          = ',dot2p
@@ -8940,7 +8940,7 @@
           if(dowr) write(outfile,*) '      kb2pt,ke2pt    = ',kb2pt,ke2pt
           if(dowr) write(outfile,*)
 
-        ENDIF
+        endif
 
 !--------------------------------------------------------------
 !  170803:
@@ -8985,33 +8985,33 @@
 !ccc   Get 2nd-order extrapolation coefficients (Fornberg 1988)   ccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  DO nn=1,4
+  do nn=1,4
 
-    IF( nn.eq.1 )THEN
+    if( nn.eq.1 )then
       x0 = sigmaf(1)/(sigmaf(2)-sigmaf(1))
       alpha(0) = sigma(1)/(sigmaf(2)-sigmaf(1))
       alpha(1) = sigma(2)/(sigmaf(2)-sigmaf(1))
       alpha(2) = sigma(3)/(sigmaf(2)-sigmaf(1))
       alpha(3) = sigma(4)/(sigmaf(2)-sigmaf(1))
-    ELSEIF( nn.eq.2 )THEN
+    elseif( nn.eq.2 )then
       x0 = sigmaf(nk+1)/(sigmaf(nk+1)-sigmaf(nk))
       alpha(0) = sigma(nk  )/(sigmaf(nk+1)-sigmaf(nk))
       alpha(1) = sigma(nk-1)/(sigmaf(nk+1)-sigmaf(nk))
       alpha(2) = sigma(nk-2)/(sigmaf(nk+1)-sigmaf(nk))
       alpha(3) = sigma(nk-3)/(sigmaf(nk+1)-sigmaf(nk))
-    ELSEIF( nn.eq.3 )THEN
+    elseif( nn.eq.3 )then
       x0 = sigmaf(1)/(sigmaf(2)-sigmaf(1))
       alpha(0) = sigmaf(2)/(sigmaf(2)-sigmaf(1))
       alpha(1) = sigmaf(3)/(sigmaf(2)-sigmaf(1))
       alpha(2) = sigmaf(4)/(sigmaf(2)-sigmaf(1))
       alpha(3) = sigmaf(5)/(sigmaf(2)-sigmaf(1))
-    ELSEIF( nn.eq.4 )THEN
+    elseif( nn.eq.4 )then
       x0 = sigmaf(nk+1)/(sigmaf(nk+1)-sigmaf(nk))
       alpha(0) = sigmaf(nk  )/(sigmaf(nk+1)-sigmaf(nk))
       alpha(1) = sigmaf(nk-1)/(sigmaf(nk+1)-sigmaf(nk))
       alpha(2) = sigmaf(nk-2)/(sigmaf(nk+1)-sigmaf(nk))
       alpha(3) = sigmaf(nk-3)/(sigmaf(nk+1)-sigmaf(nk))
-    ENDIF
+    endif
 
       delta = 0.0
 
@@ -9034,7 +9034,7 @@
         b1 = b2
       enddo
 
-    IF( nn.eq.1 )THEN
+    if( nn.eq.1 )then
       cgs1 = delta(2,0,0)
       cgs2 = delta(2,0,1)
       cgs3 = delta(2,0,2)
@@ -9042,7 +9042,7 @@
       dgs1 = delta(2,1,0)
       dgs2 = delta(2,1,1)
       dgs3 = delta(2,1,2)
-    ELSEIF( nn.eq.2 )THEN
+    elseif( nn.eq.2 )then
       cgt1 = delta(2,0,0)
       cgt2 = delta(2,0,1)
       cgt3 = delta(2,0,2)
@@ -9050,17 +9050,17 @@
       dgt1 = delta(2,1,0)
       dgt2 = delta(2,1,1)
       dgt3 = delta(2,1,2)
-    ELSEIF( nn.eq.3 )THEN
+    elseif( nn.eq.3 )then
       wbe1 = delta(2,0,0)
       wbe2 = delta(2,0,1)
       wbe3 = delta(2,0,2)
       var = wbe1*sigmaf(2)+wbe2*sigmaf(3)+wbe3*sigmaf(4)
-    ELSEIF( nn.eq.4 )THEN
+    elseif( nn.eq.4 )then
       wte1 = delta(2,0,0)
       wte2 = delta(2,0,1)
       wte3 = delta(2,0,2)
       var = wte1*sigmaf(nk)+wte2*sigmaf(nk-1)+wte3*sigmaf(nk-2)
-    ENDIF
+    endif
 
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) '  ---------------------------------- '
@@ -9072,7 +9072,7 @@
       if(dowr) write(outfile,*) sngl(delta(2,0,0)+delta(2,0,1)+delta(2,0,2)+delta(2,0,3)),var,maxz
       if(dowr) write(outfile,*)
 
-      IF( nn.eq.1 )then
+      if( nn.eq.1 )then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  cgs1,cgs2,cgs3 = ',cgs1,cgs2,cgs3
         if(dowr) write(outfile,*) '  sum            = ',cgs1+cgs2+cgs3
@@ -9080,7 +9080,7 @@
         if(dowr) write(outfile,*) '  dgs1,dgs2,dgs3 = ',dgs1,dgs2,dgs3
         if(dowr) write(outfile,*) '  sum            = ',dgs1+dgs2+dgs3
         if(dowr) write(outfile,*)
-      ELSEIF( nn.eq.2 )THEN
+      elseif( nn.eq.2 )then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  cgt1,cgt2,cgt3 = ',cgt1,cgt2,cgt3
         if(dowr) write(outfile,*) '  sum            = ',cgt1+cgt2+cgt3
@@ -9088,38 +9088,38 @@
         if(dowr) write(outfile,*) '  dgt1,dgt2,dgt3 = ',dgt1,dgt2,dgt3
         if(dowr) write(outfile,*) '  sum            = ',dgt1+dgt2+dgt3
         if(dowr) write(outfile,*)
-      ELSEIF( nn.eq.3 )THEN
+      elseif( nn.eq.3 )then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  wbe1,wbe2,wbe3 = ',wbe1,wbe2,wbe3
         if(dowr) write(outfile,*) '  sum            = ',wbe1+wbe2+wbe3
         if(dowr) write(outfile,*)
-      ELSEIF( nn.eq.4 )THEN
+      elseif( nn.eq.4 )then
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  wte1,wte2,wte3 = ',wte1,wte2,wte3
         if(dowr) write(outfile,*) '  sum            = ',wte1+wte2+wte3
         if(dowr) write(outfile,*)
-      ENDIF
+      endif
 
       if(dowr) write(outfile,*) '  ---------------------------------- '
 
-  ENDDO
+  enddo
 
 !--------------------------------------------------------------
 !  cm1r18:  Set ghost points for zh
 !  [Note:  since cm1r17, the array index (i,j,0) means the surface]
 !     (upper/lower ghost points are used by parcel subroutines only)
 
-    DO j=jb,je
-    DO i=ib,ie
+    do j=jb,je
+    do i=ib,ie
       zh(i,j,0) = zf(i,j,1)
       zh(i,j,nk+1) = zf(i,j,nk+1)
-    ENDDO
-    ENDDO
+    enddo
+    enddo
 
 !--------------------------------------------------------------
 !  moved here so zh is available:
 
-      IF( ptype.eq.3 )THEN
+      if( ptype.eq.3 )then
 
           !----- initialize the Thompson scheme -----
 
@@ -9146,14 +9146,14 @@
           if(dowr) write(outfile,*) ' ----------------------------------------------- '
           if(dowr) write(outfile,*)
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
       dothis = .false.
 
 
-      IF( dothis .and. myid.eq.0 )THEN
+      if( dothis .and. myid.eq.0 )then
 
         ! write out grids to text files:
 
@@ -9175,7 +9175,7 @@
         enddo
         close(unit=21)
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
@@ -9221,7 +9221,7 @@
 
 !------------------------------------------------------------------
 
-    IF( doazimavg )THEN
+    if( doazimavg )then
       !----------
       ! cm1r20.1: set ddr equal to minimum grid spacing
       ddr = 1.0e30
@@ -9234,11 +9234,11 @@
       if(dowr) write(outfile,*) 'ddr          = ',ddr
       if(dowr) write(outfile,*) 'rlen         = ',rlen
       if(dowr) write(outfile,*)
-    ENDIF
+    endif
 
 !----------------------------------------------------------------------
 
-    IF( cm1setup.eq.4 )THEN
+    if( cm1setup.eq.4 )then
 
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) 'les_subdomain_shape   = ',les_subdomain_shape
@@ -9248,7 +9248,7 @@
       if(dowr) write(outfile,*) 'les_subdomain_trnslen = ',les_subdomain_trnslen
       if(dowr) write(outfile,*)
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------------
 !  Eddy recycling code:
@@ -9320,7 +9320,7 @@
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
       ifrecycle:  &
-      IF( do_recycle )THEN
+      if( do_recycle )then
 
         ! dummy check:
         if( cm1setup.eq.2 )then
@@ -9362,7 +9362,7 @@
         endif
 
 
-        IF( cm1setup.eq.4 )THEN
+        if( cm1setup.eq.4 )then
 
           ! LES within mesoscale model:
           ! injection/capture regions are based on fine-mesh part of domain
@@ -9377,7 +9377,7 @@
           recy_inj_s  =  centerx - 0.5*les_subdomain_ylen + recycle_inj_loc_m
           recy_inj_n  =  centerx + 0.5*les_subdomain_ylen - recycle_inj_loc_m
 
-        ELSE
+        else
 
           ! typical simulation:
 
@@ -9397,7 +9397,7 @@
           recy_inj_s     =  miny + recycle_inj_loc_m
           recy_inj_n     =  maxy - recycle_inj_loc_m
 
-        ENDIF
+        endif
 
         if(dowr) write(outfile,*) '  recy_width    = ',recy_width
         if(dowr) write(outfile,*) '  recy_depth    = ',recy_depth
@@ -9498,14 +9498,14 @@
         if(dowr) write(outfile,*) '      nrecy   = ',nrecy
         if(dowr) write(outfile,*)
 
-      ENDIF  ifrecycle
+      endif  ifrecycle
 
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 !--------------------------------------------------------------
 
       ! for time averaging:
-      IF( dotimeavg )THEN
+      if( dotimeavg )then
 
         call setup_timeavg(nlevels=ntwk)
 
@@ -9531,7 +9531,7 @@
           vvtav = ntavr
         endif
 
-      ENDIF
+      endif
 
       ntavr = max( ntavr , 1 )
       nsfctavr = max( nsfctavr , 1 )
@@ -9542,7 +9542,7 @@
       if(dowr) write(outfile,*) '  dotimeavg = ',dotimeavg
       if(dowr) write(outfile,*)
 
-      IF( dotimeavg )THEN
+      if( dotimeavg )then
         if(dowr) write(outfile,*) '  ... using time averages ... '
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '      ibta,ieta      = ',ibta,ieta
@@ -9559,21 +9559,21 @@
         if(dowr) write(outfile,*) '      uutav          = ',uutav
         if(dowr) write(outfile,*) '      vvtav          = ',vvtav
         if(dowr) write(outfile,*)
-      ELSE
+      else
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '      ibta,ieta      = ',ibta,ieta
         if(dowr) write(outfile,*) '      jbta,jeta      = ',jbta,jeta
         if(dowr) write(outfile,*) '      kbta,keta      = ',kbta,keta
         if(dowr) write(outfile,*) '      ntavr,nsfctavr = ',ntavr,nsfctavr
         if(dowr) write(outfile,*)
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) '  do_lsnudge         = ',do_lsnudge
       if(dowr) write(outfile,*)
-      IF( do_lsnudge )THEN
+      if( do_lsnudge )then
         if(dowr) write(outfile,*) '  do_lsnudge_u       = ',do_lsnudge_u
         if(dowr) write(outfile,*) '  do_lsnudge_v       = ',do_lsnudge_v
         if(dowr) write(outfile,*) '  do_lsnudge_th      = ',do_lsnudge_th
@@ -9584,11 +9584,11 @@
         if(dowr) write(outfile,*) '  lsnudge_end        = ',lsnudge_end
         if(dowr) write(outfile,*) '  lsnudge_ramp_time  = ',lsnudge_ramp_time
         if(dowr) write(outfile,*)
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
-    IF( myid.eq.0 )THEN
+    if( myid.eq.0 )then
       open(unit=21,file='cm1_config.txt')
       write(21,*)
       write(21,*) '  CM1 version: ',trim(cm1version)
@@ -9602,9 +9602,9 @@
       write(21,*) '  tconfig                   = ',tconfig
       write(21,*) '  bcturbs                   = ',bcturbs
       write(21,*) '  ptype                     = ',ptype
-      IF ( ptype.eq.26 .or. ptype.eq.27  ) THEN
+      if ( ptype.eq.26 .or. ptype.eq.27  ) then
       write(21,*) '  nssl_3moment              = ',nssl_3moment
-      ENDIF
+      endif
       write(21,*) '  wbc                       = ',wbc
       write(21,*) '  ebc                       = ',ebc
       write(21,*) '  sbc                       = ',sbc
@@ -9672,7 +9672,7 @@
       write(21,*) '  dgt3                      = ',dgt3
       write(21,*)
       close(unit=21)
-    ENDIF
+    endif
 
 !--------------------------------------------------------------
 
@@ -9822,7 +9822,7 @@
       use input
       implicit none
 
-      IF( advwenos.ge.1 )THEN
+      if( advwenos.ge.1 )then
         if( weno_order.eq.3 )then
           hadvordrs = 3
           vadvordrs = 3
@@ -9839,8 +9839,8 @@
           hadvordrs = 9
           vadvordrs = 9
         endif
-      ENDIF
-      IF( advwenov.ge.1 )THEN
+      endif
+      if( advwenov.ge.1 )then
         if( weno_order.eq.3 )then
           hadvordrv = 3
           vadvordrv = 3
@@ -9857,7 +9857,7 @@
           hadvordrv = 9
           vadvordrv = 9
         endif
-      ENDIF
+      endif
 
       end subroutine wenocheck
 
@@ -9874,7 +9874,7 @@
 !
 !-------------------------------------------------------------------------------
 
- SUBROUTINE ZGRID(dz, dz_stretch, nz, nbndlyr, gzc, gze, ng, dzmax,ztopstr,rtop,dzmaxtop,myid)
+ subroutine ZGRID(dz, dz_stretch, nz, nbndlyr, gzc, gze, ng, dzmax,ztopstr,rtop,dzmaxtop,myid)
 
    implicit none
 
@@ -9898,49 +9898,49 @@
    zx      = 1.0d0
    stretch = 1.0d0
 
-   IF( dz .gt. dz_stretch ) THEN
+   if( dz .gt. dz_stretch ) then
 
-    DO n = 1,50
+    do n = 1,50
 
-     IF( abs(zx) .gt. 1.0e-12 ) THEN
+     if( abs(zx) .gt. 1.0e-12 ) then
       zx   = zx * 0.5
       xmid = stretch + zx
       fmid = ZHEIGHT(dz_stretch,xmid,nz-1,dzmax,nbndlyr,ztopstr,rtop,dzmaxtop) - ztop
 !      write(6,*) 'Stretch: ',n,zx,xmid,fmid,fmid + ztop
-      IF( fmid .le. 0.0 ) stretch = xmid
-      IF ( fmid .eq. 0.0d0 ) EXIT
-     ENDIF
+      if( fmid .le. 0.0 ) stretch = xmid
+      if ( fmid .eq. 0.0d0 ) exit
+     endif
 
-    ENDDO
+    enddo
 
-   ENDIF
+   endif
 
    write(6,*)
-   IF( stretch .gt. 1.1 ) THEN
-    IF ( myid == 0 ) THEN
+   if( stretch .gt. 1.1 ) then
+    if ( myid == 0 ) then
     write(6,*) 'STRETCH FAC TOO BIG! - NUMERICAL ERRORS WILL BE LARGE'
     write(6,*) 'STRETCH FAC  = ',stretch
     write(6,*) 'INCREASE NZ in namelist or increase dz_bot'
-    ENDIF
+    endif
     call stopcm1
-   ELSE
-    IF ( myid == 0 ) THEN
+   else
+    if ( myid == 0 ) then
     write(6,*) 'ZGRID:  STRETCH FAC  = ',stretch
     write(6,*) 'ZGRID:  DOMAIN  HGT  = ',ZHEIGHT(dz_stretch,stretch,nz-1,dzmax,nbndlyr,ztopstr,rtop,dzmaxtop)
-    ENDIF
-   ENDIF
+    endif
+   endif
 
    gze(1) = 0.0
-   DO k = 1,nz-1
+   do k = 1,nz-1
     gze(k+1) = ZHEIGHT(dz_stretch,stretch,k,dzmax,nbndlyr,ztopstr,rtop,dzmaxtop)
     gzc(k)   = 0.5 * ( gze(k) + gze(k+1) )
 !    write(6,*) 'ZGRID: gze,gzc = ',k,gze(k+1),gzc(k)
-   ENDDO
+   enddo
 
    gzc(nz) = 2.*gzc(nz-1) - gzc(nz-2) 
 
 
-  END SUBROUTINE ZGRID
+  end subroutine ZGRID
 
 !--------------------------------------------------------------------------
 ! FUNCTION ZHEIGHT:  Computes the height of a geometrically stretched grid
@@ -9948,7 +9948,7 @@
 !                    dz at the bottom 'n1' layers thick, it also limits
 !                    the size of dz at the top of the model to be 'dzmax'.
 
- REAL FUNCTION ZHEIGHT(dzbot,r,nz,dzmax,n1,zctop,ztopr,dzmax2)
+ real function ZHEIGHT(dzbot,r,nz,dzmax,n1,zctop,ztopr,dzmax2)
 
   implicit none
   integer nz, n1, k, k2
@@ -9973,27 +9973,27 @@
   
   n2 = 0
 
-  DO k = 1,nz
+  do k = 1,nz
 
-   IF( k .le. n1 ) THEN
+   if( k .le. n1 ) then
     dznew=dzbot
-   ELSE
+   else
     k2=k-n1
     dznew = Min(dzbot * r**(k2-1),dzmaxdp)
-      IF ( sum .ge. zctop ) THEN
-       IF ( n2 .eq. 0 ) dzm = Min(dznew,dzmaxdp)
+      if ( sum .ge. zctop ) then
+       if ( n2 .eq. 0 ) dzm = Min(dznew,dzmaxdp)
        n2 = n2 + 1
        dznew = Min(dzm * ztopr**n2, dzmax2)
-      ENDIF
-   ENDIF
+      endif
+   endif
    sum = sum + dznew
 
-  ENDDO
+  enddo
 
   ZHEIGHT = sum
 
- RETURN
- END FUNCTION ZHEIGHT
+ return
+ end function ZHEIGHT
 
 !-------------------------------------------------------------------------------
 
@@ -10029,4 +10029,4 @@
 
 !-------------------------------------------------------------------------------
 
-  END MODULE param_module
+  end module param_module

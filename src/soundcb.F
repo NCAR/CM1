@@ -1,11 +1,11 @@
-  MODULE soundcb_module
+  module soundcb_module
 
   implicit none
 
   private
   public :: soundcb
 
-  CONTAINS
+  contains
 
       subroutine soundcb(dt,xh,arh1,arh2,uh,ruh,xf,uf,yh,vh,rvh,yf,vf,    &
                         rds,sigma,rdsf,sigmaf,zh,mh,rmh,c1,c2,mf,zf,      &
@@ -74,7 +74,7 @@
 
 !---------------------------------------------------------------------
 
-    IF( nrkmax.eq.3 )THEN
+    if( nrkmax.eq.3 )then
       if(nrk.eq.1)then
 !!!        nloop=1
 !!!        dts=dt/3.
@@ -91,16 +91,16 @@
         nloop=nsound
         dts=dt/nsound
       endif
-    ELSE
+    else
       stop 97394
-    ENDIF
+    endif
 
 !!!      print *,'  nloop,dts,dttmp = ',nloop,dts,nloop*dts
 
 !---------------------------------------------------------------------
 !  Arrays for vadv:
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,tem,tem1,r1,r2)
@@ -111,7 +111,7 @@
             enddo
             enddo
 
-      ENDIF
+      endif
 
 !---------------------------------------------------------------------
 !  Prepare for acoustic steps
@@ -138,21 +138,21 @@
             u3d(i,j,k)=ua(i,j,k)
           enddo
           enddo
-          IF(axisymm.eq.0)THEN
+          if(axisymm.eq.0)then
             ! Cartesian grid:
             do j=1,nj+1
             do i=1,ni
               v3d(i,j,k)=va(i,j,k)
             enddo
             enddo
-          ENDIF
-          IF(k.ge.2)THEN
+          endif
+          if(k.ge.2)then
             do j=1,nj
             do i=1,ni
               w3d(i,j,k)=wa(i,j,k)
             enddo
             enddo
-          ENDIF
+          endif
           do j=1,nj
           do i=1,ni
             phi2(i,j,k)=phi1(i,j,k)
@@ -170,31 +170,31 @@
 !---------------------------------------------------------------------
 !  time-averaged velocities:
 
-      IF( get_time_avg )THEN
+      if( get_time_avg )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           do j=1,nj
           do i=1,ni+1
             rru(i,j,k)=0.0
           enddo
           enddo
-          IF(axisymm.eq.0)THEN
+          if(axisymm.eq.0)then
             do j=1,nj+1
             do i=1,ni
               rrv(i,j,k)=0.0
             enddo
             enddo
-          ENDIF
-          IF(k.ge.2)THEN
+          endif
+          if(k.ge.2)then
             do j=1,nj
             do i=1,ni
               rrw(i,j,k)=0.0
             enddo
             enddo
-          ENDIF
-        ENDDO
-      ENDIF
+          endif
+        enddo
+      endif
       if(timestats.ge.1) time_sound=time_sound+mytime()
 
 !-----------------------------------------------------------------------
@@ -202,7 +202,7 @@
 !-----------------------------------------------------------------------
 !  Begin small steps:
 
-      small_step_loop:  DO N=1,NLOOP
+      small_step_loop:  do N=1,NLOOP
 
 !-----
 
@@ -219,35 +219,35 @@
 !-----------------------------------------------------------------------
 !  Open boundary conditions:
 
-        IF(wbc.eq.2.and.ibw.eq.1)THEN
+        if(wbc.eq.2.and.ibw.eq.1)then
           ! west open bc tendency:
           call   ssopenbcw(uh,rds,sigma,rdsf,sigmaf,gz,rgzu,gx,radbcw,dum1,u3d,uten,dts)
-        ENDIF
-        IF(ebc.eq.2.and.ibe.eq.1)THEN
+        endif
+        if(ebc.eq.2.and.ibe.eq.1)then
           ! east open bc tendency:
           call   ssopenbce(uh,rds,sigma,rdsf,sigmaf,gz,rgzu,gx,radbce,dum1,u3d,uten,dts)
-        ENDIF
+        endif
 
-        IF(roflux.eq.1)THEN
+        if(roflux.eq.1)then
           call restrict_openbc_we(rvh,rmh,rho0,u3d)
-        ENDIF
+        endif
 
 !-----
 
-      IF(axisymm.eq.0)THEN
-        IF(sbc.eq.2.and.ibs.eq.1)THEN
+      if(axisymm.eq.0)then
+        if(sbc.eq.2.and.ibs.eq.1)then
           ! south open bc tendency:
           call   ssopenbcs(vh,rds,sigma,rdsf,sigmaf,gz,rgzv,gy,radbcs,dum1,v3d,vten,dts)
-        ENDIF
-        IF(nbc.eq.2.and.ibn.eq.1)THEN
+        endif
+        if(nbc.eq.2.and.ibn.eq.1)then
           ! north open bc tendency:
           call   ssopenbcn(vh,rds,sigma,rdsf,sigmaf,gz,rgzv,gy,radbcn,dum1,v3d,vten,dts)
-        ENDIF
+        endif
 
-        IF(roflux.eq.1)THEN
+        if(roflux.eq.1)then
           call restrict_openbc_sn(ruh,rmh,rho0,v3d)
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -263,9 +263,9 @@
 
 !-----
 
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid without terrain:
 
 !$omp parallel do default(shared)   &
@@ -285,11 +285,11 @@
           enddo
         enddo
 
-        IF( do_ib )THEN
+        if( do_ib )then
           call zero_out_uv(bndy,kbdy,u3d,v3d)
-        ENDIF
+        endif
 
-      ELSE
+      else
         ! axisymmetric grid:
 
 !$omp parallel do default(shared)   &
@@ -303,9 +303,9 @@
           enddo
         enddo
 
-      ENDIF
+      endif
 
-    ELSE
+    else
 
         ! Cartesian grid with terrain:
 
@@ -347,35 +347,35 @@
           enddo
         enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------
 !  convergence forcing:
 
-        IF( convinit.eq.1 )THEN
-          IF( rtime.le.convtime .and. nx.gt.1 )THEN
+        if( convinit.eq.1 )then
+          if( rtime.le.convtime .and. nx.gt.1 )then
             call convinitu(myid,ib,ie,jb,je,kb,ke,ni,nj,nk,ibw,ibe,   &
                            zdeep,lamx,lamy,xcent,ycent,aconv,    &
                            xf,yh,zh,u0,u3d)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !----------------------------------------------
 !  convergence forcing:
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
-        IF( convinit.eq.1 )THEN
-          IF( rtime.le.convtime .and. ny.gt.1 )THEN
+        if( convinit.eq.1 )then
+          if( rtime.le.convtime .and. ny.gt.1 )then
             call convinitv(myid,ib,ie,jb,je,kb,ke,ni,nj,nk,ibs,ibn,   &
                            zdeep,lamx,lamy,xcent,ycent,aconv,    &
                            xh,yf,zh,v0,v3d)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !----------------------------------------------
 
-      ENDIF
+      endif
 
       if(timestats.ge.1) time_sound=time_sound+mytime()
 
@@ -384,14 +384,14 @@
 !-----------------------------------------------------------------------
 !  integrate w forward in time:
 
-      IF( wnudge.eq.1 )THEN
+      if( wnudge.eq.1 )then
         !  updraft nudging tendency:
-        IF( (mtime+dt).le.t2_wnudge )THEN
+        if( (mtime+dt).le.t2_wnudge )then
           call get_wnudge(mtime,dts,xh,yh,zf,w3d,dum1)
-        ENDIF
-      ENDIF
+        endif
+      endif
 
-      IF(.not.terrain_flag)THEN
+      if(.not.terrain_flag)then
         ! without terrain:
 
 !$omp parallel do default(shared)   &
@@ -406,7 +406,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! with terrain:
 
 !$omp parallel do default(shared)   &
@@ -423,11 +423,11 @@
 
         call bcwsfc(gz,dzdx,dzdy,u3d,v3d,w3d)
 
-      ENDIF
+      endif
 
-      IF( wnudge.eq.1 )THEN
+      if( wnudge.eq.1 )then
         !  apply updraft nudging:
-        IF( (mtime+dt).le.t2_wnudge )THEN
+        if( (mtime+dt).le.t2_wnudge )then
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=2,nk
@@ -437,13 +437,13 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 
-      IF( do_ib )THEN
+      if( do_ib )then
           call zero_out_w(bndy,kbdy,w3d)
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -464,7 +464,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
         do j=1,nj
         do i=1,ni
           ppd(i,j,k)=phi2(i,j,k)
@@ -474,82 +474,82 @@
           ppd(i,j,k)=phi2(i,j,k)+dum1(i,j,k)
         enddo
         enddo
-      ENDDO
+      enddo
       if(timestats.ge.1) time_sound=time_sound+mytime()
 
-        IF( n.lt.nloop )THEN
+        if( n.lt.nloop )then
           call bcp(ppd)
-        ENDIF
+        endif
 #ifdef MPI
-        IF( n.ne.1 )THEN
+        if( n.ne.1 )then
           call comm_1p_end2(reqs_p)
-        ENDIF
-        IF( n.lt.nloop )THEN
+        endif
+        if( n.lt.nloop )then
           call comm_1p_start(ppd,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
-        ENDIF
+        endif
 #endif
 
 !--------------------------------------------------------------------
 !  time-averaged velocities:
 
-      IF( get_time_avg )THEN
+      if( get_time_avg )then
 
       if( n.lt.nloop )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           do j=1,nj
           do i=1,ni+1
             rru(i,j,k)=rru(i,j,k)+u3d(i,j,k)
           enddo
           enddo
-          IF( axisymm.eq.0 )THEN
+          if( axisymm.eq.0 )then
             do j=1,nj+1
             do i=1,ni
               rrv(i,j,k)=rrv(i,j,k)+v3d(i,j,k)
             enddo
             enddo
-          ENDIF
-          IF( k.ge.2 )THEN
+          endif
+          if( k.ge.2 )then
             do j=1,nj
             do i=1,ni
               rrw(i,j,k)=rrw(i,j,k)+w3d(i,j,k)
             enddo
             enddo
-          ENDIF
-        ENDDO
+          endif
+        enddo
       else
         tavg = 1.0/float(nloop)
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           do j=1,nj
           do i=1,ni+1
             rru(i,j,k)=(rru(i,j,k)+u3d(i,j,k))*tavg
           enddo
           enddo
-          IF( axisymm.eq.0 )THEN
+          if( axisymm.eq.0 )then
             do j=1,nj+1
             do i=1,ni
               rrv(i,j,k)=(rrv(i,j,k)+v3d(i,j,k))*tavg
             enddo
             enddo
-          ENDIF
-          IF( k.ge.2 )THEN
+          endif
+          if( k.ge.2 )then
             do j=1,nj
             do i=1,ni
               rrw(i,j,k)=(rrw(i,j,k)+w3d(i,j,k))*tavg
             enddo
             enddo
-          ENDIF
-        ENDDO
+          endif
+        enddo
       endif
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------------
 
-      ENDDO  small_step_loop
+      enddo  small_step_loop
 
 !  end of small steps
 !--------------------------------------------------------------------
@@ -563,7 +563,7 @@
 #endif
 
 
-      IF( nrk.eq.nrkmax )THEN
+      if( nrk.eq.nrkmax )then
 
         ! pressure tendency term: save for next timestep:
         ! 170823:  also, step forward phi
@@ -583,10 +583,10 @@
           enddo
         enddo
 
-      ENDIF
+      endif
       if(timestats.ge.1) time_sound=time_sound+mytime()
 
 
       end subroutine soundcb
 
-  END MODULE soundcb_module
+  end module soundcb_module

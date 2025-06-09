@@ -1,11 +1,11 @@
-  MODULE diff2_module
+  module diff2_module
 
   implicit none
 
   private
   public :: diff2u,diff2v,diff2w,diff2s,diff2def
 
-  CONTAINS
+  contains
 
 
       subroutine diff2u(rxh,arh1,arh2,uh,xf,arf1,arf2,uf,vh,vf,mh,mf,  &
@@ -38,14 +38,14 @@
 !
 !-----------------------------------------------------------------------
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
         if(myid.eq.0) print *,'  cannot use diff2u with terrain (yet) '
         call stopcm1
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
       ! Cartesian grid:
 
 !$omp parallel do default(shared)   &
@@ -70,11 +70,11 @@
         enddo
       enddo
 
-    ELSE
+    else
       ! axisymmetric grid:
 
       i2 = ni+1
-      IF( ebc.eq.3 .or. ebc.eq.4 ) i2 = ni
+      if( ebc.eq.3 .or. ebc.eq.4 ) i2 = ni
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -84,18 +84,18 @@
           diffx(i,j,k)=2.0*(arf2(i)*arf2(i)*t11(i,j,k)-arf1(i)*arf1(i)*t11(i-1,j,k))*rdx*uf(i) &
                       -twdth*(rho(i,j,k)*divx(i,j,k)-rho(i-1,j,k)*divx(i-1,j,k))*rdx*uf(i)
         enddo
-        IF( ebc.eq.3 .or. ebc.eq.4 ) diffx(ni+1,j,k) = 0.0
+        if( ebc.eq.3 .or. ebc.eq.4 ) diffx(ni+1,j,k) = 0.0
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 !  z-direction
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO j=1,nj
+      do j=1,nj
 
         do k=1,nk
         do i=1,ni+1
@@ -103,17 +103,17 @@
         enddo
         enddo
 
-        IF( axisymm.eq.1 .and. (ebc.eq.3 .or. ebc.eq.4) )THEN
+        if( axisymm.eq.1 .and. (ebc.eq.3 .or. ebc.eq.4) )then
           do k=1,nk
             diffz(ni+1,j,k)=0.0
           enddo
-        ENDIF
+        endif
 
-      ENDDO
+      enddo
 
 !-----------------------------------------------------------------------
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
 !$omp parallel do default(shared)   &
@@ -127,7 +127,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! axisymmetric grid:
 
 !$omp parallel do default(shared)   &
@@ -141,14 +141,14 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  Diagnostics:
 
-    IF( doubud .and. ud_hediff.ge.1 .and. ud_vediff.ge.1 )THEN
+    if( doubud .and. ud_hediff.ge.1 .and. ud_vediff.ge.1 )then
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
         !$omp parallel do default(shared)   &
@@ -162,7 +162,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! axisymmetric grid:
 
         !$omp parallel do default(shared)   &
@@ -176,9 +176,9 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
@@ -222,14 +222,14 @@
 !
 !-----------------------------------------------------------------------
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
         if(myid.eq.0) print *,'  cannot use diff2v with terrain (yet) '
         call stopcm1
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
       ! Cartesian grid:
 
 !$omp parallel do default(shared)   &
@@ -253,7 +253,7 @@
         enddo
       enddo
 
-    ELSE
+    else
       ! axisymmetric grid:
 
 !$omp parallel do default(shared)   &
@@ -266,18 +266,18 @@
       enddo
       enddo
 
-    ENDIF
+    endif
  
 !-----------------------------------------------------------------------
 !  z-direction
 
       j1 = 1
       j2 = nj+1
-      IF( axisymm.eq.1 ) j2 = nj
+      if( axisymm.eq.1 ) j2 = nj
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO j=j1,j2
+      do j=j1,j2
 
         do k=1,nk
         do i=1,ni
@@ -285,11 +285,11 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
 !-----------------------------------------------------------------------
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
 !$omp parallel do default(shared)   &
@@ -303,7 +303,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! axisymmetric grid:
 
 !$omp parallel do default(shared)   &
@@ -316,14 +316,14 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  Diagnostics:
 
-    IF( dovbud .and. vd_hediff.ge.1 .and. vd_vediff.ge.1 )THEN
+    if( dovbud .and. vd_hediff.ge.1 .and. vd_vediff.ge.1 )then
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
         !$omp parallel do default(shared)   &
@@ -337,7 +337,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! axisymmetric grid:
 
         !$omp parallel do default(shared)   &
@@ -351,9 +351,9 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
@@ -396,14 +396,14 @@
 !
 !-----------------------------------------------------------------------
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
         if(myid.eq.0) print *,'  cannot use diff2w with terrain (yet) '
         call stopcm1
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
       ! Cartesian grid:
 
       !  x-direction
@@ -422,7 +422,7 @@
         enddo
       enddo
 
-    ELSE
+    else
       ! axisymmetric grid:
 
 !$omp parallel do default(shared)   &
@@ -435,14 +435,14 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 !  z-direction
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO j=1,nj
+      do j=1,nj
 
         do k=1,nk
         do i=1,ni
@@ -456,11 +456,11 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
 !-----------------------------------------------------------------------
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
 !$omp parallel do default(shared)   &
@@ -473,7 +473,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! axisymmetric grid:
 
 !$omp parallel do default(shared)   &
@@ -486,14 +486,14 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  Diagnostics:
 
-    IF( dowbud .and. wd_hediff.ge.1 .and. wd_vediff.ge.1 )THEN
+    if( dowbud .and. wd_hediff.ge.1 .and. wd_vediff.ge.1 )then
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
         !$omp parallel do default(shared)   &
@@ -507,7 +507,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! axisymmetric grid:
 
         !$omp parallel do default(shared)   &
@@ -521,9 +521,9 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
@@ -566,10 +566,10 @@
 !
 !-----------------------------------------------------------------------
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
         if(myid.eq.0) print *,'  cannot use diff2s with terrain (yet) '
         call stopcm1
-      ENDIF
+      endif
 
       coef = kdiff2
 
@@ -577,7 +577,7 @@
 !  x-direction
 !  y-direction
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
       ! Cartesian grid:
 
 !$omp parallel do default(shared)   &
@@ -605,7 +605,7 @@
         enddo
       enddo
 
-    ELSE
+    else
       ! axisymmetric grid:
 
 !$omp parallel do default(shared)   &
@@ -632,14 +632,14 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 !  z-direction
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-      DO j=1,nj
+      do j=1,nj
 
         do k=2,nk
         do i=1,ni
@@ -659,11 +659,11 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
 !-----------------------------------------------------------------------
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
 !$omp parallel do default(shared)   &
@@ -676,7 +676,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! axisymmetric grid:
 
 !$omp parallel do default(shared)   &
@@ -689,14 +689,14 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  Diagnostics:
 
-    IF( dobud .and. sd_hediff.ge.1 .and. sd_vediff.ge.1 )THEN
+    if( dobud .and. sd_hediff.ge.1 .and. sd_vediff.ge.1 )then
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
         !$omp parallel do default(shared)   &
@@ -710,7 +710,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! axisymmetric grid:
 
         !$omp parallel do default(shared)   &
@@ -724,9 +724,9 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
@@ -775,11 +775,11 @@
 !-----------------------------------------------------------------------
 !  Cartesian grid:
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
 
           do j=0,nj+1
           do i=0,ni+1
@@ -859,7 +859,7 @@
           endif
           !-----
 
-          IF(k.ne.1)THEN
+          if(k.ne.1)then
             do j=1,nj+1
             do i=1,ni+1
               t13(i,j,k)=coef*( (ua(i,j,k)-ua(i,j,k-1))*rdz*mf(1,1,k)  &
@@ -917,9 +917,9 @@
               enddo
             endif
             !-----
-          ENDIF  ! endif for k.ne.1
+          endif  ! endif for k.ne.1
 
-        ENDDO  ! enddo for k loop
+        enddo  ! enddo for k loop
 
         !---------------------------------
         ! bottom/top boundary conditions:
@@ -1004,7 +1004,7 @@
         enddo
 
         ! get dissipation rate:
-        IF(idiss.eq.1.or.output_dissten.eq.1)THEN
+        if(idiss.eq.1.or.output_dissten.eq.1)then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,tmp11,tmp22,tmp33,tmp12,tmp13,tmp23,tem)
           do k=2,nk
@@ -1025,16 +1025,16 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
 
 !-----------------------------------------------------------------------
 !  axisymmetric grid:
 
-      ELSEIF(axisymm.eq.1)THEN
+      elseif(axisymm.eq.1)then
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
 
           do j=0,nj+1
           do i=0,ni+1
@@ -1076,7 +1076,7 @@
           endif
           !-----
 
-          IF(k.ne.1)THEN
+          if(k.ne.1)then
             do j=1,nj
             do i=1,ni+1
               t13(i,j,k)=coef*( (ua(i,j,k)-ua(i,j,k-1))*rdz*mf(1,1,k)  &
@@ -1102,9 +1102,9 @@
               t13(ni+1,j,k) = -coef*2.0*wa(ni,j,k)*rdx*uf(ni+1)
             endif
             !-----
-          ENDIF  ! endif for k.ne.1
+          endif  ! endif for k.ne.1
 
-        ENDDO  ! enddo for k-loop
+        enddo  ! enddo for k-loop
 
         !---------------------------------
         ! bottom/top boundary conditions:
@@ -1188,7 +1188,7 @@
         enddo
 
         ! get dissipation rate:
-        IF(idiss.eq.1.or.output_dissten.eq.1)THEN
+        if(idiss.eq.1.or.output_dissten.eq.1)then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,tmp11,tmp33,tmp12,tmp13,tmp23,tem)
           do k=2,nk
@@ -1206,13 +1206,13 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
 
 !-----------------------------------------------------------------------
 
-      ELSE
+      else
         stop 333
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 
@@ -1221,4 +1221,4 @@
       end subroutine diff2def
 
 
-  END MODULE diff2_module
+  end module diff2_module

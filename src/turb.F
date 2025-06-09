@@ -1,4 +1,4 @@
-  MODULE turb_module
+  module turb_module
 
   implicit none
 
@@ -7,7 +7,7 @@
 
   real :: turbfac,t2pfac
 
-  CONTAINS
+  contains
 
       subroutine sfc_and_turb(getsfc,getpbl,nstep,dt,dosfcflx,cloudvar,qbudget,    &
                    avgsfcu,avgsfcv,avgsfcs,avgsfcsu,avgsfcsv,avgsfct,avgsfcq,avgsfcp, &
@@ -234,7 +234,7 @@
       t2pfac = 1.0
 
     facheck:  &
-    IF( idoles .and. sgsmodel.ge.1 )THEN
+    if( idoles .and. sgsmodel.ge.1 )then
 
 
       if( ramp_sgs.ge.1 )then
@@ -269,10 +269,10 @@
         if(myid.eq.0.and.t2pfac.lt.0.999) print *,'  t2pfac = ',t2pfac
       endif
 
-    ENDIF  facheck
+    endif  facheck
 
 
-      IF( cm1setup.ge.1 .or. ipbl.ge.1 .or. horizturb.eq.1 .or. idiss.eq.1 .or. output_dissten.eq.1 )THEN
+      if( cm1setup.ge.1 .or. ipbl.ge.1 .or. horizturb.eq.1 .or. idiss.eq.1 .or. output_dissten.eq.1 )then
 
         ! cm1r17:  dissten is defined on w (full) levels:
 !$omp parallel do default(shared)  &
@@ -285,7 +285,7 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
       do j=1,nj
       do i=1,ni
@@ -293,7 +293,7 @@
       enddo
       enddo
 
-      IF( imove.eq.1 )THEN
+      if( imove.eq.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -305,8 +305,8 @@
         enddo
         enddo
         enddo
-      ELSE
-        IF( pertflx.eq.1 )THEN
+      else
+        if( pertflx.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=1,nk
@@ -317,7 +317,7 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=1,nk
@@ -328,11 +328,11 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 
-      IF( (sfcmodel.eq.2) .or. (sfcmodel.eq.3) .or. (sfcmodel.eq.4) .or. (sfcmodel.eq.6) .or. (sfcmodel.eq.7) .or. use_pbl .or. (oceanmodel.eq.2) )THEN
+      if( (sfcmodel.eq.2) .or. (sfcmodel.eq.3) .or. (sfcmodel.eq.4) .or. (sfcmodel.eq.6) .or. (sfcmodel.eq.7) .or. use_pbl .or. (oceanmodel.eq.2) )then
 
         ! variables for wrf physics:
 
@@ -345,7 +345,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-        DO j=1,nj
+        do j=1,nj
           do k=1,k2
           do i=1,ni
             ! use ground-relative winds:
@@ -385,7 +385,7 @@
           do i=1,ni
             dum6(i,j,1) = psfc(i,j)
           enddo
-        ENDDO
+        enddo
 
         ! dum1 = u at scalars
         ! dum2 = v at scalars
@@ -404,7 +404,7 @@
         rovg = rd/g
 
         ! note:  for RRTMG (radopt=2) gsw and glw arrays are already filled !
-        IF( radopt.eq.1 )THEN
+        if( radopt.eq.1 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
           do j=1,nj
@@ -413,7 +413,7 @@
             glw(i,j)=radlwin(i,j)
           enddo
           enddo
-        ELSEIF( radopt.eq.0 )THEN
+        elseif( radopt.eq.0 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
           do j=1,nj
@@ -422,9 +422,9 @@
             glw(i,j)=0.0
           enddo
           enddo
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 
 
       !-------------------
@@ -432,51 +432,51 @@
       !      dum7 stores ql+qi
 
       ! GHB, 210521:
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
         !$omp parallel do default(shared) private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           do j=1,nj
           do i=1,ni
             divx(i,j,k) = qa(i,j,k,nqv)
             dum7(i,j,k) = 0.0
           enddo
           enddo
-        ENDDO
-      IF( nql1.gt.0 )THEN
+        enddo
+      if( nql1.gt.0 )then
         do n=nql1,nql2
         !$omp parallel do default(shared) private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           do j=1,nj
           do i=1,ni
             dum7(i,j,k)=dum7(i,j,k)+qa(i,j,k,n)
           enddo
           enddo
-        ENDDO
         enddo
-      ENDIF
-        IF(iice.eq.1)THEN
+        enddo
+      endif
+        if(iice.eq.1)then
           do n=nqs1,nqs2
           !$omp parallel do default(shared) private(i,j,k)
-          DO k=1,nk
+          do k=1,nk
           do j=1,nj
             do i=1,ni
               dum7(i,j,k)=dum7(i,j,k)+qa(i,j,k,n)
             enddo
           enddo
-          ENDDO
           enddo
-        ENDIF
-      ELSE
+          enddo
+        endif
+      else
           !$omp parallel do default(shared) private(i,j,k,n)
-          DO k=1,nk
+          do k=1,nk
             do j=1,nj
             do i=1,ni
               divx(i,j,k) = 0.0
               dum7(i,j,k) = 0.0
             enddo
             enddo
-          ENDDO
-      ENDIF
+          enddo
+      endif
 
 !-----------------------------------------------------------------------
 !  hwrf parameters:
@@ -517,9 +517,9 @@
 
     if(timestats.ge.1) time_turb=time_turb+mytime()
 
-    dosfc:  IF( getsfc )THEN
+    dosfc:  if( getsfc )then
 
-      bbc3:  IF( bbc.eq.3 )THEN
+      bbc3:  if( bbc.eq.3 )then
 
         !-------------------------------
         ! u1 is u at k=kval (lowest model level by default)
@@ -544,7 +544,7 @@
           enddo
           enddo
 
-          IF( terrain_flag )THEN
+          if( terrain_flag )then
             !$omp parallel do default(shared)   &
             !$omp private(i,j)
             do j=1,nj
@@ -552,7 +552,7 @@
               ppten(i,j,1) = zh(i,j,kval)-zs(i,j)
             enddo
             enddo
-          ENDIF
+          endif
 
         !-------------------------------
         ! NOTE:
@@ -560,13 +560,13 @@
         ! dum7 stores ql+qi
         ! ppten(k=1) stores height of first model level above surface
 
-        IF( testcase.ge.1 .and. testcase.le.7 )THEN
+        if( testcase.ge.1 .and. testcase.le.7 )then
 
           ! max gradient method (for simple LES simulations only):
 
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k,dtdz)
-          DO j=1,nj
+          do j=1,nj
 
             do i=1,ni
               dum8(i,j,1) = -1.0e30
@@ -583,21 +583,21 @@
             enddo
             enddo
 
-          ENDDO
+          enddo
 
-        ELSE
+        else
 
           ! bulk-Ri method:
 
-          IF( ipbl.eq.2 )THEN
+          if( ipbl.eq.2 )then
             ! (note: for ipbl=1,3,4,5 pbl depth is calculated within the PBL subroutine)
             call gethpbl2(psfc,qsfc,thflux,qvflux,ust,tsk,zh,th0,tha,divx,ugr,vgr,dum8(ib,jb,1),dum8(ib,jb,2),dum8(ib,jb,3),dum8(ib,jb,4),hpbl,thten)
-          ENDIF
+          endif
 
-        ENDIF
+        endif
 
 
-        IF( terrain_flag )THEN
+        if( terrain_flag )then
           !$omp parallel do default(shared)   &
           !$omp private(i,j)
           do j=1,nj
@@ -605,13 +605,13 @@
             hpbl(i,j) = hpbl(i,j)-zs(i,j)
           enddo
           enddo
-         ENDIF
+         endif
 
-        IF( use_avg_sfc .and. ( sfcmodel.eq.1 .or. sfcmodel.eq.5 ) )THEN
+        if( use_avg_sfc .and. ( sfcmodel.eq.1 .or. sfcmodel.eq.5 ) )then
             call getavgsfc(u1,v1,s1,t1,psfc,divx(ib,jb,1),avgsfcu,avgsfcv,avgsfcs,avgsfcsu,avgsfcsv,avgsfct,avgsfcq,avgsfcp,ugr,vgr)
-        ENDIF
+        endif
 
-        IF( sfcmodel.eq.1 )THEN
+        if( sfcmodel.eq.1 )then
 
           call getcecd(xh,u1,v1,s1,ppten(ib,jb,1),u10,v10,s10,xland,znt,ust,cd,ch,cq,avgsfcu,avgsfcv,avgsfcs,avgsfct)
 
@@ -665,9 +665,9 @@
             enddo
           endif
 
-        ENDIF
+        endif
 
-        IF( sfcmodel.eq.5 )THEN
+        if( sfcmodel.eq.5 )then
 
           call   cm1most(u1,v1,s1,t1,tst,qst,thflux,qvflux,zol,mol,rmol,  &
                          phim,phih,psim,psih,ppten(ib,jb,1),        &
@@ -721,11 +721,11 @@
           endif
 
 
-        ENDIF
+        endif
 
 
         sfcmod1:  &
-        IF( (sfcmodel.eq.2) .or. (sfcmodel.eq.3) .or. (sfcmodel.eq.4) .or. (sfcmodel.eq.6) .or. (sfcmodel.eq.7) )THEN
+        if( (sfcmodel.eq.2) .or. (sfcmodel.eq.3) .or. (sfcmodel.eq.4) .or. (sfcmodel.eq.6) .or. (sfcmodel.eq.7) )then
           ! surface layer:
 
         sfcmod2:  &
@@ -880,7 +880,7 @@
 
 
         mynn_sf_j_loop:  &
-        DO j=1,nj
+        do j=1,nj
 
           do k=1,2
           do i=1,ni
@@ -926,7 +926,7 @@
                      its=1  ,ite=ni   , jts=1  ,jte=1    , kts=1  ,kte=nk  ,                         &
                      ustm=ustm(1,j),ck=ck(1,j),cka=cka(1,j),cd=cd(1,j),cda=cda(1,j),                 &
                      isftcflx=isftcflx,iz0tlnd=iz0tlnd)
-        ENDDO  mynn_sf_j_loop
+        enddo  mynn_sf_j_loop
 
 
         elseif( sfcmodel.eq.7 )then
@@ -1016,7 +1016,7 @@
           ifsnow = 0
           dtmin = dt/60.0
 
-        IF( update_sfc .and. testcase.ne.11 )THEN
+        if( update_sfc .and. testcase.ne.11 )then
           ! slab scheme (MM5/WRF):
           call SLAB(dum4,divx,prs,FLHC,FLQC,                        &
                        PSFC,XLAND,TMN,HFX,QFX,LH,TSK,QSFC,CHKLOWQ,  &
@@ -1029,7 +1029,7 @@
                          1, ni+1,   1, nj+1,   1, nk+1,             &
                         ib, ie,  jb, je,  kb, ke,                   &
                          1, ni,   1, nj,   1, nk                    )
-        ELSE
+        else
         if( sfcmodel.ne.7 )then
           ! dont update tsk, but diagnose qsfc:
           !  ?  ... should this be land pts only? !
@@ -1045,7 +1045,7 @@
           enddo
           enddo
         endif
-        ENDIF
+        endif
 
           ! put WRF parameters into CM1 arrays:
           if( sfcmodel.eq.2 .or. sfcmodel.eq.3 .or. sfcmodel.eq.6 .or. sfcmodel.eq.7 )then
@@ -1108,7 +1108,7 @@
             enddo
             enddo
           endif
-          IF( dosfcflx .or. output_sfcflx.eq.1 )THEN
+          if( dosfcflx .or. output_sfcflx.eq.1 )then
             !$omp parallel do default(shared)   &
             !$omp private(i,j)
             do j=1,nj
@@ -1117,26 +1117,26 @@
               qvflux(i,j) = qfx(i,j)/rf(i,j,1)
             enddo
             enddo
-          ENDIF
+          endif
 
-        ENDIF  sfcmod1
+        endif  sfcmod1
 
-      ENDIF  bbc3
+      endif  bbc3
       if(timestats.ge.1) time_sfcphys=time_sfcphys+mytime()
 
-    ELSE
+    else
 
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) '  ... skipping sfc stuff ... '
       if(dowr) write(outfile,*)
 
-    ENDIF  dosfc
+    endif  dosfc
 
 !---------------------------------------------
 ! bc/comms (very important):
 
   bbc3b:  &
-  IF( bbc.eq.3 )THEN
+  if( bbc.eq.3 )then
     !-------------!
     call bc2d(ust)
 #ifdef MPI
@@ -1224,27 +1224,27 @@
 #endif
 
     ! account for annoying GFDL naming convention:
-    IF( sfcmodel.eq.4 )THEN
+    if( sfcmodel.eq.4 )then
       do j=0,nj+1
       do i=0,ni+1
         zntmp(i,j) = mznt(i,j)
       enddo
       enddo
-    ELSE
+    else
       do j=0,nj+1
       do i=0,ni+1
         zntmp(i,j) = znt(i,j)
       enddo
       enddo
-    ENDIF
+    endif
     if(timestats.ge.1) time_sfcphys=time_sfcphys+mytime()
 
-  ENDIF  bbc3b
+  endif  bbc3b
 
 !-------------------------------------------------------------------
 
   tbc3b:  &
-  IF( tbc.eq.3 )THEN
+  if( tbc.eq.3 )then
     !-------------!
     call bc2d(ustt)
 #ifdef MPI
@@ -1296,17 +1296,17 @@
     !-------------!
 #endif
 
-  ENDIF  tbc3b
+  endif  tbc3b
 
 !-------------------------------------------------------------------
 ! simple ocean mixed layer model based Pollard, Rhines and Thompson (1973)
 !   (from WRF)
 
-    IF(oceanmodel.eq.2)THEN
-    IF( update_sfc )THEN
+    if(oceanmodel.eq.2)then
+    if( update_sfc )then
       if( getsfc )then
 
-        CALL oceanml(tml,t0ml,hml,h0ml,huml,hvml,ust,dum1,dum2, &
+        call oceanml(tml,t0ml,hml,h0ml,huml,hvml,ust,dum1,dum2, &
                      tmoml,f2d,g,oml_gamma,                     &
                     OML_RELAXATION_TIME,                        &
                      xland,hfx,lh,tsk,gsw,glw,emiss,            &
@@ -1318,34 +1318,34 @@
         if(timestats.ge.1) time_sfcphys=time_sfcphys+mytime()
 
       endif
-    ENDIF
-    ENDIF
+    endif
+    endif
 
 !---------------------------------------------
 
-      IF( sgsmodel.ge.1 .or. output_nm.eq.1 .or. ipbl.ge.1 )THEN
+      if( sgsmodel.ge.1 .or. output_nm.eq.1 .or. ipbl.ge.1 )then
         ! squared Brunt-Vaisala frequency:
         iamsat = .false.
         call calcnm(c1,c2,mf,pi0,thv0,th0,cloudvar,nm,dum1,dum2,dum3,dum4,dum5,dum6,   &
                     prs,ppi,tha,qa,iamsat)
-      ENDIF
+      endif
 
-      IF( cm1setup.ge.1 .or. output_def.eq.1 .or. ipbl.ge.1 .or. horizturb.eq.1 )THEN
+      if( cm1setup.ge.1 .or. output_def.eq.1 .or. ipbl.ge.1 .or. horizturb.eq.1 )then
         ! deformation:
         call calcdef(    rds,sigma,rdsf,sigmaf,zs,gz,rgz,gzu,rgzu,gzv,rgzv,                &
                      xh,rxh,arh1,arh2,uh,xf,rxf,arf1,arf2,uf,vh,vf,mh,c1,c2,mf,defv,defh,  &
                      dum1,dum2,ua,va,wa,t11,t12,t13,t22,t23,t33,gx,gy,rho,rr,rf)
 
-      ENDIF
+      endif
 
 !--------------------------------------
 !  LES subgrid models:
 
     les_sgs:  &
-    IF( idoles )THEN
+    if( idoles )then
 
       sgsoption:  &
-      IF( sgsmodel.eq.1 .or. sgsmodel.eq.3 .or. sgsmodel.eq.4 .or. sgsmodel.eq.5 )THEN
+      if( sgsmodel.eq.1 .or. sgsmodel.eq.3 .or. sgsmodel.eq.4 .or. sgsmodel.eq.5 )then
 
          ! Deardorff TKE:
         call     tkekm(nstep,rtime,dt,ruh,rvh,rmh,zf,mf,rmf,zntmp,ust,ustt,rf, &
@@ -1388,7 +1388,7 @@
         enddo
         enddo
 
-        IF( sgsmodel.eq.5 )THEN
+        if( sgsmodel.eq.5 )then
           ! Nonlinear Backscatter and Anisotropy (NBA) model:
           ! TKE version:
           call   turbnba(nstep,uh,ruh,uf,ruf,vh,rvh,vf,rvf,mh,rmh,mf,rmf,zf,c1,c2,rho,rf,zntmp,ust,cm0,  &
@@ -1398,9 +1398,9 @@
                          ua ,va ,wa ,tkea ,nm,                     &
                          kw1,kw2,ke1,ke2,ks1,ks2,kn1,kn2,reqs_s,   &
                          nw1,nw2,ne1,ne2,sw1,sw2,se1,se2)
-        ENDIF
+        endif
 
-      ELSEIF(sgsmodel.eq.2)THEN
+      elseif(sgsmodel.eq.2)then
 
          ! Smagorinsky:
         call     turbsmag(nstep,dt,ruh,rvh,rmh,mf,rmf,th0,rf,              &
@@ -1412,7 +1412,7 @@
                           kw1(1,1,2),kw2(1,1,2),ke1(1,1,2),ke2(1,1,2),     &
                           ks1(1,1,2),ks2(1,1,2),kn1(1,1,2),kn2(1,1,2))
 
-      ELSEIF( sgsmodel.eq.6 )THEN
+      elseif( sgsmodel.eq.6 )then
 
         ! Nonlinear Backscatter and Anisotropy (NBA) model:
         ! Smagorinsky version:
@@ -1424,7 +1424,7 @@
                          kw1,kw2,ke1,ke2,ks1,ks2,kn1,kn2,reqs_s,   &
                          nw1,nw2,ne1,ne2,sw1,sw2,se1,se2)
 
-      ELSEIF( sgsmodel.eq.0 )THEN
+      elseif( sgsmodel.eq.0 )then
 
         ! for LES modeling without a subgrid turbulence model:
         ! (sometimes called implicit les, or ILES)
@@ -1444,17 +1444,17 @@
         enddo
         enddo
 
-      ELSE
+      else
 
         print *,'  72383 '
         call stopcm1
 
-      ENDIF  sgsoption
+      endif  sgsoption
 
       !-------------
 
       ift2p:  &
-      IF( dot2p )THEN
+      if( dot2p )then
         ! Use 2-part subgrid turbulence model:
 
         rstrt:  &
@@ -1538,16 +1538,16 @@
 
         endif  rstrt
 
-      ENDIF  ift2p
+      endif  ift2p
 
       !-------------
 
-    ENDIF  les_sgs
+    endif  les_sgs
 
 !--------------------------------------
 !  Simple Smagorinsky-like turbulence scheme for horiz direction:
 
-      IF( (cm1setup.eq.2.or.cm1setup.eq.4) .and. horizturb.eq.1 )THEN
+      if( (cm1setup.eq.2.or.cm1setup.eq.4) .and. horizturb.eq.1 )then
         call turbparam_horiz(nstep,zf,dt,dosfcflx,ruh,rvh,rmh,mf,rmf,th0,thflux,qvflux,rth0s,rf, &
                       nm,defv,defh,dum4,kmh,khh,cm0,dissten,out3d,zs,zntmp,ust,xland,psfc,tlh, &
                       nw1,nw2,ne1,ne2,sw1,sw2,se1,se2,                 &
@@ -1555,9 +1555,9 @@
                       ks1(1,1,1),ks2(1,1,1),kn1(1,1,1),kn2(1,1,1),     &
                       kw1(1,1,2),kw2(1,1,2),ke1(1,1,2),ke2(1,1,2),     &
                       ks1(1,1,2),ks2(1,1,2),kn1(1,1,2),kn2(1,1,2))
-      ENDIF
+      endif
 
-      IF( (cm1setup.eq.2.or.cm1setup.eq.4) .and. ipbl.eq.2 )THEN
+      if( (cm1setup.eq.2.or.cm1setup.eq.4) .and. ipbl.eq.2 )then
         call turbparam_vert(nstep,zf,dt,dosfcflx,ruh,rvh,rmh,mf,rmf,th0,thflux,qvflux,rth0s,rf, &
                       nm,defv,defh,dum4,kmv,khv,cm0,dissten,out3d,zs,zntmp,ust,xland, &
                       nw1,nw2,ne1,ne2,sw1,sw2,se1,se2,                 &
@@ -1565,12 +1565,12 @@
                       ks1(1,1,1),ks2(1,1,1),kn1(1,1,1),kn2(1,1,1),     &
                       kw1(1,1,2),kw2(1,1,2),ke1(1,1,2),ke2(1,1,2),     &
                       ks1(1,1,2),ks2(1,1,2),kn1(1,1,2),kn2(1,1,2))
-      ENDIF
+      endif
 
 !--------------------------------------
 !   DNS (constant viscosity)
 
-      IF( cm1setup.eq.3 )THEN
+      if( cm1setup.eq.3 )then
 
         tem = viscosity/pr_num
 
@@ -1587,7 +1587,7 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !--------------------------------------
 !  Check for numerical stability:
@@ -1599,7 +1599,7 @@
 !--------------------------------------
 
     tau:  &
-    IF( idoles .or. ipbl.eq.2 .or. horizturb.eq.1 .or. cm1setup.eq.3 )THEN
+    if( idoles .or. ipbl.eq.2 .or. horizturb.eq.1 .or. cm1setup.eq.3 )then
 
       if( do_ib )then
 #ifdef MPI
@@ -1613,7 +1613,7 @@
       endif
 
         !  now, get turbulent stresses:
-      IF( sgsmodel.eq.3 )THEN
+      if( sgsmodel.eq.3 )then
         ! SMM94 two-part model:
 
         !$omp parallel do default(shared)  &
@@ -1629,13 +1629,13 @@
         call     gettau(xf,rxf,arf1,arf2,ust,stau,u1,v1,s1,ustt,ut,vt,st,rf,mf,dum1,dum2,dum3,dum4,dum5,dum6, &
                         dumw1,dumw2,t11,t12,t13,t22,t23,t33,ua,ugr,va,vgr,wa,avgsfcu,avgsfcv,avgsfcs,avgsfcsu,avgsfcsv,bndy,kbdy)
 
-      ELSE
+      else
 
         ! all other sgsmodels:
         call     gettau(xf,rxf,arf1,arf2,ust,stau,u1,v1,s1,ustt,ut,vt,st,rf,mf,dum1,dum2,dum3,dum4,dum5,dum6, &
                         kmh,kmv,t11,t12,t13,t22,t23,t33,ua,ugr,va,vgr,wa,avgsfcu,avgsfcv,avgsfcs,avgsfcsu,avgsfcsv,bndy,kbdy)
 
-      ENDIF
+      endif
 
       if( do_ib )then
         if(     sgsmodel.le.4 )then
@@ -1645,16 +1645,16 @@
         endif
       endif
 
-      IF( sgsmodel.eq.5 .or. sgsmodel.eq.6 )THEN
+      if( sgsmodel.eq.5 .or. sgsmodel.eq.6 )then
         do j=1,nj+1
         do i=1,ni+1
           m13(i,j,nk+1) = m13(i,j,nk)
           m23(i,j,nk+1) = m23(i,j,nk)
         enddo
         enddo
-      ENDIF
+      endif
 
-      IF( bbc.eq.3 .and. ( sgsmodel.eq.5 .or. sgsmodel.eq.6 ) )THEN
+      if( bbc.eq.3 .and. ( sgsmodel.eq.5 .or. sgsmodel.eq.6 ) )then
           ! for NBA scheme, set m13 and m23 at boundaries:
         do j=1,nj+1
         do i=1,ni+1
@@ -1662,8 +1662,8 @@
           m23(i,j,1) = t23(i,j,1)
         enddo
         enddo
-      ENDIF
-      IF( tbc.eq.3 .and. ( sgsmodel.eq.5 .or. sgsmodel.eq.6 ) )THEN
+      endif
+      if( tbc.eq.3 .and. ( sgsmodel.eq.5 .or. sgsmodel.eq.6 ) )then
           ! for NBA scheme, set m13 and m23 at boundaries:
         do j=1,nj+1
         do i=1,ni+1
@@ -1671,12 +1671,12 @@
           m23(i,j,nk+1) = t23(i,j,nk+1)
         enddo
         enddo
-      ENDIF
+      endif
 
-    ENDIF  tau
+    endif  tau
 
-    IF( ( idoles .and. sgsmodel.ge.1 ) .or. (cm1setup.eq.3.and.dotdwrite)  )THEN
-    IF( dodomaindiag .and. dotdwrite )then
+    if( ( idoles .and. sgsmodel.ge.1 ) .or. (cm1setup.eq.3.and.dotdwrite)  )then
+    if( dodomaindiag .and. dotdwrite )then
 
       if( sgsmodel.ge.1 .or. sgsmodel.le.4 )then
               ! use tij arrays:
@@ -1696,14 +1696,14 @@
       call getepsd(xh,rxh,uh,xf,rxf,uf,vh,vf,mh,c1,c2,mf,ua ,va ,wa ,  &
                    dum1,dum2,epsd1,epsd2,rho0,rf0,rrf0,rru,rrv,rrw,dt)
 
-    ENDIF
-    ENDIF
+    endif
+    endif
 
 
 !-------------------------------------------------------------------
 !  dissip rate for DNS:
 
-        IF( cm1setup.eq.3 )THEN
+        if( cm1setup.eq.3 )then
 
           rcoef = 1.0/viscosity
 
@@ -1713,7 +1713,7 @@
 
             !$omp parallel do default(shared)  &
             !$omp private(i,j,k,tmp11,tmp22,tmp33,tmp12,tmp13,tmp23)
-            DO j=1,nj
+            do j=1,nj
               do k=2,nk
               do i=1,ni
                 tmp11=( c1(i,j,k)*t11(i,j,k-1)**2 + c2(i,j,k)*t11(i,j,k)**2 )
@@ -1729,7 +1729,7 @@
                                          +2.0*( tmp11 + tmp22 ) + tmp12 )/(rf(i,j,k)**2) )
               enddo
               enddo
-            ENDDO
+            enddo
 
           elseif( axisymm.eq.1 )then
 
@@ -1754,7 +1754,7 @@
 
           endif
 
-        ENDIF
+        endif
 
       if(timestats.ge.1) time_turb=time_turb+mytime()
 
@@ -1762,11 +1762,11 @@
 !  Variables for PBL and/or CuParam
 
       get_vars:  &
-      IF( idopbl .or. cuparam.ge.1 )THEN
+      if( idopbl .or. cuparam.ge.1 )then
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           ! store qi in dum8:
           if( nqi.ge.1 )then
             do j=1,nj
@@ -1781,30 +1781,30 @@
             enddo
             enddo
           endif
-        ENDDO
+        enddo
 
         ! here, ppten stores qc:
 
         if( nqc.ge.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
-          DO k=1,nk
+          do k=1,nk
           do j=1,nj
           do i=1,ni
             ppten(i,j,k) = qa(i,j,k,nqc)
           enddo
           enddo
-          ENDDO
+          enddo
         else
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
-          DO k=1,nk
+          do k=1,nk
           do j=1,nj
           do i=1,ni
             ppten(i,j,k) = 0.0
           enddo
           enddo
-          ENDDO
+          enddo
         endif
 
         if( radopt.ge.1 .or. testcase.eq.4 .or. testcase.eq.5 )then
@@ -1827,7 +1827,7 @@
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO j=1,nj
+        do j=1,nj
           do k=1,nk
           do i=1,ni
             ! ground-relative winds:
@@ -1846,7 +1846,7 @@
             ! top of model:
             dum6(i,j,nk+1)= cgt1*prs(i,j,nk)+cgt2*prs(i,j,nk-1)+cgt3*prs(i,j,nk-2)
           enddo
-        ENDDO
+        enddo
 
         ! dum1  = u (grnd-rel) at scalars
         ! dum2  = v (grnd-rel) at scalars
@@ -1876,16 +1876,16 @@
 
         if(timestats.ge.1) time_misc=time_misc+mytime()
 
-      ENDIF  get_vars
+      endif  get_vars
 
 !-------------------------------------------------------------------
 !  PBL schemes:
 
     doingpbl:  &
-    IF( idopbl .and. ipbl.ge.1 )THEN
+    if( idopbl .and. ipbl.ge.1 )then
 
     dopbl:  &
-    IF( getpbl )THEN
+    if( getpbl )then
 
       !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c!
 
@@ -1901,7 +1901,7 @@
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tmp2d)
         ysu_j_loop:  &
-        DO j=1,nj
+        do j=1,nj
 
         tmp2d = 0.0
 
@@ -2027,24 +2027,24 @@
         enddo
         enddo
 
-        IF( dotbud .and. td_diss.ge.1 )THEN
+        if( dotbud .and. td_diss.ge.1 )then
           do k=1,nk
           do i=1,ni
             tdiag(i,j,k,td_diss) = tmp2d(i,k,22)
           enddo
           enddo
-        ENDIF
+        endif
 
-        IF( output_km.eq.1 .or. output_kh.eq.1 .or. dodomaindiag .or. dostat )THEN
+        if( output_km.eq.1 .or. output_kh.eq.1 .or. dodomaindiag .or. dostat )then
           do k=1,nk
           do i=1,ni
             xkzh(i,j,k) = tmp2d(i,k,18)
             xkzm(i,j,k) = tmp2d(i,k,19)
           enddo
           enddo
-        ENDIF
+        endif
 
-        ENDDO  ysu_j_loop
+        enddo  ysu_j_loop
 
         if( cm1setup.eq.4 )then
           !$omp parallel do default(shared)   &
@@ -2159,7 +2159,7 @@
                   ids=1  ,ide=ni+1 , jds= 1 ,jde=nj+1 , kds=1  ,kde=nk+1 ,          &
                   ims=ib ,ime=ie   , jms=jb ,jme=je   , kms=kb ,kme=ke ,            &
                   its=1  ,ite=ni   , jts=1  ,jte=nj   , kts=1  ,kte=nk              )
-        IF( dotbud .and. td_diss.ge.1 )THEN
+        if( dotbud .and. td_diss.ge.1 )then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=1,nk
@@ -2170,8 +2170,8 @@
           enddo
           enddo
           enddo
-        ENDIF
-        IF( dotbud .and. td_pbl.ge.1 )THEN
+        endif
+        if( dotbud .and. td_pbl.ge.1 )then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=1,nk
@@ -2182,7 +2182,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
 
       endif  dogfsedmf
 
@@ -2193,7 +2193,7 @@
       if( .not. restarted )then  ! do not call mynn on a restart
         ! MYNN PBL:
 
-        IF( imoist.eq.1 )THEN
+        if( imoist.eq.1 )then
           if( nnci.ge.1 )then
             do k=1,nk
             do j=1,nj
@@ -2228,7 +2228,7 @@
             enddo
             enddo
           endif
-        ELSE
+        else
           do k=1,nk
           do j=1,nj
           do i=1,ni
@@ -2237,7 +2237,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
 
         FLAG_QC = .true.
         FLAG_QI = .true.
@@ -2251,17 +2251,17 @@
         FLAG_QNIFA = .false.
 
       mynn_j_loop:  &
-      DO j=1,nj
+      do j=1,nj
 
         tmp1d = 0.0
         tmp2d = 0.0
 
-        IF( nstep.eq.0 )THEN
+        if( nstep.eq.0 )then
           initflag=1
           if( myid.eq.0 .and. j.eq.1 ) print *,'  initflag = ',initflag
-        ELSE
+        else
           initflag=0
-        ENDIF
+        endif
 
         if( restarted )then
           restart = .true.
@@ -2509,7 +2509,7 @@
         enddo
         enddo
 
-      ENDDO  mynn_j_loop
+      enddo  mynn_j_loop
 
         if( cm1setup.eq.4 )then
           !$omp parallel do default(shared)   &
@@ -2529,7 +2529,7 @@
         endif
 
       ! Diagnostics !
-        IF( dotbud .and. td_diss.ge.1 )THEN
+        if( dotbud .and. td_diss.ge.1 )then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=1,nk
@@ -2540,8 +2540,8 @@
           enddo
           enddo
           enddo
-        ENDIF
-        IF( dotbud .and. td_pbl.ge.1 )THEN
+        endif
+        if( dotbud .and. td_pbl.ge.1 )then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=1,nk
@@ -2552,7 +2552,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
       ! Diagnostics !
 
       else
@@ -2702,13 +2702,13 @@
 
       endif  pblopt
 
-    ELSE
+    else
 
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) '  ... skipping pbl calcs ... '
       if(dowr) write(outfile,*)
 
-    ENDIF  dopbl
+    endif  dopbl
 
         if(timestats.ge.1) time_pbl=time_pbl+mytime()
 
@@ -2717,10 +2717,10 @@
       if( ipbl.eq.1 )then
         ! Dissipative heating from ysu scheme:
 
-      IF( idiss.eq.1 .or. output_dissten.eq.1 )THEN
+      if( idiss.eq.1 .or. output_dissten.eq.1 )then
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k,tem1,tem2)
-        DO j=1,nj
+        do j=1,nj
 
           do i=1,ni
             ! assume t13,t23 are zero at top of domain:
@@ -2746,9 +2746,9 @@
           enddo
           enddo
 
-        ENDDO
+        enddo
 
-      ENDIF
+      endif
       endif  ysudiss
 
         if(timestats.ge.1) time_pbl=time_pbl+mytime()
@@ -2765,7 +2765,7 @@
 #ifdef MPI
         call comm_1s_start(vpten,vw1,vw2,ve1,ve2,vs1,vs2,vn1,vn2,reqs_p)
 #endif
-        IF( axisymm.eq.1 )THEN
+        if( axisymm.eq.1 )then
           ! cm1r19 bug fix:
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
@@ -2778,20 +2778,20 @@
               vpten(i,3,k) = vpten(i,1,k)
             enddo
           enddo
-        ENDIF
+        endif
 #ifdef MPI
         call comm_1s_end(upten,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_s)
         call comm_1s_end(vpten,vw1,vw2,ve1,ve2,vs1,vs2,vn1,vn2,reqs_p)
 #endif
       endif
 
-    ENDIF  doingpbl
+    endif  doingpbl
 
 !-----------------------------------------------------------------------------
 !  Convective parameterization:
 
     usingcp1:  &
-    IF( cuparam.eq.1 )THEN
+    if( cuparam.eq.1 )then
     if( .not. restarted )then  ! do not call tiedtke cu param on a restart
 
       ! new Tiedtke cu param (from WRFv4.4)
@@ -2799,7 +2799,7 @@
       rdt = 1.0/dt
 
       ntiedtke_jloop:  &
-      DO j=1,nj
+      do j=1,nj
 
         if( use_pbl .and. ipbl.ge.1 )then
           ! add pbl tendency to advective tendency:
@@ -2861,19 +2861,19 @@
           tmp1d(i,1) = 0.0
         enddo
 
-        IF( axisymm.eq.1 .or. ny.eq.1 )THEN
+        if( axisymm.eq.1 .or. ny.eq.1 )then
           do i=1,ni
             tmp1d(i,2) = dx*ruh(i)
           enddo
-        ELSEIF( nx.eq.1 )THEN
+        elseif( nx.eq.1 )then
           do i=1,ni
             tmp1d(i,2) = dy*rvh(j)
           enddo
-        ELSE
+        else
           do i=1,ni
             tmp1d(i,2) = max( dx*ruh(i) , dy*rvh(j) )
           enddo
-        ENDIF
+        endif
 
         call     cu_ntiedtke_wrapper(pu=tmp2d(ibtmp,kbtmp,1),  &  ! u
                                  pv=tmp2d(ibtmp,kbtmp,2),  &  ! v
@@ -2912,7 +2912,7 @@
           enddo
         enddo
 
-        IF( cm1setup.eq.4 )THEN
+        if( cm1setup.eq.4 )then
           ! do not apply cuparam in fine-mesh part of domain:
           do n=1,nrain
           do i=1,ni
@@ -2935,16 +2935,16 @@
             endif
           enddo
           enddo
-        ELSE
+        else
           do n=1,nrain
           do i=1,ni
             raincv(i,j,n) = raincv(i,j,n) + tmp1d(i,1)
           enddo
           enddo
-        ENDIF
+        endif
 
 
-      ENDDO  ntiedtke_jloop
+      enddo  ntiedtke_jloop
 
       if(timestats.ge.1) time_cuprm=time_cuprm+mytime()
 
@@ -2962,7 +2962,7 @@
       if(myid.eq.0) print *,'  ... skipping tiedtke ... '
       if(myid.eq.0) print *
     endif
-    ENDIF  usingcp1
+    endif  usingcp1
 
 !-------------------------------------------------------------------
 
@@ -3033,7 +3033,7 @@
 !  Get length scales:
 
     !  get grid scale
-    IF(tconfig.eq.1)THEN
+    if(tconfig.eq.1)then
 
       ! single length scale:  appropriate if dx,dy are nearly the same as dz
 
@@ -3088,7 +3088,7 @@
       enddo
       enddo
 
-    ELSEIF(tconfig.eq.2)THEN
+    elseif(tconfig.eq.2)then
 
       ! two length scales:  one for horizontal, one for vertical
 
@@ -3145,7 +3145,7 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 
     if( nstep.eq.0 .and. myid.eq.0 )then
@@ -3241,7 +3241,7 @@
 !--------------------------------------------------------------
 !  lower surface:
 
-      IF( bbc.eq.2 .or. bbc.eq.3 )THEN
+      if( bbc.eq.2 .or. bbc.eq.3 )then
         ! no slip (fix/check this later)
         ! semi-slip
 
@@ -3256,7 +3256,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! free slip
 
         !$omp parallel do default(shared)   &
@@ -3268,7 +3268,7 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
         if(timestats.ge.1) time_turb=time_turb+mytime()
 
@@ -3310,7 +3310,7 @@
 !--------------------------------------------------------------
 !  cm1r20: upper surface
 
-      IF( tbc.eq.3 )THEN
+      if( tbc.eq.3 )then
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j)
@@ -3360,7 +3360,7 @@
 
         if(timestats.ge.1) time_turb=time_turb+mytime()
 
-      ENDIF
+      endif
 
 
       return
@@ -3426,9 +3426,9 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    jloop:  DO j=1,nj
+    jloop:  do j=1,nj
 
-    IF(tconfig.eq.1)THEN
+    if(tconfig.eq.1)then
       ! single length scale:  appropriate if dx,dy are nearly the same as dz
 
       do k=2,nk
@@ -3441,7 +3441,7 @@
       enddo
       enddo
 
-    ELSEIF(tconfig.eq.2)THEN
+    elseif(tconfig.eq.2)then
       ! two length scales:  one for horizontal, one for vertical
 
       do i=1,ni
@@ -3461,11 +3461,11 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
-    IF(tconfig.eq.1)THEN
+    if(tconfig.eq.1)then
 
       do k=2,nk
       do i=1,ni
@@ -3478,7 +3478,7 @@
       enddo
       enddo
 
-    ELSEIF(tconfig.eq.2)THEN
+    elseif(tconfig.eq.2)then
 
       do k=2,nk
       do i=1,ni
@@ -3492,9 +3492,9 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
-    ENDDO  jloop
+    enddo  jloop
 
     if( nstep.eq.0 .and. myid.eq.0 )then
       print *
@@ -3544,8 +3544,8 @@
       enddo
 
 !!!    IF( idiss.eq.1 .or. output_dissten.eq.1 )THEN
-    IF( j.ge.1 .and. j.le.nj )THEN
-    IF( tconfig.eq.1 )THEN
+    if( j.ge.1 .and. j.le.nj )then
+    if( tconfig.eq.1 )then
       do k=2,nk
       do i=1,ni
       if( csm(i,j,k).gt.cmemin )then
@@ -3553,7 +3553,7 @@
       endif
       enddo
       enddo
-    ELSEIF( tconfig.eq.2 )THEN
+    elseif( tconfig.eq.2 )then
       do k=2,nk
       do i=1,ni
       if( csm(i,j,k).gt.cmemin )then
@@ -3562,8 +3562,8 @@
       endif
       enddo
       enddo
-    ENDIF
-    ENDIF
+    endif
+    endif
 !!!    ENDIF
 
     enddo
@@ -3571,7 +3571,7 @@
 !--------------------------------------------------------------
 !  cm1r18: surface
 
-      IF( bbc.eq.3 )THEN
+      if( bbc.eq.3 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -3591,7 +3591,7 @@
         call bcs2_2d(kmv(ibc,jbc,1))
 #endif
 
-      IF( tconfig.eq.1 )THEN
+      if( tconfig.eq.1 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
         do j=0,nj+1
@@ -3601,7 +3601,7 @@
           khh(i,j,1) = khv(i,j,1)
         enddo
         enddo
-      ELSEIF( tconfig.eq.2 )THEN
+      elseif( tconfig.eq.2 )then
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
         do j=0,nj+1
@@ -3609,9 +3609,9 @@
           khv(i,j,1) = kmv(i,j,1)*prinv
         enddo
         enddo
-      ENDIF
+      endif
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
@@ -3680,7 +3680,7 @@
 !  Interior:
 
   lhcheck:  &
-  IF( l_h.gt.1.0e-12 .or. lhref1.gt.1.0e-12 .or. lhref2.gt.1.0e-12 )THEN
+  if( l_h.gt.1.0e-12 .or. lhref1.gt.1.0e-12 .or. lhref2.gt.1.0e-12 )then
 
     if(ny.eq.1)then
       temx =  0.250*dx*dx/dt
@@ -3701,19 +3701,19 @@
 !$omp private(i,j)
     do j=1,nj
     do i=1,ni
-      IF( (xland(i,j).gt.1.5) .and. (zs(i,j).lt.1.0) )THEN
+      if( (xland(i,j).gt.1.5) .and. (zs(i,j).lt.1.0) )then
         ! over water (sea level only):
         tlh(i,j) = lhref2+(lhref1-lhref2)   &
                       *(psfc(i,j)-90000.0)  &
                       /( 101500.0-90000.0)
-      ELSE
+      else
         ! all other cases:
         tlh(i,j) = l_h
-      ENDIF
+      endif
     enddo
     enddo
 
-  IF( cm1setup.eq.4 )THEN
+  if( cm1setup.eq.4 )then
     ! get km only in mesoscale-model part of domain:
 
     !$omp parallel do default(shared)   &
@@ -3729,7 +3729,7 @@
     enddo
     enddo
 
-  ELSE
+  else
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
@@ -3742,7 +3742,7 @@
     enddo
     enddo
 
-  ENDIF
+  endif
 
 !--------------------------------------------------------------
 ! boundary conditions:
@@ -3770,7 +3770,7 @@
 !  calculate Kh
 !  and also limit horizontal coeffs for numerical stability:
 
-  IF( cm1setup.eq.4 )THEN
+  if( cm1setup.eq.4 )then
     ! get km only in mesoscale-model part of domain:
 
     !$omp parallel do default(shared)   &
@@ -3786,8 +3786,8 @@
       enddo
       enddo
 
-    IF( idiss.eq.1 .or. output_dissten.eq.1 )THEN
-    IF( j.ge.1 .and. j.le.nj )THEN
+    if( idiss.eq.1 .or. output_dissten.eq.1 )then
+    if( j.ge.1 .and. j.le.nj )then
       do k=2,nk
       do i=1,ni
       if( cm0(i,j).le.cmemin )then
@@ -3795,12 +3795,12 @@
       endif
       enddo
       enddo
-    ENDIF
-    ENDIF
+    endif
+    endif
 
     enddo
 
-  ELSE
+  else
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,tem1)
@@ -3813,23 +3813,23 @@
       enddo
       enddo
 
-    IF( idiss.eq.1 .or. output_dissten.eq.1 )THEN
-    IF( j.ge.1 .and. j.le.nj )THEN
+    if( idiss.eq.1 .or. output_dissten.eq.1 )then
+    if( j.ge.1 .and. j.le.nj )then
       do k=2,nk
       do i=1,ni
         dissten(i,j,k) = dissten(i,j,k) + (kmh(i,j,k)**3)/(tlh(i,j)**4)
       enddo
       enddo
-    ENDIF
-    ENDIF
+    endif
+    endif
 
     enddo
 
-  ENDIF
+  endif
 
 !--------------------------------------------------------------
 
-  ENDIF  lhcheck
+  endif  lhcheck
 
       if(timestats.ge.1) time_turb=time_turb+mytime()
 
@@ -3895,12 +3895,12 @@
 !  Interior:
 
   linfcheck:  &
-  IF( l_inf.gt.1.0e-12 )THEN
+  if( l_inf.gt.1.0e-12 )then
 
 !!!    tem = 1.0/(1.0e-6+l_inf)
     rlinf = (1.0e-6+l_inf)**(-2)
 
-  IF( cm1setup.eq.4 )THEN
+  if( cm1setup.eq.4 )then
     ! get km only in mesoscale-model part of domain:
 
     !$omp parallel do default(shared)   &
@@ -3916,7 +3916,7 @@
     enddo
     enddo
 
-  ELSE
+  else
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
@@ -3929,7 +3929,7 @@
     enddo
     enddo
 
-  ENDIF
+  endif
 
 !--------------------------------------------------------------
 ! boundary conditions:
@@ -3949,7 +3949,7 @@
 !--------------------------------------------------------------
 !  calculate Kh
 
-  IF( cm1setup.eq.4 )THEN
+  if( cm1setup.eq.4 )then
     ! get km only in mesoscale-model part of domain:
 
 !$omp parallel do default(shared)   &
@@ -3964,8 +3964,8 @@
       enddo
       enddo
 
-    IF( idiss.eq.1 .or. output_dissten.eq.1 )THEN
-    IF( j.ge.1 .and. j.le.nj )THEN
+    if( idiss.eq.1 .or. output_dissten.eq.1 )then
+    if( j.ge.1 .and. j.le.nj )then
       do k=2,nk
       do i=1,ni
       if( cm0(i,j).le.cmemin )then
@@ -3973,12 +3973,12 @@
       endif
       enddo
       enddo
-    ENDIF
-    ENDIF
+    endif
+    endif
 
     enddo
 
-  ELSE
+  else
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,tem1)
@@ -3990,24 +3990,24 @@
       enddo
       enddo
 
-    IF( idiss.eq.1 .or. output_dissten.eq.1 )THEN
-    IF( j.ge.1 .and. j.le.nj )THEN
+    if( idiss.eq.1 .or. output_dissten.eq.1 )then
+    if( j.ge.1 .and. j.le.nj )then
       do k=2,nk
       do i=1,ni
         dissten(i,j,k) = dissten(i,j,k) + (kmv(i,j,k)**3)/(lvz(i,j,k)**4)
       enddo
       enddo
-    ENDIF
-    ENDIF
+    endif
+    endif
 
     enddo
 
-  ENDIF
+  endif
 
 !--------------------------------------------------------------
 !  cm1r18: surface
 
-      IF( bbc.eq.3 )THEN
+      if( bbc.eq.3 )then
 
         do j=1,nj
         do i=1,ni
@@ -4031,11 +4031,11 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------
 
-  ENDIF linfcheck
+  endif linfcheck
 
       if(nstep.eq.1.and.myid.eq.0)then
         print *,'  k,zf,lvz:  znt = ',zntmp(1,1)
@@ -4106,7 +4106,7 @@
 !
 !----------------------------------------------------------------------
 
-  IF(axisymm.eq.0)THEN
+  if(axisymm.eq.0)then
 
     ! Cartesian grid:
 
@@ -4126,7 +4126,7 @@
        +( (kmh(i-1,j-1,k+1)+kmh(i,j,k+1))+(kmh(i-1,j,k+1)+kmh(i,j-1,k+1)) ) )
       enddo
       enddo
-    ENDDO
+    enddo
 
           !-----
           ! lateral boundary conditions:
@@ -4233,13 +4233,13 @@
 
 !------------------------------------
 
-  ELSE
+  else
 
     ! axisymmetric grid:
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,tem)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       do i=1,ni+1
         !  2.0 * 0.5 = 1.0
@@ -4251,7 +4251,7 @@
                                    +arf1(i)*(kmh(i-1,j,k+1)+kmh(i-1,j,k)) )
       enddo
       enddo
-    ENDDO
+    enddo
 
           !-----
           ! lateral boundary conditions:
@@ -4277,7 +4277,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       do i=1,ni+1
         !  2.0 * 0.5  =  1.0
@@ -4285,16 +4285,16 @@
         t23(i,j,k)=2.0*t23(i,j,k)*kmv(i,j,k)
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
 !------------------------------------------------------------------
 !  open boundary conditions:
 
-    IF( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )THEN
+    if( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )then
         !-----
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -4302,8 +4302,8 @@
             t11(0,j,k) = t11(1,j,k)
           enddo
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -4311,11 +4311,11 @@
             t11(ni+1,j,k) = t11(ni,j,k)
           enddo
           enddo
-        ENDIF
+        endif
         !-----
         !ccccc
         !-----
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -4323,8 +4323,8 @@
             t22(i,0,k) = t22(i,1,k)
           enddo
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -4332,11 +4332,11 @@
             t22(i,nj+1,k) = t22(i,nj,k)
           enddo
           enddo
-        ENDIF
+        endif
         !-----
         !ccccc
         !-----
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -4344,8 +4344,8 @@
             t12(1,j,k) = t12(2,j,k)
           enddo
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -4353,9 +4353,9 @@
             t12(ni+1,j,k) = t12(ni,j,k)
           enddo
           enddo
-        ENDIF
+        endif
         !-----
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -4363,8 +4363,8 @@
             t12(i,1,k) = t12(i,2,k)
           enddo
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -4372,44 +4372,44 @@
             t12(i,nj+1,k) = t12(i,nj,k)
           enddo
           enddo
-        ENDIF
+        endif
         !-----
         ! corner points:
         !-----
-        IF( sbc.eq.2 .and. ibs.eq.1 .and. &
-            wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 .and. &
+            wbc.eq.2 .and. ibw.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             t12(1,1,k) = t12(2,2,k)
           enddo
-        ENDIF
-        IF( sbc.eq.2 .and. ibs.eq.1 .and. &
-            ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( sbc.eq.2 .and. ibs.eq.1 .and. &
+            ebc.eq.2 .and. ibe.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             t12(ni+1,1,k) = t12(ni,2,k)
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 .and. &
-            wbc.eq.2 .and. ibw.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 .and. &
+            wbc.eq.2 .and. ibw.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             t12(1,nj+1,k) = t12(2,nj,k)
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 .and. &
-            ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 .and. &
+            ebc.eq.2 .and. ibe.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             t12(ni+1,nj+1,k) = t12(ni,nj,k)
           enddo
-        ENDIF
+        endif
         !-----
-    ENDIF
+    endif
 
 !--------------------------------------------------------------
 !  lower boundary conditions
@@ -4420,7 +4420,7 @@
 !--------------------------------------------------------------
 !  upper boundary conditions
 
-    IF(tbc.eq.1)THEN
+    if(tbc.eq.1)then
       ! free slip:
 
 !$omp parallel do default(shared)   &
@@ -4432,10 +4432,10 @@
       enddo
       enddo
 
-    ELSEIF(tbc.eq.2)THEN
+    elseif(tbc.eq.2)then
       ! no slip:
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -4450,7 +4450,7 @@
         enddo
         enddo
 
-      ELSE
+      else
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -4465,9 +4465,9 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ELSEIF(tbc.eq.3)THEN
+    elseif(tbc.eq.3)then
       !--------------------------------------------------------!
       !-------- (this is where "drag" is set for tbc=3) -------!
 
@@ -4484,18 +4484,18 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !--------------------------------------------------------------
 
-    IF( axisymm.eq.1 )THEN
+    if( axisymm.eq.1 )then
       ! lateral boundary condition:
       !$omp parallel do default(shared)   &
       !$omp private(k)
       do k=0,nk+1
         t13(1,1,k)=0.0
       enddo
-    ENDIF
+    endif
 
 !--------------------------------------------------------------
 !  finished
@@ -4533,7 +4533,7 @@
       integer :: i,j,k
       real :: tem1,tem2,s8u,s8v
 
-    IF(bbc.eq.1)THEN
+    if(bbc.eq.1)then
       ! free slip:
 
 !$omp parallel do default(shared)   &
@@ -4545,10 +4545,10 @@
       enddo
       enddo
 
-    ELSEIF(bbc.eq.2)THEN
+    elseif(bbc.eq.2)then
       ! no slip:
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -4563,7 +4563,7 @@
         enddo
         enddo
 
-      ELSE
+      else
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -4578,18 +4578,18 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ELSEIF(bbc.eq.3)THEN
+    elseif(bbc.eq.3)then
       !--------------------------------------------------------!
       !--------  surface stress for semi-slip lower bc --------!
       !-------- (this is where "drag" is set for bbc=3) -------!
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
         avgsfc:  &
-        IF( ( .not. use_avg_sfc ) .or. ( sfcmodel.eq.2 .or. sfcmodel.eq.3 ) )THEN
+        if( ( .not. use_avg_sfc ) .or. ( sfcmodel.eq.2 .or. sfcmodel.eq.3 ) )then
 
           !$omp parallel do default(shared)   &
           !$omp private(i,j)
@@ -4604,7 +4604,7 @@
           enddo
           enddo
 
-        ELSE  avgsfc
+        else  avgsfc
 
           ! Moeng (1984):
 
@@ -4651,9 +4651,9 @@
           enddo
           enddo
 
-        ENDIF  avgsfc
+        endif  avgsfc
 
-      ELSE
+      else
 
         ! axisymmetric grid:
 !$omp parallel do default(shared)   &
@@ -4667,9 +4667,9 @@
       enddo
       enddo
 
-      ENDIF
+      endif
 
-      IF( testcase.eq.7 )THEN
+      if( testcase.eq.7 )then
 
         ! Replace normal sfc stress ... use lowest-model-level wind speed
         ! (VanZanten et al 2011, JAMES)
@@ -4685,9 +4685,9 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j)
@@ -4763,14 +4763,14 @@
 !
 !----------------------------------------------------------------------
 
-  IF(.not.terrain_flag)THEN
+  if(.not.terrain_flag)then
 
-  IF( axisymm.eq.0 )THEN
+  if( axisymm.eq.0 )then
     ! Cartesian without terrain:
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,temz)
-    DO k=1,nk
+    do k=1,nk
 
       temz = rdz*mh(1,1,k)
 
@@ -4785,7 +4785,7 @@
       enddo
       enddo       
 
-    ENDDO
+    enddo
 
           !-----
           ! lateral boundary conditions:
@@ -4879,7 +4879,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
-    DO k=2,nk
+    do k=2,nk
 
       do j=1,nj+1
       do i=1,ni+1 
@@ -4892,7 +4892,7 @@
       enddo
       enddo       
 
-    ENDDO
+    enddo
 
             !-----
             ! lateral boundary conditions:
@@ -4979,12 +4979,12 @@
 
 !-------------------------------------------------------------------------------
 
-  ELSE
+  else
     ! axisymmetric:
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
 
       do j=1,nj
       do i=1,ni+1
@@ -4996,7 +4996,7 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
           !-----
           ! lateral boundary conditions:
@@ -5040,7 +5040,7 @@
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
-    DO k=2,nk
+    do k=2,nk
 
       do j=1,nj
       do i=1,ni+1
@@ -5052,14 +5052,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
 !-------------------------------------------------------------------------------
 !  Cartesian with terrain:
 
-  ELSE
+  else
 
     ! dum1 stores u at w-pts:
     ! dum2 stores v at w-pts:
@@ -5091,7 +5091,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,r1)
-    DO k=1,nk
+    do k=1,nk
       do j=0,nj+1
       do i=0,ni+1 
         s11(i,j,k)=gz(i,j)*(ua(i+1,j,k)*rgzu(i+1,j)-ua(i,j,k)*rgzu(i,j))*rdx*uh(i) &
@@ -5125,21 +5125,21 @@
                          )*rdsf(k)*r1*(rgzv(i,j)-rgzv(i-1,j))*rdx*uf(i) )    )
       enddo
       enddo       
-    ENDDO
+    enddo
 
     ! now, dum1 stores w at scalar-pts:
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=0,nj+1
       do i=0,ni+1
         dum1(i,j,k)=0.5*(wa(i,j,k)+wa(i,j,k+1))
       enddo
       enddo
-    ENDDO
+    enddo
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       do i=1,ni+1
         s13(i,j,k)=0.5*(                                                              &
@@ -5162,17 +5162,17 @@
         s23(i,j,k)=s23(i,j,k)*0.5*( gz(i,j-1)*rf(i,j-1,k)+gz(i,j)*rf(i,j,k) )
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
 !  end of calculations for terrain
 !-------------------------------------------------------------------------------
 !  open boundary conditions:
 
-    IF( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )THEN
+    if( wbc.eq.2 .or. ebc.eq.2 .or. sbc.eq.2 .or. nbc.eq.2 )then
         !-----
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -5180,8 +5180,8 @@
             s11(0,j,k) = s11(1,j,k)
           enddo
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -5189,11 +5189,11 @@
             s11(ni+1,j,k) = s11(ni,j,k)
           enddo
           enddo
-        ENDIF
+        endif
         !-----
         !ccccc
         !-----
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -5201,8 +5201,8 @@
             s22(i,0,k) = s22(i,1,k)
           enddo
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -5210,11 +5210,11 @@
             s22(i,nj+1,k) = s22(i,nj,k)
           enddo
           enddo
-        ENDIF
+        endif
         !-----
         !ccccc
         !-----
-        IF( wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( wbc.eq.2 .and. ibw.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -5222,8 +5222,8 @@
             s12(1,j,k) = s12(2,j,k)
           enddo
           enddo
-        ENDIF
-        IF( ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( ebc.eq.2 .and. ibe.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(j,k)
           do k=1,nk
@@ -5231,9 +5231,9 @@
             s12(ni+1,j,k) = s12(ni,j,k)
           enddo
           enddo
-        ENDIF
+        endif
         !-----
-        IF( sbc.eq.2 .and. ibs.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -5241,8 +5241,8 @@
             s12(i,1,k) = s12(i,2,k)
           enddo
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
           do k=1,nk
@@ -5250,44 +5250,44 @@
             s12(i,nj+1,k) = s12(i,nj,k)
           enddo
           enddo
-        ENDIF
+        endif
         !-----
         ! corner points:
         !-----
-        IF( sbc.eq.2 .and. ibs.eq.1 .and. &
-            wbc.eq.2 .and. ibw.eq.1 )THEN
+        if( sbc.eq.2 .and. ibs.eq.1 .and. &
+            wbc.eq.2 .and. ibw.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             s12(1,1,k) = s12(2,2,k)
           enddo
-        ENDIF
-        IF( sbc.eq.2 .and. ibs.eq.1 .and. &
-            ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( sbc.eq.2 .and. ibs.eq.1 .and. &
+            ebc.eq.2 .and. ibe.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             s12(ni+1,1,k) = s12(ni,2,k)
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 .and. &
-            wbc.eq.2 .and. ibw.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 .and. &
+            wbc.eq.2 .and. ibw.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             s12(1,nj+1,k) = s12(2,nj,k)
           enddo
-        ENDIF
-        IF( nbc.eq.2 .and. ibn.eq.1 .and. &
-            ebc.eq.2 .and. ibe.eq.1 )THEN
+        endif
+        if( nbc.eq.2 .and. ibn.eq.1 .and. &
+            ebc.eq.2 .and. ibe.eq.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(k)
           do k=1,nk
             s12(ni+1,nj+1,k) = s12(ni,nj,k)
           enddo
-        ENDIF
+        endif
         !-----
-    ENDIF
+    endif
 
 !----------------------------------------------------------------------
 !  if l_h or l_v is zero, set appropriate terms to zero:
@@ -5327,20 +5327,20 @@
 
 !--------------------------------------------------------------
 
-    IF( axisymm.eq.1 )THEN
+    if( axisymm.eq.1 )then
       ! lateral boundary condition:
 !$omp parallel do default(shared)   &
 !$omp private(k)
       do k=0,nk+1
         s13(1,1,k)=0.0
       enddo
-    ENDIF
+    endif
 
 !----------------------------------------------------------------------
 !  calculate deformation:
 !  Note:  deformation is defined at w points.
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
       ! Cartesian domain:
 
       ! Def = 2.0 * S_ij * S_ij
@@ -5382,7 +5382,7 @@
       enddo
 
 !--------------------------------------------
-    ELSE
+    else
       ! axisymmetric domain:
 
 !$omp parallel do default(shared)   &
@@ -5411,7 +5411,7 @@
       enddo
       enddo
 
-    ENDIF  ! endif for axisymm
+    endif  ! endif for axisymm
 
 
 !--------------------------------------------------------------
@@ -5455,7 +5455,7 @@
 !----------------------------------------------------------------------
 !  Dry nm
 
-    IF(imoist.eq.0)then
+    if(imoist.eq.0)then
 
       !$omp parallel do default(shared)  &
       !$omp private(i,j,k)
@@ -5480,7 +5480,7 @@
 !-----------------------------------------------------------------------
 !  Moist nm
 
-    ELSE
+    else
 
     if( ptype.eq.0 )then
       !$omp parallel do default(shared)  &
@@ -5506,7 +5506,7 @@
       enddo
     endif
 
-      IF( iice.eq.1 )THEN
+      if( iice.eq.1 )then
       !$omp parallel do default(shared)  &
       !$omp private(i,j,k)
       do k=1,nk
@@ -5516,12 +5516,12 @@
       enddo
       enddo
       enddo
-      ENDIF
+      endif
 
-      DO n=1,numq
-        IF( (n.eq.nqv) .or.                                 &
+      do n=1,numq
+        if( (n.eq.nqv) .or.                                 &
             (n.ge.nql1.and.n.le.nql2) .or.                  &
-            (n.ge.nqs1.and.n.le.nqs2.and.iice.eq.1) )THEN
+            (n.ge.nqs1.and.n.le.nqs2.and.iice.eq.1) )then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=1,nk
@@ -5531,8 +5531,8 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ENDDO
+        endif
+      enddo
 
       k = 1
 
@@ -5547,7 +5547,7 @@
       enddo
 
     icecheck:  &
-    IF( iice.eq.1 )THEN
+    if( iice.eq.1 )then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,pavg,tavg,qtavg,qvs,lh,cpml,gamma,drdt,nml,nmi,ff,qvsl,qvsi,qvciavg,qv,ql,qi)
@@ -5627,7 +5627,7 @@
       enddo
       enddo
 
-    ELSE  icecheck
+    else  icecheck
 
       ! liquid only:
       !$omp parallel do default(shared)   &
@@ -5664,7 +5664,7 @@
       enddo
       enddo
 
-    ENDIF  icecheck
+    endif  icecheck
 
       !$omp parallel do default(shared)  &
       !$omp private(i,j)
@@ -5675,7 +5675,7 @@
       enddo
       enddo
 
-    ENDIF    ! endif for imoist
+    endif    ! endif for imoist
 
 !----------------------------------------------------------------------
 
@@ -5801,13 +5801,13 @@
 
         teme = 1.0/dble(nx*ny)
 
-      IF( use_avg_sfc )THEN
+      if( use_avg_sfc )then
 
         ustbar = ust(1,1)
         zntbar = zntmp(1,1)
         molbar = mol(1,1)
 
-      ELSE
+      else
 
         ustbar = 0.0
         zntbar = 0.0
@@ -5831,7 +5831,7 @@
         zntbar = zntbar*teme
         molbar = molbar*teme
 
-      ENDIF
+      endif
 
 !!!        if(myid.eq.0) print *,'  zntbar,ustbar,ust = ',zntbar,ustbar,ust(1,1)
 
@@ -5910,7 +5910,7 @@
       endif
 
       kloops94:  &
-      DO k = 2 , 2
+      do k = 2 , 2
 
         ubar = 0.0
         vbar = 0.0
@@ -5927,35 +5927,35 @@
 
         ! Note:  here, we assume wavg = 0
 
-      IF( k.eq.2 )THEN
+      if( k.eq.2 )then
         ! Get avg u,v at w level 2:
         ! (use same algorithms as in adv_routines)
         do j=1,nj
         do i=1,ni
           !-----
           wbar = 0.5*(wa(i,j,k)+wa(i-1,j,k))
-          IF( wbar.ge.0.0 )THEN
+          if( wbar.ge.0.0 )then
             up(i,j,k) = ( c1(1,1,k)*ua(i,j,k-1) &
                          +c2(1,1,k)*ua(i,j,k  ) )
-          ELSE
+          else
             up(i,j,k) = flx3(ua(i,j,k+1),ua(i,j,k),ua(i,j,k-1))
-          ENDIF
+          endif
           ubar = ubar+up(i,j,k)
           !-----
           wbar = 0.5*(wa(i,j,k)+wa(i,j-1,k))
-          IF( wbar.ge.0.0 )THEN
+          if( wbar.ge.0.0 )then
             vp(i,j,k) = ( c1(1,1,k)*va(i,j,k-1) &
                          +c2(1,1,k)*va(i,j,k  ) )
-          ELSE
+          else
             vp(i,j,k) = flx3(va(i,j,k+1),va(i,j,k),va(i,j,k-1))
-          ENDIF
+          endif
           vbar = vbar+vp(i,j,k)
           !-----
         enddo
         enddo
-      ELSE
+      else
         stop 87632
-      ENDIF
+      endif
 
 #ifdef MPI
         call MPI_ALLREDUCE(MPI_IN_PLACE,ubar,1,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
@@ -5966,7 +5966,7 @@
         ubar = ubar*teme
         vbar = vbar*teme
 
-      IF( k.eq.2 )THEN
+      if( k.eq.2 )then
         ! Get <u'w'> and <v'w'> at w level 2:
         ! (use same algorithms as in adv_routines)
         do j=1,nj
@@ -5993,9 +5993,9 @@
           t23avg = t23avg + frv(i,j,k)
         enddo
         enddo
-      ELSE
+      else
         stop 32987
-      ENDIF
+      endif
 
         do j=1,nj
         do i=1,ni
@@ -6038,7 +6038,7 @@
 !!!        t2pm3(k) = ustbar*karman*zf(1,1,2)
         t2pm3(k) = ustbar*ustbar*rdsdz
 
-      ENDDO  kloops94
+      enddo  kloops94
 
         l2p(1) = zntbar
         l2p(2) = sqrt( kmw(2)*karman*zf(1,1,2)*rustbar )
@@ -6158,13 +6158,13 @@
 
         teme = 1.0/dble(nx*ny)
 
-      IF( use_avg_sfc )THEN
+      if( use_avg_sfc )then
 
         ustbar = ust(1,1)
         zntbar = zntmp(1,1)
         molbar = mol(1,1)
 
-      ELSE
+      else
 
         ustbar = 0.0
         zntbar = 0.0
@@ -6188,7 +6188,7 @@
         zntbar = zntbar*teme
         molbar = molbar*teme
 
-      ENDIF
+      endif
 
         do k=1,(ntwk+1)
 !!!          wspa(k) = (ustbar/karman)*alog( sngl(zh(1,1,k)/zntbar) )
@@ -6208,7 +6208,7 @@
       d2pm2 =  0.0
 
       kloop:  &
-      DO k=1,(ntwk-1)
+      do k=1,(ntwk-1)
 
         t13avg = 0.0
         t23avg = 0.0
@@ -6250,7 +6250,7 @@
         t2pm1(k+1) = -d2pm1*tem
         t2pm3(k+1) =  d2pm3*tem
 
-      ENDDO  kloop
+      enddo  kloop
 
         ! diagnostic only:
         l2p(1) = zntbar
@@ -6382,7 +6382,7 @@
       ! new formulation (accounts for all forcing terms in u,v equations)
 
     kloop:  &
-    DO k=1,(ntwk-1)
+    do k=1,(ntwk-1)
 
       do j=1,nj
       do i=1,ni
@@ -6436,7 +6436,7 @@
                                                  ss31(1,1,k),ss32(1,1,k),sn31(1,1,k),sn32(1,1,k),req2)
 #endif
 
-    ENDDO  kloop
+    enddo  kloop
 
     !-------------------------------------------
 
@@ -6725,12 +6725,12 @@
       real, parameter :: onedtwelve = 1.0/12.0
       real, parameter :: onedsixty  = 1.0/60.0
 
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
       ! without terrain:
 
       !$omp parallel do default(shared)  &
       !$omp private(i,j,k,tem)
-      DO k=1,nk
+      do k=1,nk
         tem = rho0(1,1,k)
         do j=0,nj+2
         do i=0,ni+2
@@ -6738,26 +6738,26 @@
           rrv(i,j,k)=tem*va(i,j,k)
         enddo
         enddo
-        IF(k.eq.1)THEN
+        if(k.eq.1)then
           do j=0,nj+1
           do i=0,ni+1
             rrw(i,j,   1) = 0.0
             rrw(i,j,nk+1) = 0.0
           enddo
           enddo
-        ELSE
+        else
           tem = rf0(1,1,k)
           do j=0,nj+1
           do i=0,ni+1
             rrw(i,j,k)=tem*wa(i,j,k)
           enddo
           enddo
-        ENDIF
-      ENDDO
+        endif
+      enddo
 
       doit = .true.
 
-    ELSE
+    else
       ! with terrain:
 
       epsd1 = 0.0
@@ -6765,22 +6765,22 @@
 
       doit = .false.
 
-    ENDIF
+    endif
 
   docalc:  &
-  IF( doit )THEN
+  if( doit )then
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  acheck:  IF( axisymm.eq.0 )THEN
+  acheck:  if( axisymm.eq.0 )then
 
 !----------
 !  u-x:
 !  v-y:
 
-  IF( hadvordrv.eq.5 )THEN
+  if( hadvordrv.eq.5 )then
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,ubar,vbar)
     do k=1,nk
@@ -6801,7 +6801,7 @@
     enddo
     enddo
     enddo
-  ELSEIF( idiff.ge.1 .and. difforder.eq.6 )THEN
+  elseif( idiff.ge.1 .and. difforder.eq.6 )then
     coef = kdiff6/64.0/dt
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
@@ -6819,10 +6819,10 @@
     enddo
     enddo
     enddo
-  ELSE
+  else
     dum1 = 0.0
     dum2 = 0.0
-  ENDIF
+  endif
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,tem)
@@ -6841,7 +6841,7 @@
 !  u-y:
 !  v-x:
 
-  IF( hadvordrv.eq.5 )THEN
+  if( hadvordrv.eq.5 )then
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,ubar,vbar)
     do k=1,nk
@@ -6862,7 +6862,7 @@
     enddo
     enddo
     enddo
-  ELSEIF( idiff.ge.1 .and. difforder.eq.6 )THEN
+  elseif( idiff.ge.1 .and. difforder.eq.6 )then
     coef = kdiff6/64.0/dt
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
@@ -6880,10 +6880,10 @@
     enddo
     enddo
     enddo
-  ELSE
+  else
     dum1 = 0.0
     dum2 = 0.0
-  ENDIF
+  endif
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,tem)
@@ -6903,7 +6903,7 @@
 !  w-x:
 !  w-y:
 
-  IF( hadvordrv.eq.5 )THEN
+  if( hadvordrv.eq.5 )then
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,ubar,vbar)
     do k=2,nk
@@ -6924,7 +6924,7 @@
     enddo
     enddo
     enddo
-  ELSEIF( idiff.ge.1 .and. difforder.eq.6 )THEN
+  elseif( idiff.ge.1 .and. difforder.eq.6 )then
     coef = kdiff6/64.0/dt
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
@@ -6942,10 +6942,10 @@
     enddo
     enddo
     enddo
-  ELSE
+  else
     dum1 = 0.0
     dum2 = 0.0
-  ENDIF
+  endif
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,tem)
@@ -6962,11 +6962,11 @@
 
 !----------
 
-  ELSE
+  else
 
     stop 23232
 
-  ENDIF    acheck
+  endif    acheck
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -6979,7 +6979,7 @@
 !----------
 ! u-z:
 
-  IF( vadvordrv.eq.5 )THEN
+  if( vadvordrv.eq.5 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar)
@@ -7068,16 +7068,16 @@
     enddo
     enddo
 
-  ELSE
+  else
 
     dum1 = 0.0
 
-  ENDIF
+  endif
 
 !----------
 ! v-z:
 
-  IF( vadvordrv.eq.5 )THEN
+  if( vadvordrv.eq.5 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar)
@@ -7166,11 +7166,11 @@
     enddo
     enddo
 
-  ELSE
+  else
 
     dum2 = 0.0
 
-  ENDIF
+  endif
 
 !----------
 
@@ -7192,9 +7192,9 @@
 
   dum1 = 0.0
 
-  acheck2:  IF( axisymm.eq.0 )THEN
+  acheck2:  if( axisymm.eq.0 )then
 
-  IF( vadvordrv.eq.5 )THEN
+  if( vadvordrv.eq.5 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,wbar)
@@ -7283,17 +7283,17 @@
     enddo
     enddo
 
-  ELSE
+  else
 
     dum1 = 0.0
 
-  ENDIF
+  endif
 
-  ELSE
+  else
 
     dum1 = 0.0
 
-  ENDIF   acheck2
+  endif   acheck2
 
 !----------
 
@@ -7315,7 +7315,7 @@
 !--------------------------------------------------------------
 !  finished
 
-  ENDIF  docalc
+  endif  docalc
 
       if(timestats.ge.1) time_diag=time_diag+mytime()
 
@@ -7543,4 +7543,4 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE turb_module
+  end module turb_module

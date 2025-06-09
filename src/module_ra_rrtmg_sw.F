@@ -2066,7 +2066,7 @@
       real(kind=rb) :: extcosno(ngptsw), gsno(ngptsw)
       real(kind=rb) :: ssacosno(ngptsw), forwsno(ngptsw)
 
-      CHARACTER*80 errmess
+      character*80 errmess
 
 ! Initialize
 
@@ -2159,7 +2159,7 @@
 ! For iceflag=2 option, ice particle effective radius is limited to 5.0 to 131.0 microns
 
                   elseif (iceflag .eq. 2) then
-                     if (radice .lt. 5.0_rb .or. radice .gt. 131.0_rb) stop 'ICE RADIUS OUT OF BOUNDS'
+                     if (radice .lt. 5.0_rb .or. radice .gt. 131.0_rb) stop 'ICE RADIUS out OF BOUNDS'
                      factor = (radice - 2._rb)/3._rb
                      index = int(factor)
                      if (index .eq. 43) index = 42
@@ -2184,7 +2184,7 @@
                   elseif (iceflag .ge. 3) then
                      if (radice .lt. 5.0_rb .or. radice .gt. 140.0_rb) then
                          write(errmess,'(A,i5,i5,f8.2,f8.2)' )         &
-               'ERROR: ICE GENERALIZED EFFECTIVE SIZE OUT OF BOUNDS'   &
+               'ERROR: ICE GENERALIZED EFFECTIVE SIZE out OF BOUNDS'   &
                ,ig, lay, ciwpmc(ig,lay), radice
                          call wrf_error_fatal(errmess)
                      end if
@@ -2233,7 +2233,7 @@
                      radsno = resnmc(lay)
                      if (radsno .lt. 5.0_rb .or. radsno .gt. 140.0_rb) then
                          write(errmess,'(A,i5,i5,f8.2,f8.2)' )         &
-               'ERROR: SNOW GENERALIZED EFFECTIVE SIZE OUT OF BOUNDS'   &
+               'ERROR: SNOW GENERALIZED EFFECTIVE SIZE out OF BOUNDS'   &
                ,ig, lay, cswpmc(ig,lay), radsno
                          call wrf_error_fatal(errmess)
                      end if
@@ -2493,7 +2493,7 @@
 
       integer(kind=im), intent(in) :: nlayers
 
-      logical, intent(in) :: lrtchk(:)                         ! Logical flag for reflectivity and
+      logical, intent(in) :: lrtchk(:)                         ! logical flag for reflectivity and
                                                                ! and transmissivity calculation; 
                                                                !   Dimensions: (nlayers)
 
@@ -8889,11 +8889,11 @@
                                                       !    5: Exponential/random
       real(kind=rb), intent(in) :: play(:,:)          ! Layer pressures (hPa, mb)
                                                       !    Dimensions: (ncol,nlay)
-      real(kind=rb), intent(in) :: plev(:,:)          ! Interface pressures (hPa, mb)
+      real(kind=rb), intent(in) :: plev(:,:)          ! interface pressures (hPa, mb)
                                                       !    Dimensions: (ncol,nlay+1)
       real(kind=rb), intent(in) :: tlay(:,:)          ! Layer temperatures (K)
                                                       !    Dimensions: (ncol,nlay)
-      real(kind=rb), intent(in) :: tlev(:,:)          ! Interface temperatures (K)
+      real(kind=rb), intent(in) :: tlev(:,:)          ! interface temperatures (K)
                                                       !    Dimensions: (ncol,nlay+1)
       real(kind=rb), intent(in) :: tsfc(:)            ! Surface temperature (K)
                                                       !    Dimensions: (ncol)
@@ -8931,19 +8931,19 @@
 
       real(kind=rb), intent(in) :: cldfmcl(:,:,:)     ! Cloud fraction
                                                       !    Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: taucmcl(:,:,:)     ! In-cloud optical depth
+      real(kind=rb), intent(in) :: taucmcl(:,:,:)     ! in-cloud optical depth
                                                       !    Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: ssacmcl(:,:,:)     ! In-cloud single scattering albedo
+      real(kind=rb), intent(in) :: ssacmcl(:,:,:)     ! in-cloud single scattering albedo
                                                       !    Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: asmcmcl(:,:,:)     ! In-cloud asymmetry parameter
+      real(kind=rb), intent(in) :: asmcmcl(:,:,:)     ! in-cloud asymmetry parameter
                                                       !    Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: fsfcmcl(:,:,:)     ! In-cloud forward scattering fraction
+      real(kind=rb), intent(in) :: fsfcmcl(:,:,:)     ! in-cloud forward scattering fraction
                                                       !    Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: ciwpmcl(:,:,:)     ! In-cloud ice water path (g/m2)
+      real(kind=rb), intent(in) :: ciwpmcl(:,:,:)     ! in-cloud ice water path (g/m2)
                                                       !    Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: clwpmcl(:,:,:)     ! In-cloud liquid water path (g/m2)
+      real(kind=rb), intent(in) :: clwpmcl(:,:,:)     ! in-cloud liquid water path (g/m2)
                                                       !    Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: cswpmcl(:,:,:)     ! In-cloud snow water path (g/m2)
+      real(kind=rb), intent(in) :: cswpmcl(:,:,:)     ! in-cloud snow water path (g/m2)
                                                       !    Dimensions: (ngptsw,ncol,nlay)
       real(kind=rb), intent(in) :: reicmcl(:,:)       ! Cloud ice effective radius (microns)
                                                       !    Dimensions: (ncol,nlay)
@@ -9576,11 +9576,11 @@
 
       real(kind=rb), intent(in) :: play(:,:)          ! Layer pressures (hPa, mb)
                                                       ! Dimensions: (ncol,nlay)
-      real(kind=rb), intent(in) :: plev(:,:)          ! Interface pressures (hPa, mb)
+      real(kind=rb), intent(in) :: plev(:,:)          ! interface pressures (hPa, mb)
                                                       ! Dimensions: (ncol,nlay+1)
       real(kind=rb), intent(in) :: tlay(:,:)          ! Layer temperatures (K)
                                                       ! Dimensions: (ncol,nlay)
-      real(kind=rb), intent(in) :: tlev(:,:)          ! Interface temperatures (K)
+      real(kind=rb), intent(in) :: tlev(:,:)          ! interface temperatures (K)
                                                       ! Dimensions: (ncol,nlay+1)
       real(kind=rb), intent(in) :: tsfc(:)            ! Surface temperature (K)
                                                       ! Dimensions: (ncol)
@@ -9608,19 +9608,19 @@
 
       real(kind=rb), intent(in) :: cldfmcl(:,:,:)     ! Cloud fraction
                                                       ! Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: taucmcl(:,:,:)     ! In-cloud optical depth (optional)
+      real(kind=rb), intent(in) :: taucmcl(:,:,:)     ! in-cloud optical depth (optional)
                                                       ! Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: ssacmcl(:,:,:)     ! In-cloud single scattering albedo
+      real(kind=rb), intent(in) :: ssacmcl(:,:,:)     ! in-cloud single scattering albedo
                                                       ! Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: asmcmcl(:,:,:)     ! In-cloud asymmetry parameter
+      real(kind=rb), intent(in) :: asmcmcl(:,:,:)     ! in-cloud asymmetry parameter
                                                       ! Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: fsfcmcl(:,:,:)     ! In-cloud forward scattering fraction
+      real(kind=rb), intent(in) :: fsfcmcl(:,:,:)     ! in-cloud forward scattering fraction
                                                       ! Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: ciwpmcl(:,:,:)     ! In-cloud ice water path (g/m2)
+      real(kind=rb), intent(in) :: ciwpmcl(:,:,:)     ! in-cloud ice water path (g/m2)
                                                       ! Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: clwpmcl(:,:,:)     ! In-cloud liquid water path (g/m2)
+      real(kind=rb), intent(in) :: clwpmcl(:,:,:)     ! in-cloud liquid water path (g/m2)
                                                       ! Dimensions: (ngptsw,ncol,nlay)
-      real(kind=rb), intent(in) :: cswpmcl(:,:,:)     ! In-cloud snow water path (g/m2)
+      real(kind=rb), intent(in) :: cswpmcl(:,:,:)     ! in-cloud snow water path (g/m2)
                                                       ! Dimensions: (ngptsw,ncol,nlay)
       real(kind=rb), intent(in) :: reicmcl(:,:)       ! Cloud ice effective size (microns)
                                                       ! Dimensions: (ncol,nlay)
@@ -9900,14 +9900,14 @@
       end module rrtmg_sw_rad
 
 !------------------------------------------------------------------
-MODULE module_ra_rrtmg_sw
+module module_ra_rrtmg_sw
 
 use module_model_constants, only : cp , grv => g
-USE module_wrf_error
+use module_wrf_error
 #if (HWRF == 1)
-USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT, ETAMP_HWRF 
+use module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT, ETAMP_HWRF 
 #else
-USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT
+use module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT
 #endif
 !USE module_dm
 
@@ -9920,10 +9920,10 @@ use module_ra_rrtmg_lw, only : inirad, o3data, relcalc, reicalc, retab
 !                               mcica_random_numbers, randomNumberSequence, &
 !                               new_RandomNumberSequence, getRandomReal
 
-CONTAINS
+contains
 
 !------------------------------------------------------------------
-   SUBROUTINE RRTMG_SWRAD(                                        &
+   subroutine RRTMG_SWRAD(                                        &
                        rthratensw,swtenc,                         &
                        swupt, swuptc, swuptcln, swdnt, swdntc, swdntcln, &
                        swupb, swupbc, swupbcln, swdnb, swdnbc, swdnbcln, &
@@ -9971,21 +9971,21 @@ CONTAINS
                        xcoszen,yr,julian,co2out                   & ! jararias 2013/08
                                                                   )
 !------------------------------------------------------------------
-   IMPLICIT NONE
+   implicit none
 !------------------------------------------------------------------
-   LOGICAL, INTENT(IN )      ::        warm_rain
-   LOGICAL, INTENT(IN )      ::   is_CAMMGMP_used ! Added for CAM5 RRTMG<->CAMMGMP
+   logical, intent(in )      ::        warm_rain
+   logical, intent(in )      ::   is_CAMMGMP_used ! Added for CAM5 RRTMG<->CAMMGMP
 !
-   INTEGER, INTENT(IN )      ::        ids,ide, jds,jde, kds,kde, &
+   integer, intent(in )      ::        ids,ide, jds,jde, kds,kde, &
                                        ims,ime, jms,jme, kms,kme, &
                                        its,ite, jts,jte, kts,kte
 
-   INTEGER, INTENT(IN )      ::        ICLOUD
-   INTEGER, INTENT(IN )      ::        MP_PHYSICS
+   integer, intent(in )      ::        ICLOUD
+   integer, intent(in )      ::        MP_PHYSICS
 !
 !!!   REAL, DIMENSION( ims:ime, kms:kme, jms:jme )                 , &
-   REAL, DIMENSION( ims:ime, jms:jme, kms:kme )                 , &
-         INTENT(IN   ) ::                                   dz8w, &
+   real, dimension( ims:ime, jms:jme, kms:kme )                 , &
+         intent(in   ) ::                                   dz8w, &
                                                              t3d, &
                                                              t8w, &
                                                              p3d, &
@@ -9994,21 +9994,21 @@ CONTAINS
                                                            rho3d
 
 !!!   REAL, DIMENSION( ims:ime, kms:kme, jms:jme )                 , &
-   REAL, DIMENSION( ims:ime, jms:jme, kms:kme )                 , &
-         INTENT(INOUT)  ::                            RTHRATENSW, &
+   real, dimension( ims:ime, jms:jme, kms:kme )                 , &
+         intent(inout)  ::                            RTHRATENSW, &
                                                           swtenc
 
-   REAL, DIMENSION( ims:ime, jms:jme )                          , &
-         INTENT(INOUT)  ::                                   GSW, &
+   real, dimension( ims:ime, jms:jme )                          , &
+         intent(inout)  ::                                   GSW, &
                                                             SWCF, &
                                                            COSZR
 
-   INTEGER, INTENT(IN  )     ::                           JULDAY
-   REAL, INTENT(IN    )      ::                      RADT,DEGRAD, &
+   integer, intent(in  )     ::                           JULDAY
+   real, intent(in    )      ::                      RADT,DEGRAD, &
                                          XTIME,DECLIN,SOLCON,GMT
 
-   REAL, DIMENSION( ims:ime, jms:jme )                          , &
-         INTENT(IN   )  ::                                  XLAT, &
+   real, dimension( ims:ime, jms:jme )                          , &
+         intent(in   )  ::                                  XLAT, &
                                                            XLONG, &
                                                            XLAND, &
                                                             XICE, &
@@ -10017,20 +10017,20 @@ CONTAINS
                                                           ALBEDO
 !
 !!! -------------------  Zhenxin (2011-06/20) ------------------
-   REAL, DIMENSION( ims:ime, jms:jme )                         , &
-         OPTIONAL                                               , &
-         INTENT(IN)     ::                            ALSWVISDIR, &     ! ssib albedo of sw and lw
+   real, dimension( ims:ime, jms:jme )                         , &
+         optional                                               , &
+         intent(in)     ::                            ALSWVISDIR, &     ! ssib albedo of sw and lw
                                                       ALSWVISDIF, &
                                                       ALSWNIRDIR, &
                                                       ALSWNIRDIF
 
-   REAL, DIMENSION( ims:ime, jms:jme )                         , &
-         OPTIONAL                                               , &
-         INTENT(OUT)    ::                              SWVISDIR, &
+   real, dimension( ims:ime, jms:jme )                         , &
+         optional                                               , &
+         intent(out)    ::                              SWVISDIR, &
                                                         SWVISDIF, &
                                                         SWNIRDIR, &
                                                         SWNIRDIF        ! ssib sw dir and diff rad
-   INTEGER, INTENT(IN) :: sf_surface_physics                            ! ssib para
+   integer, intent(in) :: sf_surface_physics                            ! ssib para
 
 !  ----------------------- end Zhenxin --------------------------
 !
@@ -10053,14 +10053,14 @@ CONTAINS
    real, dimension(:,:,:,:), pointer :: tauaer3d_sw,ssaaer3d_sw,asyaer3d_sw
 ! ------------------------ jararias end snippet -----------------
 
-   REAL, INTENT(IN  )   ::                                   R,G
+   real, intent(in  )   ::                                   R,G
 !
 ! Optional
 !
 !!!   REAL, DIMENSION( ims:ime, kms:kme, jms:jme )                 , &
-   REAL, DIMENSION( ims:ime, jms:jme, kms:kme )                 , &
-         OPTIONAL                                               , &
-         INTENT(IN   ) ::                                         &
+   real, dimension( ims:ime, jms:jme, kms:kme )                 , &
+         optional                                               , &
+         intent(in   ) ::                                         &
                                                         CLDFRA3D, &
                                                          LRADIUS, &
                                                          IRADIUS, &
@@ -10074,45 +10074,45 @@ CONTAINS
 
 !..Added by G. Thompson to couple cloud physics effective radii.
 !!!   REAL, DIMENSION(ims:ime, kms:kme, jms:jme), INTENT(IN)::       &
-   REAL, DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(IN)::       &
+   real, dimension(ims:ime, jms:jme, kms:kme), intent(in)::       &
                                                         RE_CLOUD, &
                                                           RE_ICE, &
                                                          RE_SNOW
-   INTEGER, INTENT(IN):: has_reqc, has_reqi, has_reqs
+   integer, intent(in):: has_reqc, has_reqi, has_reqs
 
    real pi,third,relconst,lwpmin,rhoh2o
 
-   REAL, DIMENSION( ims:ime, jms:jme , kms:kme )                 , &
-         OPTIONAL                                               , &
-         INTENT(IN   ) ::                                         &
+   real, dimension( ims:ime, jms:jme , kms:kme )                 , &
+         optional                                               , &
+         intent(in   ) ::                                         &
                                                        F_ICE_PHY, &
                                                       F_RAIN_PHY
 
-   LOGICAL, OPTIONAL, INTENT(IN)   ::                             &
+   logical, optional, intent(in)   ::                             &
                                 F_QV,F_QC,F_QR,F_QI,F_QS,F_QG,F_QNDROP
 
 ! Optional
-   REAL, DIMENSION( ims:ime, jms:jme , kms:kme ), OPTIONAL ,       &
-         INTENT(IN    ) :: tauaer300,tauaer400,tauaer600,tauaer999, & ! czhao 
+   real, dimension( ims:ime, jms:jme , kms:kme ), optional ,       &
+         intent(in    ) :: tauaer300,tauaer400,tauaer600,tauaer999, & ! czhao 
                                  gaer300,gaer400,gaer600,gaer999, & ! czhao 
                                  waer300,waer400,waer600,waer999    ! czhao 
 
-   INTEGER,    INTENT(IN  ), OPTIONAL   ::       aer_ra_feedback
+   integer,    intent(in  ), optional   ::       aer_ra_feedback
 !jdfcz   INTEGER,    INTENT(IN  ), OPTIONAL   ::       progn,prescribe
-   INTEGER,    INTENT(IN  ), OPTIONAL   ::       progn
-   INTEGER,    INTENT(IN  )             ::       calc_clean_atm_diag
+   integer,    intent(in  ), optional   ::       progn
+   integer,    intent(in  )             ::       calc_clean_atm_diag
 
 !  Ozone
-   REAL, DIMENSION( ims:ime, jms:jme , kms:kme )                 , &
-         OPTIONAL                                               , &
-         INTENT(IN   ) :: O33D
-   INTEGER, OPTIONAL, INTENT(IN ) :: o3input
+   real, dimension( ims:ime, jms:jme , kms:kme )                 , &
+         optional                                               , &
+         intent(in   ) :: O33D
+   integer, optional, intent(in ) :: o3input
 !  EC aerosol: no_src = naerec = 6
-   INTEGER,           INTENT(IN ) :: no_src
-   REAL, DIMENSION( ims:ime, jms:jme , kms:kme, 1:no_src )       , &
-         OPTIONAL                                               , &
-         INTENT(IN   ) :: aerod
-   INTEGER, OPTIONAL, INTENT(IN ) :: aer_opt
+   integer,           intent(in ) :: no_src
+   real, dimension( ims:ime, jms:jme , kms:kme, 1:no_src )       , &
+         optional                                               , &
+         intent(in   ) :: aerod
+   integer, optional, intent(in ) :: aer_opt
 
       !wavelength corresponding to wavenum1 and wavenum2 (cm-1)
       real, save :: wavemin(nbndsw) ! Min wavelength (um) of 14 intervals
@@ -10127,24 +10127,24 @@ CONTAINS
       character(len=200) :: msg
 
 ! Top of atmosphere and surface shortwave fluxes (W m-2)
-   REAL, DIMENSION( ims:ime, jms:jme ),                           &
-         OPTIONAL, INTENT(INOUT) ::                               &
+   real, dimension( ims:ime, jms:jme ),                           &
+         optional, intent(inout) ::                               &
                     SWUPT,SWUPTC,SWUPTCLN,SWDNT,SWDNTC,SWDNTCLN,  &
                     SWUPB,SWUPBC,SWUPBCLN,SWDNB,SWDNBC,SWDNBCLN
 
 ! Layer shortwave fluxes (including extra layer above model top)
 ! Vertical ordering is from bottom to top (W m-2)
-   REAL, DIMENSION( ims:ime, jms:jme , kms:kme+2 ),                &
-         OPTIONAL, INTENT(OUT) ::                                 &
+   real, dimension( ims:ime, jms:jme , kms:kme+2 ),                &
+         optional, intent(out) ::                                 &
                                SWUPFLX,SWUPFLXC,                  &
                                SWDNFLX,SWDNFLXC
 
 !  LOCAL VARS
  
-   REAL, DIMENSION( kts:kte+1 ) ::                          Pw1D, &
+   real, dimension( kts:kte+1 ) ::                          Pw1D, &
                                                             Tw1D
 
-   REAL, DIMENSION( kts:kte ) ::                          TTEN1D, &
+   real, dimension( kts:kte ) ::                          TTEN1D, &
                                                         CLDFRA1D, &
                                                             DZ1D, &
                                                              P1D, &
@@ -10315,7 +10315,7 @@ CONTAINS
 
 !
 !    REAL   ::  TSFC,GLW0,OLR0,EMISS0,FP
-    REAL   ::  FP
+    real   ::  FP
 
 !    real, dimension(1:ite-its+1 )          ::   clat     ! latitude in radians for columns
     real :: coszrs                      ! Cosine of solar zenith angle for present latitude 
@@ -10325,18 +10325,18 @@ CONTAINS
 
     integer :: pcols, pver
 
-    INTEGER :: i,j,K, na
-    LOGICAL :: predicate
+    integer :: i,j,K, na
+    logical :: predicate
 
-    REAL :: da, eot ! jararias, 14/08/2013
+    real :: da, eot ! jararias, 14/08/2013
 
 !------------------------------------------------------------------
 ! Annual function for co2 in WRF v4.2
       co2 = (280. + 90.*exp(0.02*(yr-2000)))*1.e-6
       co2out = co2
 #if ( WRF_CHEM == 1 )
-      IF ( aer_ra_feedback == 1) then
-      IF ( .NOT. &
+      if ( aer_ra_feedback == 1) then
+      if ( .NOT. &
       ( PRESENT(tauaer300) .AND. &
         PRESENT(tauaer400) .AND. &
         PRESENT(tauaer600) .AND. &
@@ -10348,11 +10348,11 @@ CONTAINS
         PRESENT(waer300) .AND. &
         PRESENT(waer400) .AND. &
         PRESENT(waer600) .AND. &
-        PRESENT(waer999) ) ) THEN
-      CALL wrf_error_fatal  &
+        PRESENT(waer999) ) ) then
+      call wrf_error_fatal  &
       ('Warning: missing fields required for aerosol radiation' )
-      ENDIF
-      ENDIF
+      endif
+      endif
 #endif
 
 !-----CALCULATE SHORT WAVE RADIATION
@@ -10402,7 +10402,7 @@ CONTAINS
             Tw1D(K) = t8w(I,J,K)
          enddo
 
-         DO K=kts,kte
+         do K=kts,kte
             QV1D(K)=0.
             QC1D(K)=0.
             QR1D(K)=0.
@@ -10410,26 +10410,26 @@ CONTAINS
             QS1D(K)=0.
             CLDFRA1D(k)=0.
             QNDROP1D(k)=0.
-         ENDDO
+         enddo
 
-         DO K=kts,kte
+         do K=kts,kte
 !!!            QV1D(K)=QV3D(I,K,J)
             QV1D(K)=QV3D(I,J,K)
             QV1D(K)=max(0.,QV1D(K))
-         ENDDO
+         enddo
 
-         IF (PRESENT(O33D)) THEN
-            DO K=kts,kte
+         if (PRESENT(O33D)) then
+            do K=kts,kte
 !!!               O31D(K)=O33D(I,K,J)
                O31D(K)=O33D(I,J,K)
-            ENDDO
-         ELSE
-            DO K=kts,kte
+            enddo
+         else
+            do K=kts,kte
                O31D(K)=0.0
-            ENDDO
-         ENDIF
+            enddo
+         endif
 
-         DO K=kts,kte
+         do K=kts,kte
             TTEN1D(K)=0.
 !!!            T1D(K)=t3d(I,K,J)
 !!!            P1D(K)=p3d(I,K,J)/100.
@@ -10437,103 +10437,103 @@ CONTAINS
             T1D(K)=t3d(I,J,K)
             P1D(K)=p3d(I,J,K)/100.
             DZ1D(K)=dz8w(I,J,K)
-         ENDDO
+         enddo
 
 ! moist variables
 
-         IF (ICLOUD .ne. 0) THEN
-            IF ( PRESENT( CLDFRA3D ) ) THEN
-              DO K=kts,kte
+         if (ICLOUD .ne. 0) then
+            if ( PRESENT( CLDFRA3D ) ) then
+              do K=kts,kte
 !!!                 CLDFRA1D(k)=CLDFRA3D(I,K,J)
                  CLDFRA1D(k)=CLDFRA3D(I,J,K)
-              ENDDO
-            ENDIF
+              enddo
+            endif
 
-            IF (PRESENT(F_QC) .AND. PRESENT(QC3D)) THEN
-              IF ( F_QC) THEN
-                 DO K=kts,kte
+            if (PRESENT(F_QC) .AND. PRESENT(QC3D)) then
+              if ( F_QC) then
+                 do K=kts,kte
 !!!                    QC1D(K)=QC3D(I,K,J)
                     QC1D(K)=QC3D(I,J,K)
                     QC1D(K)=max(0.,QC1D(K))
-                 ENDDO
-              ENDIF
-            ENDIF
+                 enddo
+              endif
+            endif
 
-            IF (PRESENT(F_QR) .AND. PRESENT(QR3D)) THEN
-              IF ( F_QR) THEN
-                 DO K=kts,kte
+            if (PRESENT(F_QR) .AND. PRESENT(QR3D)) then
+              if ( F_QR) then
+                 do K=kts,kte
 !!!                    QR1D(K)=QR3D(I,K,J)
                     QR1D(K)=QR3D(I,J,K)
                     QR1D(K)=max(0.,QR1D(K))
-                 ENDDO
-              ENDIF
-            ENDIF
+                 enddo
+              endif
+            endif
 
-            IF ( PRESENT(F_QNDROP).AND.PRESENT(QNDROP3D)) THEN
-             IF (F_QNDROP) THEN
-              DO K=kts,kte
+            if ( PRESENT(F_QNDROP).AND.PRESENT(QNDROP3D)) then
+             if (F_QNDROP) then
+              do K=kts,kte
 !!!               qndrop1d(K)=qndrop3d(I,K,J)
                qndrop1d(K)=qndrop3d(I,J,K)
-              ENDDO
-             ENDIF
-            ENDIF
+              enddo
+             endif
+            endif
 
 ! This logic is tortured because cannot test F_QI unless
 ! it is present, and order of evaluation of expressions
 ! is not specified in Fortran
 
-            IF ( PRESENT ( F_QI ) ) THEN
+            if ( PRESENT ( F_QI ) ) then
               predicate = F_QI
-            ELSE
+            else
               predicate = .FALSE.
-            ENDIF
+            endif
 
 ! For MP option 3
-            IF (.NOT. predicate .and. .not. warm_rain) THEN
-               DO K=kts,kte
-                  IF (T1D(K) .lt. 273.15) THEN
+            if (.NOT. predicate .and. .not. warm_rain) then
+               do K=kts,kte
+                  if (T1D(K) .lt. 273.15) then
                   QI1D(K)=QC1D(K)
                   QS1D(K)=QR1D(K)
                   QC1D(K)=0.
                   QR1D(K)=0.
-                  ENDIF
-               ENDDO
-            ENDIF
+                  endif
+               enddo
+            endif
 
-            IF (PRESENT(F_QI) .AND. PRESENT(QI3D)) THEN
-               IF (F_QI) THEN
-                  DO K=kts,kte
+            if (PRESENT(F_QI) .AND. PRESENT(QI3D)) then
+               if (F_QI) then
+                  do K=kts,kte
 !!!                     QI1D(K)=QI3D(I,K,J)
                      QI1D(K)=QI3D(I,J,K)
                      QI1D(K)=max(0.,QI1D(K))
-                  ENDDO
-               ENDIF
-            ENDIF
+                  enddo
+               endif
+            endif
 
-            IF (PRESENT(F_QS) .AND. PRESENT(QS3D)) THEN
-               IF (F_QS) THEN
-                  DO K=kts,kte
+            if (PRESENT(F_QS) .AND. PRESENT(QS3D)) then
+               if (F_QS) then
+                  do K=kts,kte
 !!!                     QS1D(K)=QS3D(I,K,J)
                      QS1D(K)=QS3D(I,J,K)
                      QS1D(K)=max(0.,QS1D(K))
-                  ENDDO
-               ENDIF
-            ENDIF
+                  enddo
+               endif
+            endif
 
-            IF (PRESENT(F_QG) .AND. PRESENT(QG3D)) THEN
-               IF (F_QG) THEN
-                  DO K=kts,kte
+            if (PRESENT(F_QG) .AND. PRESENT(QG3D)) then
+               if (F_QG) then
+                  do K=kts,kte
 !!!                     QG1D(K)=QG3D(I,K,J)
                      QG1D(K)=QG3D(I,J,K)
                      QG1D(K)=max(0.,QG1D(K))
-                  ENDDO
-               ENDIF
-            ENDIF
+                  enddo
+               endif
+            endif
 
 ! mji - For MP option 5
-            IF ( PRESENT(F_QI) .and. PRESENT(F_QC) .and. PRESENT(F_QS) .and. PRESENT(F_ICE_PHY) ) THEN
-               IF ( F_QC .and. .not. F_QI .and. F_QS ) THEN
-                  DO K=kts,kte
+            if ( PRESENT(F_QI) .and. PRESENT(F_QC) .and. PRESENT(F_QS) .and. PRESENT(F_ICE_PHY) ) then
+               if ( F_QC .and. .not. F_QI .and. F_QS ) then
+                  do K=kts,kte
 !!!                     qi1d(k) = 0.1*qs3d(i,k,j)
 !!!                     qs1d(k) = 0.9*qs3d(i,k,j)
 !!!                     qc1d(k) = qc3d(i,k,j)
@@ -10542,22 +10542,22 @@ CONTAINS
                      qc1d(k) = qc3d(i,j,k)
                      qi1d(k) = max(0.,qi1d(k))
                      qc1d(k) = max(0.,qc1d(k))
-                  ENDDO
-               ENDIF
-            ENDIF
+                  enddo
+               endif
+            endif
 
-         ENDIF
+         endif
 ! For mp option=5 or 85  (new Ferrier- Aligo or called fer_hires
 ! scheme), QI3D saves all frozen water (ice+snow)
 #if (HWRF == 1)
-           IF ( mp_physics == FER_MP_HIRES .OR. &
+           if ( mp_physics == FER_MP_HIRES .OR. &
                 mp_physics == FER_MP_HIRES_ADVECT .OR. &
-                mp_physics == ETAMP_HWRF ) THEN
+                mp_physics == ETAMP_HWRF ) then
 #else
-           IF ( mp_physics == FER_MP_HIRES .OR. &
-                mp_physics == FER_MP_HIRES_ADVECT) THEN
+           if ( mp_physics == FER_MP_HIRES .OR. &
+                mp_physics == FER_MP_HIRES_ADVECT) then
 #endif
-                  DO K=kts,kte
+                  do K=kts,kte
 !!!                     qi1d(k) = qi3d(i,k,j)
                      qi1d(k) = qi3d(i,j,k)
                      qs1d(k) = 0.0
@@ -10565,16 +10565,16 @@ CONTAINS
                      qc1d(k) = qc3d(i,j,k)
                      qi1d(k) = max(0.,qi1d(k))
                      qc1d(k) = max(0.,qc1d(k))
-                  ENDDO
-           ENDIF
+                  enddo
+           endif
 !
 !         EMISS0=EMISS(I,J)
 !         GLW0=0. 
 !         OLR0=0. 
 !         TSFC=TSK(I,J)
-         DO K=kts,kte
+         do K=kts,kte
             QV1D(K)=AMAX1(QV1D(K),1.E-12) 
-         ENDDO
+         enddo
 
 ! Set up input for shortwave
          ncol = 1
@@ -10595,10 +10595,10 @@ CONTAINS
          liqflgsw = 1
 
 !Mukul change the flags here with reference to the new effective cloud/ice/snow radius
-         IF (ICLOUD .ne. 0) THEN
-            IF ( has_reqc .ne. 0) THEN
+         if (ICLOUD .ne. 0) then
+            if ( has_reqc .ne. 0) then
                inflgsw = 3
-               DO K=kts,kte
+               do K=kts,kte
                   recloud1D(ncol,K) = MAX(2.5, re_cloud(I,J,K)*1.E6)
                   if (recloud1D(ncol,K).LE.2.5.AND.cldfra3d(i,j,k).gt.0. &
      &                            .AND. (XLAND(I,J)-1.5).GT.0.) then      !--- Ocean
@@ -10607,22 +10607,22 @@ CONTAINS
      &                            .AND. (XLAND(I,J)-1.5).LT.0.) then      !--- Land
                      recloud1D(ncol,K) = 7.5
                   endif
-               ENDDO
-            ELSE
-               DO K=kts,kte
+               enddo
+            else
+               do K=kts,kte
 !  cm1r19:  assume em_core = 1
 !!!#if (EM_CORE==1)
                   recloud1D(ncol,K) = 5.0
 !!!#else
 !!!                  recloud1D(ncol,K) = 10.0  ! was 5.0
 !!!#endif
-               ENDDO
-            ENDIF
+               enddo
+            endif
 
-            IF ( has_reqi .ne. 0) THEN
+            if ( has_reqi .ne. 0) then
                inflgsw  = 4
                iceflgsw = 4
-               DO K=kts,kte
+               do K=kts,kte
                   reice1D(ncol,K) = MAX(5., re_ice(I,J,K)*1.E6)
                   if (reice1D(ncol,K).LE.5..AND.cldfra3d(i,j,k).gt.0.) then
                      idx_rei = int(t3d(i,j,k)-179.)
@@ -10632,21 +10632,21 @@ CONTAINS
      &                                 retab(idx_rei+1)*corr
                      reice1D(ncol,K) = MAX(reice1D(ncol,K), 5.0)
                   endif
-               ENDDO
-            ELSE
-               DO K=kts,kte
+               enddo
+            else
+               do K=kts,kte
                   reice1D(ncol,K) = 10.
-               ENDDO
-            ENDIF
+               enddo
+            endif
 
-            IF ( has_reqs .ne. 0) THEN
+            if ( has_reqs .ne. 0) then
                inflgsw  = 5
                iceflgsw = 5
-               DO K=kts,kte
+               do K=kts,kte
                   resnow1D(ncol,K) = MAX(10., re_snow(I,J,K)*1.E6)
-               ENDDO
-            ELSE
-               DO K=kts,kte
+               enddo
+            else
+               do K=kts,kte
 !  cm1r19:  assume em_core = 1
 !!!#if (EM_CORE==1) 
                   resnow1D(ncol,K) = 10.0
@@ -10668,24 +10668,24 @@ CONTAINS
 !!!                 endif
 !!!                 reice1D(ncol,K) = min(tem2, 135.72)   !- 1.0315*reice <= 140 microns 
 !!!#endif
-               ENDDO
-            ENDIF
+               enddo
+            endif
 
 ! special case for P3 and ISHMAEL microphysics
 ! put ice into snow category for optics, then set ice to zero
-            IF ( has_reqs .eq. 0 .and. has_reqi .ne. 0 .and. has_reqc .ne. 0) THEN
+            if ( has_reqs .eq. 0 .and. has_reqi .ne. 0 .and. has_reqc .ne. 0) then
                inflgsw  = 5
                iceflgsw = 5
-               DO K=kts,kte
+               do K=kts,kte
                   resnow1D(ncol,K) = MAX(10., re_ice(i,j,k)*1.E6)
                   QS1D(K)=QI3D(i,j,k)
                   QI1D(K)=0.
                   reice1D(ncol,K)=10.
-               END DO
+               end do
 
-            END IF
+            end if
 
-         ENDIF
+         endif
 
 ! Set cosine of solar zenith angle
          coszen(ncol) = coszrs
@@ -10755,7 +10755,7 @@ CONTAINS
         if(present(o33d)) then
          do k = kts, kte+1
             o3vmr(ncol,k) = o3mmr(k) * amdo
-            IF ( PRESENT( O33D ) ) THEN
+            if ( PRESENT( O33D ) ) then
             if(o3input .eq. 2)then
                if(k.le.kte)then
                  o3vmr(ncol,k) = o31d(k)
@@ -10765,7 +10765,7 @@ CONTAINS
                  if(o3vmr(ncol,k) .le. 0.)o3vmr(ncol,k) = o3mmr(k)*amdo
                endif
             endif
-            ENDIF
+            endif
 !!!           ! RCEMIP:
 !!!           o3vmr(ncol,k) = ( 1.0d-6 * 3.6478d0 * ( dble(play(ncol,k))**0.83209d0 ) * exp( -dble(play(ncol,k))/11.3515d0 ) )
          enddo
@@ -10787,17 +10787,17 @@ CONTAINS
 ! -------    End of Comments    ------ !
 
 ! ------- 2. New Addiation  ------ !
-    IF ( sf_surface_physics .eq. 8 .AND. XLAND(i,j) .LT. 1.5) THEN
+    if ( sf_surface_physics .eq. 8 .AND. XLAND(i,j) .LT. 1.5) then
          asdir(ncol) = ALSWVISDIR(I,J)
          asdif(ncol) = ALSWVISDIF(I,J)
          aldir(ncol) = ALSWNIRDIR(I,J)
          aldif(ncol) = ALSWNIRDIF(I,J)
-    ELSE
+    else
          asdir(ncol) = albedo(i,j)
          asdif(ncol) = albedo(i,j)
          aldir(ncol) = albedo(i,j)
          aldif(ncol) = albedo(i,j)
-    ENDIF
+    endif
 
 ! ---------- End of Addiation ------!
 ! ----------  End of fds_Zhenxin 2011-06-20   --------------!
@@ -10854,8 +10854,8 @@ CONTAINS
             do k = kts, kte
                gicewp = (qi1d(k)+qs1d(k)) * pdel(ncol,k)*100.0 / gravmks * 1000.0     ! Grid box ice water path.
                gliqwp = qc1d(k) * pdel(ncol,k)*100.0 / gravmks * 1000.0     ! Grid box liquid water path.
-               cicewp(ncol,k) = gicewp / max(0.01,cldfrac(ncol,k))               ! In-cloud ice water path.
-               cliqwp(ncol,k) = gliqwp / max(0.01,cldfrac(ncol,k))               ! In-cloud liquid water path.
+               cicewp(ncol,k) = gicewp / max(0.01,cldfrac(ncol,k))               ! in-cloud ice water path.
+               cliqwp(ncol,k) = gliqwp / max(0.01,cldfrac(ncol,k))               ! in-cloud liquid water path.
             end do
 
 ! Mukul
@@ -10865,7 +10865,7 @@ CONTAINS
            if(iceflgsw.ge.4)then 
               do k = kts, kte
                      gicewp = qi1d(k) * pdel(ncol,k)*100.0 / gravmks * 1000.0     ! Grid box ice water path.
-                     cicewp(ncol,k) = gicewp / max(0.01,cldfrac(ncol,k))               ! In-cloud ice water path.
+                     cicewp(ncol,k) = gicewp / max(0.01,cldfrac(ncol,k))               ! in-cloud ice water path.
               end do
            end if
 
@@ -11091,7 +11091,7 @@ CONTAINS
       end if
 
 #if ( WRF_CHEM == 1 )
-   IF ( AER_RA_FEEDBACK == 1) then
+   if ( AER_RA_FEEDBACK == 1) then
       do nb = 1, nbndsw
          wavemid(nb)=0.5*(wavemin(nb)+wavemax(nb))  ! um
       do k = kts,kte      !wig
@@ -11180,7 +11180,7 @@ CONTAINS
             enddo
          enddo
 
-      IF ( PRESENT( aerod ) ) THEN
+      if ( PRESENT( aerod ) ) then
       if ( aer_opt .eq. 0 ) then
          do na = 1, naerec
             do k = kts, kte+1
@@ -11198,7 +11198,7 @@ CONTAINS
             ecaer(ncol,kte+1,na) = 0.
          enddo
       endif
-      ENDIF
+      endif
 
 ! Call RRTMG shortwave radiation model
 
@@ -11332,75 +11332,75 @@ CONTAINS
 
 !-------------------------------------------------------------------
 
-   END SUBROUTINE RRTMG_SWRAD
+   end subroutine RRTMG_SWRAD
 
  
 !====================================================================
-   SUBROUTINE rrtmg_swinit(                                         &
+   subroutine rrtmg_swinit(                                         &
                        allowed_to_read , myid,                      &
                        ids, ide, jds, jde, kds, kde,                &
                        ims, ime, jms, jme, kms, kme,                &
                        its, ite, jts, jte, kts, kte                 )
 !--------------------------------------------------------------------
-   IMPLICIT NONE
+   implicit none
 !--------------------------------------------------------------------
 
-   LOGICAL , INTENT(IN)           :: allowed_to_read
-   INTEGER , INTENT(IN)           :: ids, ide, jds, jde, kds, kde,  &
+   logical , intent(in)           :: allowed_to_read
+   integer , intent(in)           :: ids, ide, jds, jde, kds, kde,  &
                                      ims, ime, jms, jme, kms, kme,  &
                                      its, ite, jts, jte, kts, kte
    integer, intent(in) :: myid
 
 ! Read in absorption coefficients and other data
-   IF ( allowed_to_read ) THEN
+   if ( allowed_to_read ) then
      if(myid.eq.0) print *,'  calling rrtmg_swlookuptable '
-     CALL rrtmg_swlookuptable
-   ENDIF
+     call rrtmg_swlookuptable
+   endif
 
 ! Perform g-point reduction and other initializations
 ! Specific heat of dry air (cp) used in flux to heating rate conversion factor.
    if(myid.eq.0) print *,'  calling rrtmg_sw_ini, cp,grv = ',cp,grv
    call rrtmg_sw_ini(cp,grv)
 
-   END SUBROUTINE rrtmg_swinit
+   end subroutine rrtmg_swinit
 
 
 ! **************************************************************************     
-      SUBROUTINE rrtmg_swlookuptable
+      subroutine rrtmg_swlookuptable
 ! **************************************************************************     
 
-IMPLICIT NONE
+implicit none
 
 ! Local                                    
-      INTEGER :: i
-      LOGICAL                 :: opened
-      LOGICAL , EXTERNAL      :: wrf_dm_on_monitor
+      integer :: i
+      logical                 :: opened
+      logical , external      :: wrf_dm_on_monitor
 
-      CHARACTER*80 errmess
-      INTEGER rrtmg_unit
+      character*80 errmess
+      integer rrtmg_unit
       integer, parameter :: iwordsize = 4
 
-      IF ( wrf_dm_on_monitor() ) THEN
-        DO i = 10,99
+      if ( wrf_dm_on_monitor() ) then
+        do i = 10,99
           INQUIRE ( i , OPENED = opened )
-          IF ( .NOT. opened ) THEN
+          if ( .NOT. opened ) then
             rrtmg_unit = i
             GOTO 2010
-          ENDIF
-        ENDDO
+          endif
+        enddo
         rrtmg_unit = -1
- 2010   CONTINUE
-      ENDIF
-      CALL wrf_dm_bcast_bytes ( rrtmg_unit , IWORDSIZE )
-      IF ( rrtmg_unit < 0 ) THEN
-        CALL wrf_error_fatal ( 'module_ra_rrtmg_sw: rrtm_swlookuptable: Can not '// &
+ 2010   continue
+      endif
+      call wrf_dm_bcast_bytes ( rrtmg_unit , IWORDSIZE )
+      if ( rrtmg_unit < 0 ) then
+        call wrf_error_fatal ( 'module_ra_rrtmg_sw: rrtm_swlookuptable: Can not '// &
                                'find unused fortran unit to read in lookup table.' )
-      ENDIF
+      endif
 
-      IF ( wrf_dm_on_monitor() ) THEN
-        OPEN(rrtmg_unit,FILE='RRTMG_SW_DATA',                  &
+      if ( wrf_dm_on_monitor() ) then
+        open(rrtmg_unit,FILE='RRTMG_SW_DATA',                  &
              FORM='UNFORMATTED',STATUS='OLD',ERR=9009,CONVERT="BIG_ENDIAN")
-      ENDIF
+      endif
 
       call sw_kgb16(rrtmg_unit)
       call sw_kgb17(rrtmg_unit)
@@ -11417,14 +11417,14 @@ IMPLICIT NONE
       call sw_kgb28(rrtmg_unit)
       call sw_kgb29(rrtmg_unit)
 
-     IF ( wrf_dm_on_monitor() ) CLOSE (rrtmg_unit)
+     if ( wrf_dm_on_monitor() ) close (rrtmg_unit)
 
-     RETURN
-9009 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error opening RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9009 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error opening RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
-     END SUBROUTINE rrtmg_swlookuptable
+     end subroutine rrtmg_swlookuptable
 
 ! **************************************************************************
 !  RRTMG Shortwave Radiative Transfer Model
@@ -11508,7 +11508,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, strrat1, layreffr, kao, kbo, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_REAL(strrat1)
@@ -11519,10 +11519,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb16
 
@@ -11591,7 +11591,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, strrat, layreffr, kao, kbo, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_REAL(strrat)
@@ -11602,10 +11602,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb17
 
@@ -11674,7 +11674,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, strrat, layreffr, kao, kbo, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_REAL(strrat)
@@ -11685,10 +11685,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb18 
 
@@ -11757,7 +11757,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, strrat, layreffr, kao, kbo, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_REAL(strrat)
@@ -11768,10 +11768,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb19
 
@@ -11842,7 +11842,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, layreffr, absch4o, kao, kbo, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_INTEGER(layreffr)
@@ -11853,10 +11853,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb20
 
@@ -11925,7 +11925,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, strrat, layreffr, kao, kbo, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_REAL(strrat)
@@ -11936,10 +11936,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb21
 
@@ -12008,7 +12008,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, strrat, layreffr, kao, kbo, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_REAL(strrat)
@@ -12019,10 +12019,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb22
 
@@ -12081,7 +12081,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          raylo, givfac, layreffr, kao, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_MACRO(raylo)
 !      DM_BCAST_REAL(givfac)
@@ -12091,10 +12091,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb23
 
@@ -12167,7 +12167,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          raylao, raylbo, strrat, layreffr, abso3ao, abso3bo, kao, kbo, selfrefo, &
          forrefo, sfluxrefo
 !      DM_BCAST_MACRO(raylao)
@@ -12182,10 +12182,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb24
 
@@ -12232,7 +12232,7 @@ IMPLICIT NONE
 !#define DM_BCAST_MACRO(A) CALL wrf_dm_bcast_bytes ( A , size ( A ) * RWORDSIZE )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          raylo, layreffr, abso3ao, abso3bo, kao, sfluxrefo
 !      DM_BCAST_MACRO(raylo)
 !      DM_BCAST_INTEGER(layreffr)
@@ -12241,10 +12241,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(kao)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb25
 
@@ -12270,15 +12270,15 @@ IMPLICIT NONE
 
 !#define DM_BCAST_MACRO(A) CALL wrf_dm_bcast_bytes ( A , size ( A ) * RWORDSIZE )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          raylo, sfluxrefo
 !      DM_BCAST_MACRO(raylo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb26
 
@@ -12340,7 +12340,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          raylo, scalekur, layreffr, kao, kbo, sfluxrefo
 !      DM_BCAST_MACRO(raylo)
 !      DM_BCAST_REAL(scalekur)
@@ -12349,10 +12349,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(kbo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb27
 
@@ -12409,7 +12409,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, strrat, layreffr, kao, kbo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_REAL(strrat)
@@ -12418,10 +12418,10 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(kbo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb28
 
@@ -12494,7 +12494,7 @@ IMPLICIT NONE
 !#define DM_BCAST_REAL(A) CALL wrf_dm_bcast_real ( A , 1 )
 !#define DM_BCAST_INTEGER(A) CALL wrf_dm_bcast_integer ( A , 1 )
 
-      IF ( wrf_dm_on_monitor() ) READ (rrtmg_unit,ERR=9010) &
+      if ( wrf_dm_on_monitor() ) read (rrtmg_unit,ERR=9010) &
          rayl, layreffr, absh2oo, absco2o, kao, kbo, selfrefo, forrefo, sfluxrefo
 !      DM_BCAST_REAL(rayl)
 !      DM_BCAST_INTEGER(layreffr)
@@ -12506,14 +12506,14 @@ IMPLICIT NONE
 !      DM_BCAST_MACRO(forrefo)
 !      DM_BCAST_MACRO(sfluxrefo)
 
-     RETURN
-9010 CONTINUE
-     WRITE( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
-     CALL wrf_error_fatal(errmess)
+     return
+9010 continue
+     write( errmess , '(A,I4)' ) 'module_ra_rrtmg_sw: error reading RRTMG_SW_DATA on unit ',rrtmg_unit
+     call wrf_error_fatal(errmess)
 
       end subroutine sw_kgb29
 
 !------------------------------------------------------------------
 
-END MODULE module_ra_rrtmg_sw
+end module module_ra_rrtmg_sw
 !***********************************************************************

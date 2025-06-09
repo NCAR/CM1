@@ -1,4 +1,4 @@
-  MODULE goddard_module
+  module goddard_module
 
   implicit none
 
@@ -25,7 +25,7 @@
       real, dimension(0:151) :: pwr81
       real, dimension(0:50001) :: pwr2
 
-  CONTAINS
+  contains
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -68,7 +68,7 @@
     nmax=0
     iflag=0
 
-    IF(eqtset.eq.2)THEN
+    if(eqtset.eq.2)then
 
       if(nrk.eq.4)then
 !!!        converge=0.0005
@@ -103,8 +103,8 @@
         endif
         qvs=qsw+qsi
 
-        IF(qc3d(i,j,k).gt.1.0e-12 .or. qi3d(i,j,k).gt.1.0e-12     &
-           .or. qv3d(i,j,k).gt.qvs)THEN
+        if(qc3d(i,j,k).gt.1.0e-12 .or. qi3d(i,j,k).gt.1.0e-12     &
+           .or. qv3d(i,j,k).gt.qvs)then
 
           qvnew=qv3d(i,j,k)
           qcnew=qc3d(i,j,k)
@@ -195,13 +195,13 @@
           
           nmax=max(n,nmax)
 
-        ENDIF
+        endif
 
       enddo
       enddo
       enddo
 
-    ELSE
+    else
 
       nmax=1
 
@@ -269,9 +269,9 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
-    IF(nrk.ge.nrkmax)THEN
+    if(nrk.ge.nrkmax)then
       tem6=dx*dy*dz
       do k=1,nk
         tcond=tcond+bud1(k)*tem6
@@ -280,7 +280,7 @@
       do k=1,nk
         tevac=tevac+bud2(k)*tem6
       enddo
-    ENDIF
+    endif
 
 !!!#ifdef MPI
 !!!      omax=0
@@ -306,7 +306,7 @@
 
       if(timestats.ge.1) time_satadj=time_satadj+mytime()
 
-      END subroutine satadj_ice
+      end subroutine satadj_ice
 
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -426,12 +426,12 @@
 !$omp vgcr,vgcf,r3456,a2,ee1,ee2,a1,r7r,r8r,del,r11rt,nci,tem1,tem2,tem3,   &
 !$omp tem4,rrho,rp0,rpi,ene1,ene2,lhv,lhs,lhf,temp,f1,f2,dum1,cpml,cvml,    &
 !$omp rm,dum)
-      DO k=1,nk
+      do k=1,nk
       bud1(k)=0.0d0
       bud2(k)=0.0d0
       bud3(k)=0.0d0
-      DO j=1,nj
-      DO i=1,ni
+      do j=1,nj
+      do i=1,ni
           rho0=1.0e-3*rhod(i,j,1)
 
           vtr(i,j,k)=0.0
@@ -453,11 +453,11 @@
           QS=QS3D(I,J,K)
           QG=QG3D(I,J,K)
           QV=max(QV,cmin1)
-          IF(QC.LT.cmin)  QC=0.0                                  
-          IF(QR.LT.cmin)  QR=0.0                                  
-          IF(QI.LT.cmin)  QI=0.0                                  
-          IF(QS.LT.cmin)  QS=0.0                                  
-          IF(QG.LT.cmin)  QG=0.0                                  
+          if(QC.LT.cmin)  QC=0.0                                  
+          if(QR.LT.cmin)  QR=0.0                                  
+          if(QI.LT.cmin)  QI=0.0                                  
+          if(QS.LT.cmin)  QS=0.0                                  
+          if(QG.LT.cmin)  QG=0.0                                  
           TAIR=(th0(i,j,k)+PT)*PPI                                     
           TAIRC=TAIR-T0K                                          
 !----------------------------------------------------
@@ -493,7 +493,7 @@
           VR=0.0                                                     
           VS=0.0                                                     
           VG=0.0                                                     
-          IF(QR.GT.cmin)THEN                                         
+          if(QR.GT.cmin)then                                         
             DD=RHO*QR                                          
             Y1=sqrt(sqrt(DD))
             ZR=ZRC/Y1                                             
@@ -502,14 +502,14 @@
             f1=pwr2(index)
             f2=pwr2(index+1)
             VR=VRC*tem2*(f1+(f2-f1)*(temp-index))
-          ENDIF                                                         
-          IF(QS.GT.cmin)THEN                                         
+          endif                                                         
+          if(QS.GT.cmin)then                                         
             DD=RHO*QS                                          
             Y1=sqrt(sqrt(DD))
             ZS=ZSC/Y1                                             
 !!!            VS=VSC*tem2*sqrt(sqrt(y1))
             VS=VSC*tem2*DD**BSQ
-          ENDIF                                                         
+          endif                                                         
           if (qg .gt. cmin) then                                     
             dd=rho*qg                                         
             y1=sqrt(sqrt(dd))
@@ -554,34 +554,34 @@
           r3456=tem2
 !!!          DD=1.0/(sqrt(sqrt(ZS))*ZS**3)
           DD=1.0/ZS**BS3
-          IF( (QI.GT.CMIN) .or. (QC.GT.CMIN) )THEN
+          if( (QI.GT.CMIN) .or. (QC.GT.CMIN) )then
             temp=exp(alog(ZR)*(-BW3))
-          ENDIF
-          IF(QI.GT.CMIN) THEN                                        
-           IF(TAIR.LT.T0K)THEN                                       
+          endif
+          if(QI.GT.CMIN) then                                        
+           if(TAIR.LT.T0K)then                                       
              ESI=EXP(.025*TAIRC)                                  
              PSAUT=MAX(RN1*ESI*(QI-BND1),0.0)                
              PSACI=RN3*R3456*.1*QI*DD                          
              PRACI=RN5*R3456*QI*temp
              PIACR=RN6*R3456*QI*exp(alog(ZR)*(-BW6))
-           ENDIF                                                        
-          ENDIF                                                         
-          IF(QC.GT.CMIN) THEN                                        
-            IF(TAIR.LT.T0K)THEN                                      
+           endif                                                        
+          endif                                                         
+          if(QC.GT.CMIN) then                                        
+            if(TAIR.LT.T0K)then                                      
               PSACW=RN4*R3456*QC*DD                            
-            ELSE                                                        
+            else                                                        
               QSACW=RN4*R3456*QC*DD                            
-            ENDIF                                                       
+            endif                                                       
 !* 21 * PRAUT : AUTOCONVERSION OF QC TO QR                        **21**
 !* 22 * PRACW : ACCRETION OF QC BY QR                             **22**
            PRACW=RN22*tem2*QC*temp
-           IF(iautoc.eq.1)THEN
+           if(iautoc.eq.1)then
              Y1=QC-BND3                                             
-             IF(Y1.GT.cmin)THEN                                        
+             if(Y1.GT.cmin)then                                        
                PRAUT=RHO*Y1*Y1/(1.2E-4+RN21/Y1)            
-             ENDIF                                                        
-           ENDIF
-          ENDIF                                                         
+             endif                                                        
+           endif
+          endif                                                         
 !* 12 * PSFW : BERGERON PROCESSES FOR QS (KOENING, 1971)          **12**
 !* 13 * PSFI : BERGERON PROCESSES FOR QI                          **13**
 !* 32 * PIDEP : DEPOSITION OF QI                                  **32**
@@ -589,7 +589,7 @@
           PSFI=0.0                                                   
           PIDEP=0.0                                                  
           PISUB=0.0                                                  
-          IF(TAIR.LT.T0K.AND.QI.GT.cmin)THEN                      
+          if(TAIR.LT.T0K.AND.QI.GT.cmin)then                      
             Y1=MAX(MIN(TAIRC,-1.),-31.)                       
             IT=INT(ABS(Y1))                                       
             Y1=RN12A(IT)                                          
@@ -608,24 +608,24 @@
             Y1=206.18*SSI/DD                                   
             DEP=DM/(1.+RSUB1)*rdt
             PIDEP=Y1*SQRT(NCI*QI*rrho)                       
-            IF(DM.GT.cmin) THEN                                      
+            if(DM.GT.cmin) then                                      
                a2=1.                                                    
                if(pidep.gt.dep .and. pidep .gt. cmin) then     
                   a2=dep/pidep                                    
                   pidep=dep                                       
                endif                                                    
                PSFI=a2*QI*Y1*tem5
-            ELSEIF(DM.LT.-cmin) THEN                                 
+            elseif(DM.LT.-cmin) then                                 
                PISUB=MAX(-QI*rdt,PIDEP)                      
                PISUB=MIN(-PISUB,-DM*rdt)                     
                PIDEP=0.                                              
                PSFI=0.                                               
-            ELSE                                                        
+            else                                                        
                PISUB=0.                                              
                PIDEP=0.                                              
                PSFI=0.                                               
-            ENDIF                                                       
-          ENDIF                                                         
+            endif                                                       
+          endif                                                         
 !TTT***** QG=QG+MIN(PGDRY,PGWET)                                        
 !*  9 * PGACS : ACCRETION OF QS BY QG (DGACS,WGACS: DRY AND WET)  ***9**
 !* 14 * DGACW : ACCRETION OF QC BY QG (QGACW FOR PGMLT)           **14**
@@ -640,16 +640,16 @@
           DGACI=0.0                                                  
           WGACI=0.0                                                  
           PGWET=0.0                                                  
-        IF(QG.GT.CMIN)THEN                                           
+        if(QG.GT.CMIN)then                                           
                                                                         
-          IF(QC+QR.LT.1.e-4) THEN
+          if(QC+QR.LT.1.e-4) then
              EE1=.01
-          ELSE
+          else
              EE1=1.
-          ENDIF
+          endif
           EE2=0.09                                                      
           EGS=EE1*EXP(EE2*TAIRC)                                  
-          IF(TAIR.GE.T0K)EGS=1.0                                  
+          if(TAIR.GE.T0K)EGS=1.0                                  
           Y1=ABS(VG-VS)                                        
           Y2=ZS*ZG                                             
           Y3=5./Y2                                                
@@ -659,13 +659,13 @@
           PGACS=RN9*rrho*EGS*DD                              
           DGACS=PGACS                                             
           WGACS=RN9*rrho*DD                                     
-          IF(IHAIL.EQ.1) THEN                                           
+          if(IHAIL.EQ.1) then                                           
              Y1=1.0/(sqrt(ZG)*ZG**3)
              DGACW=MAX(RN14*QC*Y1*tem3,0.0)          
-          ELSE                                                          
+          else                                                          
              Y1=exp(alog(ZG)*(-BG3))
              DGACW=MAX(RN14*QC*Y1*R3456,0.0)                 
-          ENDIF                                                         
+          endif                                                         
           QGACW=DGACW                                             
           Y1=ABS(VG-VR)                                        
           Y2=ZR*ZG                                             
@@ -676,42 +676,42 @@
                 *rrho                                                  
           DGACR=MAX(DD,0.0)                                     
           QGACR=DGACR                                             
-          IF(TAIR.GE.T0K)THEN                                        
+          if(TAIR.GE.T0K)then                                        
             DGACS=0.0                                                
             WGACS=0.0                                                
             DGACW=0.0                                                
             DGACR=0.0                                                
-          ELSE                                                          
+          else                                                          
             PGACS=0.0                                                
             QGACW=0.0                                                
             QGACR=0.0                                                
-          ENDIF                                                         
+          endif                                                         
 !*******PGDRY : DGACW+DGACI+DGACR+DGACS                           ******
 !* 15 * DGACI : ACCRETION OF QI BY QG (WGACI FOR WET GROWTH)      **15**
 !* 17 * PGWET : WET GROWTH OF QG                                  **17**
-          IF(TAIR.LT.T0K.AND.TAIR.GT.T0K-40.)THEN                 
-            IF(IHAIL.EQ.1) THEN                                         
+          if(TAIR.LT.T0K.AND.TAIR.GT.T0K-40.)then                 
+            if(IHAIL.EQ.1) then                                         
                Y1=QI/(sqrt(ZG)*ZG**3)
                DGACI=Y1*RN15*tem3
                WGACI=Y1*RN15A*tem3
-            ELSE                                                        
+            else                                                        
                Y1=QI/ZG**BG3                                      
                DGACI=Y1*RN15*R3456                                
                WGACI=Y1*RN15A*R3456                               
-            ENDIF                                                       
+            endif                                                       
             Y1=1./(ALF+RN17C*TAIRC)                               
-            IF(IHAIL.EQ.1) THEN                                         
+            if(IHAIL.EQ.1) then                                         
                Y3=.78/ZG**2+SCV*RN17A*tem1*exp(alog(ZG)*(-BGH5))
-            ELSE                                                        
+            else                                                        
                Y3=.78/ZG**2+SCV*RN17A*tem4*exp(alog(ZG)*(-BGH5))
-            ENDIF                                                       
+            endif                                                       
             Y4=RHO*ALV*DWV*(C380*rp0-QV)-TCA*   &
                   TAIRC                                              
             DD=Y1*(Y4*Y3*RN17*rrho+(WGACI+WGACS)*(   &
                   ALF+RN17B*TAIRC))                                  
             PGWET=MAX(DD,0.0)                                   
-          ENDIF                                                         
-        ENDIF                                                           
+          endif                                                         
+        endif                                                           
 !********   HANDLING THE NEGATIVE CLOUD WATER (QC)    ******************
 !********   HANDLING THE NEGATIVE CLOUD ICE (QI)      ******************
 !********   DIFFERENT FROM LIN ET AL                  ******************
@@ -728,7 +728,7 @@
                 QGACW)*D2T                                           
           QC=QC-Y1                                             
                                                                         
-          IF(QC.LT.0.0) THEN                                         
+          if(QC.LT.0.0) then                                         
              a1=1.                                                      
               if (y1 .ne. 0.0) A1=QC/Y1+1.                     
             PSACW=PSACW*A1                                        
@@ -739,7 +739,7 @@
             QSACW=QSACW*A1                                        
             QGACW=QGACW*A1                                        
             QC=0.0                                                   
-          ENDIF                                                         
+          endif                                                         
 
           dum=ruh(i)*rvh(j)*rmh(i,j,k)
 
@@ -756,15 +756,15 @@
 !     FOR RAIN AND WGACI AND DGACI ARE NEEDED FOR ICE.                  
           WGACR=PGWET-DGACW-WGACI-WGACS                  
           Y2=DGACW+DGACI+DGACR+DGACS                     
-          IF(PGWET.GE.Y2)THEN                                     
+          if(PGWET.GE.Y2)then                                     
             WGACR=0.0                                                
             WGACI=0.0                                                
             WGACS=0.0                                                
-          ELSE                                                          
+          else                                                          
             DGACR=0.0                                                
             DGACI=0.0                                                
             DGACS=0.0                                                
-          ENDIF                                                         
+          endif                                                         
                                                                         
             y1=qi*rdt
            psaut=MIN(y1, psaut)                              
@@ -793,13 +793,13 @@
 !                                                                       
           DLT3=0.0                                                   
           DLT2=0.0                                                   
-          IF(TAIR.LT.T0K)THEN                                        
-            IF(QR.LT.1.E-4)THEN                                      
+          if(TAIR.LT.T0K)then                                        
+            if(QR.LT.1.E-4)then                                      
               DLT3=1.0                                               
               DLT2=1.0                                               
-            ENDIF                                                       
-            IF(QS.GE.1.E-4)DLT2=0.0                               
-          ENDIF                                                         
+            endif                                                       
+            if(QS.GE.1.E-4)DLT2=0.0                               
+          endif                                                         
           PR=(QSACW+PRAUT+PRACW+QGACW)*D2T               
           PS=(PSAUT+PSACI+PSACW+PSFW+PSFI+DLT3*    &
                 PRACI)*D2T                                           
@@ -811,7 +811,7 @@
             QSACR=0.0                                                
             PGFR=0.0                                                 
             PGAUT=0.0                                                
-        IF(QR.GT.CMIN)THEN                                           
+        if(QR.GT.CMIN)then                                           
           Y1=ABS(VR-VS)                                        
           Y2=ZR*ZS                                             
           Y3=5./Y2                                                
@@ -822,21 +822,21 @@
           R8R=RN8*rrho                                                
           PSACR=R8R*Y1*(Y3/ZR**5+Y4/ZR**3+Y5/ZR)
           QSACR=PSACR                                             
-          IF(TAIR.GE.T0K)THEN                                        
+          if(TAIR.GE.T0K)then                                        
             PRACS=0.0                                                
             PSACR=0.0                                                
-          ELSE                                                          
+          else                                                          
             QSACR=0.0                                                
-          ENDIF                                                         
+          endif                                                         
 !*  2 * PGAUT : AUTOCONVERSION OF QS TO QG                        ***2**
 !* 18 * PGFR  : FREEZING OF QR TO QG                              **18**
-          IF(TAIR.LT.T0K)THEN                                        
+          if(TAIR.LT.T0K)then                                        
 !           Y1=EXP(.09*TAIRC)                                     
 !           if (ihail .eq. 1) PGAUT=MAX(RN2*Y1*(QS-BND2),0.0)
             Y2=EXP(RN18A*(T0K-TAIR))                              
             PGFR=MAX((Y2-1.)*RN18*rrho/ZR**7,0.0)       
-          ENDIF                                                         
-        ENDIF                                                           
+          endif                                                         
+        endif                                                           
 !********   HANDLING THE NEGATIVE RAIN WATER (QR)    *******************
 !********   HANDLING THE NEGATIVE SNOW (QS)          *******************
 !********   DIFFERENT FROM LIN ET AL                 *******************
@@ -850,7 +850,7 @@
          pgfr= MIN(y1, pgfr)                                 
 
          del=0.                                                         
-         IF(WGACR.LT.0.) del=1.                                      
+         if(WGACR.LT.0.) del=1.                                      
           Y1=(PIACR+DGACR+(1.-del)*WGACR+PSACR+          &
                   PGFR)*D2T                                          
           qr=qr+pr-y1-del*WGACR*D2T                      
@@ -901,7 +901,7 @@
           PGMLT=0.0                                                  
           TAIR=(th0(i,j,k)+PT)*PPI                                     
           r3456=tem2
-          IF(TAIR.GE.T0K .AND. (QS+QG).GT.CMIN) THEN           
+          if(TAIR.GE.T0K .AND. (QS+QG).GT.CMIN) then           
             TAIRC=TAIR-T0K                                        
             Y1=TCA*TAIRC-RHO*ALV*DWV    &
                        *(C380*rp0-QV)
@@ -910,11 +910,11 @@
             R11RT=RN11*D2T*rrho                                       
             DD=R11RT*Y1*Y2+R11AT*TAIRC*(QSACW+QSACR)  
             PSMLT=MAX(0.0,MIN(DD,QS))                      
-            IF(IHAIL.EQ.1) THEN                                         
+            if(IHAIL.EQ.1) then                                         
                Y3=.78/ZG**2+SCV*RN19A*tem1*exp(alog(ZG)*(-BGH5))
-            ELSE                                                        
+            else                                                        
                Y3=.78/ZG**2+SCV*RN19A*tem4*exp(alog(ZG)*(-BGH5))
-            ENDIF                                                       
+            endif                                                       
             DD1=Y1*Y3*RN19*D2T*rrho+R19BT*TAIRC*(QGACW   &
                    +QGACR)                                            
             PGMLT=MAX(0.0,MIN(DD1,QG))                     
@@ -922,25 +922,25 @@
             QR=QR+PSMLT+PGMLT                               
             QS=QS-PSMLT                                        
             QG=QG-PGMLT                                        
-          ENDIF                                                         
+          endif                                                         
 !* 24 * PIHOM : HOMOGENEOUS FREEZING OF QC TO QI (T < T00K)    **24**   
 !* 25 * PIDW : DEPOSITION GROWTH OF QC TO QI ( T0K < T <= T00K)**25**   
 !* 26 * PIMLT : MELTING OF QI TO QC (T >= T0K)                 **26**   
-          IF(QC.LE.cmin)QC=0.0                                    
-          IF(QI.LE.cmin)QI=0.0                                    
+          if(QC.LE.cmin)QC=0.0                                    
+          if(QI.LE.cmin)QI=0.0                                    
           PIHOM=0.                                                   
           PIMLT=0.                                                   
           TAIR=(th0(i,j,k)+PT)*PPI                                     
-          IF((TAIR-T00K).LE.0.) PIHOM=QC                       
-          IF((TAIR-T0K) .GE.0.) PIMLT=QI                       
+          if((TAIR-T00K).LE.0.) PIHOM=QC                       
+          if((TAIR-T0K) .GE.0.) PIMLT=QI                       
           PIDW=0.0                                                   
-          IF(TAIR.LT.T0K.AND.TAIR.GT.T00K.AND.QC.GT.CMIN)THEN  
+          if(TAIR.LT.T0K.AND.TAIR.GT.T00K.AND.QC.GT.CMIN)then  
             TAIRC=TAIR-T0K                                        
             Y1=MAX(MIN(TAIRC,-1.),-31.)                       
             Y2=RN25A(INT(ABS(Y1)))                                
             Y3=MIN(RN25*EXP(BETA*TAIRC),1.)                     
             PIDW=MIN(Y2*Y3*D2T*rrho,QC)                 
-          ENDIF                                                         
+          endif                                                         
           Y1=PIHOM-PIMLT+PIDW                               
           PT=PT+lhf*ene1*Y1    &
                      +(lhs*ene1-ene2)*(PIDEP-PISUB)*D2T
@@ -952,7 +952,7 @@
           PINT=0.0                                                   
           TAIR=(th0(i,j,k)+PT)*PPI                                     
            if (qi .le. cmin) qi=0.0                               
-          IF(TAIR.LT.T0K)THEN                                        
+          if(TAIR.LT.T0K)then                                        
             TAIRC=TAIR-T0K                                        
             RTAIR=1./(TAIR-C76)                                   
             Y2=EXP(C218-C580*RTAIR)                               
@@ -975,7 +975,7 @@
             PT=PT+(lhs*ene1-ene2)*PINT
             QV=QV-PINT                                         
             QI=QI+PINT                                         
-          ENDIF                                                         
+          endif                                                         
 !--------------------------------------
 !  cut saturation .... do later
 !--------------------------------------
@@ -986,9 +986,9 @@
           PGSUB=0.0                                                  
           r3456=tem2
           TAIR=(th0(i,j,k)+PT)*PPI                                     
-          IF((QS+QG).GT.CMIN)THEN              
-            IF(QS.LT.cmin) QS=0.0                                 
-            IF(QG.LT.cmin) QG=0.0                                 
+          if((QS+QG).GT.CMIN)then              
+            if(QS.LT.cmin) QS=0.0                                 
+            if(QG.LT.cmin) QG=0.0                                 
             RTAIR=1./(TAIR-C76)                                   
             QSI=C380*rp0*EXP(C218-C580*RTAIR)                 
             SSI=QV/QSI-1.                                
@@ -999,11 +999,11 @@
             PSSUB=PSDEP                                           
             PSDEP=MAX(PSDEP,0.)                                 
             PSSUB=MAX(-QS,MIN(PSSUB,0.))                   
-            IF(IHAIL.EQ.1) THEN                                         
+            if(IHAIL.EQ.1) then                                         
                Y2=.78/ZG**2+SCV*RN20B*tem1*exp(alog(ZG)*(-BGH5))
-            ELSE                                                        
+            else                                                        
                Y2=.78/ZG**2+SCV*RN20B*tem4*exp(alog(ZG)*(-BGH5))
-            ENDIF                                                       
+            endif                                                       
             PGSUB=R20T*SSI*Y2/Y1                            
             DM=QV-QSI                                      
             RSUB1=C580*ASC*QSI*RTAIR*RTAIR                  
@@ -1016,11 +1016,11 @@
             DD=MAX((-Y2-QS),0.)                              
             PGSUB=MIN(DD,QG,MAX(PGSUB,0.))              
 !      DLT1=CVMGP(1.,0.,QC+QI-1.E-5)                           
-            IF((QC+QI-1.E-5).GE.0.)THEN                           
+            if((QC+QI-1.E-5).GE.0.)then                           
               DLT1=1.                                                
-            ELSE                                                        
+            else                                                        
               DLT1=0.                                                
-            ENDIF                                                       
+            endif                                                       
             PSDEP=DLT1*PSDEP                                   
             PSSUB=(1.-DLT1)*PSSUB                              
             PGSUB=(1.-DLT1)*PGSUB                              
@@ -1028,10 +1028,10 @@
             QV=QV+PGSUB-PSSUB-PSDEP                      
             QS=QS+PSDEP+PSSUB                               
             QG=QG-PGSUB                                        
-          ENDIF                                                         
+          endif                                                         
 !* 23 * ERN : EVAPORATION OF QR (SUBSATURATION)                   **23**
           ERN=0.0                                                    
-          IF(QR.GT.CMIN)THEN                                         
+          if(QR.GT.CMIN)then                                         
             TAIR=(th0(i,j,k)+PT)*PPI                                   
             RTAIR=1./(TAIR-C358)                                  
             QSW=C380*rp0*EXP(C172-C409*RTAIR)                 
@@ -1047,24 +1047,24 @@
             PT=PT-(lhv*ene1-ene2)*ERN
             QV=QV+ERN                                          
             QR=QR-ERN                                          
-          ENDIF                                                         
+          endif                                                         
           dum=ruh(i)*rvh(j)*rmh(i,j,k)
           bud3(k)=bud3(k)+rr(i,j,k)*ERN*dum
-          IF(QC.LE.cmin)QC=0.                                     
-          IF(QR.LE.cmin)QR=0.                                     
-          IF(QI.LE.cmin)QI=0.                                     
-          IF(QS.LE.cmin)QS=0.                                     
-          IF(QG.LE.cmin)QG=0.                                     
-        IF(eqtset.eq.2)THEN
+          if(QC.LE.cmin)QC=0.                                     
+          if(QR.LE.cmin)QR=0.                                     
+          if(QI.LE.cmin)QI=0.                                     
+          if(QS.LE.cmin)QS=0.                                     
+          if(QG.LE.cmin)QG=0.                                     
+        if(eqtset.eq.2)then
           dum1=abs(qv-qv3d(i,j,k))+abs(qc-qc3d(i,j,k))+abs(qr-qr3d(i,j,k))   &
               +abs(qi-qi3d(i,j,k))+abs(qs-qs3d(i,j,k))+abs(qg-qg3d(i,j,k))
           if(dum1.gt.1.0e-7)then
             pp3d(i,j,k)=((rhod(i,j,k)*(rd+rv*qv)*(th0(i,j,k)+pt)*rp00)**rddcv)-pi0(i,j,k)
             prs(i,j,k)=p00*((pi0(i,j,k)+pp3d(i,j,k))**cpdrd)
           endif
-        ELSE
+        else
           rhod(i,j,k)=prs(i,j,k)/(rd*(th0(i,j,k)+pt)*(pi0(i,j,k)+pp3d(i,j,k))*(1.0+qv*reps))
-        ENDIF
+        endif
 
           TH3D(I,J,K)=PT
           QV3D(I,J,K)=QV
@@ -1100,7 +1100,7 @@
 
 !C**********************************************************************
 !                                                                       
-      END subroutine goddard                                                              
+      end subroutine goddard                                                              
 
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1109,7 +1109,7 @@
 
 
 !***********************************************************************
-      SUBROUTINE CONSAT
+      subroutine CONSAT
       use input
       use cm1libs , only : gamma
       implicit none
@@ -1125,12 +1125,12 @@
 !***********************************************************************
 
       real A1(31),A2(31)
-      DATA A1/.7939E-7,.7841E-6,.3369E-5,.4336E-5,.5285E-5,.3728E-5,       &
+      data A1/.7939E-7,.7841E-6,.3369E-5,.4336E-5,.5285E-5,.3728E-5,       &
          .1852E-5,.2991E-6,.4248E-6,.7434E-6,.1812E-5,.4394E-5,.9145E-5,   &
          .1725E-4,.3348E-4,.1725E-4,.9175E-5,.4412E-5,.2252E-5,.9115E-6,   &
          .4876E-6,.3473E-6,.4758E-6,.6306E-6,.8573E-6,.7868E-6,.7192E-6,   &
          .6513E-6,.5956E-6,.5333E-6,.4834E-6/
-      DATA A2/.4006,.4831,.5320,.5307,.5319,.5249,.4888,.3894,.4047,    &
+      data A2/.4006,.4831,.5320,.5307,.5319,.5249,.4888,.3894,.4047,    &
          .4318,.4771,.5183,.5463,.5651,.5813,.5655,.5478,.5203,.4906,   &
          .4447,.4126,.3960,.4149,.4320,.4506,.4483,.4460,.4433,.4413,   &
          .4382,.4361/
@@ -1299,13 +1299,13 @@
       RI50=10.e-3
       CMN=1.05E-15
       RN12=CPI*EIW*UI50*RI50**2
-      DO 10 K=1,31
+      do 10 K=1,31
         Y1=1.-A2(K)
         RN13=A1(K)*Y1/(AMI100**Y1-AMI40**Y1)
         RN12A(K)=RN13/AMI100
         RN12B(K)=A1(K)*AMI100**A2(K)
         RN25A(K)=A1(K)*CMN**A2(K)
-   10 CONTINUE
+   10 continue
       EGW=1.
       EGI=.1
       EGI2=1.
@@ -1367,7 +1367,7 @@
         pwr2(i)=(i*1.0e-9)**bwq
       enddo
 !-----------------------------------------------
-      END subroutine consat
+      end subroutine consat
 
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1376,7 +1376,7 @@
 
 
 !***********************************************************************
-      SUBROUTINE CONSAT2(d2t)
+      subroutine CONSAT2(d2t)
       implicit none
       real d2t
       R10T=RN10*D2T
@@ -1384,6 +1384,6 @@
       R19BT=RN19B*D2T
       R20T=-RN20*D2T
       R23T=-RN23*D2T
-      END subroutine consat2
+      end subroutine consat2
 
-  END MODULE goddard_module
+  end module goddard_module

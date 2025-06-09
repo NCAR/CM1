@@ -1,7 +1,7 @@
 ! GHB, 230721: this file comes from WRFV4.5.2
 !WRF:MODEL_LAYER:PHYSICS
 !
-MODULE module_sf_mynn
+module module_sf_mynn
 
 !-------------------------------------------------------------------
 !Modifications implemented by Joseph Olson NOAA/GSL
@@ -61,11 +61,11 @@ MODULE module_sf_mynn
 !      Performance with the Noah (or other) LSM is relatively unknown.
 !-------------------------------------------------------------------
 !For WRF
-  USE module_model_constants, only: &
+  use module_model_constants, only: &
        &p1000mb, ep_2
 
 !-------------------------------------------------------------------
-  IMPLICIT NONE
+  implicit none
 !-------------------------------------------------------------------
 !For non-WRF
 !   REAL    , PARAMETER :: g            = 9.81
@@ -79,27 +79,27 @@ MODULE module_sf_mynn
 !   REAL    , PARAMETER :: p1000mb      = 100000.
 !   REAL    , PARAMETER :: EP_2         = r_d/r_v
 
-  REAL, PARAMETER :: ep_3=1.-ep_2 
-  REAL, PARAMETER :: wmin=0.1    ! Minimum wind speed
-  REAL, PARAMETER :: VCONVC=1.25
-  REAL, PARAMETER :: SNOWZ0=0.011
-  REAL, PARAMETER :: COARE_OPT=3.0  ! 3.0 or 3.5
-  INTEGER, PARAMETER :: psi_opt = 0    ! 0 = stable: Cheng and Brustaert
+  real, parameter :: ep_3=1.-ep_2 
+  real, parameter :: wmin=0.1    ! Minimum wind speed
+  real, parameter :: VCONVC=1.25
+  real, parameter :: SNOWZ0=0.011
+  real, parameter :: COARE_OPT=3.0  ! 3.0 or 3.5
+  integer, parameter :: psi_opt = 0    ! 0 = stable: Cheng and Brustaert
                                        !     unstable: blended COARE
                                        ! 1 = GFS
-  REAL, PARAMETER :: qvmin = 1e-9
+  real, parameter :: qvmin = 1e-9
   !For debugging purposes:
-  LOGICAL, PARAMETER :: debug_code = .false.
+  logical, parameter :: debug_code = .false.
 
-  REAL,   DIMENSION(0:1000 ),SAVE :: psim_stab,psim_unstab, &
+  real,   dimension(0:1000 ),save :: psim_stab,psim_unstab, &
                                      psih_stab,psih_unstab
 
-CONTAINS
+contains
 
 !-------------------------------------------------------------------
-  SUBROUTINE mynn_sf_init_driver(allowed_to_read)
+  subroutine mynn_sf_init_driver(allowed_to_read)
 
-    LOGICAL, INTENT(in) :: allowed_to_read
+    logical, intent(in) :: allowed_to_read
 
     !Fill the PSIM and PSIH tables. This code was leveraged from
     !module_sf_sfclayrev.F, leveraging the work from Pedro Jimenez.
@@ -107,12 +107,12 @@ CONTAINS
     !and Grachev et al (2000) for unstable conditions and the form 
     !from Cheng and Brutsaert (2005) for stable conditions.
 
-     CALL psi_init(psi_opt)
+     call psi_init(psi_opt)
 
-  END SUBROUTINE mynn_sf_init_driver
+  end subroutine mynn_sf_init_driver
 
 !-------------------------------------------------------------------
-   SUBROUTINE SFCLAY_mynn(                                  &
+   subroutine SFCLAY_mynn(                                  &
               U3D,V3D,T3D,QV3D,P3D,dz8w,th3d,rho3d,         &
               CP,G,ROVCP,R,XLV,PSFCPA,CHS,CHS2,CQS2,CPM,    &
               ZNT,UST,PBLH,MAVAIL,ZOL,MOL,REGIME,PSIM,PSIH, &
@@ -127,7 +127,7 @@ CONTAINS
               its,ite, jts,jte, kts,kte,                    &
               ustm,ck,cka,cd,cda,isftcflx,iz0tlnd           )
 !-------------------------------------------------------------------
-      IMPLICIT NONE
+      implicit none
 !-------------------------------------------------------------------
 !-- U3D         3D u-velocity interpolated to theta points (m/s)
 !-- V3D         3D v-velocity interpolated to theta points (m/s)
@@ -219,36 +219,36 @@ CONTAINS
 !=================================================================
 ! SCALARS
 !===================================
-      INTEGER,  INTENT(IN)   ::        ids,ide, jds,jde, kds,kde, &
+      integer,  intent(in)   ::        ids,ide, jds,jde, kds,kde, &
                                        ims,ime, jms,jme, kms,kme, &
                                        its,ite, jts,jte, kts,kte
-      INTEGER,  INTENT(IN)   ::        itimestep
-      REAL,     INTENT(IN)   ::        SVP1,SVP2,SVP3,SVPT0
-      REAL,     INTENT(IN)   ::        EP1,EP2,KARMAN
-      REAL,     INTENT(IN)   ::        CP,G,ROVCP,R,XLV,DX
+      integer,  intent(in)   ::        itimestep
+      real,     intent(in)   ::        SVP1,SVP2,SVP3,SVPT0
+      real,     intent(in)   ::        EP1,EP2,KARMAN
+      real,     intent(in)   ::        CP,G,ROVCP,R,XLV,DX
 !NAMELIST OPTIONS:
-      INTEGER,  INTENT(IN)   ::        ISFFLX
-      INTEGER,  OPTIONAL,  INTENT(IN)   ::     ISFTCFLX, IZ0TLND
-      INTEGER,  OPTIONAL,  INTENT(IN)   ::     spp_pbl
+      integer,  intent(in)   ::        ISFFLX
+      integer,  optional,  intent(in)   ::     ISFTCFLX, IZ0TLND
+      integer,  optional,  intent(in)   ::     spp_pbl
 
 !===================================
 ! 3D VARIABLES
 !===================================
-      REAL,     DIMENSION( ims:ime, kms:kme, jms:jme )           , &
-                INTENT(IN   )   ::                           dz8w, &
+      real,     dimension( ims:ime, kms:kme, jms:jme )           , &
+                intent(in   )   ::                           dz8w, &
                                                              QV3D, &
                                                               P3D, &
                                                               T3D, &
                                                           U3D,V3D, &
                                                        RHO3D,th3d
 
-      REAL, DIMENSION( ims:ime, kms:kme, jms:jme ), OPTIONAL,      &
-                INTENT(IN) ::                      pattern_spp_pbl
+      real, dimension( ims:ime, kms:kme, jms:jme ), optional,      &
+                intent(in) ::                      pattern_spp_pbl
 !===================================
 ! 2D VARIABLES
 !===================================
-      REAL,     DIMENSION( ims:ime, jms:jme )                    , &
-                INTENT(IN   )               ::             MAVAIL, &
+      real,     dimension( ims:ime, jms:jme )                    , &
+                intent(in   )               ::             MAVAIL, &
                                                              PBLH, &
                                                             XLAND, &
                                                               TSK, &
@@ -257,15 +257,15 @@ CONTAINS
                                                             SNOWH
 
 
-      REAL,     DIMENSION( ims:ime, jms:jme )                    , &
-                INTENT(OUT  )               ::            U10,V10, &
+      real,     dimension( ims:ime, jms:jme )                    , &
+                intent(out  )               ::            U10,V10, &
                                                         TH2,T2,Q2
 
-      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme )              , &
-                INTENT(OUT)     ::              ck,cka,cd,cda,ustm
+      real, optional, dimension( ims:ime, jms:jme )              , &
+                intent(out)     ::              ck,cka,cd,cda,ustm
 !
-      REAL,     DIMENSION( ims:ime, jms:jme )                    , &
-                INTENT(INOUT)               ::             REGIME, &
+      real,     dimension( ims:ime, jms:jme )                    , &
+                intent(inout)               ::             REGIME, &
                                                               HFX, &
                                                               QFX, &
                                                                LH, &
@@ -284,11 +284,11 @@ CONTAINS
                                                         PSIM,PSIH
 
 !ADDITIONAL OUTPUT
-      REAL,     DIMENSION( ims:ime, jms:jme )    ::   wstar,qstar
+      real,     dimension( ims:ime, jms:jme )    ::   wstar,qstar
 !===================================
 ! 1D LOCAL ARRAYS
 !===================================
-      REAL,     DIMENSION( its:ite ) ::                       U1D, &
+      real,     dimension( its:ite ) ::                       U1D, &
                                                               V1D, &
                                                         U1D2,V1D2, & !level2 winds
                                                              QV1D, &
@@ -299,17 +299,17 @@ CONTAINS
                                                            dz2w1d    !level 2 height
 
 
-      REAL,     DIMENSION( its:ite ) ::                  rstoch1D
+      real,     dimension( its:ite ) ::                  rstoch1D
 
-      INTEGER ::  I,J,K,itf,jtf,ktf
+      integer ::  I,J,K,itf,jtf,ktf
 !-----------------------------------------------------------
 
       itf=MIN0(ite,ide-1)
       jtf=MIN0(jte,jde-1)
       ktf=MIN0(kte,kde-1)
 
-      DO J=jts,jte
-        DO i=its,ite
+      do J=jts,jte
+        do i=its,ite
            dz8w1d(I) = dz8w(i,kts,j)
            dz2w1d(I) = dz8w(i,kts+1,j)
            U1D(i) =U3D(i,kts,j)
@@ -326,18 +326,18 @@ CONTAINS
            else
                rstoch1D(i)=0.0
            endif
-        ENDDO
+        enddo
 
-        IF (itimestep==1) THEN
-           DO i=its,ite
+        if (itimestep==1) then
+           do i=its,ite
               UST(i,j)=MAX(0.04*SQRT(U1D(i)*U1D(i) + V1D(i)*V1D(i)),0.001)
               MOL(i,j)=0.     ! Tstar
               QSFC(i,j)=QV3D(i,kts,j)/(1.+QV3D(i,kts,j))
               qstar(i,j)=0.0
-           ENDDO
-        ENDIF
+           enddo
+        endif
 
-        CALL SFCLAY1D_mynn(                                        &
+        call SFCLAY1D_mynn(                                        &
                 J,U1D,V1D,T1D,QV1D,P1D,dz8w1d,rho1d,               &
                 U1D2,V1D2,dz2w1d,                                  &
                 CP,G,ROVCP,R,XLV,PSFCPA(ims,j),CHS(ims,j),CHS2(ims,j),&
@@ -363,12 +363,12 @@ CONTAINS
                 USTM(ims,j),CK(ims,j),CKA(ims,j),                  &
                 CD(ims,j),CDA(ims,j)                               &
                                                                    )
-      ENDDO
+      enddo
 
-    END SUBROUTINE SFCLAY_MYNN
+    end subroutine SFCLAY_MYNN
 
 !-------------------------------------------------------------------
-   SUBROUTINE SFCLAY1D_mynn(                                       &
+   subroutine SFCLAY1D_mynn(                                       &
                      J,U1D,V1D,T1D,QV1D,P1D,dz8w1d,rho1d,          &
                      U1D2,V1D2,dz2w1d,                             &
                      CP,G,ROVCP,R,XLV,PSFCPA,CHS,CHS2,CQS2,CPM,    &
@@ -391,31 +391,31 @@ CONTAINS
                      )
 
 !-------------------------------------------------------------------
-      IMPLICIT NONE
+      implicit none
 !-------------------------------------------------------------------
 ! SCALARS
 !-----------------------------
-      INTEGER,  INTENT(IN) ::        ids,ide, jds,jde, kds,kde, &
+      integer,  intent(in) ::        ids,ide, jds,jde, kds,kde, &
                                      ims,ime, jms,jme, kms,kme, &
                                      its,ite, jts,jte, kts,kte, &
                                      J, itimestep
 
-      REAL,     PARAMETER  :: XKA=2.4E-5   !molecular diffusivity
-      REAL,     PARAMETER  :: PRT=1.       !prandlt number
-      REAL,     INTENT(IN) :: SVP1,SVP2,SVP3,SVPT0,EP1,EP2
-      REAL,     INTENT(IN) :: KARMAN,CP,G,ROVCP,R,XLV,DX
+      real,     parameter  :: XKA=2.4E-5   !molecular diffusivity
+      real,     parameter  :: PRT=1.       !prandlt number
+      real,     intent(in) :: SVP1,SVP2,SVP3,SVPT0,EP1,EP2
+      real,     intent(in) :: KARMAN,CP,G,ROVCP,R,XLV,DX
 
 !-----------------------------
 ! NAMELIST OPTIONS
 !-----------------------------
-      INTEGER,  INTENT(IN) :: ISFFLX
-      INTEGER,  OPTIONAL,  INTENT(IN )   ::     ISFTCFLX, IZ0TLND
-      INTEGER,    INTENT(IN)             ::     spp_pbl
+      integer,  intent(in) :: ISFFLX
+      integer,  optional,  intent(in )   ::     ISFTCFLX, IZ0TLND
+      integer,    intent(in)             ::     spp_pbl
 
 !-----------------------------
 ! 1D ARRAYS
 !-----------------------------
-      REAL,     DIMENSION( ims:ime ), INTENT(IN)    ::     MAVAIL, &
+      real,     dimension( ims:ime ), intent(in)    ::     MAVAIL, &
                                                              PBLH, &
                                                             XLAND, &
                                                               TSK, &
@@ -423,14 +423,14 @@ CONTAINS
                                                               QCG, &
                                                             SNOWH
 
-      REAL,     DIMENSION( its:ite ), INTENT(IN)   ::     U1D,V1D, &
+      real,     dimension( its:ite ), intent(in)   ::     U1D,V1D, &
                                                         U1D2,V1D2, &
                                                          QV1D,P1D, &
                                                               T1D, &
                                                     dz8w1d,dz2w1d, &
                                                             RHO1D
 
-      REAL,     DIMENSION( ims:ime ), INTENT(INOUT) ::     REGIME, &
+      real,     dimension( ims:ime ), intent(inout) ::     REGIME, &
                                                        HFX,QFX,LH, &
                                                          MOL,RMOL, &
                                                          QGH,QSFC, &
@@ -445,22 +445,22 @@ CONTAINS
                                                              WSPD, &
                                                                BR, &
                                                         PSIM,PSIH
-      REAL,     DIMENSION( its:ite ), INTENT(IN)   ::     rstoch1D
+      real,     dimension( its:ite ), intent(in)   ::     rstoch1D
 
       ! DIAGNOSTIC OUTPUT
-      REAL,     DIMENSION( ims:ime ), INTENT(OUT)   ::    U10,V10, &
+      real,     dimension( ims:ime ), intent(out)   ::    U10,V10, &
                                                         TH2,T2,Q2
 
-      REAL, OPTIONAL, DIMENSION( ims:ime )                       , &
-                INTENT(OUT)     ::              ck,cka,cd,cda,ustm
+      real, optional, dimension( ims:ime )                       , &
+                intent(out)     ::              ck,cka,cd,cda,ustm
 !--------------------------------------------
 !JOE-additinal output
-      REAL,     DIMENSION( ims:ime ) ::                wstar,qstar
+      real,     dimension( ims:ime ) ::                wstar,qstar
 !JOE-end
 !----------------------------------------------------------------
 ! LOCAL VARS
 !----------------------------------------------------------------
-      REAL, DIMENSION(its:ite) :: &
+      real, dimension(its:ite) :: &
                  ZA, &    !Height of lowest 1/2 sigma level(m)
                 ZA2, &    !Height of 2nd lowest 1/2 sigma level(m)
               THV1D, &    !Theta-v at lowest 1/2 sigma (K)
@@ -486,18 +486,18 @@ CONTAINS
              GZ1OZt, &    !LOG((ZA(I)+z_t(i))/z_t(i))
              zratio       !z0/zt
 
-      INTEGER ::  N,I,K,L,yesno
+      integer ::  N,I,K,L,yesno
 
-      REAL    ::  PL,THCON,TVCON,E1
-      REAL    ::  DTHVDZ,DTHVM,VCONV,ZOL2,ZOL10,ZOLZA,ZOLZ0,ZOLZT
-      REAL    ::  DTG,PSIX,DTTHX,DTHDZ,PSIX10,PSIT,PSIT2, &
+      real    ::  PL,THCON,TVCON,E1
+      real    ::  DTHVDZ,DTHVM,VCONV,ZOL2,ZOL10,ZOLZA,ZOLZ0,ZOLZT
+      real    ::  DTG,PSIX,DTTHX,DTHDZ,PSIX10,PSIT,PSIT2, &
                   PSIQ,PSIQ2,PSIQ10,DZDT
-      REAL    ::  FLUXC,VSGD
-      REAL    ::  restar,VISC,DQG,OLDUST,OLDTST
+      real    ::  FLUXC,VSGD
+      real    ::  restar,VISC,DQG,OLDUST,OLDTST
 
 !-------------------------------------------------------------------
 
-      DO I=its,ite
+      do I=its,ite
          ! CONVERT GROUND & LOWEST LAYER TEMPERATURE TO POTENTIAL TEMPERATURE:
          ! PSFC cmb
          PSFC(I)=PSFCPA(I)/1000.
@@ -509,7 +509,7 @@ CONTAINS
          TC1D(I)=T1D(I)-273.15                  !(T, Celsius)    
 
          ! CONVERT TO VIRTUAL TEMPERATURE
-         QVSH(I)=QV1D(I)/(1.+QV1D(I))        !CONVERT TO SPEC HUM (kg/kg)
+         QVSH(I)=QV1D(I)/(1.+QV1D(I))        !CONVERT to SPEC HUM (kg/kg)
          TVCON=(1.+EP1*QVSH(I))
          THV1D(I)=TH1D(I)*TVCON                 !(K)
          TV1D(I)=T1D(I)*TVCON   !(K)
@@ -518,42 +518,42 @@ CONTAINS
          ZA(I)=0.5*dz8w1d(I)             !height of first half-sigma level 
          ZA2(I)=dz8w1d(I) + 0.5*dz2w1d(I)    !height of 2nd half-sigma level
          GOVRTH(I)=G/TH1D(I)
-      ENDDO
+      enddo
 
-      DO I=its,ite
-         IF (TSK(I) .LT. 273.15) THEN
+      do I=its,ite
+         if (TSK(I) .LT. 273.15) then
             !SATURATION VAPOR PRESSURE WRT ICE (SVP1=.6112; 10*mb)
             E1=SVP1*EXP(4648*(1./273.15 - 1./TSK(I)) - &
             & 11.64*LOG(273.15/TSK(I)) + 0.02265*(273.15 - TSK(I)))
-         ELSE
+         else
             !SATURATION VAPOR PRESSURE WRT WATER (Bolton 1980)
             E1=SVP1*EXP(SVP2*(TSK(I)-SVPT0)/(TSK(I)-SVP3))
-         ENDIF
+         endif
          !FOR LAND POINTS, QSFC can come from LSM, ONLY RECOMPUTE OVER WATER
-         IF (xland(i).gt.1.5 .or. QSFC(i).le.0.0) THEN   !WATER
+         if (xland(i).gt.1.5 .or. QSFC(i).le.0.0) then   !WATER
             QSFC(I)=EP2*E1/(PSFC(I)-ep_3*E1)             !specific humidity    
             QSFCMR(I)=EP2*E1/(PSFC(I)-E1)                !mixing ratio 
-         ELSE                                            !LAND 
+         else                                            !LAND 
             QSFCMR(I)=QSFC(I)/(1.-QSFC(I))
-         ENDIF
+         endif
 
          ! QGH CHANGED TO USE LOWEST-LEVEL AIR TEMP CONSISTENT WITH MYJSFC CHANGE
          ! Q2SAT = QGH IN LSM
-         IF (TSK(I) .LT. 273.15) THEN
+         if (TSK(I) .LT. 273.15) then
             !SATURATION VAPOR PRESSURE WRT ICE
             E1=SVP1*EXP(4648*(1./273.15 - 1./T1D(I)) - &
             &  11.64*LOG(273.15/T1D(I)) + 0.02265*(273.15 - T1D(I)))
-         ELSE
+         else
             !SATURATION VAPOR PRESSURE WRT WATER (Bolton 1980)
             E1=SVP1*EXP(SVP2*(T1D(I)-SVPT0)/(T1D(I)-SVP3))
-         ENDIF
+         endif
          PL=P1D(I)/1000.
          !QGH(I)=EP2*E1/(PL-ep_3*E1)    !specific humidity
          QGH(I)=EP2*E1/(PL-E1)          !mixing ratio
          CPM(I)=CP*(1.+0.84*QV1D(I))
-      ENDDO
+      enddo
 
-      DO I=its,ite
+      do I=its,ite
          WSPD(I)=SQRT(U1D(I)*U1D(I)+V1D(I)*V1D(I))     
 
          !TGS:THVGB(I)=THGB(I)*(1.+EP1*QSFC(I)*MAVAIL(I)) 
@@ -571,13 +571,13 @@ CONTAINS
          fluxc = max(hfx(i)/RHO1D(i)/cp                    &
          &    + ep1*THVGB(I)*qfx(i)/RHO1D(i),0.)
          !WSTAR(I) = vconvc*(g/TSK(i)*pblh(i)*fluxc)**.33
-         IF (xland(i).gt.1.5 .or. QSFC(i).le.0.0) THEN   !WATER
+         if (xland(i).gt.1.5 .or. QSFC(i).le.0.0) then   !WATER
             WSTAR(I) = vconvc*(g/TSK(i)*pblh(i)*fluxc)**.33
-         ELSE                                            !LAND
+         else                                            !LAND
             !increase height scale, assuming that the non-local transoport
             !from the mass-flux (plume) mixing exceedsd the PBLH.
             WSTAR(I) = vconvc*(g/TSK(i)*MIN(1.5*pblh(i),4000.)*fluxc)**.33
-         ENDIF
+         endif
          !--------------------------------------------------------
          ! Mahrt and Sun low-res correction
          ! (for 13 km ~ 0.37 m/s; for 3 km == 0 m/s)
@@ -591,21 +591,21 @@ CONTAINS
          ! ACCORDING TO AKB(1976), EQ(12). 
          !--------------------------------------------------------
          BR(I)=GOVRTH(I)*ZA(I)*DTHVDZ/(WSPD(I)*WSPD(I))
-         IF (ITIMESTEP == 1) THEN
+         if (ITIMESTEP == 1) then
             !SET LIMITS ACCORDING TO Li et al. (2010) Boundary-Layer Meteorol (p.158)
             BR(I)=MAX(BR(I),-2.0)
             BR(I)=MIN(BR(I),2.0)
-         ELSE
+         else
             BR(I)=MAX(BR(I),-4.0)
             BR(I)=MIN(BR(I), 4.0)
-         ENDIF
+         endif
 
          ! IF PREVIOUSLY UNSTABLE, DO NOT LET INTO REGIMES 1 AND 2 (STABLE)
          !if (itimestep .GT. 1) THEN
          !    IF(MOL(I).LT.0.)BR(I)=MIN(BR(I),0.0)
          !ENDIF
      
-      ENDDO
+      enddo
 
  1006   format(A,F7.3,A,f9.4,A,f9.5,A,f9.4)
  1007   format(A,F2.0,A,f6.2,A,f7.3,A,f7.2)
@@ -616,51 +616,51 @@ CONTAINS
 !--------------------------------------------------------------------
 !--------------------------------------------------------------------
 
- DO I=its,ite
+ do I=its,ite
 
     !COMPUTE KINEMATIC VISCOSITY (m2/s) Andreas (1989) CRREL Rep. 89-11
     !valid between -173 and 277 degrees C.
     VISC=1.326e-5*(1. + 6.542e-3*TC1D(I) + 8.301e-6*TC1D(I)*TC1D(I) &
                       - 4.84e-9*TC1D(I)*TC1D(I)*TC1D(I))
 
-    IF ((XLAND(I)-1.5).GE.0) THEN
+    if ((XLAND(I)-1.5).GE.0) then
        !--------------------------------------
        ! WATER
        !--------------------------------------
        ! CALCULATE z0 (znt)
        !--------------------------------------
-       IF ( PRESENT(ISFTCFLX) ) THEN
-          IF ( ISFTCFLX .EQ. 0 ) THEN
-             IF (COARE_OPT .EQ. 3.0) THEN
+       if ( PRESENT(ISFTCFLX) ) then
+          if ( ISFTCFLX .EQ. 0 ) then
+             if (COARE_OPT .EQ. 3.0) then
                 !COARE 3.0 (MISLEADING SUBROUTINE NAME)
-                CALL charnock_1955(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
-             ELSE
+                call charnock_1955(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
+             else
                 !COARE 3.5
-                CALL edson_etal_2013(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
-             ENDIF
-          ELSEIF ( ISFTCFLX .EQ. 1 .OR. ISFTCFLX .EQ. 2 ) THEN
-             CALL davis_etal_2008(ZNT(i),UST(i))
-          ELSEIF ( ISFTCFLX .EQ. 3 ) THEN
-             CALL Taylor_Yelland_2001(ZNT(i),UST(i),WSPD(i))
-          ELSEIF ( ISFTCFLX .EQ. 4 ) THEN
-             IF (COARE_OPT .EQ. 3.0) THEN
+                call edson_etal_2013(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
+             endif
+          elseif ( ISFTCFLX .EQ. 1 .OR. ISFTCFLX .EQ. 2 ) then
+             call davis_etal_2008(ZNT(i),UST(i))
+          elseif ( ISFTCFLX .EQ. 3 ) then
+             call Taylor_Yelland_2001(ZNT(i),UST(i),WSPD(i))
+          elseif ( ISFTCFLX .EQ. 4 ) then
+             if (COARE_OPT .EQ. 3.0) then
                 !COARE 3.0 (MISLEADING SUBROUTINE NAME)
-                CALL charnock_1955(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
-             ELSE
+                call charnock_1955(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
+             else
                 !COARE 3.5
-                CALL edson_etal_2013(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
-             ENDIF
-          ENDIF
-       ELSE
+                call edson_etal_2013(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
+             endif
+          endif
+       else
           !DEFAULT TO COARE 3.0/3.5
-          IF (COARE_OPT .EQ. 3.0) THEN
+          if (COARE_OPT .EQ. 3.0) then
              !COARE 3.0
-             CALL charnock_1955(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
-          ELSE
+             call charnock_1955(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
+          else
              !COARE 3.5
-             CALL edson_etal_2013(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
-          ENDIF
-       ENDIF
+             call edson_etal_2013(ZNT(i),UST(i),WSPD(i),visc,ZA(I))
+          endif
+       endif
 
        ! add stochastic perturbaction of ZNT
        if (spp_pbl==1) then
@@ -678,39 +678,39 @@ CONTAINS
        !--------------------------------------
        !CALCULATE z_t and z_q
        !--------------------------------------
-       IF ( PRESENT(ISFTCFLX) ) THEN
-          IF ( ISFTCFLX .EQ. 0 ) THEN
-             IF (COARE_OPT .EQ. 3.0) THEN
-                CALL fairall_etal_2003(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
-             ELSE
+       if ( PRESENT(ISFTCFLX) ) then
+          if ( ISFTCFLX .EQ. 0 ) then
+             if (COARE_OPT .EQ. 3.0) then
+                call fairall_etal_2003(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
+             else
                 !presumably, this will be published soon, but hasn't yet
-                CALL fairall_etal_2014(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
-             ENDIF
-          ELSEIF ( ISFTCFLX .EQ. 1 ) THEN
-             IF (COARE_OPT .EQ. 3.0) THEN
-                CALL fairall_etal_2003(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
-             ELSE
-                CALL fairall_etal_2014(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
-             ENDIF
-          ELSEIF ( ISFTCFLX .EQ. 2 ) THEN
-             CALL garratt_1992(z_t(i),z_q(i),ZNTstoch(i),restar,XLAND(I))
-          ELSEIF ( ISFTCFLX .EQ. 3 ) THEN
-             IF (COARE_OPT .EQ. 3.0) THEN
-                CALL fairall_etal_2003(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
-             ELSE
-                CALL fairall_etal_2014(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
-             ENDIF
-          ENDIF
-       ELSE
+                call fairall_etal_2014(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
+             endif
+          elseif ( ISFTCFLX .EQ. 1 ) then
+             if (COARE_OPT .EQ. 3.0) then
+                call fairall_etal_2003(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
+             else
+                call fairall_etal_2014(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
+             endif
+          elseif ( ISFTCFLX .EQ. 2 ) then
+             call garratt_1992(z_t(i),z_q(i),ZNTstoch(i),restar,XLAND(I))
+          elseif ( ISFTCFLX .EQ. 3 ) then
+             if (COARE_OPT .EQ. 3.0) then
+                call fairall_etal_2003(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
+             else
+                call fairall_etal_2014(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
+             endif
+          endif
+       else
           !DEFAULT TO COARE 3.0/3.5
-          IF (COARE_OPT .EQ. 3.0) THEN
-             CALL fairall_etal_2003(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
-          ELSE
-             CALL fairall_etal_2014(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
-          ENDIF
-       ENDIF
+          if (COARE_OPT .EQ. 3.0) then
+             call fairall_etal_2003(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
+          else
+             call fairall_etal_2014(z_t(i),z_q(i),restar,UST(i),visc,rstoch1D(i),spp_pbl)
+          endif
+       endif
  
-    ELSE
+    else
 
        ! add stochastic perturbaction of ZNT
        if (spp_pbl==1) then
@@ -729,28 +729,28 @@ CONTAINS
        !GET z_t and z_q
        !--------------------------------------
        !CHECK FOR SNOW/ICE POINTS OVER LAND
-       IF ( SNOWH(i) .GE. 0.1) THEN
-          CALL Andreas_2002(ZNTSTOCH(i),visc,ust(i),z_t(i),z_q(i))
-       ELSE
-          IF ( PRESENT(IZ0TLND) ) THEN
-             IF ( IZ0TLND .LE. 1 ) THEN
-                CALL zilitinkevich_1995(ZNTSTOCH(i),z_t(i),z_q(i),restar,&
+       if ( SNOWH(i) .GE. 0.1) then
+          call Andreas_2002(ZNTSTOCH(i),visc,ust(i),z_t(i),z_q(i))
+       else
+          if ( PRESENT(IZ0TLND) ) then
+             if ( IZ0TLND .LE. 1 ) then
+                call zilitinkevich_1995(ZNTSTOCH(i),z_t(i),z_q(i),restar,&
                            UST(I),KARMAN,XLAND(I),IZ0TLND,spp_pbl,rstoch1D(i))
-             ELSEIF ( IZ0TLND .EQ. 2 ) THEN
-                CALL Yang_2008(ZNTSTOCH(i),z_t(i),z_q(i),UST(i),MOL(I),&
+             elseif ( IZ0TLND .EQ. 2 ) then
+                call Yang_2008(ZNTSTOCH(i),z_t(i),z_q(i),UST(i),MOL(I),&
                                qstar(I),restar,visc,XLAND(I))
-             ELSEIF ( IZ0TLND .EQ. 3 ) THEN
+             elseif ( IZ0TLND .EQ. 3 ) then
                 !Original MYNN in WRF-ARW used this form:
-                CALL garratt_1992(z_t(i),z_q(i),ZNTSTOCH(i),restar,XLAND(I))
-             ENDIF
-          ELSE
+                call garratt_1992(z_t(i),z_q(i),ZNTSTOCH(i),restar,XLAND(I))
+             endif
+          else
              !DEFAULT TO ZILITINKEVICH
-             CALL zilitinkevich_1995(ZNTSTOCH(i),z_t(i),z_q(i),restar,&
+             call zilitinkevich_1995(ZNTSTOCH(i),z_t(i),z_q(i),restar,&
                            UST(I),KARMAN,XLAND(I),0,spp_pbl,rstoch1D(i))
-          ENDIF
-       ENDIF
+          endif
+       endif
 
-    ENDIF
+    endif
     zratio(i)=ZNTstoch(I)/z_t(I)   !needed for Li et al.
 
     GZ1OZ0(I)= LOG((ZA(I)+ZNTstoch(I))/ZNTstoch(I))
@@ -781,23 +781,23 @@ CONTAINS
     !               REPRESENTS FREE CONVECTION CONDITIONS (REGIME=4).                
     !                                                                                
     !--------------------------------------------------------------------
-    IF (BR(I) .GT. 0.0) THEN
-       IF (BR(I) .GT. 0.2) THEN        
+    if (BR(I) .GT. 0.0) then
+       if (BR(I) .GT. 0.2) then        
           !---CLASS 1; STABLE (NIGHTTIME) CONDITIONS:                                    
           REGIME(I)=1.
-       ELSE
+       else
           !---CLASS 2; DAMPED MECHANICAL TURBULENCE:
           REGIME(I)=2.
-       ENDIF
+       endif
 
        !COMPUTE z/L first guess:
-       IF (itimestep .LE. 1) THEN
-          CALL Li_etal_2010(ZOL(I),BR(I),ZA(I)/ZNTstoch(I),zratio(I))
-       ELSE
+       if (itimestep .LE. 1) then
+          call Li_etal_2010(ZOL(I),BR(I),ZA(I)/ZNTstoch(I),zratio(I))
+       else
           ZOL(I)=ZA(I)*KARMAN*G*MOL(I)/(TH1D(I)*MAX(UST(I)*UST(I),0.0001))
           ZOL(I)=MAX(ZOL(I),0.0)
           ZOL(I)=MIN(ZOL(I),20.)
-       ENDIF
+       endif
 
        !Use Pedros iterative function to find z/L
        !zol(I)=zolri(br(I),ZA(I),ZNTstoch(I),z_t(I),ZOL(I),psi_opt)
@@ -813,7 +813,7 @@ CONTAINS
        zol2  = zol(I)*(2.+ZNTstoch(I))/za(I)     ! (2+z0)/L 
 
        !COMPUTE PSIM and PSIH
-       IF ((XLAND(I)-1.5).GE.0) THEN                                            
+       if ((XLAND(I)-1.5).GE.0) then                                            
           ! WATER
           !CALL PSI_Suselj_Sood_2010(PSIM(I),PSIH(I),ZOL(I))
           !CALL PSI_Beljaars_Holtslag_1991(PSIM(I),PSIH(I),ZOL(I))
@@ -826,7 +826,7 @@ CONTAINS
           psim10(I)=psim_stable(zol10,psi_opt)-psim_stable(zolz0,psi_opt)
           psih10(I)=psih_stable(zol10,psi_opt)-psih_stable(zolz0,psi_opt)
           psih2(I)=psih_stable(zol2,psi_opt)-psih_stable(zolz0,psi_opt)
-       ELSE
+       else
           ! LAND  
           !CALL PSI_Beljaars_Holtslag_1991(PSIM(I),PSIH(I),ZOL(I))
           !CALL PSI_Businger_1971(PSIM(I),PSIH(I),ZOL(I))
@@ -839,7 +839,7 @@ CONTAINS
           psim10(I)=psim_stable(zol10,psi_opt)-psim_stable(zolz0,psi_opt)
           psih10(I)=psih_stable(zol10,psi_opt)-psih_stable(zolz0,psi_opt)
           psih2(I)=psih_stable(zol2,psi_opt)-psih_stable(zolz0,psi_opt)
-       ENDIF
+       endif
 
        !PSIM10(I)=10./ZA(I)*PSIM(I)
        !PSIH10(I)=10./ZA(I)*PSIH(I)
@@ -849,7 +849,7 @@ CONTAINS
        ! 1.0 over Monin-Obukhov length
        RMOL(I)= ZOL(I)/ZA(I)
 
-    ELSEIF(BR(I) .EQ. 0.) THEN                  
+    elseif(BR(I) .EQ. 0.) then                  
        !=========================================================  
        !-----CLASS 3; FORCED CONVECTION/NEUTRAL:                                                
        !=========================================================
@@ -869,20 +869,20 @@ CONTAINS
        !ENDIF
        RMOL(I) = ZOL(I)/ZA(I)
 
-    ELSEIF(BR(I) .LT. 0.)THEN
+    elseif(BR(I) .LT. 0.)then
        !==========================================================
        !-----CLASS 4; FREE CONVECTION:                                                  
        !==========================================================
        REGIME(I)=4.
 
        !COMPUTE z/L first guess:
-       IF (itimestep .LE. 1) THEN
-          CALL Li_etal_2010(ZOL(I),BR(I),ZA(I)/ZNTstoch(I),zratio(I))
-       ELSE
+       if (itimestep .LE. 1) then
+          call Li_etal_2010(ZOL(I),BR(I),ZA(I)/ZNTstoch(I),zratio(I))
+       else
           ZOL(I)=ZA(I)*KARMAN*G*MOL(I)/(TH1D(I)*MAX(UST(I)*UST(I),0.001))
           ZOL(I)=MAX(ZOL(I),-20.0)
           ZOL(I)=MIN(ZOL(I),0.0)
-       ENDIF
+       endif
 
        !Use Pedros iterative function to find z/L
        !zol(I)=zolri(br(I),ZA(I),ZNTstoch(I),z_t(I),ZOL(I),psi_opt)
@@ -898,7 +898,7 @@ CONTAINS
        zol2  = zol(I)*(2.+ZNTstoch(I))/za(I)      ! (2+z0)/L
 
        !COMPUTE PSIM and PSIH
-       IF ((XLAND(I)-1.5).GE.0) THEN                                            
+       if ((XLAND(I)-1.5).GE.0) then                                            
           ! WATER
           !CALL PSI_Suselj_Sood_2010(PSIM(I),PSIH(I),ZOL(I))
           !CALL PSI_Hogstrom_1996(PSIM(I),PSIH(I),ZOL(I), z_t(I), ZNTstoch(I), ZA(I))
@@ -910,7 +910,7 @@ CONTAINS
           psim10(I)=psim_unstable(zol10,psi_opt)-psim_unstable(zolz0,psi_opt)
           psih10(I)=psih_unstable(zol10,psi_opt)-psih_unstable(zolz0,psi_opt)
           psih2(I)=psih_unstable(zol2,psi_opt)-psih_unstable(zolz0,psi_opt)
-       ELSE           
+       else           
           ! LAND  
           !CALL PSI_Hogstrom_1996(PSIM(I),PSIH(I),ZOL(I), z_t(I), ZNTstoch(I), ZA(I))
           !CALL PSI_Businger_1971(PSIM(I),PSIH(I),ZOL(I))
@@ -921,7 +921,7 @@ CONTAINS
           psim10(I)=psim_unstable(zol10,psi_opt)-psim_unstable(zolz0,psi_opt)
           psih10(I)=psih_unstable(zol10,psi_opt)-psih_unstable(zolz0,psi_opt)
           psih2(I)=psih_unstable(zol2,psi_opt)-psih_unstable(zolz0,psi_opt)
-       ENDIF              
+       endif              
 
        !PSIM10(I)=10./ZA(I)*PSIM(I)
        !PSIH2(I)=2./ZA(I)*PSIH(I)
@@ -937,7 +937,7 @@ CONTAINS
 
        RMOL(I) = ZOL(I)/ZA(I)  
 
-    ENDIF
+    endif
 
     !------------------------------------------------------------
     !-----COMPUTE THE FRICTIONAL VELOCITY:                                           
@@ -952,15 +952,15 @@ CONTAINS
      
     ! Compute u* without vconv for use in HFX calc when isftcflx > 0           
     WSPDI(I)=MAX(SQRT(U1D(I)*U1D(I)+V1D(I)*V1D(I)), wmin)
-    IF ( PRESENT(USTM) ) THEN
+    if ( PRESENT(USTM) ) then
        USTM(I)=0.5*USTM(I)+0.5*KARMAN*WSPDI(I)/PSIX
-    ENDIF
+    endif
 
-    IF ((XLAND(I)-1.5).LT.0.) THEN        !LAND
+    if ((XLAND(I)-1.5).LT.0.) then        !LAND
        UST(I)=MAX(UST(I),0.005)  !Further relaxing this limit - no need to go lower
        !Keep ustm = ust over land.
-       IF ( PRESENT(USTM) ) USTM(I)=UST(I)
-    ENDIF
+       if ( PRESENT(USTM) ) USTM(I)=UST(I)
+    endif
 
     !------------------------------------------------------------
     !-----COMPUTE THE THERMAL AND MOISTURE RESISTANCE (PSIQ AND PSIT):
@@ -999,7 +999,7 @@ CONTAINS
         !  write(*,*)"============================================="
     !ENDIF
 
- ENDDO     ! end i-loop
+ enddo     ! end i-loop
 
  1000   format(A,F6.1, A,f6.1, A,f5.1, A,f7.1)
  1001   format(A,F2.0, A,f10.4,A,f5.3, A,f11.5)
@@ -1011,7 +1011,7 @@ CONTAINS
       !----------------------------------------------------------
       !  COMPUTE SURFACE HEAT AND MOISTURE FLUXES
       !----------------------------------------------------------
- DO I=its,ite
+ do I=its,ite
 
     !For computing the diagnostics and fluxes (below), whether the fluxes
     !are turned off or on, we need the following:
@@ -1025,7 +1025,7 @@ CONTAINS
     PSIQ2=MAX(LOG((2.0+z_q(i))/z_q(I))-PSIH2(I) ,1.0)
     PSIQ10=MAX(LOG((10.0+z_q(i))/z_q(I))-PSIH10(I) ,1.0)
 
-    IF (ISFFLX .LT. 1) THEN                            
+    if (ISFFLX .LT. 1) then                            
 
        QFX(i)  = 0.                                                              
        HFX(i)  = 0.    
@@ -1036,14 +1036,14 @@ CONTAINS
        CH(I)   = 0.                                                             
        CHS2(i) = 0.                                                              
        CQS2(i) = 0.                                                              
-       IF(PRESENT(ck)  .and. PRESENT(cd) .and. &
-         &PRESENT(cka) .and. PRESENT(cda)) THEN
+       if(PRESENT(ck)  .and. PRESENT(cd) .and. &
+         &PRESENT(cka) .and. PRESENT(cda)) then
            Ck(I) = 0.
            Cd(I) = 0.
            Cka(I)= 0.
            Cda(I)= 0.
-       ENDIF
-    ELSE
+       endif
+    else
 
       !------------------------------------------
       ! CALCULATE THE EXCHANGE COEFFICIENTS FOR HEAT (FLHC)
@@ -1063,18 +1063,18 @@ CONTAINS
       !----------------------------------
       ! COMPUTE SURFACE HEAT FLUX:
       !----------------------------------
-      IF(XLAND(I)-1.5.GT.0.)THEN      !WATER                                           
+      if(XLAND(I)-1.5.GT.0.)then      !WATER                                           
          HFX(I)=FLHC(I)*(THGB(I)-TH1D(I))                                
-         IF ( PRESENT(ISFTCFLX) ) THEN
-            IF ( ISFTCFLX.NE.0 ) THEN
+         if ( PRESENT(ISFTCFLX) ) then
+            if ( ISFTCFLX.NE.0 ) then
                ! AHW: add dissipative heating term
                HFX(I)=HFX(I)+RHO1D(I)*USTM(I)*USTM(I)*WSPDI(I)
-            ENDIF
-         ENDIF
-      ELSEIF(XLAND(I)-1.5.LT.0.)THEN  !LAND                               
+            endif
+         endif
+      elseif(XLAND(I)-1.5.LT.0.)then  !LAND                               
          HFX(I)=FLHC(I)*(THGB(I)-TH1D(I))                                
          HFX(I)=MAX(HFX(I),-250.)                                       
-      ENDIF
+      endif
 
       !CHS(I)=UST(I)*KARMAN/(ALOG(KARMAN*UST(I)*ZA(I) &
       !       /XKA+ZA(I)/ZL)-PSIH(I))
@@ -1091,15 +1091,15 @@ CONTAINS
       CQS2(I)=UST(I)*KARMAN/PSIQ2
       CHS2(I)=UST(I)*KARMAN/PSIT2
 
-      IF(PRESENT(ck)  .and. PRESENT(cd) .and. &
-        &PRESENT(cka) .and. PRESENT(cda)) THEN
+      if(PRESENT(ck)  .and. PRESENT(cd) .and. &
+        &PRESENT(cka) .and. PRESENT(cda)) then
          Ck(I)=(karman/psix10)*(karman/psiq10)
          Cd(I)=(karman/psix10)*(karman/psix10)
          Cka(I)=(karman/psix)*(karman/psiq)
          Cda(I)=(karman/psix)*(karman/psix)
-      ENDIF
+      endif
 
-   ENDIF !end ISFFLX option
+   endif !end ISFFLX option
 
    !-----------------------------------------------------
    !COMPUTE DIAGNOSTICS
@@ -1139,55 +1139,55 @@ CONTAINS
    TH2(I)=THGB(I)+DTG*PSIT2/PSIT
    !***  BE CERTAIN THAT THE 2-M THETA IS BRACKETED BY
    !***  THE VALUES AT THE SURFACE AND LOWEST MODEL LEVEL.
-   IF ((TH1D(I)>THGB(I) .AND. (TH2(I)<THGB(I) .OR. TH2(I)>TH1D(I))) .OR. &
-       (TH1D(I)<THGB(I) .AND. (TH2(I)>THGB(I) .OR. TH2(I)<TH1D(I)))) THEN
+   if ((TH1D(I)>THGB(I) .AND. (TH2(I)<THGB(I) .OR. TH2(I)>TH1D(I))) .OR. &
+       (TH1D(I)<THGB(I) .AND. (TH2(I)>THGB(I) .OR. TH2(I)<TH1D(I)))) then
        TH2(I)=THGB(I) + 2.*(TH1D(I)-THGB(I))/ZA(I)
-   ENDIF
+   endif
    T2(I)=TH2(I)*(PSFC(I)/100.)**ROVCP
 
    Q2(I)=QSFCMR(I)+(QV1D(I)-QSFCMR(I))*PSIQ2/PSIQ
    Q2(I)= MAX(Q2(I), MIN(QSFCMR(I), QV1D(I)))
    Q2(I)= MIN(Q2(I), 1.05*QV1D(I))
 
-   IF ( debug_code ) THEN
+   if ( debug_code ) then
       yesno = 0
-      IF (HFX(I) > 1200. .OR. HFX(I) < -700.)THEN
-            print*,"SUSPICIOUS VALUES IN MYNN SFCLAYER",&
+      if (HFX(I) > 1200. .OR. HFX(I) < -700.)then
+            print*,"SUSPICIOUS VALUES in MYNN SFCLAYER",&
             I,J, "HFX: ",HFX(I)
             yesno = 1
-      ENDIF
-      IF (LH(I)  > 1200. .OR. LH(I)  < -700.)THEN
-            print*,"SUSPICIOUS VALUES IN MYNN SFCLAYER",&
+      endif
+      if (LH(I)  > 1200. .OR. LH(I)  < -700.)then
+            print*,"SUSPICIOUS VALUES in MYNN SFCLAYER",&
             I,J, "LH: ",LH(I)
             yesno = 1
-      ENDIF
-      IF (UST(I) < 0.0 .OR. UST(I) > 4.0 )THEN
-            print*,"SUSPICIOUS VALUES IN MYNN SFCLAYER",&
+      endif
+      if (UST(I) < 0.0 .OR. UST(I) > 4.0 )then
+            print*,"SUSPICIOUS VALUES in MYNN SFCLAYER",&
             I,J, "UST: ",UST(I)
             yesno = 1
-      ENDIF
-      IF (WSTAR(I)<0.0 .OR. WSTAR(I) > 6.0)THEN
-            print*,"SUSPICIOUS VALUES IN MYNN SFCLAYER",&
+      endif
+      if (WSTAR(I)<0.0 .OR. WSTAR(I) > 6.0)then
+            print*,"SUSPICIOUS VALUES in MYNN SFCLAYER",&
             I,J, "WSTAR: ",WSTAR(I)
             yesno = 1
-      ENDIF
-      IF (RHO1D(I)<0.0 .OR. RHO1D(I) > 1.6 )THEN
-            print*,"SUSPICIOUS VALUES IN MYNN SFCLAYER",&
+      endif
+      if (RHO1D(I)<0.0 .OR. RHO1D(I) > 1.6 )then
+            print*,"SUSPICIOUS VALUES in MYNN SFCLAYER",&
             I,J, "rho: ",RHO1D(I)
             yesno = 1
-      ENDIF
-      IF (QSFC(I)*1000. <0.0 .OR. QSFC(I)*1000. >40.)THEN
-            print*,"SUSPICIOUS VALUES IN MYNN SFCLAYER",&
+      endif
+      if (QSFC(I)*1000. <0.0 .OR. QSFC(I)*1000. >40.)then
+            print*,"SUSPICIOUS VALUES in MYNN SFCLAYER",&
             I,J, "QSFC: ",QSFC(I)
             yesno = 1
-      ENDIF
-      IF (PBLH(I)<0. .OR. PBLH(I)>6000.)THEN
-            print*,"SUSPICIOUS VALUES IN MYNN SFCLAYER",&
+      endif
+      if (PBLH(I)<0. .OR. PBLH(I)>6000.)then
+            print*,"SUSPICIOUS VALUES in MYNN SFCLAYER",&
             I,J, "PBLH: ",PBLH(I)
             yesno = 1
-      ENDIF
+      endif
 
-      IF (yesno == 1) THEN
+      if (yesno == 1) then
         print*," OTHER INFO:"
         write(*,1001)"REGIME:",REGIME(I)," z/L:",ZOL(I)," U*:",UST(I),&
               " Tstar:",MOL(I)
@@ -1200,14 +1200,14 @@ CONTAINS
               QSFC(I)," QVSH(I):",QVSH(I)
         print*,"PSIX=",PSIX," Z0:",ZNTstoch(I)," T1D(i):",T1D(i)
         write(*,*)"============================================="
-      ENDIF
-   ENDIF
+      endif
+   endif
 
- ENDDO !end i-loop
+ enddo !end i-loop
 
-END SUBROUTINE SFCLAY1D_mynn
+end subroutine SFCLAY1D_mynn
 !-------------------------------------------------------------------          
-   SUBROUTINE zilitinkevich_1995(Z_0,Zt,Zq,restar,ustar,KARMAN,&
+   subroutine zilitinkevich_1995(Z_0,Zt,Zq,restar,ustar,KARMAN,&
        & landsea,IZ0TLND2,spp_pbl,rstoch)
 
        ! This subroutine returns the thermal and moisture roughness lengths
@@ -1219,45 +1219,45 @@ END SUBROUTINE SFCLAY1D_mynn
        !            to work with the Noah LSM and may be specific for that
        !            LSM only. Tests with RUC LSM showed no improvements. 
 
-       IMPLICIT NONE
-       REAL, INTENT(IN) :: Z_0,restar,ustar,KARMAN,landsea
-       INTEGER, OPTIONAL, INTENT(IN)::  IZ0TLND2
-       REAL, INTENT(OUT) :: Zt,Zq
-       REAL :: CZIL  !=0.100 in Chen et al. (1997)
+       implicit none
+       real, intent(in) :: Z_0,restar,ustar,KARMAN,landsea
+       integer, optional, intent(in)::  IZ0TLND2
+       real, intent(out) :: Zt,Zq
+       real :: CZIL  !=0.100 in Chen et al. (1997)
                      !=0.075 in Zilitinkevich (1995)
                      !=0.500 in Lemone et al. (2008)
-       INTEGER,  INTENT(IN)  ::    spp_pbl
-       REAL,     INTENT(IN)  ::    rstoch
+       integer,  intent(in)  ::    spp_pbl
+       real,     intent(in)  ::    rstoch
 
 
-       IF (landsea-1.5 .GT. 0) THEN    !WATER
+       if (landsea-1.5 .GT. 0) then    !WATER
 
           !THIS IS BASED ON Zilitinkevich, Grachev, and Fairall (2001;
           !Their equations 15 and 16).
-          IF (restar .LT. 0.1) THEN
+          if (restar .LT. 0.1) then
              Zt = Z_0*EXP(KARMAN*2.0)
              Zt = MIN( Zt, 6.0e-5)
              Zt = MAX( Zt, 2.0e-9)
              Zq = Z_0*EXP(KARMAN*3.0)
              Zq = MIN( Zq, 6.0e-5)
              Zq = MAX( Zq, 2.0e-9)
-          ELSE
+          else
              Zt = Z_0*EXP(-KARMAN*(4.0*SQRT(restar)-3.2))
              Zt = MIN( Zt, 6.0e-5)
              Zt = MAX( Zt, 2.0e-9)
              Zq = Z_0*EXP(-KARMAN*(4.0*SQRT(restar)-4.2))
              Zq = MIN( Zt, 6.0e-5)
              Zq = MAX( Zt, 2.0e-9)
-          ENDIF
+          endif
 
-       ELSE                             !LAND
+       else                             !LAND
 
           !Option to modify CZIL according to Chen & Zhang, 2009
-          IF ( IZ0TLND2 .EQ. 1 ) THEN
+          if ( IZ0TLND2 .EQ. 1 ) then
              CZIL = 10.0 ** ( -0.40 * ( Z_0 / 0.07 ) )
-          ELSE
+          else
              CZIL = 0.085 !0.075 !0.10
-          END IF
+          end if
 
           Zt = Z_0*EXP(-KARMAN*CZIL*SQRT(restar))
           Zt = MIN( Zt, 0.75*Z_0)
@@ -1273,13 +1273,13 @@ END SUBROUTINE SFCLAY1D_mynn
              Zq = Zt
           endif
 
-       ENDIF
+       endif
                    
        return
 
-   END SUBROUTINE zilitinkevich_1995
+   end subroutine zilitinkevich_1995
 !--------------------------------------------------------------------
-   SUBROUTINE davis_etal_2008(Z_0,ustar)
+   subroutine davis_etal_2008(Z_0,ustar)
 
     !a.k.a. : Donelan et al. (2004)
     !This formulation for roughness length was designed to match 
@@ -1287,11 +1287,11 @@ END SUBROUTINE SFCLAY1D_mynn
     !This is an update version from Davis et al. 2008, which
     !corrects a small-bias in Z_0 (AHW real-time 2012).
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: ustar
-       REAL, INTENT(OUT)  :: Z_0
-       REAL :: ZW, ZN1, ZN2
-       REAL, PARAMETER :: G=9.81, OZO=1.59E-5
+       implicit none
+       real, intent(in)  :: ustar
+       real, intent(out)  :: Z_0
+       real :: ZW, ZN1, ZN2
+       real, parameter :: G=9.81, OZO=1.59E-5
 
        !OLD FORM: Z_0 = 10.*EXP(-10./(ustar**(1./3.)))
        !NEW FORM:
@@ -1307,18 +1307,18 @@ END SUBROUTINE SFCLAY1D_mynn
                    
        return
 
-   END SUBROUTINE davis_etal_2008
+   end subroutine davis_etal_2008
 !--------------------------------------------------------------------
-   SUBROUTINE Taylor_Yelland_2001(Z_0,ustar,wsp10)
+   subroutine Taylor_Yelland_2001(Z_0,ustar,wsp10)
 
     !This formulation for roughness length was designed account for 
     !wave steepness.
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: ustar,wsp10
-       REAL, INTENT(OUT) :: Z_0
-       REAL, parameter  :: g=9.81, pi=3.14159265
-       REAL :: hs, Tp, Lp
+       implicit none
+       real, intent(in)  :: ustar,wsp10
+       real, intent(out) :: Z_0
+       real, parameter  :: g=9.81, pi=3.14159265
+       real :: hs, Tp, Lp
 
        !hs is the significant wave height
         hs = 0.0248*(wsp10**2.)
@@ -1333,21 +1333,21 @@ END SUBROUTINE SFCLAY1D_mynn
                    
        return
 
-   END SUBROUTINE Taylor_Yelland_2001
+   end subroutine Taylor_Yelland_2001
 !--------------------------------------------------------------------
-   SUBROUTINE charnock_1955(Z_0,ustar,wsp10,visc,zu)
+   subroutine charnock_1955(Z_0,ustar,wsp10,visc,zu)
  
     !This version of Charnock's relation employs a varying
     !Charnock parameter, similar to COARE3.0 [Fairall et al. (2003)].
     !The Charnock parameter CZC is varied from .011 to .018 
     !between 10-m wsp = 10 and 18. 
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: ustar, visc, wsp10, zu
-       REAL, INTENT(OUT) :: Z_0
-       REAL, PARAMETER   :: G=9.81, CZO2=0.011
-       REAL              :: CZC    !variable charnock "constant"   
-       REAL              :: wsp10m ! logarithmically calculated 10 m
+       implicit none
+       real, intent(in)  :: ustar, visc, wsp10, zu
+       real, intent(out) :: Z_0
+       real, parameter   :: G=9.81, CZO2=0.011
+       real              :: CZC    !variable charnock "constant"   
+       real              :: wsp10m ! logarithmically calculated 10 m
 
        wsp10m = wsp10*log(10./1e-4)/log(zu/1e-4)
        CZC = CZO2 + 0.007*MIN(MAX((wsp10m-10.)/8., 0.), 1.0)
@@ -1358,9 +1358,9 @@ END SUBROUTINE SFCLAY1D_mynn
 
        return
 
-   END SUBROUTINE charnock_1955
+   end subroutine charnock_1955
 !--------------------------------------------------------------------
-   SUBROUTINE edson_etal_2013(Z_0,ustar,wsp10,visc,zu)
+   subroutine edson_etal_2013(Z_0,ustar,wsp10,visc,zu)
 
      !This version of Charnock's relation employs a varying
      !Charnock parameter, taken from COARE 3.5 [Edson et al. (2001, JPO)].
@@ -1369,13 +1369,13 @@ END SUBROUTINE SFCLAY1D_mynn
      !11 Nov 2021: Note that this was finally fixed according to the
      !             Edson et al (2014) corrigendum, where "m" was corrected.
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: ustar, visc, wsp10, zu
-       REAL, INTENT(OUT) :: Z_0
-       REAL, PARAMETER   :: G=9.81
-       REAL, PARAMETER   :: m=0.0017, b=-0.005
-       REAL              :: CZC    ! variable charnock "constant"
-       REAL              :: wsp10m ! logarithmically calculated 10 m
+       implicit none
+       real, intent(in)  :: ustar, visc, wsp10, zu
+       real, intent(out) :: Z_0
+       real, parameter   :: G=9.81
+       real, parameter   :: m=0.0017, b=-0.005
+       real              :: CZC    ! variable charnock "constant"
+       real              :: wsp10m ! logarithmically calculated 10 m
 
        wsp10m = wsp10*log(10/1e-4)/log(zu/1e-4)
        wsp10m = MIN(19., wsp10m)
@@ -1388,9 +1388,9 @@ END SUBROUTINE SFCLAY1D_mynn
 
        return
 
-   END SUBROUTINE edson_etal_2013
+   end subroutine edson_etal_2013
 !--------------------------------------------------------------------
-   SUBROUTINE garratt_1992(Zt,Zq,Z_0,Ren,landsea)
+   subroutine garratt_1992(Zt,Zq,Z_0,Ren,landsea)
 
     !This formulation for the thermal and moisture roughness lengths
     !(Zt and Zq) relates them to Z0 via the roughness Reynolds number (Ren).
@@ -1399,13 +1399,13 @@ END SUBROUTINE SFCLAY1D_mynn
     !data. The formula for land uses a constant ratio (Z_0/7.4) taken
     !from Garratt (1992).
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: Ren, Z_0,landsea
-       REAL, INTENT(OUT) :: Zt,Zq
-       REAL :: Rq
-       REAL, PARAMETER  :: e=2.71828183
+       implicit none
+       real, intent(in)  :: Ren, Z_0,landsea
+       real, intent(out) :: Zt,Zq
+       real :: Rq
+       real, parameter  :: e=2.71828183
 
-       IF (landsea-1.5 .GT. 0) THEN    !WATER
+       if (landsea-1.5 .GT. 0) then    !WATER
 
           Zt = Z_0*EXP(2.0 - (2.48*(Ren**0.25)))
           Zq = Z_0*EXP(2.0 - (2.28*(Ren**0.25)))
@@ -1414,16 +1414,16 @@ END SUBROUTINE SFCLAY1D_mynn
           Zq = MAX( Zq, 2.0e-9)
           Zt = MIN( Zt, 5.5e-5)
           Zt = MAX( Zt, 2.0e-9) !same lower limit as ECMWF
-       ELSE                            !LAND
+       else                            !LAND
           Zq = Z_0/(e**2.)      !taken from Garratt (1980,1992)
           Zt = Zq
-       ENDIF
+       endif
                    
        return
 
-    END SUBROUTINE garratt_1992
+    end subroutine garratt_1992
 !--------------------------------------------------------------------
-    SUBROUTINE fairall_etal_2003(Zt,Zq,Ren,ustar,visc,rstoch,spp_pbl)
+    subroutine fairall_etal_2003(Zt,Zq,Ren,ustar,visc,rstoch,spp_pbl)
 
     !This formulation for thermal and moisture roughness length (Zt and Zq)
     !as a function of the roughness Reynolds number (Ren) comes from the
@@ -1435,12 +1435,12 @@ END SUBROUTINE SFCLAY1D_mynn
     !
     !This is for use over water only.
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)   :: Ren,ustar,visc,rstoch
-       INTEGER, INTENT(IN):: spp_pbl
-       REAL, INTENT(OUT)  :: Zt,Zq
+       implicit none
+       real, intent(in)   :: Ren,ustar,visc,rstoch
+       integer, intent(in):: spp_pbl
+       real, intent(out)  :: Zt,Zq
 
-       IF (Ren .le. 2.) then
+       if (Ren .le. 2.) then
 
           Zt = (5.5e-5)*(Ren**(-0.60))
           Zq = Zt
@@ -1448,13 +1448,13 @@ END SUBROUTINE SFCLAY1D_mynn
           !Zq = 0.2*visc/MAX(ustar,0.1)
           !Zq = 0.3*visc/MAX(ustar,0.1)
 
-       ELSE
+       else
 
           !FOR ROUGH SEAS, USE COARE
           Zt = (5.5e-5)*(Ren**(-0.60))
           Zq = Zt
 
-       ENDIF
+       endif
 
        if (spp_pbl==1) then
           Zt = Zt + Zt * 0.5 * rstoch
@@ -1469,9 +1469,9 @@ END SUBROUTINE SFCLAY1D_mynn
 
        return
 
-    END SUBROUTINE fairall_etal_2003
+    end subroutine fairall_etal_2003
 !--------------------------------------------------------------------
-    SUBROUTINE fairall_etal_2014(Zt,Zq,Ren,ustar,visc,rstoch,spp_pbl)
+    subroutine fairall_etal_2014(Zt,Zq,Ren,ustar,visc,rstoch,spp_pbl)
 
     !This formulation for thermal and moisture roughness length (Zt and Zq)
     !as a function of the roughness Reynolds number (Ren) comes from the
@@ -1479,28 +1479,28 @@ END SUBROUTINE SFCLAY1D_mynn
     ![Fairall et al. (2014? coming soon, not yet published as of July 2014)].
     !This is for use over water only.
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: Ren,ustar,visc,rstoch
-       INTEGER, INTENT(IN):: spp_pbl
-       REAL, INTENT(OUT) :: Zt,Zq
+       implicit none
+       real, intent(in)  :: Ren,ustar,visc,rstoch
+       integer, intent(in):: spp_pbl
+       real, intent(out) :: Zt,Zq
 
        !Zt = (5.5e-5)*(Ren**(-0.60))
        Zt = MIN(1.6E-4, 5.8E-5/(Ren**0.72))
        Zq = Zt
 
-       IF (spp_pbl ==1) THEN
+       if (spp_pbl ==1) then
           Zt = MAX(Zt + Zt*0.5*rstoch,2.0e-9)
           Zq = MAX(Zt + Zt*0.5*rstoch,2.0e-9)
-       ELSE
+       else
           Zt = MAX(Zt,2.0e-9)
           Zq = MAX(Zt,2.0e-9)
-       ENDIF
+       endif
 
        return
 
-    END SUBROUTINE fairall_etal_2014
+    end subroutine fairall_etal_2014
 !--------------------------------------------------------------------
-    SUBROUTINE Yang_2008(Z_0,Zt,Zq,ustar,tstar,qst,Ren,visc,landsea)
+    subroutine Yang_2008(Z_0,Zt,Zq,ustar,tstar,qst,Ren,visc,landsea)
 
     !This is a modified version of Yang et al (2002 QJRMS, 2008 JAMC) 
     !and Chen et al (2010, J of Hydromet). Although it was originally 
@@ -1526,15 +1526,15 @@ END SUBROUTINE SFCLAY1D_mynn
     !
     !This should only be used over land!
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: Z_0, Ren, ustar, tstar, qst, visc, landsea
-       REAL              :: ht,     &! roughness height at critical Reynolds number
+       implicit none
+       real, intent(in)  :: Z_0, Ren, ustar, tstar, qst, visc, landsea
+       real              :: ht,     &! roughness height at critical Reynolds number
                             tstar2, &! bounded T*, forced to be non-positive
                             qstar2, &! bounded q*, forced to be non-positive
                             Z_02,   &! bounded Z_0 for variable Renc2 calc
                             Renc2    ! variable Renc, function of Z_0
-       REAL, INTENT(OUT) :: Zt,Zq
-       REAL, PARAMETER  :: Renc=300., & !old constant Renc
+       real, intent(out) :: Zt,Zq
+       real, parameter  :: Renc=300., & !old constant Renc
                            beta=1.5,  & !important for diurnal variation
                            m=170.,    & !slope for Renc2 function
                            b=691.       !y-intercept for Renc2 function
@@ -1555,25 +1555,25 @@ END SUBROUTINE SFCLAY1D_mynn
 
        return
 
-    END SUBROUTINE Yang_2008
+    end subroutine Yang_2008
 !--------------------------------------------------------------------
-    SUBROUTINE Andreas_2002(Z_0,bvisc,ustar,Zt,Zq)
+    subroutine Andreas_2002(Z_0,bvisc,ustar,Zt,Zq)
 
     ! This is taken from Andreas (2002; J. of Hydromet) and 
     ! Andreas et al. (2005; BLM).
     !
     ! This should only be used over snow/ice!
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: Z_0, bvisc, ustar
-       REAL, INTENT(OUT) :: Zt, Zq
-       REAL :: Ren2, zntsno
+       implicit none
+       real, intent(in)  :: Z_0, bvisc, ustar
+       real, intent(out) :: Zt, Zq
+       real :: Ren2, zntsno
 
-       REAL, PARAMETER  :: bt0_s=1.25,  bt0_t=0.149,  bt0_r=0.317,  &
+       real, parameter  :: bt0_s=1.25,  bt0_t=0.149,  bt0_r=0.317,  &
                            bt1_s=0.0,   bt1_t=-0.55,  bt1_r=-0.565, &
                            bt2_s=0.0,   bt2_t=0.0,    bt2_r=-0.183
 
-       REAL, PARAMETER  :: bq0_s=1.61,  bq0_t=0.351,  bq0_r=0.396,  &
+       real, parameter  :: bq0_s=1.61,  bq0_t=0.351,  bq0_r=0.396,  &
                            bq1_s=0.0,   bq1_t=-0.628, bq1_r=-0.512, &
                            bq2_s=0.0,   bq2_t=0.0,    bq2_r=-0.180
 
@@ -1585,48 +1585,48 @@ END SUBROUTINE SFCLAY1D_mynn
 
        ! Make sure that Re is not outside of the range of validity
        ! for using their equations
-       IF (Ren2 .gt. 1000.) Ren2 = 1000. 
+       if (Ren2 .gt. 1000.) Ren2 = 1000. 
 
-       IF (Ren2 .le. 0.135) then
+       if (Ren2 .le. 0.135) then
 
           Zt = zntsno*EXP(bt0_s + bt1_s*LOG(Ren2) + bt2_s*LOG(Ren2)**2)
           Zq = zntsno*EXP(bq0_s + bq1_s*LOG(Ren2) + bq2_s*LOG(Ren2)**2)
 
-       ELSE IF (Ren2 .gt. 0.135 .AND. Ren2 .lt. 2.5) then
+       else if (Ren2 .gt. 0.135 .AND. Ren2 .lt. 2.5) then
 
           Zt = zntsno*EXP(bt0_t + bt1_t*LOG(Ren2) + bt2_t*LOG(Ren2)**2)
           Zq = zntsno*EXP(bq0_t + bq1_t*LOG(Ren2) + bq2_t*LOG(Ren2)**2)
 
-       ELSE
+       else
 
           Zt = zntsno*EXP(bt0_r + bt1_r*LOG(Ren2) + bt2_r*LOG(Ren2)**2)
           Zq = zntsno*EXP(bq0_r + bq1_r*LOG(Ren2) + bq2_r*LOG(Ren2)**2)
 
-       ENDIF
+       endif
 
        return
 
-    END SUBROUTINE Andreas_2002
+    end subroutine Andreas_2002
 !--------------------------------------------------------------------
-    SUBROUTINE PSI_Hogstrom_1996(psi_m, psi_h, zL, Zt, Z_0, Za)
+    subroutine PSI_Hogstrom_1996(psi_m, psi_h, zL, Zt, Z_0, Za)
 
     ! This subroutine returns the stability functions based off
     ! of Hogstrom (1996).
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: zL, Zt, Z_0, Za
-       REAL, INTENT(OUT) :: psi_m, psi_h
-       REAL  :: x, x0, y, y0, zmL, zhL
+       implicit none
+       real, intent(in)  :: zL, Zt, Z_0, Za
+       real, intent(out) :: psi_m, psi_h
+       real  :: x, x0, y, y0, zmL, zhL
 
        zmL = Z_0*zL/Za  
        zhL = Zt*zL/Za
 
-       IF (zL .gt. 0.) THEN  !STABLE (not well tested - seem large)
+       if (zL .gt. 0.) then  !STABLE (not well tested - seem large)
 
           psi_m = -5.3*(zL - zmL)
           psi_h = -8.0*(zL - zhL)
  
-       ELSE                 !UNSTABLE
+       else                 !UNSTABLE
 
           x = (1.-19.0*zL)**0.25
           x0= (1.-19.0*zmL)**0.25
@@ -1638,33 +1638,33 @@ END SUBROUTINE SFCLAY1D_mynn
                     &2.0*ATAN(x) + 2.0*ATAN(x0)
           psi_h = 2.*LOG((1.+y)/(1.+y0))
 
-       ENDIF
+       endif
                    
        return
 
-    END SUBROUTINE PSI_Hogstrom_1996
+    end subroutine PSI_Hogstrom_1996
 !--------------------------------------------------------------------
-    SUBROUTINE PSI_DyerHicks(psi_m, psi_h, zL, Zt, Z_0, Za)
+    subroutine PSI_DyerHicks(psi_m, psi_h, zL, Zt, Z_0, Za)
 
     ! This subroutine returns the stability functions based off
     ! of Hogstrom (1996), but with different constants compatible
     ! with Dyer and Hicks (1970/74?). This formulation is used for
     ! testing/development by Nakanishi (personal communication).
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: zL, Zt, Z_0, Za
-       REAL, INTENT(OUT) :: psi_m, psi_h
-       REAL  :: x, x0, y, y0, zmL, zhL
+       implicit none
+       real, intent(in)  :: zL, Zt, Z_0, Za
+       real, intent(out) :: psi_m, psi_h
+       real  :: x, x0, y, y0, zmL, zhL
 
        zmL = Z_0*zL/Za  !Zo/L
        zhL = Zt*zL/Za   !Zt/L
 
-       IF (zL .gt. 0.) THEN  !STABLE
+       if (zL .gt. 0.) then  !STABLE
 
           psi_m = -5.0*(zL - zmL)
           psi_h = -5.0*(zL - zhL)
  
-       ELSE                 !UNSTABLE
+       else                 !UNSTABLE
 
           x = (1.-16.*zL)**0.25
           x0= (1.-16.*zmL)**0.25
@@ -1677,86 +1677,86 @@ END SUBROUTINE SFCLAY1D_mynn
                     &2.0*ATAN(x) + 2.0*ATAN(x0)
           psi_h = 2.*LOG((1.+y)/(1.+y0))
 
-       ENDIF
+       endif
                    
        return
 
-    END SUBROUTINE PSI_DyerHicks
+    end subroutine PSI_DyerHicks
 !--------------------------------------------------------------------
-    SUBROUTINE PSI_Beljaars_Holtslag_1991(psi_m, psi_h, zL)
+    subroutine PSI_Beljaars_Holtslag_1991(psi_m, psi_h, zL)
 
     ! This subroutine returns the stability functions based off
     ! of Beljaar and Holtslag 1991, which is an extension of Holtslag
     ! and Debruin 1989.
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: zL
-       REAL, INTENT(OUT) :: psi_m, psi_h
-       REAL, PARAMETER  :: a=1., b=0.666, c=5., d=0.35
+       implicit none
+       real, intent(in)  :: zL
+       real, intent(out) :: psi_m, psi_h
+       real, parameter  :: a=1., b=0.666, c=5., d=0.35
 
-       IF (zL .lt. 0.) THEN  !UNSTABLE
+       if (zL .lt. 0.) then  !UNSTABLE
 
-          WRITE(*,*)"WARNING: Universal stability functions from"
-          WRITE(*,*)"        Beljaars and Holtslag (1991) should only"
-          WRITE(*,*)"        be used in the stable regime!"
+          write(*,*)"WARNING: Universal stability functions from"
+          write(*,*)"        Beljaars and Holtslag (1991) should only"
+          write(*,*)"        be used in the stable regime!"
           psi_m = 0.
           psi_h = 0.
  
-       ELSE                 !STABLE
+       else                 !STABLE
 
           psi_m = -(a*zL + b*(zL -(c/d))*exp(-d*zL) + (b*c/d))
           psi_h = -((1.+.666*a*zL)**1.5 + &
                   b*(zL - (c/d))*exp(-d*zL) + (b*c/d) -1.)
 
-       ENDIF
+       endif
                    
        return
 
-    END SUBROUTINE PSI_Beljaars_Holtslag_1991
+    end subroutine PSI_Beljaars_Holtslag_1991
 !--------------------------------------------------------------------
-    SUBROUTINE PSI_Zilitinkevich_Esau_2007(psi_m, psi_h, zL)
+    subroutine PSI_Zilitinkevich_Esau_2007(psi_m, psi_h, zL)
 
     ! This subroutine returns the stability functions come from
     ! Zilitinkevich and Esau (2007, BM), which are formulatioed from the
     ! "generalized similarity theory" and tuned to the LES DATABASE64
     ! to determine their dependence on z/L.
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: zL
-       REAL, INTENT(OUT) :: psi_m, psi_h
-       REAL, PARAMETER  :: Cm=3.0, Ct=2.5
+       implicit none
+       real, intent(in)  :: zL
+       real, intent(out) :: psi_m, psi_h
+       real, parameter  :: Cm=3.0, Ct=2.5
 
-       IF (zL .lt. 0.) THEN  !UNSTABLE
+       if (zL .lt. 0.) then  !UNSTABLE
 
-          WRITE(*,*)"WARNING: Universal stability function from"
-          WRITE(*,*)"        Zilitinkevich and Esau (2007) should only"
-          WRITE(*,*)"        be used in the stable regime!"
+          write(*,*)"WARNING: Universal stability function from"
+          write(*,*)"        Zilitinkevich and Esau (2007) should only"
+          write(*,*)"        be used in the stable regime!"
           psi_m = 0.
           psi_h = 0.
  
-       ELSE                 !STABLE
+       else                 !STABLE
 
           psi_m = -Cm*(zL**(5./6.))
           psi_h = -Ct*(zL**(4./5.))
 
-       ENDIF
+       endif
                    
        return
 
-    END SUBROUTINE PSI_Zilitinkevich_Esau_2007
+    end subroutine PSI_Zilitinkevich_Esau_2007
 !--------------------------------------------------------------------
-    SUBROUTINE PSI_Businger_1971(psi_m, psi_h, zL)
+    subroutine PSI_Businger_1971(psi_m, psi_h, zL)
 
     ! This subroutine returns the flux-profile relationships
     ! of Businger el al. 1971.
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: zL
-       REAL, INTENT(OUT) :: psi_m, psi_h
-       REAL  :: x, y
-       REAL, PARAMETER  ::  Pi180 = 3.14159265/180.
+       implicit none
+       real, intent(in)  :: zL
+       real, intent(out) :: psi_m, psi_h
+       real  :: x, y
+       real, parameter  ::  Pi180 = 3.14159265/180.
 
-       IF (zL .lt. 0.) THEN  !UNSTABLE
+       if (zL .lt. 0.) then  !UNSTABLE
 
           x = (1. - 15.0*zL)**0.25
           y = (1. - 9.0*zL)**0.5
@@ -1766,18 +1766,18 @@ END SUBROUTINE SFCLAY1D_mynn
                  &2.0*ATAN(x) + Pi180*90.
           psi_h = 2.*LOG((1.+y)/2.)
 
-       ELSE                 !STABLE
+       else                 !STABLE
 
           psi_m = -4.7*zL
           psi_h = -(4.7/0.74)*zL
 
-       ENDIF
+       endif
                    
        return
 
-    END SUBROUTINE PSI_Businger_1971
+    end subroutine PSI_Businger_1971
 !--------------------------------------------------------------------
-    SUBROUTINE PSI_Suselj_Sood_2010(psi_m, psi_h, zL)
+    subroutine PSI_Suselj_Sood_2010(psi_m, psi_h, zL)
 
     !This subroutine returns flux-profile relatioships based off
     !of Lobocki (1993), which is derived from the MY-level 2 model.
@@ -1786,12 +1786,12 @@ END SUBROUTINE SFCLAY1D_mynn
     !are more agressive (larger magnitude) than most formulations. They
     !showed improvement over water, but untested over land.
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: zL
-       REAL, INTENT(OUT) :: psi_m, psi_h
-       REAL, PARAMETER  :: Rfc=0.19, Ric=0.183, PHIT=0.8
+       implicit none
+       real, intent(in)  :: zL
+       real, intent(out) :: psi_m, psi_h
+       real, parameter  :: Rfc=0.19, Ric=0.183, PHIT=0.8
 
-       IF (zL .gt. 0.) THEN  !STABLE
+       if (zL .gt. 0.) then  !STABLE
 
           psi_m = -(zL/Rfc + 1.1223*EXP(1.-1.6666/zL))
           !psi_h = -zL*Ric/((Rfc**2.)*PHIT) + 8.209*(zL**1.1091)
@@ -1799,26 +1799,26 @@ END SUBROUTINE SFCLAY1D_mynn
           !THEIR FIG 1. THIS EQ (BELOW) MATCHES THEIR FIG 1 BETTER:
           psi_h = -(zL*Ric/((Rfc**2.)*5.) + 7.09*(zL**1.1091))
  
-       ELSE                 !UNSTABLE
+       else                 !UNSTABLE
 
           psi_m = 0.9904*LOG(1. - 14.264*zL)
           psi_h = 1.0103*LOG(1. - 16.3066*zL)
 
-       ENDIF
+       endif
                    
        return
 
-    END SUBROUTINE PSI_Suselj_Sood_2010
+    end subroutine PSI_Suselj_Sood_2010
 !--------------------------------------------------------------------
-    SUBROUTINE PSI_CB2005(psim1,psih1,zL,z0L)
+    subroutine PSI_CB2005(psim1,psih1,zL,z0L)
 
     ! This subroutine returns the stability functions based off
     ! of Cheng and Brutseart (2005, BLM), for use in stable conditions only.
     ! The returned values are the combination of psi((za+zo)/L) - psi(z0/L)
 
-       IMPLICIT NONE
-       REAL, INTENT(IN)  :: zL,z0L
-       REAL, INTENT(OUT) :: psim1,psih1
+       implicit none
+       real, intent(in)  :: zL,z0L
+       real, intent(out) :: psim1,psih1
 
        psim1 = -6.1*LOG(zL  + (1.+ zL **2.5)**0.4) &
                -6.1*LOG(z0L + (1.+ z0L**2.5)**0.4)
@@ -1827,70 +1827,70 @@ END SUBROUTINE SFCLAY1D_mynn
 
        return
 
-    END SUBROUTINE PSI_CB2005
+    end subroutine PSI_CB2005
 !--------------------------------------------------------------------
-    SUBROUTINE Li_etal_2010(zL, Rib, zaz0, z0zt)
+    subroutine Li_etal_2010(zL, Rib, zaz0, z0zt)
 
     !This subroutine returns a more robust z/L that best matches
     !the z/L from Hogstrom (1996) for unstable conditions and Beljaars
     !and Holtslag (1991) for stable conditions.
 
-       IMPLICIT NONE
-       REAL, INTENT(OUT)  :: zL
-       REAL, INTENT(IN) :: Rib, zaz0, z0zt
-       REAL :: alfa, beta, zaz02, z0zt2
-       REAL, PARAMETER  :: au11=0.045, bu11=0.003, bu12=0.0059, &
+       implicit none
+       real, intent(out)  :: zL
+       real, intent(in) :: Rib, zaz0, z0zt
+       real :: alfa, beta, zaz02, z0zt2
+       real, parameter  :: au11=0.045, bu11=0.003, bu12=0.0059, &
                           &bu21=-0.0828, bu22=0.8845, bu31=0.1739, &
                           &bu32=-0.9213, bu33=-0.1057
-       REAL, PARAMETER  :: aw11=0.5738, aw12=-0.4399, aw21=-4.901,&
+       real, parameter  :: aw11=0.5738, aw12=-0.4399, aw21=-4.901,&
                           &aw22=52.50, bw11=-0.0539, bw12=1.540, &
                           &bw21=-0.669, bw22=-3.282
-       REAL, PARAMETER  :: as11=0.7529, as21=14.94, bs11=0.1569,&
+       real, parameter  :: as11=0.7529, as21=14.94, bs11=0.1569,&
                           &bs21=-0.3091, bs22=-1.303
           
        !set limits according to Li et al (2010), p 157.
        zaz02=zaz0
-       IF (zaz0 .lt. 100.0) zaz02=100.
-       IF (zaz0 .gt. 100000.0) zaz02=100000.
+       if (zaz0 .lt. 100.0) zaz02=100.
+       if (zaz0 .gt. 100000.0) zaz02=100000.
 
        !set more limits according to Li et al (2010)
        z0zt2=z0zt
-       IF (z0zt .lt. 0.5) z0zt2=0.5
-       IF (z0zt .gt. 100.0) z0zt2=100.
+       if (z0zt .lt. 0.5) z0zt2=0.5
+       if (z0zt .gt. 100.0) z0zt2=100.
 
        alfa = LOG(zaz02)
        beta = LOG(z0zt2)
 
-       IF (Rib .le. 0.0) THEN
+       if (Rib .le. 0.0) then
           zL = au11*alfa*Rib**2 + (                   &
                &  (bu11*beta + bu12)*alfa**2 +        &
                &  (bu21*beta + bu22)*alfa    +        &
                &  (bu31*beta**2 + bu32*beta + bu33))*Rib
           !if(zL .LT. -15 .OR. zl .GT. 0.)print*,"VIOLATION Rib<0:",zL
-          zL = MAX(zL,-15.) !LIMITS SET ACCORDING TO Li et al (2010)
+          zL = MAX(zL,-15.) !LIMITS SET ACCORDING to Li et al (2010)
           zL = MIN(zL,0.)   !Figure 1.
-       ELSEIF (Rib .gt. 0.0 .AND. Rib .le. 0.2) THEN
+       elseif (Rib .gt. 0.0 .AND. Rib .le. 0.2) then
           zL = ((aw11*beta + aw12)*alfa +             &
              &  (aw21*beta + aw22))*Rib**2 +          &
              & ((bw11*beta + bw12)*alfa +             &
              &  (bw21*beta + bw22))*Rib
           !if(zL .LT. 0 .OR. zl .GT. 4)print*,"VIOLATION 0<Rib<0.2:",zL
-          zL = MIN(zL,4.) !LIMITS APPROX SET ACCORDING TO Li et al (2010)
+          zL = MIN(zL,4.) !LIMITS APPROX SET ACCORDING to Li et al (2010)
           zL = MAX(zL,0.) !THEIR FIGURE 1B.
-       ELSE
+       else
           zL = (as11*alfa + as21)*Rib + bs11*alfa +   &
              &  bs21*beta + bs22
           !if(zL .LE. 1 .OR. zl .GT. 23)print*,"VIOLATION Rib>0.2:",zL
-          zL = MIN(zL,20.) !LIMITS ACCORDING TO Li et al (2010), THIER
+          zL = MIN(zL,20.) !LIMITS ACCORDING to Li et al (2010), THIER
                            !FIGUE 1C.
           zL = MAX(zL,1.)
-       ENDIF
+       endif
 
        return
 
-    END SUBROUTINE Li_etal_2010
+    end subroutine Li_etal_2010
 !-------------------------------------------------------------------
-      REAL function zolri(ri,za,z0,zt,zol1,psi_opt)
+      real function zolri(ri,za,z0,zt,zol1,psi_opt)
 
       ! This iterative algorithm is a two-point secant method taken from the revised 
       ! surface layer scheme in WRF-ARW, written by Pedro Jimenez and Jimy Dudhia and 
@@ -1898,12 +1898,12 @@ END SUBROUTINE SFCLAY1D_mynn
       ! to input the thermal roughness length, zt, (as well as z0) and use initial
       ! estimate of z/L.
 
-      IMPLICIT NONE
-      REAL, INTENT(IN) :: ri,za,z0,zt,zol1
-      INTEGER, INTENT(IN) :: psi_opt
-      REAL :: x1,x2,fx1,fx2
-      INTEGER :: n
-      INTEGER, PARAMETER :: nmax = 20
+      implicit none
+      real, intent(in) :: ri,za,z0,zt,zol1
+      integer, intent(in) :: psi_opt
+      real :: x1,x2,fx1,fx2
+      integer :: n
+      integer, parameter :: nmax = 20
 
       if (ri.lt.0.)then
          x1=zol1 - 0.02  !-5.
@@ -1917,7 +1917,7 @@ END SUBROUTINE SFCLAY1D_mynn
       fx1=zolri2(x1,ri,za,z0,zt,psi_opt)
       fx2=zolri2(x2,ri,za,z0,zt,psi_opt)
         
-      Do While (abs(x1 - x2) > 0.01 .and. n < nmax)
+      do While (abs(x1 - x2) > 0.01 .and. n < nmax)
         if(abs(fx2) .lt. abs(fx1))then
           x1=x1-fx1/(fx2-fx1)*(x2-x1)
           fx1=zolri2(x1,ri,za,z0,zt,psi_opt)
@@ -1932,7 +1932,7 @@ END SUBROUTINE SFCLAY1D_mynn
 
       if (n==nmax .and. abs(x1 - x2) >= 0.01) then
          !if convergence fails, use approximate values:
-         CALL Li_etal_2010(zolri, ri, za/z0, z0/zt)
+         call Li_etal_2010(zolri, ri, za/z0, z0/zt)
          !print*,"FAILED, n=",n," Ri=",ri," zt=",zt
       else
          !print*,"SUCCESS,n=",n," Ri=",ri," z/L=",zolri
@@ -1941,7 +1941,7 @@ END SUBROUTINE SFCLAY1D_mynn
       return
       end function
 !-------------------------------------------------------------------
-      REAL function zolri2(zol2,ri2,za,z0,zt,psi_opt)
+      real function zolri2(zol2,ri2,za,z0,zt,psi_opt)
 
       ! INPUT: =================================
       ! zol2 - estimated z/L
@@ -1952,13 +1952,13 @@ END SUBROUTINE SFCLAY1D_mynn
       ! OUTPUT: ================================
       ! zolri2 - delta Ri
 
-      IMPLICIT NONE
-      INTEGER, INTENT(IN) :: psi_opt
-      REAL, INTENT(IN) :: ri2,za,z0,zt
-      REAL, INTENT(INOUT) :: zol2
-      REAL :: zol20,zol3,psim1,psih1,psix2,psit2,zolt
+      implicit none
+      integer, intent(in) :: psi_opt
+      real, intent(in) :: ri2,za,z0,zt
+      real, intent(inout) :: zol2
+      real :: zol20,zol3,psim1,psih1,psix2,psit2,zolt
 
-      if(zol2*ri2 .lt. 0.) THEN
+      if(zol2*ri2 .lt. 0.) then
          !print*,"WRONG QUADRANTS: z/L=",zol2," ri=",ri2
          zol2=0.
       endif 
@@ -1982,21 +1982,21 @@ END SUBROUTINE SFCLAY1D_mynn
       end function
 !====================================================================
 
-      REAL function zolrib(ri,za,z0,zt,logz0,logzt,zol1,psi_opt)
+      real function zolrib(ri,za,z0,zt,logz0,logzt,zol1,psi_opt)
 
       ! This iterative algorithm to compute z/L from bulk-Ri
 
-      IMPLICIT NONE
-      REAL, INTENT(IN) :: ri,za,z0,zt,logz0,logzt
-      INTEGER, INTENT(IN) :: psi_opt
-      REAL, INTENT(INOUT) :: zol1
-      REAL :: zol20,zol3,zolt,zolold
-      INTEGER :: n
-      INTEGER, PARAMETER :: nmax = 20
+      implicit none
+      real, intent(in) :: ri,za,z0,zt,logz0,logzt
+      integer, intent(in) :: psi_opt
+      real, intent(inout) :: zol1
+      real :: zol20,zol3,zolt,zolold
+      integer :: n
+      integer, parameter :: nmax = 20
       !REAL, DIMENSION(nmax):: zLhux
-      REAL :: psit2,psix2
+      real :: psit2,psix2
 
-      if(zol1*ri .lt. 0.) THEN
+      if(zol1*ri .lt. 0.) then
          !print*,"WRONG QUADRANTS: z/L=",zol1," ri=",ri
          zol1=0.
       endif
@@ -2010,7 +2010,7 @@ END SUBROUTINE SFCLAY1D_mynn
       endif
       n=1
 
-      DO While (abs(zolold - zolrib) > 0.01 .and. n < nmax)
+      do While (abs(zolold - zolrib) > 0.01 .and. n < nmax)
 
         if(n==1)then
           zolold=zol1
@@ -2037,7 +2037,7 @@ END SUBROUTINE SFCLAY1D_mynn
       if (n==nmax .and. abs(zolold - zolrib) > 0.01 ) then
          !print*,"iter FAIL, n=",n," Ri=",ri," z/L=",zolri
          !if convergence fails, use approximate values:
-         CALL Li_etal_2010(zolrib, ri, za/z0, z0/zt)
+         call Li_etal_2010(zolrib, ri, za/z0, z0/zt)
          !zLhux(n)=zolri
          !print*,"FAILED, n=",n," Ri=",ri," zt=",zt
          !print*,"z/L=",zLhux(1:nmax)
@@ -2049,15 +2049,15 @@ END SUBROUTINE SFCLAY1D_mynn
       end function
 !====================================================================
 
-   SUBROUTINE psi_init(psi_opt)
+   subroutine psi_init(psi_opt)
 
     ! Define tables from -10 <= z/L <= 10
 
-    INTEGER                   ::      N,psi_opt
-    REAL                      ::      zolf
+    integer                   ::      N,psi_opt
+    real                      ::      zolf
 
     if (psi_opt == 0) then
-       DO N=0,1000
+       do N=0,1000
           ! stable function tables
           zolf = float(n)*0.01
           psim_stab(n)=psim_stable_full(zolf)
@@ -2067,9 +2067,9 @@ END SUBROUTINE SFCLAY1D_mynn
           zolf = -float(n)*0.01
           psim_unstab(n)=psim_unstable_full(zolf)
           psih_unstab(n)=psih_unstable_full(zolf)
-       ENDDO
+       enddo
     else
-       DO N=0,1000
+       do N=0,1000
           ! stable function tables
           zolf = float(n)*0.01
           psim_stab(n)=psim_stable_full_gfs(zolf)
@@ -2079,31 +2079,31 @@ END SUBROUTINE SFCLAY1D_mynn
           zolf = -float(n)*0.01
           psim_unstab(n)=psim_unstable_full_gfs(zolf)
           psih_unstab(n)=psih_unstable_full_gfs(zolf)
-       ENDDO
+       enddo
     endif
 
-   END SUBROUTINE psi_init
+   end subroutine psi_init
 ! ==================================================================
 ! ... Full equations for the integrated similarity functions ...
 ! ==================================================================
-   REAL function psim_stable_full(zolf)
-        REAL :: zolf   
+   real function psim_stable_full(zolf)
+        real :: zolf   
 
         psim_stable_full=-6.1*log(zolf+(1+zolf**2.5)**(1./2.5))
 
         return
    end function
 
-   REAL function psih_stable_full(zolf)
-        REAL :: zolf
+   real function psih_stable_full(zolf)
+        real :: zolf
 
         psih_stable_full=-5.3*log(zolf+(1+zolf**1.1)**(1./1.1))
 
         return
    end function
 
-   REAL function psim_unstable_full(zolf)
-        REAL :: zolf,x,ym,psimc,psimk
+   real function psim_unstable_full(zolf)
+        real :: zolf,x,ym,psimc,psimk
 
         x=(1.-16.*zolf)**.25
         psimk=2*ALOG(0.5*(1+X))+ALOG(0.5*(1+X*X))-2.*ATAN(X)+2.*ATAN(1.)
@@ -2116,8 +2116,8 @@ END SUBROUTINE SFCLAY1D_mynn
         return
    end function
 
-   REAL function psih_unstable_full(zolf)
-        REAL :: zolf,y,yh,psihc,psihk
+   real function psih_unstable_full(zolf)
+        real :: zolf,y,yh,psihc,psihk
 
         y=(1.-16.*zolf)**.5
         psihk=2.*log((1+y)/2.)
@@ -2133,10 +2133,10 @@ END SUBROUTINE SFCLAY1D_mynn
 ! ==================================================================
 ! ... integrated similarity functions from GFS...
 !
-   REAL function psim_stable_full_gfs(zolf)
-        REAL :: zolf
-        REAL, PARAMETER :: alpha4 = 20.
-        REAL :: aa
+   real function psim_stable_full_gfs(zolf)
+        real :: zolf
+        real, parameter :: alpha4 = 20.
+        real :: aa
 
         aa     = sqrt(1. + alpha4 * zolf)
         psim_stable_full_gfs  = -1.*aa + log(aa + 1.)
@@ -2144,10 +2144,10 @@ END SUBROUTINE SFCLAY1D_mynn
         return
    end function
 
-   REAL function psih_stable_full_gfs(zolf)
-        REAL :: zolf
-        REAL, PARAMETER :: alpha4 = 20.
-        REAL :: bb
+   real function psih_stable_full_gfs(zolf)
+        real :: zolf
+        real, parameter :: alpha4 = 20.
+        real :: bb
 
         bb     = sqrt(1. + alpha4 * zolf)
         psih_stable_full_gfs  = -1.*bb + log(bb + 1.)
@@ -2155,10 +2155,10 @@ END SUBROUTINE SFCLAY1D_mynn
         return
    end function
 
-   REAL function psim_unstable_full_gfs(zolf)
-        REAL :: zolf
-        REAL :: hl1,tem1
-        REAL, PARAMETER :: a0=-3.975,  a1=12.32,  &
+   real function psim_unstable_full_gfs(zolf)
+        real :: zolf
+        real :: hl1,tem1
+        real, parameter :: a0=-3.975,  a1=12.32,  &
                            b1=-7.755,  b2=6.041
 
         if (zolf .ge. -0.5) then
@@ -2173,10 +2173,10 @@ END SUBROUTINE SFCLAY1D_mynn
         return
    end function
 
-   REAL function psih_unstable_full_gfs(zolf)
-        REAL :: zolf
-        REAL :: hl1,tem1
-        REAL, PARAMETER :: a0p=-7.941, a1p=24.75, &
+   real function psih_unstable_full_gfs(zolf)
+        real :: zolf
+        real :: hl1,tem1
+        real, parameter :: a0p=-7.941, a1p=24.75, &
                            b1p=-8.705, b2p=7.899
 
         if (zolf .ge. -0.5) then
@@ -2195,7 +2195,7 @@ END SUBROUTINE SFCLAY1D_mynn
 ! These functions use the look-up table functions when |z/L| <= 10
 ! but default to the full equations when |z/L| > 10.  
 !=================================================================
-   REAL function psim_stable(zolf,psi_opt)
+   real function psim_stable(zolf,psi_opt)
         integer :: nzol,psi_opt
         real    :: rzol,zolf
 
@@ -2214,7 +2214,7 @@ END SUBROUTINE SFCLAY1D_mynn
       return
    end function
 
-   REAL function psih_stable(zolf,psi_opt)
+   real function psih_stable(zolf,psi_opt)
         integer :: nzol,psi_opt
         real    :: rzol,zolf
 
@@ -2233,7 +2233,7 @@ END SUBROUTINE SFCLAY1D_mynn
       return
    end function
 
-   REAL function psim_unstable(zolf,psi_opt)
+   real function psim_unstable(zolf,psi_opt)
         integer :: nzol,psi_opt
         real    :: rzol,zolf
 
@@ -2252,7 +2252,7 @@ END SUBROUTINE SFCLAY1D_mynn
       return
    end function
 
-   REAL function psih_unstable(zolf,psi_opt)
+   real function psih_unstable(zolf,psi_opt)
         integer :: nzol,psi_opt
         real    :: rzol,zolf
 
@@ -2272,5 +2272,5 @@ END SUBROUTINE SFCLAY1D_mynn
    end function
 !========================================================================
 
-END MODULE module_sf_mynn
+end module module_sf_mynn
 

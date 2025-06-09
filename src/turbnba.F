@@ -1,4 +1,4 @@
-  MODULE turbnba_module
+  module turbnba_module
 
   implicit none
 
@@ -14,7 +14,7 @@
       real, parameter :: nba_cb = 0.36
       real, parameter :: nba_sk = 0.5
 
-  CONTAINS
+  contains
 
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -89,10 +89,10 @@
 
 !------------------------------------------------------------------
 
-    DO k=2,nk
+    do k=2,nk
 
     !  get grid scale
-    IF(tconfig.eq.1)THEN
+    if(tconfig.eq.1)then
       ! single length scale:  appropriate if dx,dy are nearly the same as dz
       do j=1,nj
       do i=1,ni
@@ -104,10 +104,10 @@
 !!!                               ) )
       enddo
       enddo
-    ELSEIF(tconfig.eq.2)THEN
+    elseif(tconfig.eq.2)then
       ! two length scales:  one for horizontal, one for vertical
       stop 15151
-    ENDIF
+    endif
 
       ! Get turbulence length scale
       do j=1,nj
@@ -128,7 +128,7 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
     if( nstep.eq.0 .and. myid.eq.0 )then
       print *
@@ -159,19 +159,19 @@
       if( cm1setup.eq.4 )then
         ! zero-out lenscl in mesoscale-model part of domain:
 
-        DO k=1,nk
+        do k=1,nk
         do j=0,nj+1
         do i=0,ni+1
           if( cm0(i,j).le.cmemin ) lenscl(i,j,k) = 0.0
         enddo
         enddo
-        ENDDO
+        enddo
 
       endif
 
 !------------------------------------------------------------------
 
-        DO k=1,nk
+        do k=1,nk
 
           do j=0,nj+2
           do i=0,ni+2
@@ -193,7 +193,7 @@
           enddo
           enddo
 
-        ENDDO
+        enddo
 
       do j=-1,nj+2
       do i=-1,ni+2
@@ -239,7 +239,7 @@
       call getcornert(tkea,nw1,nw2,ne1,ne2,sw1,sw2,se1,se2)
 #endif
 
-  kloop:  DO k=1,nk
+  kloop:  do k=1,nk
 
     do j=0,nj+1
     do i=0,ni+1
@@ -346,7 +346,7 @@
     enddo
     enddo
 
-  kcheck:  IF( k.ge.2 )THEN
+  kcheck:  if( k.ge.2 )then
 
     do j=1,nj
     do i=1,ni+1
@@ -426,13 +426,13 @@
     enddo
     enddo
 
-  ENDIF  kcheck
+  endif  kcheck
 
-  ENDDO  kloop
+  enddo  kloop
 
 !------------------------------------------------------------------
 
-      IF(bbc.eq.1)THEN
+      if(bbc.eq.1)then
         ! free slip:
         do j=1,nj+1
         do i=1,ni+1
@@ -440,20 +440,20 @@
           m23(i,j,1) = m23(i,j,2)
         enddo
         enddo
-      ELSEIF(bbc.eq.2.or.bbc.eq.3)THEN
-        IF(axisymm.eq.0)THEN
+      elseif(bbc.eq.2.or.bbc.eq.3)then
+        if(axisymm.eq.0)then
 !!!          do j=1,nj+1
 !!!          do i=1,ni+1
 !!!            m13(i,j,1) = t13(i,j,1)
 !!!            m23(i,j,1) = t23(i,j,1)
 !!!          enddo
 !!!          enddo
-        ELSE
+        else
           stop 1212
-        ENDIF
-      ELSE
+        endif
+      else
         stop 2222
-      ENDIF
+      endif
 
 !------------------------------------------------------------------
 
@@ -532,10 +532,10 @@
 
 !------------------------------------------------------------------
 
-    DO k=2,nk
+    do k=2,nk
 
     !  get grid scale
-    IF(tconfig.eq.1)THEN
+    if(tconfig.eq.1)then
       ! single length scale:  appropriate if dx,dy are nearly the same as dz
       do j=1,nj
       do i=1,ni
@@ -547,12 +547,12 @@
 !!!                               ) )
       enddo
       enddo
-    ELSEIF(tconfig.eq.2)THEN
+    elseif(tconfig.eq.2)then
       ! two length scales:  one for horizontal, one for vertical
       stop 15151
-    ENDIF
+    endif
 
-    ENDDO
+    enddo
 
     if( nstep.eq.0 .and. myid.eq.0 )then
       print *
@@ -583,19 +583,19 @@
       if( cm1setup.eq.4 )then
         ! zero-out grdscl in mesoscale-model part of domain:
 
-        DO k=1,nk
+        do k=1,nk
         do j=0,nj+1
         do i=0,ni+1
           if( cm0(i,j).le.cmemin ) grdscl(i,j,k) = 0.0
         enddo
         enddo
-        ENDDO
+        enddo
 
       endif
 
 !------------------------------------------------------------------
 
-        DO k=1,nk
+        do k=1,nk
 
           do j=0,nj+2
           do i=0,ni+2
@@ -617,7 +617,7 @@
           enddo
           enddo
 
-        ENDDO
+        enddo
 
       tem1 = 1.0/(zf(1,1,2)-zf(1,1,1))
 
@@ -636,7 +636,7 @@
       enddo
       enddo
 
-  kloop:  DO k=1,nk
+  kloop:  do k=1,nk
 
     do j=0,nj+1
     do i=0,ni+1
@@ -738,7 +738,7 @@
     enddo
     enddo
 
-  kcheck:  IF( k.ge.2 )THEN
+  kcheck:  if( k.ge.2 )then
 
     do j=1,nj
     do i=1,ni+1
@@ -822,13 +822,13 @@
     enddo
     enddo
 
-  ENDIF  kcheck
+  endif  kcheck
 
-  ENDDO  kloop
+  enddo  kloop
 
 !------------------------------------------------------------------
 
-      IF(bbc.eq.1)THEN
+      if(bbc.eq.1)then
         ! free slip:
         do j=1,nj+1
         do i=1,ni+1
@@ -836,20 +836,20 @@
           m23(i,j,1) = m23(i,j,2)
         enddo
         enddo
-      ELSEIF(bbc.eq.2.or.bbc.eq.3)THEN
-        IF(axisymm.eq.0)THEN
+      elseif(bbc.eq.2.or.bbc.eq.3)then
+        if(axisymm.eq.0)then
 !!!          do j=1,nj+1
 !!!          do i=1,ni+1
 !!!            m13(i,j,1) = t13(i,j,1)
 !!!            m23(i,j,1) = t23(i,j,1)
 !!!          enddo
 !!!          enddo
-        ELSE
+        else
           stop 1212
-        ENDIF
-      ELSE
+        endif
+      else
         stop 2222
-      ENDIF
+      endif
 
 !------------------------------------------------------------------
 
@@ -861,4 +861,4 @@
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 
-  END MODULE turbnba_module
+  end module turbnba_module

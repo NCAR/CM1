@@ -1,8 +1,8 @@
-  MODULE init_surface_module
+  module init_surface_module
 
   implicit none
 
-  CONTAINS
+  contains
 
       subroutine init_surface(num_soil_layers,dosfcflx,xh,ruh,xf,yh,rvh,yf,   &
            lu_index,xland,tsk,slab_zs,slab_dzs,tslb, &
@@ -37,7 +37,7 @@
 !-----------------------------------------------------------------------
 !  BEGIN user settings
 
-    IF( (sfcmodel.ge.1) .or. (bbc.eq.3) )THEN
+    if( (sfcmodel.ge.1) .or. (bbc.eq.3) )then
 
       ! Initialize the surface:
 
@@ -67,7 +67,7 @@
 !----------
 !  Initialize the sea breeze test case from WRF:
 
-      IF( initsfc.eq.2 )THEN 
+      if( initsfc.eq.2 )then 
 
         ! sea breeze test case from WRF:
         ! (modified on 150830 to match WRF3.7 setup)
@@ -94,7 +94,7 @@
 
 !----------
 
-      ELSEIF( initsfc.eq.3 ) THEN
+      elseif( initsfc.eq.3 ) then
 
         do j=jb,je
         do i=ib,ie
@@ -108,7 +108,7 @@
 
 !----------
 
-      ELSEIF( initsfc.eq.4 ) THEN
+      elseif( initsfc.eq.4 ) then
 
         xcoast = minx + 0.5*(maxx-minx)
 
@@ -127,7 +127,7 @@
 !----------
 !  if initsfc is not 1,2:
 
-      ELSEIF( initsfc.ne.1 .and. initsfc.ne.2 )THEN
+      elseif( initsfc.ne.1 .and. initsfc.ne.2 )then
 
         ! build your own initial conditions here:
 
@@ -142,38 +142,38 @@
 
 !----------
 
-      ENDIF     ! endif for initsfc options
+      endif     ! endif for initsfc options
 
 
 !     END of user settings
 !-----------------------------------------------------------------------
 !     NO NOT CHANGE ANYTHING BELOW HERE
 
-    IF( sfcmodel.eq.2 .or. sfcmodel.eq.3 .or. sfcmodel.eq.4 .or. sfcmodel.eq.6 .or. sfcmodel.eq.7 )THEN
+    if( sfcmodel.eq.2 .or. sfcmodel.eq.3 .or. sfcmodel.eq.4 .or. sfcmodel.eq.6 .or. sfcmodel.eq.7 )then
 
-      IF (num_soil_layers.NE.1)THEN
+      if (num_soil_layers.NE.1)then
       slab_dzs(1)=.01
       slab_zs(1)=.5*slab_dzs(1)
-      DO l=2,num_soil_layers
+      do l=2,num_soil_layers
          slab_dzs(l)=2*slab_dzs(l-1)
          slab_zs(l)=slab_zs(l-1)+.5*slab_dzs(l-1)+.5*slab_dzs(l)
-      ENDDO
-      DO l=1,num_soil_layers
-         DO j=jb,je
-            DO i=ib,ie
+      enddo
+      do l=1,num_soil_layers
+         do j=jb,je
+            do i=ib,ie
               tslb(i,j,l)=( tsk(i,j)*(slab_zs(num_soil_layers)-slab_zs(l))   &
                           + tmn(i,j)*(slab_zs(l)-slab_zs(1)) ) / &
                           ( slab_zs(num_soil_layers)-slab_zs(1) )
-            ENDDO
-         ENDDO
-      ENDDO
-      ENDIF
+            enddo
+         enddo
+      enddo
+      endif
 
-    ENDIF
+    endif
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
 
-      IF( axisymm.eq.1 .or. ny.eq.1 )THEN
+      if( axisymm.eq.1 .or. ny.eq.1 )then
 
         do j=jb,je
         do i=ib,ie
@@ -181,7 +181,7 @@
         enddo
         enddo
 
-      ELSEIF( nx.eq.1 )THEN
+      elseif( nx.eq.1 )then
 
         do j=jb,je
         do i=ib,ie
@@ -189,7 +189,7 @@
         enddo
         enddo
 
-      ELSE
+      else
 
         do j=jb,je
         do i=ib,ie
@@ -198,11 +198,11 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
-  ENDIF    ! endif for sfcmodel >= 1
+  endif    ! endif for sfcmodel >= 1
 
 !-----------------------------------------------------------------------
 ! ensure interoperability of surface schemes and turbulence schemes:
@@ -212,19 +212,19 @@
       ! parameters needed in turb subroutines:
       dosfcflx = .false.
 
-      IF( cm1setup.ge.1 .or. ipbl.eq.2 )THEN
+      if( cm1setup.ge.1 .or. ipbl.eq.2 )then
         if( isfcflx.eq.1 ) dosfcflx = .true.
         if( sfcmodel.eq.2 .or. sfcmodel.eq.3 .or. sfcmodel.eq.4 .or. sfcmodel.eq.6 .or. sfcmodel.eq.7 )then
           dosfcflx = .true.
         endif
-      ENDIF
-      IF( ipbl.eq.1 .or. ipbl.eq.3 .or. ipbl.eq.4 .or. ipbl.eq.5 )THEN
+      endif
+      if( ipbl.eq.1 .or. ipbl.eq.3 .or. ipbl.eq.4 .or. ipbl.eq.5 )then
         ! sfc flux/drag is handled by ysu/gfsedmf/mynn pbl subroutines:
         dosfcflx = .false.
-      ENDIF
+      endif
 
       ! 230424: bug fix
-      IF( cm1setup.eq.4 .and. isfcflx.eq.1 ) dosfcflx = .true.
+      if( cm1setup.eq.4 .and. isfcflx.eq.1 ) dosfcflx = .true.
 
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) '  Settings used in this simulation:'
@@ -269,7 +269,7 @@
 !-----------------------------------------------------------------------
 !  reality checks:
 
-      IF( sfcmodel.ge.1 .or. bbc.eq.3 )THEN
+      if( sfcmodel.ge.1 .or. bbc.eq.3 )then
 
         do j=jb,je
         do i=ib,ie
@@ -277,7 +277,7 @@
           ! 171020:
           if( xland(i,j).gt.1.5 ) mavail(i,j) = 1.0
 
-          IF( nint(xland(i,j)).le.0 .or. nint(xland(i,j)).ge.3 )THEN
+          if( nint(xland(i,j)).le.0 .or. nint(xland(i,j)).ge.3 )then
             print *
             print *,'  Invalid value for xland '
             print *
@@ -286,9 +286,9 @@
             print *,'  Stopping CM1 .... '
             print *
             call stopcm1
-          ENDIF
+          endif
           if( sfcmodel.eq.2 .or. sfcmodel.eq.3 .or. sfcmodel.eq.4 .or. sfcmodel.eq.6 .or. sfcmodel.eq.7 )then
-          IF( lu_index(i,j).le.0 .or. lu_index(i,j).ge.34 )THEN
+          if( lu_index(i,j).le.0 .or. lu_index(i,j).ge.34 )then
             print *
             print *,'  Invalid value for lu_index '
             print *
@@ -298,30 +298,30 @@
             print *,'  Stopping CM1 .... '
             print *
             call stopcm1
-          ENDIF
           endif
-          IF( tsk(i,j).lt.100.0 )THEN
+          endif
+          if( tsk(i,j).lt.100.0 )then
             print *
             print *,'  WARNING:  tsk is less than 100 K '
             print *
             print *,'  Stopping CM1 .... '
             print *
             call stopcm1
-          ENDIF
+          endif
           if( sfcmodel.eq.2 .or. sfcmodel.eq.3 .or. sfcmodel.eq.4 .or. sfcmodel.eq.6 .or. sfcmodel.eq.7 )then
-          IF( tmn(i,j).lt.100.0 )THEN
+          if( tmn(i,j).lt.100.0 )then
             print *
             print *,'  WARNING:  tmn is less than 100 K '
             print *
             print *,'  Stopping CM1 .... '
             print *
             call stopcm1
-          ENDIF
+          endif
           endif
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  Initialize the ocean mixed layer model:
@@ -394,7 +394,7 @@
 
 !-----------------------------------------------------------------------
 
-      IF( myid.eq.0 )THEN
+      if( myid.eq.0 )then
         open(unit=11,file='LANDUSE.TBL',status='old',err=888)
         read(11,*,err=808)
         read(11,*,err=808)
@@ -424,7 +424,7 @@
 !        print *,'  ther = ',therin(:,2)
 !        print *,'  scfx = ',scfx(:,2)
 !        print *,'  sfhc = ',sfhc(:,2)
-      ENDIF
+      endif
 
 #ifdef MPI
       call MPI_BCAST(albd  ,max_cats*max_seas,MPI_REAL,0,MPI_COMM_WORLD,ierr)
@@ -445,9 +445,9 @@
       do i=ib,ie
         IS = lu_index(i,j)
         ! SET NO-DATA POINTS (IS=0) TO WATER
-        IF(IS.EQ.0)THEN
+        if(IS.EQ.0)then
           IS=ISWATER
-        ENDIF
+        endif
         if( albd(is,isn).le.0.0 )then
           print *,'  category not found '
           call stopcm1
@@ -457,11 +457,11 @@
         EMISS(I,J) = SFEM(IS,ISN)
         ZNT(I,J) = SFZ0(IS,ISN)/100.
         MAVAIL(I,J) = SLMO(IS,ISN)
-        IF(IS.NE.ISWATER)THEN
+        if(IS.NE.ISWATER)then
           XLAND(I,J)=1.0
-        ELSE
+        else
           XLAND(I,J)=2.0
-        ENDIF
+        endif
       enddo
       enddo
 
@@ -495,4 +495,4 @@
 
       end subroutine getlanduse
 
-  END MODULE init_surface_module
+  end module init_surface_module

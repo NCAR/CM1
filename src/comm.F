@@ -1,8 +1,8 @@
-  MODULE comm_module
+  module comm_module
 
   implicit none
 
-  CONTAINS
+  contains
 
 !-----------------------------------------------------------------------
 !  message passing routines
@@ -6396,19 +6396,19 @@
 !  This subroutine is ONLY for parcel_interp !
 !--------------------------------------------!
 
-      IF( comm.eq.1 )THEN
+      if( comm.eq.1 )then
         call bcs(s)
-      ENDIF
+      endif
 #ifdef MPI
-      IF( comm.eq.1 )THEN
+      if( comm.eq.1 )then
         call comm_1s_start(s,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
         call comm_1s_end(  s,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
-      ENDIF
+      endif
       call getcorner(s,nw1(1),nw2(1),ne1(1),ne2(1),sw1(1),sw2(1),se1(1),se2(1))
       call bcs2(s)
 #endif
 
-      IF( bbc.eq.1 .or. bbc.eq.2 .or. bbc.eq.3 )THEN
+      if( bbc.eq.1 .or. bbc.eq.2 .or. bbc.eq.3 )then
         ! extrapolate:
 !$omp parallel do default(shared)  &
 !$omp private(i,j)
@@ -6417,9 +6417,9 @@
           s(i,j,0) = cgs1*s(i,j,1)+cgs2*s(i,j,2)+cgs3*s(i,j,3)
         enddo
         enddo
-      ENDIF
+      endif
 
-      IF( tbc.eq.1 .or. tbc.eq.2 )THEN
+      if( tbc.eq.1 .or. tbc.eq.2 )then
         ! extrapolate:
 !$omp parallel do default(shared)  &
 !$omp private(i,j)
@@ -6428,7 +6428,7 @@
           s(i,j,nk+1) = cgt1*s(i,j,nk)+cgt2*s(i,j,nk-1)+cgt3*s(i,j,nk-2)
         enddo
         enddo
-      ENDIF
+      endif
 
       end subroutine prepcorners
 
@@ -6457,14 +6457,14 @@
 !  This subroutine is ONLY for parcel_interp !
 !--------------------------------------------!
 
-      IF( comm.eq.1 )THEN
+      if( comm.eq.1 )then
         call bcw(t,0)
-      ENDIF
+      endif
 #ifdef MPI
-      IF( comm.eq.1 )THEN
+      if( comm.eq.1 )then
         call comm_1t_start(t,tkw1(1,1,1),tkw2(1,1,1),tke1(1,1,1),tke2(1,1,1),tks1(1,1,1),tks2(1,1,1),tkn1(1,1,1),tkn2(1,1,1),reqs_p)
         call comm_1t_end(  t,tkw1(1,1,1),tkw2(1,1,1),tke1(1,1,1),tke2(1,1,1),tks1(1,1,1),tks2(1,1,1),tkn1(1,1,1),tkn2(1,1,1),reqs_p)
-      ENDIF
+      endif
       call getcornert(t,nw1,nw2,ne1,ne2,sw1,sw2,se1,se2)
       call bct2(t)
 #endif
@@ -7075,4 +7075,4 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 #endif
 
-  END MODULE comm_module
+  end module comm_module
