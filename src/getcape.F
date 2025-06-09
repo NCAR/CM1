@@ -1,11 +1,11 @@
-  MODULE getcape_module
+  module getcape_module
 
   implicit none
 
   private
   public :: getcape
 
-  CONTAINS
+  contains
 
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -154,18 +154,18 @@
 
 !---- find source parcel ----!
 
-  IF(source.eq.1)THEN
+  if(source.eq.1)then
     ! use surface parcel
     kmax = 1
 
-  ELSEIF(source.eq.2)THEN
+  elseif(source.eq.2)then
     ! use most unstable parcel (max theta-e)
 
-    IF(p(1).lt.50000.0)THEN
+    if(p(1).lt.50000.0)then
       ! first report is above 500 mb ... just use the first level reported
       kmax = 1
       maxthe = getthx(p(1),t(1),td(1),q(1))
-    ELSE
+    else
       ! find max thetae below 500 mb
       maxthe = 0.0
       do k=1,nk
@@ -177,13 +177,13 @@
           endif
         endif
       enddo
-    ENDIF
+    endif
     if(debug_level.ge.100) print *,'  kmax,maxthe = ',kmax,maxthe
 
-  ELSEIF(source.eq.3)THEN
+  elseif(source.eq.3)then
     ! use mixed layer
 
-    IF( (z(2)-z(1)).gt.ml_depth )THEN
+    if( (z(2)-z(1)).gt.ml_depth )then
       ! the second level is above the mixed-layer depth:  just use the
       ! lowest level
 
@@ -191,7 +191,7 @@
       avgqv = q(1)
       kmax = 1
 
-    ELSEIF( z(nk).lt.ml_depth )THEN
+    elseif( z(nk).lt.ml_depth )then
       ! the top-most level is within the mixed layer:  just use the
       ! upper-most level
 
@@ -199,7 +199,7 @@
       avgqv = q(nk)
       kmax = nk
 
-    ELSE
+    else
       ! calculate the mixed-layer properties:
 
       avgth = 0.0
@@ -235,11 +235,11 @@
 
       kmax = 1
 
-    ENDIF
+    endif
 
     if(debug_level.ge.100) print *,avgth,avgqv
 
-  ELSE
+  else
 
     print *
     print *,'  Unknown value for source'
@@ -248,7 +248,7 @@
     print *
     stop
 
-  ENDIF
+  endif
 
 !---- define parcel properties at initial location ----!
     narea = 0.0
@@ -411,17 +411,17 @@
            plcl = p(k-1)+(p(k)-p(k-1))*float(n)/float(nloop)
         endif
 
-        IF(adiabat.eq.1.or.adiabat.eq.3)THEN
+        if(adiabat.eq.1.or.adiabat.eq.3)then
           ! pseudoadiabat
           qt  = qv2
           ql2 = 0.0
           qi2 = 0.0
-        ELSEIF(adiabat.le.0.or.adiabat.ge.5)THEN
+        elseif(adiabat.le.0.or.adiabat.ge.5)then
           print *
           print *,'  Undefined adiabat'
           print *
           stop 10000
-        ENDIF
+        endif
 
       enddo
 
@@ -597,4 +597,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 
-  END MODULE getcape_module
+  end module getcape_module

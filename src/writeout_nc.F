@@ -1,4 +1,4 @@
-  MODULE writeout_nc_module
+  module writeout_nc_module
 
   implicit none
 
@@ -8,7 +8,7 @@
   public :: restart_prelim,writestat_nc,writepdata_nc,writehifrq_nc,writediag_nc,writeazim_nc,writecenter_nc,writemove_nc,disp_err
 #endif
 
-  CONTAINS
+  contains
 
 !-------------------------------------------------------------
 !
@@ -102,38 +102,38 @@
       string(i:i) = ' '
     enddo
 
-  IF( fnum.eq.51 )THEN
-    IF(output_filetype.eq.1)THEN
+  if( fnum.eq.51 )then
+    if(output_filetype.eq.1)then
       string = 'cm1out.nc'
-    ELSEIF(output_filetype.eq.2)THEN
+    elseif(output_filetype.eq.2)then
       string = 'cm1out_XXXXXX.nc'
       write(string(8:13),100) nwrite
-    ELSEIF(output_filetype.eq.3)THEN
+    elseif(output_filetype.eq.3)then
       string = 'cm1out_XXXXXX_YYYYYY.nc'
       write(string( 8:13),100) myid
       write(string(15:20),100) nwrite
-    ELSE
+    else
       if(dowr) write(outfile,*) '  for netcdf output, output_filetype must be either 1,2, or 3 '
       call stopcm1
-    ENDIF
-  ELSEIF( fnum.eq.71 )THEN
-    IF(output_filetype.eq.1)THEN
+    endif
+  elseif( fnum.eq.71 )then
+    if(output_filetype.eq.1)then
       string = 'cm1out_i.nc'
-    ELSEIF(output_filetype.eq.2)THEN
+    elseif(output_filetype.eq.2)then
       string = 'cm1out_XXXXXX_i.nc'
       write(string(8:13),100) nwrite
-    ELSEIF(output_filetype.eq.3)THEN
+    elseif(output_filetype.eq.3)then
       string = 'cm1out_XXXXXX_YYYYYY_i.nc'
       write(string( 8:13),100) myid
       write(string(15:20),100) nwrite
-    ELSE
+    else
       if(dowr) write(outfile,*) '  for netcdf output, output_filetype must be either 1,2, or 3 '
       call stopcm1
-    ENDIF
-  ELSE
+    endif
+  else
     print *,'  Unrecognized value for fnum in netcdf_prelim '
     call stopcm1
-  ENDIF
+  endif
 
       if(myid.eq.0) print *,string
 
@@ -142,24 +142,24 @@
 !--------------------------------------------------------------
 !  Dimensions of data:
 
-    IF( output_filetype.eq.1 .or. output_filetype.eq.2 )THEN
+    if( output_filetype.eq.1 .or. output_filetype.eq.2 )then
       ival = nx
       jval = ny
       chkx = nx
       chky = ny
       chkxp1 = nx+1
       chkyp1 = ny+1
-    ELSEIF( output_filetype.eq.3 )THEN
+    elseif( output_filetype.eq.3 )then
       ival = ni
       jval = nj
       chkx = ni
       chky = nj
       chkxp1 = ni+1
       chkyp1 = nj+1
-    ELSE
+    else
       print *,'  unrecognized value for output_filetype '
       call stopcm1
-    ENDIF
+    endif
 
     ivalp1 = ival+1
     jvalp1 = jval+1
@@ -173,13 +173,13 @@
     num_write = nwrite
 
     allinfo = .false.
-    IF(num_write.eq.1) allinfo=.true.
-    IF(output_filetype.ge.2)THEN
+    if(num_write.eq.1) allinfo=.true.
+    if(output_filetype.ge.2)then
       allinfo=.true.
       num_write=1
-    ENDIF
+    endif
 
-    IF( num_write.ne.1 )THEN
+    if( num_write.ne.1 )then
       ! cm1r18:  Try to open file.
       !          If error, set num_write to 1 and write all info.
       status = nf90_open( path=string , mode=nf90_write , ncid=ncid )
@@ -198,11 +198,11 @@
         allinfo = .true.
         num_write = 1
       endif
-    ENDIF
+    endif
 
     time_index = num_write
 
-    ifallinfo: IF(allinfo)THEN
+    ifallinfo: if(allinfo)then
 !!!      print *,'  allinfo ... '
 
 !-----------------------------------------------------------------------
@@ -232,11 +232,11 @@
       call disp_err( nf90_def_dim(ncid,'time',nf90_unlimited,timeid) , .true. )
       call disp_err( nf90_def_dim(ncid,'one',1,oneid) , .true. )
 
-    IF(icor.eq.1)THEN
+    if(icor.eq.1)then
       call disp_err( nf90_def_var(ncid,"f_cor",nf90_float,oneid,varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","Coriolis parameter") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","1/s") , .true. )
-    ENDIF
+    endif
 
       call disp_err( nf90_def_var(ncid,"ztop",nf90_float,oneid,varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","height at top of model") , .true. )
@@ -328,14 +328,14 @@
         elseif( grid_output(n).eq.'2' )then
           call disp_err( nf90_def_var(ncid,trim(name_output(n)),nf90_float,(/xhid,yhid,timeid/),varid) , .true. )
         else
-          IF( fnum.eq.71 .and. ( grid_output(n).eq.'u' .or. grid_output(n).eq.'v' .or. grid_output(n).eq.'w' ) )THEN
+          if( fnum.eq.71 .and. ( grid_output(n).eq.'u' .or. grid_output(n).eq.'v' .or. grid_output(n).eq.'w' ) )then
             ! no error for u,v,w with fnum=71
             print *,'  fnum=71, skipping: ',trim(name_output(n))
-          ELSE
+          else
             print *,'  Unknown setting for grid_output = ',grid_output(n)
             print *,'    67329 '
             call stopcm1
-          ENDIF
+          endif
         endif
         call disp_err( nf90_put_att(ncid,varid,"long_name",trim(desc_output(n))) , .true. )
         call disp_err( nf90_put_att(ncid,varid,"units",trim(unit_output(n))) , .true. )
@@ -351,14 +351,14 @@
         elseif( grid_output(n).eq.'2' )then
           call disp_err( NF90_DEF_VAR_CHUNKING(ncid,varid,NF90_CHUNKED,(/chkx,chky,1/)) , .true. )
         else
-          IF( fnum.eq.71 .and. ( grid_output(n).eq.'u' .or. grid_output(n).eq.'v' .or. grid_output(n).eq.'w' ) )THEN
+          if( fnum.eq.71 .and. ( grid_output(n).eq.'u' .or. grid_output(n).eq.'v' .or. grid_output(n).eq.'w' ) )then
             ! no error for u,v,w with fnum=71
             print *,'  fnum=71, skipping: ',trim(name_output(n))
-          ELSE
+          else
             print *,'  Unknown setting for grid_output = ',grid_output(n)
             print *,'    67330 '
             call stopcm1
-          ENDIF
+          endif
         endif
         if( cmpr_output(n) )then
 !!!          if( myid.eq.0 ) print *,'    ... compressing ... '
@@ -461,10 +461,10 @@
 !--------------------------------------------------
 ! begin data ... initial time ...
 
-    IF(icor.eq.1)THEN
+    if(icor.eq.1)then
       call disp_err( nf90_inq_varid(ncid,'f_cor',varid) , .true. )
       call disp_err( nf90_put_var(ncid,varid,fcor) , .true. )
-    ENDIF
+    endif
 
       call disp_err( nf90_inq_varid(ncid,'ztop',varid) , .true. )
       call disp_err( nf90_put_var(ncid,varid,outunitconv*ztop) , .true. )
@@ -551,7 +551,7 @@
 
 !----------------------------------------------------------
 
-    ENDIF ifallinfo
+    endif ifallinfo
 
       call disp_err( nf90_inq_varid(ncid,'time',varid) , stop_on_error )
       call disp_err( nf90_put_var(ncid,varid,actual_time,(/time_index/)) , stop_on_error )
@@ -629,16 +629,16 @@
       string(i:i) = ' '
     enddo
 
-  IF(     restart_filetype.eq.1 )THEN
+  if(     restart_filetype.eq.1 )then
     string = 'cm1rst.nc'
-  ELSEIF( restart_filetype.eq.2 )THEN
+  elseif( restart_filetype.eq.2 )then
     string = 'cm1rst_XXXXXX.nc'
     write(string(8:13),100) nrst
 100 format(i6.6)
-  ELSE
+  else
     print *,'  invalid value for restart_filetype '
     stop 33443
-  ENDIF
+  endif
 
     if(myid.eq.0) print *,'  string = ',string
 
@@ -659,13 +659,13 @@
     num_write = nrst
 
     allinfo = .false.
-    IF( num_write.eq.1 ) allinfo = .true.
-    IF( restart_filetype.ge.2 )THEN
+    if( num_write.eq.1 ) allinfo = .true.
+    if( restart_filetype.ge.2 )then
       allinfo = .true.
       num_write = 1
-    ENDIF
+    endif
 
-    IF( num_write.ne.1 )THEN
+    if( num_write.ne.1 )then
       ! cm1r18:  Try to open file.
       !          If error, set num_write to 1 and write all info.
       status = nf90_open( path=string , mode=nf90_write , ncid=ncid )
@@ -684,14 +684,14 @@
         allinfo = .true.
         num_write = 1
       endif
-    ENDIF
+    endif
 
     time_index = num_write
 
 !-----------------------------------------------------------------------
 !  BEGIN
 
-    ifallinfo:  IF( allinfo )THEN
+    ifallinfo:  if( allinfo )then
 
 #ifdef NCFPLUS
 !--- works with netcdf 4.2, but not 4.0 (grumble)
@@ -973,12 +973,12 @@
           call disp_err( nf90_put_att(ncid,varid,"units","kg/kg") , .true. )
         elseif(idm.eq.1.and.n.ge.nnc1.and.n.le.nnc2)then
           call disp_err( nf90_put_att(ncid,varid,"long_name","number concentration") , .true. )
-          IF ( output_n_as_m3 == 0 ) THEN
+          if ( output_n_as_m3 == 0 ) then
           call disp_err( nf90_put_att(ncid,varid,"units","kg^{-1}") , .true. )
-          ELSE
+          else
           ! for NSSL microphysics
           call disp_err( nf90_put_att(ncid,varid,"units","m^{-3}") , .true. )
-          ENDIF
+          endif
         elseif(idm .eq. 1 .and. n.ge.nzl1 .and. n .le. nzl2)then
           call disp_err( nf90_put_att(ncid,varid,"long_name","reflectivity moment") , .true. )
           call disp_err( nf90_put_att(ncid,varid,"units","Z m^{-3}kg^{-1}") , .true. )
@@ -1221,7 +1221,7 @@
   !------------------
   !  mynn:
 
-    IF( ipbl.eq.4 .or. ipbl.eq.5 .or. sfcmodel.eq.6 )THEN
+    if( ipbl.eq.4 .or. ipbl.eq.5 .or. sfcmodel.eq.6 )then
       call disp_err( nf90_def_var(ncid,"qke"     ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"qke3d"   ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"tsq"     ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
@@ -1255,16 +1255,16 @@
       call disp_err( nf90_def_var(ncid,"maxmf"   ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"nupdraft",nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"ktop_plu",nf90_float,(/niid,njid,timeid/),varid) , .true. )
-    ENDIF
+    endif
 
   !------------------
   ! myj:
 
-    IF(ipbl.eq.6)THEN
+    if(ipbl.eq.6)then
       call disp_err( nf90_def_var(ncid,"tke_myj" ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"el_myj " ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
-    ENDIF         
-    IF(sfcmodel.eq.7)THEN
+    endif         
+    if(sfcmodel.eq.7)then
       call disp_err( nf90_def_var(ncid,"mixht" ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"akhs"  ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"akms"  ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
@@ -1282,11 +1282,11 @@
       call disp_err( nf90_def_var(ncid,"zntmyj",nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"lowlyr",nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"ivgtyp",nf90_float,(/niid,njid,timeid/),varid) , .true. )
-    ENDIF
+    endif
 
   !------------------
 
-    IF( cuparam.ge.1 )THEN
+    if( cuparam.ge.1 )then
       call disp_err( nf90_def_var(ncid,"raincv",nf90_float,(/niid,njid,timeid/),varid) , .true. )
       if(nrain.eq.2)  &
       call disp_err( nf90_def_var(ncid,"raincv2",nf90_float,(/niid,njid,timeid/),varid) , .true. )
@@ -1296,7 +1296,7 @@
       call disp_err( nf90_def_var(ncid,"qicuten",nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"ucuten" ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_def_var(ncid,"vcuten" ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
-    ENDIF
+    endif
 
   !------------------
 
@@ -1361,76 +1361,76 @@
       ! 150820:  optionals
 
     !-----
-    IF( restart_file_theta )THEN
+    if( restart_file_theta )then
       call disp_err( nf90_def_var(ncid,"theta"   ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","potential temperature") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","K") , .true. )
-    ENDIF
-    IF( restart_file_u0 .or. do_lsnudge .or. do_adapt_move )THEN
+    endif
+    if( restart_file_u0 .or. do_lsnudge .or. do_adapt_move )then
       call disp_err( nf90_def_var(ncid,"u0"   ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
-    ENDIF
-    IF( restart_file_v0 .or. do_lsnudge .or. do_adapt_move )THEN
+    endif
+    if( restart_file_v0 .or. do_lsnudge .or. do_adapt_move )then
       call disp_err( nf90_def_var(ncid,"v0"   ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
-    ENDIF
-    IF( restart_file_dbz )THEN
+    endif
+    if( restart_file_dbz )then
       call disp_err( nf90_def_var(ncid,"dbz"     ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","reflectivity") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","dBZ") , .true. )
-    ENDIF
+    endif
     !-----
-    IF( restart_file_th0 )THEN
+    if( restart_file_th0 )then
       call disp_err( nf90_def_var(ncid,"th0"     ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","base-state potential temperature") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","K") , .true. )
-    ENDIF
-    IF( restart_file_prs0 )THEN
+    endif
+    if( restart_file_prs0 )then
       call disp_err( nf90_def_var(ncid,"prs0"    ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","base-state pressure") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","Pa") , .true. )
-    ENDIF
-    IF( restart_file_pi0 )THEN
+    endif
+    if( restart_file_pi0 )then
       call disp_err( nf90_def_var(ncid,"pi0"     ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","base-state nondimensional pressure") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","nondimensional") , .true. )
-    ENDIF
-    IF( restart_file_rho0 )THEN
+    endif
+    if( restart_file_rho0 )then
       call disp_err( nf90_def_var(ncid,"rho0"    ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","base-state dry-air density") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","kg/m^3") , .true. )
-    ENDIF
-    IF( restart_file_qv0 )THEN
+    endif
+    if( restart_file_qv0 )then
       call disp_err( nf90_def_var(ncid,"qv0"     ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","base-state water vapor mixing ratio") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","kg/kg") , .true. )
-    ENDIF
-    IF( restart_file_u0 )THEN
+    endif
+    if( restart_file_u0 )then
       call disp_err( nf90_def_var(ncid,"u0"      ,nf90_float,(/nip1id,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","base-state x-component velocity") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","m/s") , .true. )
-    ENDIF
-    IF( restart_file_v0 )THEN
+    endif
+    if( restart_file_v0 )then
       call disp_err( nf90_def_var(ncid,"v0"      ,nf90_float,(/niid,njp1id,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","base-state y-component velocity") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","m/s") , .true. )
-    ENDIF
+    endif
     !-----
-    IF( restart_file_zs )THEN
+    if( restart_file_zs )then
       call disp_err( nf90_def_var(ncid,"zs"      ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","terrain height") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","m") , .true. )
-    ENDIF
-    IF( restart_file_zh )THEN
+    endif
+    if( restart_file_zh )then
       call disp_err( nf90_def_var(ncid,"zhalf"   ,nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","height of half (scalar) grid points (3d array)") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","m") , .true. )
-    ENDIF
-    IF( restart_file_zf )THEN
+    endif
+    if( restart_file_zf )then
       call disp_err( nf90_def_var(ncid,"zfull"   ,nf90_float,(/niid,njid,nkp1id,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","height of full (w) grid points (3d array)") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","m") , .true. )
-    ENDIF
+    endif
     !-----
-    IF( restart_file_diags )THEN
+    if( restart_file_diags )then
       if( td_diss.gt.0 )then
         call disp_err( nf90_def_var(ncid,"dissheat",nf90_float,(/niid,njid,nkid,timeid/),varid) , .true. )
         call disp_err( nf90_put_att(ncid,varid,"long_name","dissipative heating (potential temperature tendency)") , .true. )
@@ -1466,7 +1466,7 @@
         call disp_err( nf90_put_att(ncid,varid,"long_name","terminal fall velocity of qi") , .true. )
         call disp_err( nf90_put_att(ncid,varid,"units","m/s") , .true. )
       endif
-    ENDIF
+    endif
     !-----
 
       !------------------
@@ -1611,7 +1611,7 @@
       endif
 
 
-    ENDIF  ifallinfo
+    endif  ifallinfo
 
 !  END
 !-----------------------------------------------------------------------
@@ -1657,11 +1657,11 @@
     if(myid.eq.0) print *,string
 
     allinfo = .false.
-    IF(nrec.eq.1) allinfo=.true.
+    if(nrec.eq.1) allinfo=.true.
 
     ncid = 1
 
-    IF( nrec.ne.1 )THEN
+    if( nrec.ne.1 )then
       ! cm1r18:  Try to open file.
       !          If error, set nrec to 1 and write all info.
       status = nf90_open( path=string , mode=nf90_write , ncid=ncid )
@@ -1680,12 +1680,12 @@
         allinfo = .true.
         nrec = 1
       endif
-    ENDIF
+    endif
 
     if( myid.eq.0 ) print *,'  nrec = ',nrec
 
 
-  allinfo2:  IF( allinfo )THEN
+  allinfo2:  if( allinfo )then
     ! Definitions/descriptions:
 
       if( myid.eq.0 ) print *,'  calling nf90_create '
@@ -1755,7 +1755,7 @@
     call disp_err( nf90_inq_varid(ncid,'zh',varid) , .true. )
     call disp_err( nf90_put_var(ncid,varid,0.0) , .true. )
 
-  ENDIF  allinfo2
+  endif  allinfo2
 
   !---------------------------------------------------------------------
     ! Write data:
@@ -1765,10 +1765,10 @@
     call disp_err( nf90_inq_varid(ncid,'time',timeid) , .true. )
     call disp_err( nf90_put_var(ncid,timeid,rtime,(/time_index/)) , .true. )
 
-    DO n=1,nstat
+    do n=1,nstat
       call disp_err( nf90_inq_varid(ncid,trim(name_stat(n)),varid) , .true. )
       call disp_err( nf90_put_var(ncid,varid,rstat(n),(/time_index/)) , .true. )
-    ENDDO
+    enddo
 
     ! close file
 
@@ -1791,15 +1791,15 @@
       integer, intent(in) :: status
       logical, intent(in) :: stop_on_error
 
-      IF( status.ne.nf90_noerr )THEN
-        IF( stop_on_error )THEN
+      if( status.ne.nf90_noerr )then
+        if( stop_on_error )then
           print *,'  netcdf status returned an error: ', status,' ... stopping program'
           print *
           print *,nf90_strerror(status)
           print *
           call stopcm1
-        ENDIF
-      ENDIF
+        endif
+      endif
 
       end subroutine disp_err
 
@@ -1835,11 +1835,11 @@
       string(1:22) = 'cm1out_pdata.nc'
 
     allinfo = .false.
-    IF(prec.eq.1) allinfo=.true.
+    if(prec.eq.1) allinfo=.true.
 
     ncid = 1
 
-    IF( prec.ne.1 )THEN
+    if( prec.ne.1 )then
       ! cm1r18:  Try to open file.
       !          If error, set prec to 1 and write all info.
       status = nf90_open( path=string , mode=nf90_write , ncid=ncid )
@@ -1858,12 +1858,12 @@
         allinfo = .true.
         prec = 1
       endif
-    ENDIF
+    endif
 
     if( myid.eq.0 ) print *,'  pdata prec = ',prec
 
 
-  allinfo3:  IF( allinfo )THEN
+  allinfo3:  if( allinfo )then
     ! Definitions/descriptions:
 
 #ifdef NCFPLUS
@@ -1929,7 +1929,7 @@
 
 !------------------------
 
-  ENDIF  allinfo3
+  endif  allinfo3
 
       ! Write data:
 
@@ -1940,13 +1940,13 @@
 
       call disp_err( nf90_inq_varid(ncid,'x',xid) , .true. )
 
-      DO n=1,prcl_out
+      do n=1,prcl_out
         call disp_err( nf90_inq_varid(ncid,trim(name_prcl(n)),varid) , .true. )
         do np=1,nparcels
           pdata2(np) = pdata(np,n)
         enddo
         call disp_err( nf90_put_var(ncid,varid,pdata2,(/1,time_index/),(/nparcels,1/)) , .true. )
-      ENDDO
+      enddo
 
       ! close file
 
@@ -2366,12 +2366,12 @@
         print *,'  string = ',string
 
         allinfo = .false.
-        IF(nwritea.eq.1) allinfo=.true.
+        if(nwritea.eq.1) allinfo=.true.
         num_write = nwritea
 
         ncid = 1
 
-        IF( nwritea.ne.1 )THEN
+        if( nwritea.ne.1 )then
           !   Try to open file.
           !   If error, set num_write to 1 and write all info.
           status = nf90_open( path=string , mode=nf90_write , ncid=ncid )
@@ -2389,14 +2389,14 @@
             allinfo = .true.
             num_write = 1
           endif
-        ENDIF
+        endif
 
         time_index = num_write
 
         print *,'  allinfo,time_index = ',allinfo,time_index
 
     ifallinfo:  &
-    IF(allinfo)THEN
+    if(allinfo)then
 
 #ifdef NCFPLUS
         call disp_err( nf90_create( path=string , cmode=IOR(nf90_netcdf4, nf90_classic_model) , ncid=ncid ) , .true. )
@@ -2473,7 +2473,7 @@
         call disp_err( nf90_inq_varid(ncid,'zh',varid) , .true. )
         call disp_err( nf90_put_var(ncid,varid,0.0) , .true. )
 
-    ENDIF  ifallinfo
+    endif  ifallinfo
 
         actual_time = mtime
         call disp_err( nf90_inq_varid(ncid,'time',varid) , .true. )
@@ -2543,12 +2543,12 @@
         print *,'  string = ',string
 
         allinfo = .false.
-        IF(nwritemv.eq.1) allinfo=.true.
+        if(nwritemv.eq.1) allinfo=.true.
         num_write = nwritemv
 
         ncid = 1
 
-        IF( nwritemv.ne.1 )THEN
+        if( nwritemv.ne.1 )then
           !   Try to open file.
           !   If error, set num_write to 1 and write all info.
           status = nf90_open( path=string , mode=nf90_write , ncid=ncid )
@@ -2566,14 +2566,14 @@
             allinfo = .true.
             num_write = 1
           endif
-        ENDIF
+        endif
 
         time_index = num_write
 
         print *,'  allinfo,time_index = ',allinfo,time_index
 
     ifallinfo:  &
-    IF(allinfo)THEN
+    if(allinfo)then
 
 #ifdef NCFPLUS
         call disp_err( nf90_create( path=string , cmode=IOR(nf90_netcdf4, nf90_classic_model) , ncid=ncid ) , .true. )
@@ -2646,7 +2646,7 @@
         call disp_err( nf90_inq_varid(ncid,'zh',varid) , .true. )
         call disp_err( nf90_put_var(ncid,varid,0.0) , .true. )
 
-    ENDIF  ifallinfo
+    endif  ifallinfo
 
         actual_time = mtime
         call disp_err( nf90_inq_varid(ncid,'time',varid) , .true. )
@@ -2685,4 +2685,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 #endif
 
-  END MODULE writeout_nc_module
+  end module writeout_nc_module

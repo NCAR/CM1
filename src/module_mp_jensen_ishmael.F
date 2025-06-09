@@ -378,19 +378,19 @@ contains
 
   !.. cm1
     integer, intent(in) :: nrain
-    REAL, INTENT(IN) :: dx,dy,cm1dz
+    real, intent(in) :: dx,dy,cm1dz
     double precision, intent(inout) :: tcond,tevac,tevar,train
     real, intent(in), dimension(ims:ime) :: ruh
     real, intent(in), dimension(jms:jme) :: rvh
-    REAL, DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(IN) :: rmh, rr
-    REAL, DIMENSION(ims:ime, jms:jme, nrain), INTENT(INOUT) :: rain
-    REAL, DIMENSION(ims:ime, jms:jme),        INTENT(INOUT) :: prate
+    real, dimension(ims:ime, jms:jme, kms:kme), intent(in) :: rmh, rr
+    real, dimension(ims:ime, jms:jme, nrain), intent(inout) :: rain
+    real, dimension(ims:ime, jms:jme),        intent(inout) :: prate
     integer, intent(in) :: ib3d,ie3d,jb3d,je3d,kb3d,ke3d,nout3d
     real, intent(inout) , dimension(ib3d:ie3d,jb3d:je3d,kb3d:ke3d,nout3d) :: out3d
     integer, intent(in) :: eqtset
     real :: rdt
     integer :: n
-    DOUBLE PRECISION, DIMENSION(kts:kte):: prv_rev,prw_vcd
+    double precision, dimension(kts:kte):: prv_rev,prw_vcd
     real :: tem1,tem2
     double precision, dimension(jds:jde) :: bud1,bud2,bud3,bud4
     
@@ -514,17 +514,17 @@ contains
 !             DIAG_ITYPE_3(i,j,k)  = icetype1d(ICE3,k)
           enddo
 
-        IF( dorad )THEN
+        if( dorad )then
           do k=kts,kte
              DIAG_EFFC3D(i,j,k)  =   max((min(EFFC1D(k),50.e-6)),2.51e-6)
              DIAG_EFFI3D(i,j,k)  =   max((min(EFFI1D(k),999.e-6)),5.e-6)
           enddo
-        ENDIF
-        IF( getdbz )THEN
+        endif
+        if( getdbz )then
           do k=kts,kte
              DIAG_DBZ3D(i,j,k)   =   max(dbz1d(k),-35.)
           enddo
-        ENDIF
+        endif
 
   !.. Accumulated precipitation and precipitation rates
 
@@ -595,7 +595,7 @@ contains
     logical, parameter :: WET_GROW    = .TRUE. ! Wet growth 
 
   !.. Input/Output variables from WRF
-    integer, intent(in) :: it, i, j  !.. Integer timestep, model i and j
+    integer, intent(in) :: it, i, j  !.. integer timestep, model i and j
     integer, intent(in) :: kts, kte  !.. Tile k-start and k-end
     integer, intent(in) :: CAT, ICE1, ICE2, ICE3 !.. Number of categories, planar and columnar index
     real, intent(in) :: dt !.. Timestep
@@ -1007,7 +1007,7 @@ contains
   !--------------------------------------------------------------------------------------------------------------!
   !.. Ice Microphysics
 
-          if(numice.gt.0) then     !.. If one or more ice species have ice
+          if(numice.gt.0) then     !.. if one or more ice species have ice
              tmpsum = 0.
              tmpsumr= 0.
              do ccvar = 1, numice  
@@ -1103,7 +1103,7 @@ contains
                       qi_qc_nrm(cc)=0.
                       qi_qc_nrd(cc)=0.
                    endif
-                endif   !.. End ice-cloud riming
+                endif   !.. end ice-cloud riming
              
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
@@ -1211,7 +1211,7 @@ contains
                       qi_qr_nrn(cc)=0.
                    endif
                 
-                endif !.. End ice-rain collection
+                endif !.. end ice-rain collection
                 
   !.. Do not over-deplete cloud water or rain from ice-cloud and ice-rain
                 tmpsum = tmpsum + rimesum(cc)
@@ -1309,7 +1309,7 @@ contains
   !.. This is parameterized from Macklin (1962) and is described in
   !.. Jensen et al. 2017 (JAS) 
                 if(RIMING.and.qc(k).gt.QSMALL.and.qi_qc_nrm(cc).gt.0.) then
-                   rimec1 = 0.0066 !.. Value at -10C
+                   rimec1 = 0.0066 !.. value at -10C
                    if((temp-T0).lt.-30.) then
                       rimec1 = 0.0036
                    elseif((temp-T0).lt.-20.and.(temp-T0).ge.-30.) then
@@ -1349,12 +1349,12 @@ contains
                         4.*PI*rni(cc)**2)),0.)
                    rnfr   = rnfr + max((rimedr*nc(k)*rhoair(k)),0.)*dt
                    
-                endif !.. End ice-cloud rime density calculation
+                endif !.. end ice-cloud rime density calculation
                 
   !.. Calculate the ice-rain rime density
   !.. This is parameterized from Macklin (1962)
                 if(RAIN_ICE.and.qr(k).gt.QSMALL.and.qi_qr_nrm(cc).gt.0.) then
-                   rimec1 = 0.0066 !.. Value at -10C
+                   rimec1 = 0.0066 !.. value at -10C
                    if((temp-T0).lt.-30.) then
                       rimec1 = 0.0036
                    elseif((temp-T0).lt.-20.and.(temp-T0).ge.-30.) then
@@ -1394,7 +1394,7 @@ contains
                         4.*PI*rni(cc)**2)),0.)
                    rnfr    = rnfr + max((rimedrr*nr(k)*rhoair(k)),0.)*dt
                    
-                endif !.. End ice-rain rime density calculation
+                endif !.. end ice-rain rime density calculation
              
   !.. Caculate the volume after riming
                 gamma_arg = NU+2.+deltastr(cc)
@@ -1474,7 +1474,7 @@ contains
                          anfr = ((vfr*gamma_tab(gi))/(fourthirdspi*phifr*gamma_tab(gi2)))**0.3333333333
                          cnfr = phifr*anfr*gammnu/gamma_tab(gi)
                       endif
-                   endif !.. End axis evolution from riming
+                   endif !.. end axis evolution from riming
 
   !.. Don't let the axes shrink from riming
                    cnfr=max(cnfr,cni(cc))
@@ -1504,7 +1504,7 @@ contains
                    ardr(cc)=0.
                    crdr(cc)=0.
                    
-                endif !.. End dry versus wet growth
+                endif !.. end dry versus wet growth
 
                 if(temp.gt.T0) then
 
@@ -1533,8 +1533,8 @@ contains
                    cmlt(cc) = amlt(cc)*cni(cc)/ani(cc)*(1.+(2.*deltastr(cc)))/(2.+deltastr(cc))
 
                 endif
-             enddo    !.. End the loop over ice speices
-          endif       !.. End if ice
+             enddo    !.. end the loop over ice speices
+          endif       !.. end if ice
           
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
@@ -1670,7 +1670,7 @@ contains
                 call aggregation(dt,rhoair(k),temp,qi(ICE1,k),ni(ICE1,k),dn1,qi(ICE2,k),ni(ICE2,k),dn2,  &
                      qi(ICE3,k),ni(ICE3,k),dn3,rhobar(ICE1),rhobar(ICE2),phiagg1,phiagg2,coltab,         &
                      coltabn,qagg(ICE1),qagg(ICE2),qagg(ICE3),nagg(ICE1),nagg(ICE2),nagg(ICE3))
-             endif  !.. If ice mass mixing ratios are high enough to aggregate
+             endif  !.. if ice mass mixing ratios are high enough to aggregate
           endif
           
   !--------------------------------------------------------------------------------------------------------------!
@@ -2118,9 +2118,9 @@ contains
                         alphstr, alphv, betam)
 
                    dsold(cc) = deltastr(cc)
-                endif  !.. End if ice exists after melting
+                endif  !.. end if ice exists after melting
              enddo     !.. Loop over all ices species
-          endif        !.. End temperature above melting
+          endif        !.. end temperature above melting
        
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
@@ -2316,7 +2316,7 @@ contains
                          deltastr(cc)=1.
                       endif
                    endif
-                endif    !.. End nucleation update distribution properties
+                endif    !.. end nucleation update distribution properties
 
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
@@ -2380,7 +2380,7 @@ contains
                 vtrzi1(cc,k)=0.
                 vtrmi1(cc,k)=0.
                 vtrni1(cc,k)=0.
-             endif  !.. End check for ice
+             endif  !.. end check for ice
           enddo     !.. Loop over all ice species
 
   !--------------------------------------------------------------------------------------------------------------!
@@ -2475,9 +2475,9 @@ contains
                            alphstr, alphv, betam)
 
                    endif
-                endif  !.. If ice exist
+                endif  !.. if ice exist
              enddo     !.. Loop over all species
-          endif        !.. If temperature < 273.15 K
+          endif        !.. if temperature < 273.15 K
           
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
@@ -2736,7 +2736,7 @@ contains
                 vtrzi1(cc,k)=0.
                 vtrmi1(cc,k)=0.
                 vtrni1(cc,k)=0.
-             endif !.. If ice exists
+             endif !.. if ice exists
 
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
@@ -2856,7 +2856,7 @@ contains
           vtrn(k)=0.
           qrpre1d=0.
 
-       endif  !.. If domicro
+       endif  !.. if domicro
     enddo     !.. do k = kts, kte
 
   !--------------------------------------------------------------------------------------------------------------!
@@ -3103,11 +3103,11 @@ contains
     
     implicit none
     
-    REAL, INTENT(IN) :: NU, ao, fourthirdspi, gammnu, qidum
-    REAL :: voltmp, maxsize, gamma_arg
-    INTEGER :: gi
-    REAL, INTENT(INOUT) :: dsdum, ani, cni, rbdum, nidum, aidum, cidum
-    REAL, INTENT(OUT) :: rni, alphstr, alphv, betam
+    real, intent(in) :: NU, ao, fourthirdspi, gammnu, qidum
+    real :: voltmp, maxsize, gamma_arg
+    integer :: gi
+    real, intent(inout) :: dsdum, ani, cni, rbdum, nidum, aidum, cidum
+    real, intent(out) :: rni, alphstr, alphv, betam
     
   !.. Deltastr check
     if(dsdum.lt.0.55) then 
@@ -3210,18 +3210,18 @@ contains
     implicit none
     
     real, parameter :: QASMALL= 1.e-19   ! Smallest ice size for sublimation  (squared)
-    REAL, INTENT(IN) :: dt, ani, cni, rni, igr, nidum, temp, presdum
-    REAL, INTENT(IN) :: NU, alphstr, mu, iwci, rhodum, qidum
-    REAL, INTENT(IN) :: dv, kt, ao, nsch, npr, gammnu, i_gammnu, fourthirdspi, svpi
-    REAL, INTENT(IN) :: xxls, xxlv, xxlf, capgam, rimesum, sui, sup, qvs, qvi, dsdum
-    REAL :: gammnubet, phii, fs, alphanr, bl, al, aa, ba
-    REAL :: xn, bx, xm, am, bm, f_c1, f_c2, del1, del2, alpha, afn, del
-    REAL :: xvent, ntherm, bv1, bv2, gv, bt1, bt2, gt, vtbranch, rhodep
-    REAL :: videp, vmin, betavol, vi, vf, cf, maxsui, qe, Nre, phif, gamma_arg, rbdumtmp
-    INTEGER :: gi, gi2
-    REAL, INTENT(INOUT) :: vtbarb, vtbarbm, vtbarbz
-    REAL, INTENT(OUT) :: anf, cnf, rnf, iwcf, rdout
-    REAL, INTENT(INOUT) :: fvdum, fhdum, dsdumout, rbdum
+    real, intent(in) :: dt, ani, cni, rni, igr, nidum, temp, presdum
+    real, intent(in) :: NU, alphstr, mu, iwci, rhodum, qidum
+    real, intent(in) :: dv, kt, ao, nsch, npr, gammnu, i_gammnu, fourthirdspi, svpi
+    real, intent(in) :: xxls, xxlv, xxlf, capgam, rimesum, sui, sup, qvs, qvi, dsdum
+    real :: gammnubet, phii, fs, alphanr, bl, al, aa, ba
+    real :: xn, bx, xm, am, bm, f_c1, f_c2, del1, del2, alpha, afn, del
+    real :: xvent, ntherm, bv1, bv2, gv, bt1, bt2, gt, vtbranch, rhodep
+    real :: videp, vmin, betavol, vi, vf, cf, maxsui, qe, Nre, phif, gamma_arg, rbdumtmp
+    integer :: gi, gi2
+    real, intent(inout) :: vtbarb, vtbarbm, vtbarbz
+    real, intent(out) :: anf, cnf, rnf, iwcf, rdout
+    real, intent(inout) :: fvdum, fhdum, dsdumout, rbdum
     
     fvdum = 1.0
     fhdum = 1.0
@@ -3319,7 +3319,7 @@ contains
     fvdum = bv1 + bv2*xvent**gv
     fhdum = bt1 + bt2*ntherm**gt
     
-    if(temp.le.T0) then !.. If T < T0 do vapor growth/sublimation (otherwise assume water on surface)
+    if(temp.le.T0) then !.. if T < T0 do vapor growth/sublimation (otherwise assume water on surface)
        
   !.. Fall speed needed to determine when branching occurs
        vtbranch = vtbarbm
@@ -3489,8 +3489,8 @@ contains
     
     implicit none
     
-    REAL, INTENT(IN) :: ani, dsdum, NU, alphstr, i_gammnu
-    REAL :: a1, a2, b1, b2, c1, c2, d1, d2, gammad1, gammad2
+    real, intent(in) :: ani, dsdum, NU, alphstr, i_gammnu
+    real :: a1, a2, b1, b2, c1, c2, d1, d2, gammad1, gammad2
     
   !.. Oblate Spheroid
     if (dsdum.le.1.0) then
@@ -3534,18 +3534,18 @@ contains
 
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
-  SUBROUTINE wet_growth_check(NU, temp, rhodum, xxlv, xxlf, qvdum, dv, kt, qs0, &
+  subroutine wet_growth_check(NU, temp, rhodum, xxlv, xxlf, qvdum, dv, kt, qs0, &
        fvdum, fhdum, rimedum, rni, nidum, dgflag)
     
-    IMPLICIT NONE
+    implicit none
 
   !.. Check for wet growth conditions
   !.. See Lamb and Verlinde (2011)
-    REAL, INTENT(IN) :: NU, temp, rhodum, xxlv, xxlf, qvdum, dv, kt
-    REAL, INTENT(IN) :: fvdum, fhdum, rni, nidum
-    REAL, INTENT(IN) :: qs0, rimedum
-    REAL :: wetg, dum
-    LOGICAL, INTENT(INOUT) :: dgflag
+    real, intent(in) :: NU, temp, rhodum, xxlv, xxlf, qvdum, dv, kt
+    real, intent(in) :: fvdum, fhdum, rni, nidum
+    real, intent(in) :: qs0, rimedum
+    real :: wetg, dum
+    logical, intent(inout) :: dgflag
     
     dum=nidum*NU*2.*rni
     wetg=2.*PI*dum*(kt*fhdum*(T0-temp)+rhodum*xxlv*dv*fvdum*(qs0-qvdum))/(xxlf + (CPW*(temp-T0)))
@@ -3557,7 +3557,7 @@ contains
 
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
-  real function polysvp(T,TYPE)
+  real function polysvp(T,type)
     
   !--------------------------------------------------------------
   !.. Taken from 'module_mp_morr_two_moment.F' (WRFV3.4)
@@ -3572,11 +3572,11 @@ contains
   !.. TABLE 4 (RIGHT-HAND COLUMN)
   !--------------------------------------------------------------
 
-    IMPLICIT NONE
+    implicit none
     
-    REAL DUM
-    REAL T
-    INTEGER TYPE
+    real DUM
+    real T
+    integer type
   !.. ice
     real a0i,a1i,a2i,a3i,a4i,a5i,a6i,a7i,a8i
     data a0i,a1i,a2i,a3i,a4i,a5i,a6i,a7i,a8i /&
@@ -3595,22 +3595,22 @@ contains
     real dt
     
   !.. ICE
-    IF (TYPE.EQ.1) THEN
+    if (type.EQ.1) then
 
        dt = max(-80.,t-273.16)
        polysvp = a0i + dt*(a1i+dt*(a2i+dt*(a3i+dt*(a4i+dt*(a5i+dt*(a6i+dt*(a7i+a8i*dt)))))))
        polysvp = polysvp*100.
        
-    END IF
+    end if
 
   !.. LIQUID
-    IF (TYPE.EQ.0) THEN
+    if (type.EQ.0) then
        
        dt = max(-80.,t-273.16)
        polysvp = a0 + dt*(a1+dt*(a2+dt*(a3+dt*(a4+dt*(a5+dt*(a6+dt*(a7+a8*dt)))))))
        polysvp = polysvp*100.
          
-    END IF
+    end if
       
   end function polysvp
 
@@ -3686,10 +3686,10 @@ contains
     
     implicit none
     
-    REAL :: xx
-    REAL*8 :: cof(6), stp, x, y, tmp, ser 
-    INTEGER :: j
-    DATA cof, stp/76.18009172947146d0, &
+    real :: xx
+    real*8 :: cof(6), stp, x, y, tmp, ser 
+    integer :: j
+    data cof, stp/76.18009172947146d0, &
          -86.50532032941677d0,         &
          24.01409824083091d0,          &
          -1.231739572450155d0,         &
@@ -3713,7 +3713,7 @@ contains
 
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
-  REAL FUNCTION GAMMA(X)
+  real function GAMMA(X)
     !----------------------------------------------------------------------
     !
     ! THIS ROUTINE CALCULATES THE GAMMA FUNCTION FOR A REAL ARGUMENT X.
@@ -3804,148 +3804,148 @@ contains
     !
     !----------------------------------------------------------------------
     implicit none
-    INTEGER I,N
-    LOGICAL PARITY
-    REAL                                                          &
+    integer I,N
+    logical PARITY
+    real                                                          &
          CONV,EPS,FACT,HALF,ONE,RES,SUM,TWELVE,                    &
          TWO,X,XBIG,XDEN,XINF,XMININ,XNUM,Y,Y1,YSQ,Z,ZERO
-    REAL, DIMENSION(7) :: C
-    REAL, DIMENSION(8) :: P
-    REAL, DIMENSION(8) :: Q
-    REAL, PARAMETER :: xxx = 0.9189385332046727417803297
+    real, dimension(7) :: C
+    real, dimension(8) :: P
+    real, dimension(8) :: Q
+    real, parameter :: xxx = 0.9189385332046727417803297
     !----------------------------------------------------------------------
     !  MATHEMATICAL CONSTANTS
     !----------------------------------------------------------------------
-    DATA ONE,HALF,TWELVE,TWO,ZERO/1.0E0,0.5E0,12.0E0,2.0E0,0.0E0/
+    data ONE,HALF,TWELVE,TWO,ZERO/1.0E0,0.5E0,12.0E0,2.0E0,0.0E0/
     
     
     !----------------------------------------------------------------------
     !  MACHINE DEPENDENT PARAMETERS
     !----------------------------------------------------------------------
-    DATA XBIG,XMININ,EPS/35.040E0,1.18E-38,1.19E-7/,XINF/3.4E38/
+    data XBIG,XMININ,EPS/35.040E0,1.18E-38,1.19E-7/,XINF/3.4E38/
     !----------------------------------------------------------------------
     !  NUMERATOR AND DENOMINATOR COEFFICIENTS FOR RATIONAL MINIMAX
     !     APPROXIMATION OVER (1,2).
     !----------------------------------------------------------------------
-    DATA P/-1.71618513886549492533811E+0,2.47656508055759199108314E+1,  &
+    data P/-1.71618513886549492533811E+0,2.47656508055759199108314E+1,  &
          -3.79804256470945635097577E+2,6.29331155312818442661052E+2,  &
          8.66966202790413211295064E+2,-3.14512729688483675254357E+4,  &
          -3.61444134186911729807069E+4,6.64561438202405440627855E+4/
-    DATA Q/-3.08402300119738975254353E+1,3.15350626979604161529144E+2,  &
+    data Q/-3.08402300119738975254353E+1,3.15350626979604161529144E+2,  &
          -1.01515636749021914166146E+3,-3.10777167157231109440444E+3, &
          2.25381184209801510330112E+4,4.75584627752788110767815E+3,  &
          -1.34659959864969306392456E+5,-1.15132259675553483497211E+5/
     !----------------------------------------------------------------------
     !  COEFFICIENTS FOR MINIMAX APPROXIMATION OVER (12, INF).
     !----------------------------------------------------------------------
-    DATA C/-1.910444077728E-03,8.4171387781295E-04,                      &
+    data C/-1.910444077728E-03,8.4171387781295E-04,                      &
          -5.952379913043012E-04,7.93650793500350248E-04,	           &
          -2.777777777777681622553E-03,8.333333333333333331554247E-02,	   &
          5.7083835261E-03/
     !----------------------------------------------------------------------
     !  STATEMENT FUNCTIONS FOR CONVERSION BETWEEN INTEGER AND FLOAT
     !----------------------------------------------------------------------
-    CONV(I) = REAL(I)
+    CONV(I) = real(I)
     PARITY=.FALSE.
     FACT=ONE
     N=0
     Y=X
-    IF(Y.LE.ZERO)THEN
+    if(Y.LE.ZERO)then
        !----------------------------------------------------------------------
        !  ARGUMENT IS NEGATIVE
        !----------------------------------------------------------------------
        Y=-X
        Y1=AINT(Y)
        RES=Y-Y1
-       IF(RES.NE.ZERO)THEN
-          IF(Y1.NE.AINT(Y1*HALF)*TWO)PARITY=.TRUE.
+       if(RES.NE.ZERO)then
+          if(Y1.NE.AINT(Y1*HALF)*TWO)PARITY=.TRUE.
           FACT=-PI/SIN(PI*RES)
           Y=Y+ONE
-       ELSE
+       else
           RES=XINF
           GOTO 900
-       ENDIF
-    ENDIF
+       endif
+    endif
     !----------------------------------------------------------------------
     !  ARGUMENT IS POSITIVE
     !----------------------------------------------------------------------
-    IF(Y.LT.EPS)THEN
+    if(Y.LT.EPS)then
        !----------------------------------------------------------------------
        !  ARGUMENT .LT. EPS
        !----------------------------------------------------------------------
-       IF(Y.GE.XMININ)THEN
+       if(Y.GE.XMININ)then
           RES=ONE/Y
-       ELSE
+       else
           RES=XINF
           GOTO 900
-       ENDIF
-    ELSEIF(Y.LT.TWELVE)THEN
+       endif
+    elseif(Y.LT.TWELVE)then
        Y1=Y
-       IF(Y.LT.ONE)THEN
+       if(Y.LT.ONE)then
           !----------------------------------------------------------------------
           !  0.0 .LT. ARGUMENT .LT. 1.0
           !----------------------------------------------------------------------
           Z=Y
           Y=Y+ONE
-       ELSE
+       else
           !----------------------------------------------------------------------
           !  1.0 .LT. ARGUMENT .LT. 12.0, REDUCE ARGUMENT IF NECESSARY
           !----------------------------------------------------------------------
           N=INT(Y)-1
           Y=Y-CONV(N)
           Z=Y-ONE
-       ENDIF
+       endif
        !----------------------------------------------------------------------
        !  EVALUATE APPROXIMATION FOR 1.0 .LT. ARGUMENT .LT. 2.0
        !----------------------------------------------------------------------
        XNUM=ZERO
        XDEN=ONE
-       DO I=1,8
+       do I=1,8
           XNUM=(XNUM+P(I))*Z
           XDEN=XDEN*Z+Q(I)
-       END DO
+       end do
        RES=XNUM/XDEN+ONE
-       IF(Y1.LT.Y)THEN
+       if(Y1.LT.Y)then
           !----------------------------------------------------------------------
           !  ADJUST RESULT FOR CASE  0.0 .LT. ARGUMENT .LT. 1.0
           !----------------------------------------------------------------------
           RES=RES/Y1
-       ELSEIF(Y1.GT.Y)THEN
+       elseif(Y1.GT.Y)then
           !----------------------------------------------------------------------
           !  ADJUST RESULT FOR CASE  2.0 .LT. ARGUMENT .LT. 12.0
           !----------------------------------------------------------------------
-          DO I=1,N
+          do I=1,N
              RES=RES*Y
              Y=Y+ONE
-          END DO
-       ENDIF
-    ELSE
+          end do
+       endif
+    else
        !----------------------------------------------------------------------
        !  EVALUATE FOR ARGUMENT .GE. 12.0,
        !----------------------------------------------------------------------
-       IF(Y.LE.XBIG)THEN
+       if(Y.LE.XBIG)then
           YSQ=Y*Y
           SUM=C(7)
-          DO I=1,6
+          do I=1,6
              SUM=SUM/YSQ+C(I)
-          END DO
+          end do
           SUM=SUM/Y-Y+xxx
           SUM=SUM+(Y-HALF)*LOG(Y)
           RES=EXP(SUM)
-       ELSE
+       else
           RES=XINF
           GOTO 900
-       ENDIF
-    ENDIF
+       endif
+    endif
     !----------------------------------------------------------------------
     !  FINAL ADJUSTMENTS AND RETURN
     !----------------------------------------------------------------------
-    IF(PARITY)RES=-RES
-    IF(FACT.NE.ONE)RES=FACT/RES
+    if(PARITY)RES=-RES
+    if(FACT.NE.ONE)RES=FACT/RES
 900 GAMMA=RES
-    RETURN
+    return
     ! ---------- LAST LINE OF GAMMA ----------
-  END FUNCTION GAMMA
+  end function GAMMA
 
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
@@ -4015,15 +4015,15 @@ contains
     real qs(nz),ns(nz),dns(nz),qa(nz),na(nz),dna(nz)
     real t(nz,ncat),tc(nz),rhoa(nz),tk(nz),denfac(nz),eff(nz)
     real ftable(nftab,ncat)
-    real, intent(IN) :: coltab(ndn,ndn,npair),coltabn(ndn,ndn,npair)
+    real, intent(in) :: coltab(ndn,ndn,npair),coltabn(ndn,ndn,npair)
     integer ipair(ncat,ncat),ict(nz,ncat)
     real, dimension(ncat,9) :: dstprms
-    real, intent(IN) :: qdum1,ndum1,qdum2,ndum2,qdum3,ndum3,ddum1,ddum2
-    real, intent(INOUT) :: qagg1,qagg2,qagg3,nagg1,nagg2,nagg3,ddum3
-    real, intent(IN) :: rhodum1, rhodum2, phidum1, phidum2
+    real, intent(in) :: qdum1,ndum1,qdum2,ndum2,qdum3,ndum3,ddum1,ddum2
+    real, intent(inout) :: qagg1,qagg2,qagg3,nagg1,nagg2,nagg3,ddum3
+    real, intent(in) :: rhodum1, rhodum2, phidum1, phidum2
     real :: rhoeff, phieff, rhoeffmax, phieffmax, efffact
     real :: source3, sink3, source4, sink4, ratioagg
-    real, intent(IN) :: dtdum, rhoairdum, tempdum
+    real, intent(in) :: dtdum, rhoairdum, tempdum
     
     dstprms=&
          !-----------------------------------------------------------------------                                
@@ -4632,18 +4632,18 @@ contains
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
   !.. Used by aggregation
-  REAL FUNCTION GAMMQ(A,X)
+  real function GAMMQ(A,X)
 
     real :: x, a, gln, gamser
 
-    IF (X .LT. A+1.) THEN
-       CALL LOWGSERIES(GAMSER,A,X,GLN)
+    if (X .LT. A+1.) then
+       call LOWGSERIES(GAMSER,A,X,GLN)
        GAMMQ = 1. - GAMSER
-    ELSE
-       CALL HIGHGCONTFRAC(GAMMQ,A,X,GLN)
-    END IF
-    RETURN
-  END FUNCTION GAMMQ
+    else
+       call HIGHGCONTFRAC(GAMMQ,A,X,GLN)
+    end if
+    return
+  end function GAMMQ
 
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
@@ -4653,7 +4653,7 @@ contains
     
     implicit none
     
-    REAL :: a, x, gammaser, gammacf, gln
+    real :: a, x, gammaser, gammacf, gln
     
     if(x.lt.0.0.or.a.lt.0.0) then
        write(*,*) 'either x or a is less than zero'
@@ -4679,10 +4679,10 @@ contains
     
     implicit none
     
-    INTEGER, PARAMETER :: ITMAX = 100
-    INTEGER :: n
-    REAL :: gammaser, a, x, gln, sum, del, ap
-    REAL, PARAMETER :: EPS = 3.0e-7
+    integer, parameter :: ITMAX = 100
+    integer :: n
+    real :: gammaser, a, x, gln, sum, del, ap
+    real, parameter :: EPS = 3.0e-7
 
     gln = gammln(a)
     if(x.le.0) then
@@ -4712,10 +4712,10 @@ contains
 
     implicit none
 
-    INTEGER, PARAMETER :: ITMAX = 100
-    INTEGER :: n
-    REAL :: gammacf, a, x, gln, b, c, d, h, del, an
-    REAL, PARAMETER :: EPS = 3.0e-7, FPMIN = 1.0e-30
+    integer, parameter :: ITMAX = 100
+    integer :: n
+    real :: gammacf, a, x, gln, b, c, d, h, del, an
+    real, parameter :: EPS = 3.0e-7, FPMIN = 1.0e-30
 
     gln = gammln(a)
     b=x+1.-a
@@ -4742,46 +4742,46 @@ contains
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!
   !.. Used by aggregation
-SUBROUTINE AVINT(X,Y,N,XLO,XUP,ANS)
-  DOUBLE PRECISION :: R3,RP5,SUM,SYL,SYL2,SYL3,SYU,SYU2,SYU3,X1,X2,X3 &
+subroutine AVINT(X,Y,N,XLO,XUP,ANS)
+  double precision :: R3,RP5,SUM,SYL,SYL2,SYL3,SYU,SYU2,SYU3,X1,X2,X3 &
        ,X12,X13,X23,TERM1,TERM2,TERM3,A,B,C,CA,CB,CC
-  REAL :: XLO,XUP,ANS,FL,FR,SLOPE
-  INTEGER :: N, I, INLFT,INRT,ISTART,ISTOP
-  REAL, DIMENSION(N) :: X,Y
+  real :: XLO,XUP,ANS,FL,FR,SLOPE
+  integer :: N, I, INLFT,INRT,ISTART,ISTOP
+  real, dimension(N) :: X,Y
 
   ANS =0.0
-  IF (XLO-XUP) 3,100,200
-3 IF (N.LT.2) GO TO 215
-  DO 5 I=2,N
-     IF (X(I).LE.X(I-1)) GO TO 210
-     IF (X(I).GT.XUP) GO TO 6
-5    CONTINUE
-6    CONTINUE
-     IF (N.GE.3) GO TO 9
+  if (XLO-XUP) 3,100,200
+3 if (N.LT.2) go to 215
+  do 5 I=2,N
+     if (X(I).LE.X(I-1)) go to 210
+     if (X(I).GT.XUP) go to 6
+5    continue
+6    continue
+     if (N.GE.3) go to 9
   !.. special n=2 case                                                                              
      SLOPE = (Y(2)-Y(1))/(X(2)-X(1))
      FL = Y(1) + SLOPE*(XLO-X(1))
      FR = Y(2) + SLOPE*(XUP-X(2))
      ANS = 0.5*(FL+FR)*(XUP-XLO)
-     RETURN
-9    CONTINUE
-     IF (X(N-2).LT.XLO)  GO TO 205
-     IF (X(3).GT.XUP)    GO TO 205
+     return
+9    continue
+     if (X(N-2).LT.XLO)  go to 205
+     if (X(3).GT.XUP)    go to 205
      I = 1
-10   IF (X(I).GE.XLO) GO TO 15
+10   if (X(I).GE.XLO) go to 15
      I = I+1
-     GO TO 10
+     go to 10
 15   INLFT = I
      I = N
-20   IF (X(I).LE.XUP) GO TO 25
+20   if (X(I).LE.XUP) go to 25
      I = I-1
-     GO TO 20
+     go to 20
 25   INRT = I
-     IF ((INRT-INLFT).LT.2) GO TO 205
+     if ((INRT-INLFT).LT.2) go to 205
      ISTART = INLFT
-     IF (INLFT.EQ.1) ISTART = 2
+     if (INLFT.EQ.1) ISTART = 2
      ISTOP  = INRT
-     IF (INRT.EQ.N)  ISTOP  = N-1
+     if (INRT.EQ.N)  ISTOP  = N-1
 
      R3 = 3.0D0
      RP5= 0.5D0
@@ -4790,7 +4790,7 @@ SUBROUTINE AVINT(X,Y,N,XLO,XUP,ANS)
      SYL2= SYL*SYL
      SYL3= SYL2*SYL
 
-     DO 50 I=ISTART,ISTOP
+     do 50 I=ISTART,ISTOP
         X1 = X(I-1)
         X2 = X(I)
         X3 = X(I+1)
@@ -4803,11 +4803,11 @@ SUBROUTINE AVINT(X,Y,N,XLO,XUP,ANS)
         A = TERM1+TERM2+TERM3
         B = -(X2+X3)*TERM1 - (X1+X3)*TERM2 - (X1+X2)*TERM3
         C = X2*X3*TERM1 + X1*X3*TERM2 + X1*X2*TERM3
-        IF (I-ISTART) 30,30,35
+        if (I-ISTART) 30,30,35
 30      CA = A
         CB = B
         CC = C
-        GO TO 40
+        go to 40
 35      CA = 0.5*(A+CA)
         CB = 0.5*(B+CB)
         CC = 0.5*(C+CC)
@@ -4821,20 +4821,20 @@ SUBROUTINE AVINT(X,Y,N,XLO,XUP,ANS)
         SYL = SYU
         SYL2= SYU2
         SYL3= SYU3
-50      CONTINUE
+50      continue
         SYU = XUP
         ANS = SUM + CA*(SYU**3-SYL3)/R3 + CB*RP5*(SYU**2-SYL2) &
              + CC*(SYU-SYL)
-100     RETURN
-200     PRINT*, 'Upper limit of integration not greater than lower limit.'
-        STOP 'AVINT2'
-205     PRINT*, 'Less than 3 function values between integration limits.'
-        STOP 'AVINT3'
-210     PRINT*, 'Abscissas not strictly increasing.'
-        STOP 'AVINT4'
-215     PRINT*, 'Less than 2 function values were supplied.'
-        STOP 'AVINT5'
-   END SUBROUTINE
+100     return
+200     print*, 'Upper limit of integration not greater than lower limit.'
+        stop 'AVINT2'
+205     print*, 'Less than 3 function values between integration limits.'
+        stop 'AVINT3'
+210     print*, 'Abscissas not strictly increasing.'
+        stop 'AVINT4'
+215     print*, 'Less than 2 function values were supplied.'
+        stop 'AVINT5'
+   end subroutine
 
   !--------------------------------------------------------------------------------------------------------------!
   !--------------------------------------------------------------------------------------------------------------!

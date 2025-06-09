@@ -1,4 +1,4 @@
-  MODULE solve1_module
+  module solve1_module
 
         ! solve1: pre-RK terms
         ! (tendencies held fixed during Runge-Kutta integration and acoustic sub-stepping)
@@ -72,7 +72,7 @@
   private
   public :: solve1
 
-  CONTAINS
+  contains
 
       subroutine solve1(nstep,num_soil_layers,                       &
                    dt,dtlast,adtlast,mtime,dbldt,                    &
@@ -293,7 +293,7 @@
 !cc   subgrid turbulence schemes  cccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-      IF( idoles .and. sgsmodel.eq.3 )THEN
+      if( idoles .and. sgsmodel.eq.3 )then
 
         ! wten = kmh
         ! rrw  = kmv
@@ -309,16 +309,16 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------------
 !  get RHS for tke scheme:
 
-      IF( idoles .and. iusetke )THEN
+      if( idoles .and. iusetke )then
 
         !  Buoyancy, Dissipation, and mean-gradient (ie, shear) terms:
         !    cm1r21.1: switch back to shear-prod formulation from cm1r19 and earlier
-        IF(tconfig.eq.1)THEN
+        if(tconfig.eq.1)then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=2,nk
@@ -330,7 +330,7 @@
           enddo
           enddo
           enddo
-        ELSEIF(tconfig.eq.2)THEN
+        elseif(tconfig.eq.2)then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=2,nk
@@ -343,7 +343,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
         if(timestats.ge.1) time_turb=time_turb+mytime()
 
         if( dotdwrite .and. kd_turb.ge.1 )then
@@ -380,14 +380,14 @@
           enddo
         endif
 
-      ENDIF
+      endif
 
 
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 !CC   Pre-RK calculations   CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 !CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-    IF( irdamp.eq.2 .or. hrdamp.eq.2 .or. tqnudge .or. do_lsnudge )THEN
+    if( irdamp.eq.2 .or. hrdamp.eq.2 .or. tqnudge .or. do_lsnudge )then
 
       if( imoist.eq.1 )then
         call     get_avg_uvtq(uavg,vavg,thavg,qavg,cavg,th0,ua,va,tha,qa,ruh,ruf,rvh,rvf)
@@ -395,7 +395,7 @@
         call     get_avg_uvt(uavg,vavg,thavg,cavg,th0,ua,va,tha,ruh,ruf,rvh,rvf)
       endif
 
-    ENDIF
+    endif
 
 !--------------------------------------------------------------------
 !  radbc
@@ -411,7 +411,7 @@
 !--------------------------------------------------------------------
 !  Rayleigh damping and set tendency arrays:
 
-      IF( irdamp.eq.1 .or. hrdamp.eq.1 )THEN
+      if( irdamp.eq.1 .or. hrdamp.eq.1 )then
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
         do k=1,nk
@@ -424,7 +424,7 @@
         enddo
         enddo
         enddo
-      ELSEIF( irdamp.eq.2 .or. hrdamp.eq.2 )THEN
+      elseif( irdamp.eq.2 .or. hrdamp.eq.2 )then
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
         do k=1,nk
@@ -437,7 +437,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
         do k=1,nk
@@ -450,10 +450,10 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
       if(timestats.ge.1) time_rdamp=time_rdamp+mytime()
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
         ! moisture:
         do n=1,numq
           !$omp parallel do default(shared)   &
@@ -467,9 +467,9 @@
           enddo
         enddo
         if(timestats.ge.1) time_misc=time_misc+mytime()
-      ENDIF
+      endif
 
-      IF(iptra.eq.1)THEN
+      if(iptra.eq.1)then
         ! passive tracers:
         do n=1,npt
           !$omp parallel do default(shared)   &
@@ -482,7 +482,7 @@
           enddo
           enddo
         enddo
-      ENDIF
+      endif
 
     ! Diagnostics (infrequent):
 
@@ -535,13 +535,13 @@
 !--------------------------------------------------------------------
 !  large-scale pressure gradient:
 
-      IF( lspgrad.ge.1 )THEN
+      if( lspgrad.ge.1 )then
 
         ! Include a large-scale pressure gradient:
 
           do_adapt_lspg = .false.
 
-          IF( do_adapt_lspg .and. lspgrad.eq.4 )THEN
+          if( do_adapt_lspg .and. lspgrad.eq.4 )then
 !!!            stop 3333
 
           if( mtime.gt.  10.0 .and. mod(mtime,  1.0).lt.1.0e-8 )then
@@ -585,7 +585,7 @@
             ulspg = newval
    
           endif
-          ENDIF
+          endif
 
         if(     lspgrad.eq.1 )then
 
@@ -678,12 +678,12 @@
         endif
         if(timestats.ge.1) time_misc=time_misc+mytime()
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------------
 !  2nd-order diffusion, fixed viscosity (eg, DNS and idealized test):
 
-      IF( difforder.eq.2 )THEN
+      if( difforder.eq.2 )then
 
         idiffge1:  &
         if(idiff.ge.1)then
@@ -707,7 +707,7 @@
                       dum1,dum2,dum3,dum4,tha,thten1,rho,rr,rf,  &
                       dotbud,ibdt,iedt,jbdt,jedt,kbdt,kedt,ntdiag,tdiag,td_hediff,td_vediff)
 
-          IF( imoist.eq.1 )THEN
+          if( imoist.eq.1 )then
             ! moisture:
             do n=1,numq
               if( n.eq.nqv )then
@@ -720,20 +720,20 @@
                             .false.,ibdq,iedq,jbdq,jedq,kbdq,kedq,nqdiag,qdiag,1,1)
               endif
             enddo
-          ENDIF
+          endif
 
-          IF(iptra.eq.1)THEN
+          if(iptra.eq.1)then
             ! passive tracers:
             do n=1,npt
               call diff2s(rxh,arh1,arh2,uh,xf,arf1,arf2,uf,vh,vf,mh,mf,  &
                           dum1,dum2,dum3,dum4,pta(ib,jb,kb,n),ptten(ib,jb,kb,n),rho,rr,rf,  &
                           .false.,ibdq,iedq,jbdq,jedq,kbdq,kedq,nqdiag,qdiag,1,1)
             enddo
-          ENDIF
+          endif
 
         endif  idiffeq1
 
-      ENDIF
+      endif
 
 !--------------------------------------------------------------------
 !  tendencies specific to THETA:
@@ -741,13 +741,13 @@
 
       !----- cvm (if needed) -----!
 
-      IF( eqtset.eq.2 .and. imoist.eq.1 .and. (idiss.eq.1.or.rterm.eq.1) )THEN
+      if( eqtset.eq.2 .and. imoist.eq.1 .and. (idiss.eq.1.or.rterm.eq.1) )then
         ! for energy-conserving moist thermodynamics:
         ! store cvm in dum1:
         ! store ql  in dum2:
         ! store qi  in dum3:
 
-        IF( nql1.ge.1 )THEN
+        if( nql1.ge.1 )then
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -771,7 +771,7 @@
             enddo
           enddo
 
-        ELSE
+        else
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -783,9 +783,9 @@
           enddo
           enddo
 
-        ENDIF
+        endif
 
-        IF(iice.eq.1)THEN
+        if(iice.eq.1)then
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -809,7 +809,7 @@
             enddo
           enddo
 
-        ELSE
+        else
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -821,35 +821,35 @@
           enddo
           enddo
 
-        ENDIF
+        endif
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           dum1(i,j,k)=cv+cvv*qa(i,j,k,nqv)+cpl*dum2(i,j,k)+cpi*dum3(i,j,k)
         enddo
         enddo
-        ENDDO
+        enddo
 
-      ELSE
+      else
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k,n)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           dum1(i,j,k)=cv
         enddo
         enddo
-        ENDDO
+        enddo
 
-      ENDIF
+      endif
 
       !----- store appropriate rho for budget calculations in dum2 -----!
 
-      IF(axisymm.eq.1)THEN
+      if(axisymm.eq.1)then
        ! for axisymmetric grid:
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -860,7 +860,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
        ! for Cartesian grid:
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -871,7 +871,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
       !-------------------------------------------------------------
 
@@ -916,8 +916,8 @@
 
       !---- Dissipative heating term:
 
-      IF( idiss.eq.1 )THEN
-        IF( dotbud .and. td_diss.ge.1 )THEN
+      if( idiss.eq.1 )then
+        if( dotbud .and. td_diss.ge.1 )then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=1,nk
@@ -927,7 +927,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
         ! note:  dissten array stores epsilon (dissipation rate) at w points
         if( bbc.eq.3 )then
           k1 = 2
@@ -987,7 +987,7 @@
             enddo
           endif
         endif
-        IF( dotbud .and. td_diss.ge.1 )THEN
+        if( dotbud .and. td_diss.ge.1 )then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=1,nk
@@ -997,13 +997,13 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ENDIF
+        endif
+      endif
 
       !---- Rotunno-Emanuel "radiation" term
       !---- (currently capped at 2 K/day ... see RE87 p 546)
 
-      IF(rterm.eq.1)THEN
+      if(rterm.eq.1)then
         if( dotbud .and. td_rad.ge.1 )then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -1050,10 +1050,10 @@
           enddo
           enddo
         endif
-      ENDIF
+      endif
       if(timestats.ge.1) time_misc=time_misc+mytime()
 
-      IF( radopt.ge.1 )THEN
+      if( radopt.ge.1 )then
         ! Radiation tendencies:
 
         ! Notes:
@@ -1082,9 +1082,9 @@
           enddo
         endif
         if(timestats.ge.1) time_rad=time_rad+mytime()
-      ENDIF
+      endif
 
-      IF( use_pbl )THEN
+      if( use_pbl )then
         ! PBL tendencies:
 
         !$omp parallel do default(shared)  &
@@ -1109,14 +1109,14 @@
         endif
         if(timestats.ge.1) time_pbl=time_pbl+mytime()
 
-      ENDIF
+      endif
 
 
 !--------------------------------------------------------------------
 !  subgrid turbulence tendencies:
 
       doturb:  &
-      IF( dohturb .or. dovturb )THEN
+      if( dohturb .or. dovturb )then
 
         if( sgsmodel.eq.5 .or. sgsmodel.eq.6 )then
           ! NBA sgs turbulence models:
@@ -1183,7 +1183,7 @@
 
         ! cm1r18: subtract th0r from theta (as in advection scheme)
         !         (reduces roundoff error)
-        IF(.not.terrain_flag)THEN
+        if(.not.terrain_flag)then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k,tem)
           do k=1,nk
@@ -1194,7 +1194,7 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k,tem)
           do k=1,nk
@@ -1204,13 +1204,13 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
         call turbs(1,dt,dosfcflx,xh,rxh,arh1,arh2,uh,xf,arf1,arf2,uf,vh,vf,thflux,   &
                    rds,sigma,rdsf,sigmaf,mh,mf,gz,rgz,gzu,rgzu,gzv,rgzv,gx,gxu,gy,gyv, &
                    dum1,dum2,dum3,dum4,dum5,sten,rho,rr,rf,sadv,thten1,khh,khv,cm0,dum7,dum8, &
                    dotbud,ibdt,iedt,jbdt,jedt,kbdt,kedt,ntdiag,tdiag,td_hturb,td_vturb,1)
 
-        IF( imoist.eq.1 )THEN
+        if( imoist.eq.1 )then
           ! moisture:
           do n=1,numq
             if( n.eq.nqv )then
@@ -1225,9 +1225,9 @@
                          .false.,ibdq,iedq,jbdq,jedq,kbdq,kedq,nqdiag,qdiag,1,1,0)
             endif
           enddo
-        ENDIF
+        endif
 
-        IF(iptra.eq.1)THEN
+        if(iptra.eq.1)then
           ! passive tracers:
           do n=1,npt
             call turbs(0,dt,dosfcflx,xh,rxh,arh1,arh2,uh,xf,arf1,arf2,uf,vh,vf,qvflux,   &
@@ -1235,18 +1235,18 @@
                        dum1,dum2,dum3,dum4,dum5,sten,rho,rr,rf,pta(ib,jb,kb,n),ptten(ib,jb,kb,n),khh,khv,cm0,dum7,dum8, &
                        .false.,ibdq,iedq,jbdq,jedq,kbdq,kedq,nqdiag,qdiag,1,1,0)
           enddo
-        ENDIF
+        endif
 
-      ENDIF  doturb
+      endif  doturb
 
 !--------------------------------------------------------------------
 !  U-equation
 
-      IF( iinit.eq.10 .and. mtime.lt.t2_uforce )THEN
+      if( iinit.eq.10 .and. mtime.lt.t2_uforce )then
         ! u-forcing for squall-line initialization:
         ! (Morrison et al, 2015, JAS, pg 315)
         gamm = 1.0
-        if(mtime.ge.t1_uforce)THEN
+        if(mtime.ge.t1_uforce)then
           gamm = 1.0+(0.0-1.0)*(mtime-t1_uforce)/(t2_uforce-t1_uforce)
         endif
         if(myid.eq.0) print *,'  mtime,gamm = ',mtime,gamm
@@ -1263,7 +1263,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
       if(timestats.ge.1) time_rdamp=time_rdamp+mytime()
 
       if( use_pbl )then
@@ -1281,7 +1281,7 @@
         enddo
         enddo
         enddo
-        IF( doubud .and. ud_pbl.ge.1 )then
+        if( doubud .and. ud_pbl.ge.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=1,nk
@@ -1291,7 +1291,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
         if(timestats.ge.1) time_pbl=time_pbl+mytime()
       endif
 
@@ -1308,7 +1308,7 @@
         enddo
         enddo
         enddo
-        IF( dovbud .and. vd_pbl.ge.1 )then
+        if( dovbud .and. vd_pbl.ge.1 )then
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=1,nk
@@ -1318,7 +1318,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
         if(timestats.ge.1) time_pbl=time_pbl+mytime()
       endif
  
@@ -1349,7 +1349,7 @@
               endif
               if(timestats.ge.1) time_pbl=time_pbl+mytime()
             endif
-        IF( use_pbl )THEN
+        if( use_pbl )then
         if(nqc.ge.1)then
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
@@ -1395,12 +1395,12 @@
           enddo
         endif
           if(timestats.ge.1) time_pbl=time_pbl+mytime()
-        ENDIF
+        endif
       endif
 
 !--------------------------------------------------------------------
 
-    IF( tqnudge )THEN
+    if( tqnudge )then
 
       if( imoist.eq.0 .and. td_nudge.ge.1   &
           .and. dotbud )then
@@ -1486,13 +1486,13 @@
 
       if(timestats.ge.1) time_misc=time_misc+mytime()
 
-    ENDIF
+    endif
 
 !--------------------------------------------------------------------
 !  TENDENCIES for pre-configured cases:
 !    (new for cm1r19)
 
-      IF( testcase.ge.1 )THEN
+      if( testcase.ge.1 )then
 
         call     testcase_simple_phys(mh,rho0,rr0,rf0,th0,u0,v0,     &
                    zh,zf,dum1,dum2,dum3,dum4,dum5,dum6,              &
@@ -1502,12 +1502,12 @@
                    o30 ,thraten,zir,ruh,ruf,rvh,rvf,mtime)
         if(timestats.ge.1) time_misc=time_misc+mytime()
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------------
 !  Convective parameterization:
 
-    IF( cuparam.ge.1 )THEN
+    if( cuparam.ge.1 )then
 
       !$omp parallel do default(shared)  &
       !$omp private(i,j,k)
@@ -1521,7 +1521,7 @@
       enddo
       enddo
 
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
         if(nqv.ge.1)then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -1555,15 +1555,15 @@
           enddo
           enddo
         endif
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
 !-------------------------------------------------------------------
 !   Eddy recycler
 
       doeddyrec:  &
-      IF( do_recycle )THEN
+      if( do_recycle )then
 
 !!!        out3d = 0.0
 
@@ -1599,13 +1599,13 @@
 
         if(timestats.ge.1) time_ercyl=time_ercyl+mytime()
 
-      ENDIF  doeddyrec
+      endif  doeddyrec
 
  
 !--------------------------------------------------------------------
 
 
-    IF( do_lsnudge .and. timenudge.gt.lsnudge_start )THEN
+    if( do_lsnudge .and. timenudge.gt.lsnudge_start )then
 
         call     get_avg_uvtq(uavg,vavg,thavg,qavg,cavg,th0,ua,va,tha,qa,ruh,ruf,rvh,rvf)
 
@@ -1690,7 +1690,7 @@
         enddo
       endif
       if(timestats.ge.1) time_misc=time_misc+mytime()
-    ENDIF
+    endif
 
 
 !-------------------------------------------------------------------
@@ -1701,9 +1701,9 @@
 !  plus, some other stuff:
 
     ps6:  &
-    IF( psolver.le.3 )THEN
+    if( psolver.le.3 )then
 
-      IF(eqtset.eq.1)THEN
+      if(eqtset.eq.1)then
         ! traditional cloud modeling:
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -1714,11 +1714,11 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! mass-conserving pressure eqt:  different sections for moist/dry cases:
         rdt = 1.0/dt
         tem = 0.0001*tsmall
-        IF(imoist.eq.1)THEN
+        if(imoist.eq.1)then
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k,pinew,thnew,qvnew)
           do k=1,nk
@@ -1726,15 +1726,15 @@
           do i=1,ni
             ! cm1r17:
             ! note:  nothing in pre-RK section should modify rho
-            IF( abs(dt*thten1(i,j,k)).gt.tem .or.  &
-                abs(dt*qten(i,j,k,nqv)).gt.qsmall )THEN
+            if( abs(dt*thten1(i,j,k)).gt.tem .or.  &
+                abs(dt*qten(i,j,k,nqv)).gt.qsmall )then
               thnew = tha(i,j,k)+dt*thten1(i,j,k)
               qvnew = qa(i,j,k,nqv)+dt*qten(i,j,k,nqv)
               pinew = (rho(i,j,k)*(th0(i,j,k)+thnew)*(rd+rv*qvnew)*rp00)**rddcv - pi0(i,j,k)
               ppten(i,j,k) = (pinew-ppi(i,j,k))*rdt
-            ELSE
+            else
               ppten(i,j,k) = 0.0
-            ENDIF
+            endif
           enddo
           enddo
           enddo
@@ -1753,7 +1753,7 @@
             enddo
             enddo
           endif
-        ELSE
+        else
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k,pinew,thnew)
           do k=1,nk
@@ -1762,21 +1762,21 @@
             !-----
             ! cm1r17:
             ! note:  nothing in pre-RK section should modify rho
-            IF( abs(dt*thten1(i,j,k)).gt.tem )THEN
+            if( abs(dt*thten1(i,j,k)).gt.tem )then
               thnew = tha(i,j,k)+dt*thten1(i,j,k)
               pinew = (rho(i,j,k)*(th0(i,j,k)+thnew)*rd*rp00)**rddcv - pi0(i,j,k)
               ppten(i,j,k) = (pinew-ppi(i,j,k))*rdt
-            ELSE
+            else
               ppten(i,j,k)=0.0
-            ENDIF
+            endif
             !-----
           enddo
           enddo
           enddo
-        ENDIF  ! endif for moist/dry
-      ENDIF    ! endif for eqtset 1/2
+        endif  ! endif for moist/dry
+      endif    ! endif for eqtset 1/2
 
-    ENDIF  ps6
+    endif  ps6
 
         if(timestats.ge.1) time_integ=time_integ+mytime()
 
@@ -1791,4 +1791,4 @@
       end subroutine solve1
 
 
-  END MODULE solve1_module
+  end module solve1_module

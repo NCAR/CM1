@@ -1,8 +1,8 @@
-  MODULE kessler_module
+  module kessler_module
 
   implicit none
 
-  CONTAINS
+  contains
 
 
       subroutine kessler(dt,tauto,taccr,tevar,ruh,rvh,rmh,pi0,th0,tmp,   &
@@ -175,7 +175,7 @@
     nmax=0
     iflag=0
 
-    IF(eqtset.eq.2)THEN
+    if(eqtset.eq.2)then
 
       if(nrk.eq.4)then
 !!!        converge=0.0005
@@ -202,7 +202,7 @@
         esl = min( esl , prs(i,j,k)*0.5 )
         qvs=eps*esl/(prs(i,j,k)-esl)
 
-        IF(q3d(i,j,k,nqc).gt.1.0e-12 .or. q3d(i,j,k,nqv).gt.qvs)THEN
+        if(q3d(i,j,k,nqc).gt.1.0e-12 .or. q3d(i,j,k,nqv).gt.qvs)then
 
           qvnew=q3d(i,j,k,nqv)
           qcnew=q3d(i,j,k,nqc)
@@ -272,14 +272,14 @@
 
           nmax=max(n,nmax)
 
-        ENDIF
+        endif
 
 
       enddo
       enddo
       enddo
 
-    ELSE
+    else
 
       nmax=1
 
@@ -320,9 +320,9 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
-    IF(nrk.ge.nrkmax)THEN
+    if(nrk.ge.nrkmax)then
       dum=dx*dy*dz
       do k=1,nk
         tcond=tcond+bud1(k)*dum
@@ -331,7 +331,7 @@
       do k=1,nk
         tevac=tevac+bud2(k)*dum
       enddo
-    ENDIF
+    endif
 
 !!!#ifdef MPI
 !!!      omax=0
@@ -562,4 +562,4 @@
       end subroutine geterain
 
 
-  END MODULE kessler_module
+  end module kessler_module

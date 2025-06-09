@@ -5,9 +5,9 @@
 
  !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-MODULE module_wrf_error
-  INTEGER           :: wrf_debug_level = 0
-  CHARACTER*256     :: wrf_err_message
+module module_wrf_error
+  integer           :: wrf_debug_level = 0
+  character*256     :: wrf_err_message
 
   ! LOGICAL silence -- if TRUE (non-zero), this MPI rank does not send
   !   messages via wrf_message, end_timing, wrf_debug, atm_announce,
@@ -18,7 +18,7 @@ MODULE module_wrf_error
 #if defined(DM_PARALLEL)
   integer, save :: silence=0
 #else
-  integer, PARAMETER :: silence=0 ! Per-rank silence requires MPI
+  integer, parameter :: silence=0 ! Per-rank silence requires MPI
 #endif
 
   ! LOGICAL buffered -- if TRUE, messages are buffered via clog_write.
@@ -34,7 +34,7 @@ MODULE module_wrf_error
 #if defined(WRF_LOG_BUFFERING)
   integer :: buffered=0
 #else
-  integer, PARAMETER :: buffered=0 ! buffering disabled at compile time
+  integer, parameter :: buffered=0 ! buffering disabled at compile time
 #endif
 
   ! LOGICAL stderrlog -- if TRUE, messages are sent to stderr via
@@ -50,7 +50,7 @@ MODULE module_wrf_error
   integer :: stderrlog=0! 1/T = send to write(0,...) if buffered=0
 #endif
 
-  INTEGER, PARAMETER :: wrf_log_flush=0, wrf_log_set_buffer_size=1, &
+  integer, parameter :: wrf_log_flush=0, wrf_log_set_buffer_size=1, &
                         wrf_log_write=2
 
   !NOTE: Make sure silence, buffered and stderrlog defaults here match
@@ -66,28 +66,28 @@ MODULE module_wrf_error
   integer, parameter :: min_allowed_buffer_size=200
 
 !$OMP THREADPRIVATE (wrf_err_message)
-CONTAINS
+contains
 
 ! ------------------------------------------------------------------------------
 
-  LOGICAL FUNCTION wrf_at_debug_level ( level )
-    IMPLICIT NONE
-    INTEGER , INTENT(IN) :: level
+  logical function wrf_at_debug_level ( level )
+    implicit none
+    integer , intent(in) :: level
     wrf_at_debug_level = ( level .LE. wrf_debug_level )
-    RETURN
-  END FUNCTION wrf_at_debug_level
+    return
+  end function wrf_at_debug_level
 
 ! ------------------------------------------------------------------------------
 
-  SUBROUTINE init_module_wrf_error(on_io_server)
-    IMPLICIT NONE
-    LOGICAL,OPTIONAL,INTENT(IN) :: on_io_server
+  subroutine init_module_wrf_error(on_io_server)
+    implicit none
+    logical,optional,intent(in) :: on_io_server
 #if defined(DM_PARALLEL)
-    LOGICAL, EXTERNAL :: wrf_dm_on_monitor
+    logical, external :: wrf_dm_on_monitor
 #endif
-    LOGICAL :: compute_tasks_silent
-    LOGICAL :: io_servers_silent
-    INTEGER :: buffer_size,iostat,stderr_logging
+    logical :: compute_tasks_silent
+    logical :: io_servers_silent
+    integer :: buffer_size,iostat,stderr_logging
     namelist /logging/ buffer_size,compute_tasks_silent, &
                        io_servers_silent,stderr_logging
 
@@ -110,12 +110,12 @@ CONTAINS
 500 format(A)
     ! Open namelist.input using the same unit used by module_io_wrf 
     ! since we know nobody else will use that unit:
-    OPEN(unit=27, file="namelist.input", form="formatted", status="old")
-    READ(27,nml=logging,iostat=iostat)
+    open(unit=27, file="namelist.input", form="formatted", status="old")
+    read(27,nml=logging,iostat=iostat)
     if(iostat /= 0) then
 #if (DA_CORE!=1)
-       CALL wrf_debug ( 1 , 'Namelist logging not found in namelist.input. ' )
-       CALL wrf_debug ( 1 , ' --> Using registry defaults for variables in logging.' )
+       call wrf_debug ( 1 , 'Namelist logging not found in namelist.input. ' )
+       call wrf_debug ( 1 , ' --> Using registry defaults for variables in logging.' )
 #else
        write(0,*) 'Namelist logging not found in namelist.input. Using registry defaults for variables in logging.'
        write(6,*) 'Namelist logging not found in namelist.input. Using registry defaults for variables in logging.'
@@ -126,7 +126,7 @@ CONTAINS
        close(27)
        return
     endif
-    CLOSE(27)
+    close(27)
 
 #if defined(WRF_LOG_BUFFERING)
     ! Forbid small buffers.  See the comment above for min_allowed_buffer_size:
@@ -170,15 +170,15 @@ CONTAINS
        endif
     endif
 #endif
-  END SUBROUTINE init_module_wrf_error
+  end subroutine init_module_wrf_error
 
-END MODULE module_wrf_error
+end module module_wrf_error
 
 ! ------------------------------------------------------------------------------
 ! ------------------------  GLOBAL SCOPE SUBROUTINES  --------------------------
 ! ------------------------------------------------------------------------------
 #if defined(WRF_LOG_BUFFERING)
-SUBROUTINE wrf_log_action( act,int,str )
+subroutine wrf_log_action( act,int,str )
   ! The underlying clog.c is not thread-safe, so this wrapper subroutine
   ! ensures that only one thread accesses clog.c at a time.
 
@@ -197,21 +197,21 @@ SUBROUTINE wrf_log_action( act,int,str )
      call clog_write(int,str)
   endif
 !$OMP END CRITICAL(wrf_log_action_critical)
-END SUBROUTINE wrf_log_action
+end subroutine wrf_log_action
 #endif
 ! ------------------------------------------------------------------------------
 
 ! wrf_message: ordinary message
 !   Write to stderr if stderrlog=T to ensure immediate output
 !   Write to stdout for buffered output.
-SUBROUTINE wrf_message( str )
+subroutine wrf_message( str )
 #ifdef ESMFIO
-  USE ESMF
+  use ESMF
 #endif
   use module_wrf_error, only: silence, buffered, stderrlog, wrf_log_write
-  IMPLICIT NONE
+  implicit none
 
-  CHARACTER*(*) str
+  character*(*) str
   if(silence/=0) return
   if(buffered/=0) then
 #if defined(WRF_LOG_BUFFERING)
@@ -231,9 +231,9 @@ SUBROUTINE wrf_message( str )
   endif
 
 #ifdef ESMFIO
-  CALL ESMF_LogWrite(TRIM(str),ESMF_LOGMSG_INFO)
+  call ESMF_LogWrite(TRIM(str),ESMF_LOGMSG_INFO)
 #endif
-END SUBROUTINE wrf_message
+end subroutine wrf_message
 
 ! ------------------------------------------------------------------------------
 
@@ -242,12 +242,12 @@ END SUBROUTINE wrf_message
 ! it is used for potentially fatal error or warning messages and
 ! we want the message to get to the log file before any crash 
 ! or MPI_Abort happens.
-SUBROUTINE wrf_message2( str )
+subroutine wrf_message2( str )
 #ifdef ESMFIO
-  USE ESMF
+  use ESMF
 #endif
-  IMPLICIT NONE
-  CHARACTER*(*) str
+  implicit none
+  character*(*) str
 !$OMP MASTER
 400 format(A)
   write(0,400) str
@@ -256,45 +256,45 @@ SUBROUTINE wrf_message2( str )
 # endif
 !$OMP END MASTER
 #ifdef ESMFIO
-  CALL ESMF_LogWrite(TRIM(str),ESMF_LOGMSG_INFO)
+  call ESMF_LogWrite(TRIM(str),ESMF_LOGMSG_INFO)
 #endif
-END SUBROUTINE wrf_message2
+end subroutine wrf_message2
 
 ! ------------------------------------------------------------------------------
 
-SUBROUTINE wrf_error_fatal3( file_str, line, str )
-  USE module_wrf_error
+subroutine wrf_error_fatal3( file_str, line, str )
+  use module_wrf_error
 #ifdef ESMFIO
 ! 5.2.0r  USE ESMF_Mod
-  USE ESMF
+  use ESMF
 #endif
-  IMPLICIT NONE
-  CHARACTER*(*) file_str
-  INTEGER , INTENT (IN) :: line  ! only print file and line if line > 0
-  CHARACTER*(*) str
-  CHARACTER*256 :: line_str
+  implicit none
+  character*(*) file_str
+  integer , intent (in) :: line  ! only print file and line if line > 0
+  character*(*) str
+  character*256 :: line_str
 
   write(line_str,'(i6)') line
 
   ! Fatal errors are printed to stdout and stderr regardless of
   ! any &logging namelist settings.
 
-  CALL wrf_message( '-------------- FATAL CALLED ---------------' )
+  call wrf_message( '-------------- FATAL CALLED ---------------' )
   ! only print file and line if line is positive
-  IF ( line > 0 ) THEN
-    CALL wrf_message( 'FATAL CALLED FROM FILE:  '//file_str//'  LINE:  '//TRIM(line_str) )
-  ENDIF
-  CALL wrf_message( str )
-  CALL wrf_message( '-------------------------------------------' )
+  if ( line > 0 ) then
+    call wrf_message( 'FATAL CALLED FROM FILE:  '//file_str//'  LINE:  '//TRIM(line_str) )
+  endif
+  call wrf_message( str )
+  call wrf_message( '-------------------------------------------' )
 
   force_stderr: if(stderrlog==0) then
-  CALL wrf_message2( '-------------- FATAL CALLED ---------------' )
+  call wrf_message2( '-------------- FATAL CALLED ---------------' )
   ! only print file and line if line is positive
-  IF ( line > 0 ) THEN
-        CALL wrf_message2( 'FATAL CALLED FROM FILE:  '//file_str//'  LINE:  '//TRIM(line_str) )
-  ENDIF
-     CALL wrf_message2( trim(str) )
-  CALL wrf_message2( '-------------------------------------------' )
+  if ( line > 0 ) then
+        call wrf_message2( 'FATAL CALLED FROM FILE:  '//file_str//'  LINE:  '//TRIM(line_str) )
+  endif
+     call wrf_message2( trim(str) )
+  call wrf_message2( '-------------------------------------------' )
   endif force_stderr
 
   ! Flush all streams.
@@ -306,45 +306,45 @@ SUBROUTINE wrf_error_fatal3( file_str, line, str )
 
 #ifdef ESMFIO
 ! 5.2.0r  CALL esmf_finalize(terminationflag=ESMF_ABORT)
-  CALL esmf_finalize(endflag=ESMF_END_ABORT)
+  call esmf_finalize(endflag=ESMF_END_ABORT)
 #endif
 
 #ifdef TRACEBACKQQ
-  CALL tracebackqq
+  call tracebackqq
 #endif
-  CALL wrf_abort
-END SUBROUTINE wrf_error_fatal3
+  call wrf_abort
+end subroutine wrf_error_fatal3
 
 ! ------------------------------------------------------------------------------
 
-SUBROUTINE wrf_error_fatal( str )
-  USE module_wrf_error
-  IMPLICIT NONE
-  CHARACTER*(*) str
-  CALL wrf_error_fatal3 ( ' ', 0, str )
-END SUBROUTINE wrf_error_fatal
+subroutine wrf_error_fatal( str )
+  use module_wrf_error
+  implicit none
+  character*(*) str
+  call wrf_error_fatal3 ( ' ', 0, str )
+end subroutine wrf_error_fatal
 
 ! ------------------------------------------------------------------------------
 
 ! Check to see if expected value == actual value
 ! If not, print message and exit.  
-SUBROUTINE wrf_check_error( expected, actual, str, file_str, line )
-  USE module_wrf_error
-  IMPLICIT NONE
-  INTEGER , INTENT (IN) :: expected
-  INTEGER , INTENT (IN) :: actual
-  CHARACTER*(*) str
-  CHARACTER*(*) file_str
-  INTEGER , INTENT (IN) :: line
-  CHARACTER (LEN=512)   :: rc_str
-  CHARACTER (LEN=512)   :: str_with_rc
+subroutine wrf_check_error( expected, actual, str, file_str, line )
+  use module_wrf_error
+  implicit none
+  integer , intent (in) :: expected
+  integer , intent (in) :: actual
+  character*(*) str
+  character*(*) file_str
+  integer , intent (in) :: line
+  character (LEN=512)   :: rc_str
+  character (LEN=512)   :: str_with_rc
 
-  IF ( expected .ne. actual ) THEN
-    WRITE (rc_str,*) '  Routine returned error code = ',actual
+  if ( expected .ne. actual ) then
+    write (rc_str,*) '  Routine returned error code = ',actual
     str_with_rc = TRIM(str // rc_str)
-    CALL wrf_error_fatal3 ( file_str, line, str_with_rc )
-  ENDIF
-END SUBROUTINE wrf_check_error
+    call wrf_error_fatal3 ( file_str, line, str_with_rc )
+  endif
+end subroutine wrf_check_error
 
 ! ------------------------------------------------------------------------------
 
@@ -355,19 +355,19 @@ END SUBROUTINE wrf_check_error
 !  These CPP ifdefs are defined in the configure file.
 
 #ifdef USE_FFLUSH
-SUBROUTINE flush ( iunit )
-  IMPLICIT NONE
-  INTEGER :: iunit
-  CALL fflush ( iunit ) 
-END SUBROUTINE flush
+subroutine flush ( iunit )
+  implicit none
+  integer :: iunit
+  call fflush ( iunit ) 
+end subroutine flush
 #endif
 
 #ifdef NO_FLUSH_SUPPORT
-SUBROUTINE flush ( iunit )
-  IMPLICIT NONE
-  INTEGER :: iunit
-  RETURN
-END SUBROUTINE flush
+subroutine flush ( iunit )
+  implicit none
+  integer :: iunit
+  return
+end subroutine flush
 #endif
 
 
@@ -375,7 +375,7 @@ END SUBROUTINE flush
  !---  cm1r19:  misc stuff needed to adapt WRF RRTMG code to cm1  ---!
  !-------------------------------------------------------------------!
 
- MODULE module_state_description
+ module module_state_description
 
    implicit none
 
@@ -393,83 +393,83 @@ END SUBROUTINE flush
     integer, parameter :: p_qnc = 1
     integer, parameter :: p_qni = 1
 
- END MODULE module_state_description
+ end module module_state_description
 
  !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
- MODULE module_model_constants
+ module module_model_constants
 
    implicit none
 
     !  240213: use the same values as CM1
 
-   REAL    , PARAMETER :: r_d          = 287.04
-   REAL    , PARAMETER :: cp           = 1005.7
+   real    , parameter :: r_d          = 287.04
+   real    , parameter :: cp           = 1005.7
 
 
    ! needed for mynn:
-   REAL    , PARAMETER ::  KARMAN=0.4
-   REAL    , PARAMETER :: g = 9.81  ! acceleration due to gravity (m {s}^-2)
-   REAL    , PARAMETER :: p1000mb      = 100000.
-   REAL    , PARAMETER :: r_v          = 461.5
-   REAL    , PARAMETER :: rcp          = r_d/cp
-   REAL    , PARAMETER :: XLS          = 2.834E6
-   REAL    , PARAMETER :: XLV          = 2.501E6
-   REAL    , PARAMETER :: XLF          = XLS-XLV
-   REAL    , PARAMETER ::  SVP1=0.6112
-   REAL    , PARAMETER ::  SVP2=17.67
-   REAL    , PARAMETER ::  SVP3=29.65
-   REAL    , PARAMETER ::  SVPT0=273.15
-   REAL    , PARAMETER ::  EP_1=R_v/R_d-1.
-   REAL    , PARAMETER ::  EP_2=R_d/R_v
-   REAL    , PARAMETER :: rvovrd       = r_v/r_d
-   REAL    , PARAMETER :: cpv          = 4.*r_v
-   REAL    , PARAMETER :: cliq         = 4190.
-   REAL    , PARAMETER :: cice         = 2106.
+   real    , parameter ::  KARMAN=0.4
+   real    , parameter :: g = 9.81  ! acceleration due to gravity (m {s}^-2)
+   real    , parameter :: p1000mb      = 100000.
+   real    , parameter :: r_v          = 461.5
+   real    , parameter :: rcp          = r_d/cp
+   real    , parameter :: XLS          = 2.834E6
+   real    , parameter :: XLV          = 2.501E6
+   real    , parameter :: XLF          = XLS-XLV
+   real    , parameter ::  SVP1=0.6112
+   real    , parameter ::  SVP2=17.67
+   real    , parameter ::  SVP3=29.65
+   real    , parameter ::  SVPT0=273.15
+   real    , parameter ::  EP_1=R_v/R_d-1.
+   real    , parameter ::  EP_2=R_d/R_v
+   real    , parameter :: rvovrd       = r_v/r_d
+   real    , parameter :: cpv          = 4.*r_v
+   real    , parameter :: cliq         = 4190.
+   real    , parameter :: cice         = 2106.
 
    ! needed for myj:
-   REAL , PARAMETER ::  pq0=379.90516     ! 
-   REAL , PARAMETER ::  epsq2=0.2         ! initial TKE for camuw PBL scheme (m2 s^-2) 
-   REAL , PARAMETER ::  a2=17.2693882
-   REAL , PARAMETER ::  a3=273.16
-   REAL , PARAMETER ::  a4=35.86
-   REAL , PARAMETER ::  p608=rvovrd-1.
+   real , parameter ::  pq0=379.90516     ! 
+   real , parameter ::  epsq2=0.2         ! initial TKE for camuw PBL scheme (m2 s^-2) 
+   real , parameter ::  a2=17.2693882
+   real , parameter ::  a3=273.16
+   real , parameter ::  a4=35.86
+   real , parameter ::  p608=rvovrd-1.
 
- END MODULE module_model_constants
+ end module module_model_constants
 
  !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-SUBROUTINE set_wrf_debug_level ( level ) 
-  USE module_wrf_error 
-  IMPLICIT NONE 
-  INTEGER , INTENT(IN) :: level 
+subroutine set_wrf_debug_level ( level ) 
+  use module_wrf_error 
+  implicit none 
+  integer , intent(in) :: level 
   wrf_debug_level = level 
-  RETURN 
-END SUBROUTINE set_wrf_debug_level 
+  return 
+end subroutine set_wrf_debug_level 
  
-SUBROUTINE get_wrf_debug_level ( level ) 
-  USE module_wrf_error 
-  IMPLICIT NONE 
-  INTEGER , INTENT(OUT) :: level 
+subroutine get_wrf_debug_level ( level ) 
+  use module_wrf_error 
+  implicit none 
+  integer , intent(out) :: level 
   level = wrf_debug_level 
-  RETURN 
-END SUBROUTINE get_wrf_debug_level 
+  return 
+end subroutine get_wrf_debug_level 
  
-SUBROUTINE wrf_debug( level , str ) 
-  USE module_wrf_error 
-  IMPLICIT NONE 
-  CHARACTER*(*) str 
-  INTEGER , INTENT (IN) :: level 
-  INTEGER :: debug_level 
-  CHARACTER (LEN=256) :: time_str 
-  CHARACTER (LEN=256) :: grid_str 
-  CHARACTER (LEN=512) :: out_str 
+subroutine wrf_debug( level , str ) 
+  use module_wrf_error 
+  implicit none 
+  character*(*) str 
+  integer , intent (in) :: level 
+  integer :: debug_level 
+  character (LEN=256) :: time_str 
+  character (LEN=256) :: grid_str 
+  character (LEN=512) :: out_str 
   if(silence/=0) return
-  CALL get_wrf_debug_level( debug_level ) 
-  IF ( level .LE. debug_level ) THEN 
+  call get_wrf_debug_level( debug_level ) 
+  if ( level .LE. debug_level ) then 
 #ifdef _OPENMP 
   ! old behavior 
-  CALL wrf_message( str ) 
+  call wrf_message( str ) 
 #else 
   ! TBH: This fails on pgf90 6.1-4 when built with OpenMP and using more 
   ! TBH: than one thread. It works fine multi-threaded on AIX with xlf 
@@ -478,11 +478,11 @@ SUBROUTINE wrf_debug( level , str )
 !!!  CALL get_current_time_string( time_str ) 
 !!!  CALL get_current_grid_name( grid_str ) 
   out_str = TRIM(grid_str)//' '//TRIM(time_str)//' '//TRIM(str) 
-  CALL wrf_message( TRIM(out_str) ) 
+  call wrf_message( TRIM(out_str) ) 
 #endif 
-  ENDIF 
-  RETURN 
-END SUBROUTINE wrf_debug 
+  endif 
+  return 
+end subroutine wrf_debug 
 
  !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
@@ -498,284 +498,284 @@ END SUBROUTINE wrf_debug
 ! It is important to recognize this, because changes directly to src/module_dm.F
 ! will be lost!
 
-LOGICAL FUNCTION wrf_dm_on_monitor()
+logical function wrf_dm_on_monitor()
   wrf_dm_on_monitor = .true.
-END FUNCTION wrf_dm_on_monitor
+end function wrf_dm_on_monitor
 
-INTEGER FUNCTION wrf_dm_monitor_rank()
+integer function wrf_dm_monitor_rank()
   wrf_dm_monitor_rank = 0
-END FUNCTION wrf_dm_monitor_rank
+end function wrf_dm_monitor_rank
 
-SUBROUTINE wrf_get_myproc( myproc )
-  IMPLICIT NONE
-  INTEGER myproc
+subroutine wrf_get_myproc( myproc )
+  implicit none
+  integer myproc
   myproc = 0
-  RETURN
-END SUBROUTINE wrf_get_myproc
+  return
+end subroutine wrf_get_myproc
 
-SUBROUTINE wrf_get_nproc( nprocs )
-  IMPLICIT NONE
-  INTEGER nprocs
+subroutine wrf_get_nproc( nprocs )
+  implicit none
+  integer nprocs
   nprocs = 1
-  RETURN
-END SUBROUTINE wrf_get_nproc
+  return
+end subroutine wrf_get_nproc
 
-SUBROUTINE wrf_get_nprocx( nprocs )
-  IMPLICIT NONE
-  INTEGER nprocs
+subroutine wrf_get_nprocx( nprocs )
+  implicit none
+  integer nprocs
   nprocs = 1
-  RETURN
-END SUBROUTINE wrf_get_nprocx
+  return
+end subroutine wrf_get_nprocx
 
-SUBROUTINE wrf_get_nprocy( nprocs )
-  IMPLICIT NONE
-  INTEGER nprocs
+subroutine wrf_get_nprocy( nprocs )
+  implicit none
+  integer nprocs
   nprocs = 1
-  RETURN
-END SUBROUTINE wrf_get_nprocy
+  return
+end subroutine wrf_get_nprocy
 
-SUBROUTINE wrf_dm_bcast_string ( buf , size )
-  IMPLICIT NONE
-  INTEGER size
-  INTEGER BUF(*)
-  RETURN
-END SUBROUTINE wrf_dm_bcast_string
+subroutine wrf_dm_bcast_string ( buf , size )
+  implicit none
+  integer size
+  integer BUF(*)
+  return
+end subroutine wrf_dm_bcast_string
 
-SUBROUTINE wrf_dm_bcast_bytes ( buf , size )
-  IMPLICIT NONE
-  INTEGER size
-  INTEGER BUF(*)
-  RETURN
-END SUBROUTINE wrf_dm_bcast_bytes
+subroutine wrf_dm_bcast_bytes ( buf , size )
+  implicit none
+  integer size
+  integer BUF(*)
+  return
+end subroutine wrf_dm_bcast_bytes
 
-SUBROUTINE wrf_dm_bcast_integer( BUF, N1 )
-   IMPLICIT NONE
-   INTEGER n1
-   INTEGER  buf(*)
-   RETURN
-END SUBROUTINE wrf_dm_bcast_integer
+subroutine wrf_dm_bcast_integer( BUF, N1 )
+   implicit none
+   integer n1
+   integer  buf(*)
+   return
+end subroutine wrf_dm_bcast_integer
 
-SUBROUTINE wrf_dm_bcast_real( BUF, N1 )
-   IMPLICIT NONE
-   INTEGER n1
-   REAL  buf(*)
-   RETURN
-END SUBROUTINE wrf_dm_bcast_real
+subroutine wrf_dm_bcast_real( BUF, N1 )
+   implicit none
+   integer n1
+   real  buf(*)
+   return
+end subroutine wrf_dm_bcast_real
 
-SUBROUTINE wrf_dm_bcast_logical( BUF, N1 )
-   IMPLICIT NONE
-   INTEGER n1
-   LOGICAL  buf(*)
-   RETURN
-END SUBROUTINE wrf_dm_bcast_logical
+subroutine wrf_dm_bcast_logical( BUF, N1 )
+   implicit none
+   integer n1
+   logical  buf(*)
+   return
+end subroutine wrf_dm_bcast_logical
 
-SUBROUTINE wrf_dm_halo ( domdesc , comms , stencil_id )
-   IMPLICIT NONE
-   INTEGER domdesc , comms(*) , stencil_id
-   RETURN
-END SUBROUTINE wrf_dm_halo
+subroutine wrf_dm_halo ( domdesc , comms , stencil_id )
+   implicit none
+   integer domdesc , comms(*) , stencil_id
+   return
+end subroutine wrf_dm_halo
 
-SUBROUTINE wrf_dm_boundary ( domdesc , comms , period_id , &
+subroutine wrf_dm_boundary ( domdesc , comms , period_id , &
                              periodic_x , periodic_y )
-   IMPLICIT NONE
-   INTEGER domdesc , comms(*) , period_id
-   LOGICAL , INTENT(IN)      :: periodic_x, periodic_y
-   RETURN
-END SUBROUTINE wrf_dm_boundary
+   implicit none
+   integer domdesc , comms(*) , period_id
+   logical , intent(in)      :: periodic_x, periodic_y
+   return
+end subroutine wrf_dm_boundary
 
-SUBROUTINE wrf_dm_xpose_z2x ( domdesc , comms , xpose_id  )
-   IMPLICIT NONE
-   INTEGER domdesc , comms(*), xpose_id
-   RETURN
-END SUBROUTINE wrf_dm_xpose_z2x
-SUBROUTINE wrf_dm_xpose_x2y ( domdesc , comms , xpose_id  )
-   IMPLICIT NONE
-   INTEGER domdesc , comms(*), xpose_id
-   RETURN
-END SUBROUTINE wrf_dm_xpose_x2y
-SUBROUTINE wrf_dm_xpose_y2z ( domdesc , comms , xpose_id  )
-   IMPLICIT NONE
-   INTEGER domdesc , comms(*), xpose_id
-   RETURN
-END SUBROUTINE wrf_dm_xpose_y2z
+subroutine wrf_dm_xpose_z2x ( domdesc , comms , xpose_id  )
+   implicit none
+   integer domdesc , comms(*), xpose_id
+   return
+end subroutine wrf_dm_xpose_z2x
+subroutine wrf_dm_xpose_x2y ( domdesc , comms , xpose_id  )
+   implicit none
+   integer domdesc , comms(*), xpose_id
+   return
+end subroutine wrf_dm_xpose_x2y
+subroutine wrf_dm_xpose_y2z ( domdesc , comms , xpose_id  )
+   implicit none
+   integer domdesc , comms(*), xpose_id
+   return
+end subroutine wrf_dm_xpose_y2z
 
 !-------
 
-SUBROUTINE wrf_get_dm_communicator ( communicator )
-   IMPLICIT NONE
-   INTEGER , INTENT(OUT) :: communicator
+subroutine wrf_get_dm_communicator ( communicator )
+   implicit none
+   integer , intent(out) :: communicator
    communicator = 0
-   RETURN
-END SUBROUTINE wrf_get_dm_communicator
+   return
+end subroutine wrf_get_dm_communicator
 
-SUBROUTINE wrf_get_dm_iocommunicator ( iocommunicator )
-   IMPLICIT NONE
-   INTEGER , INTENT(OUT) :: iocommunicator
+subroutine wrf_get_dm_iocommunicator ( iocommunicator )
+   implicit none
+   integer , intent(out) :: iocommunicator
    iocommunicator = 0
-   RETURN
-END SUBROUTINE wrf_get_dm_iocommunicator
+   return
+end subroutine wrf_get_dm_iocommunicator
 
-SUBROUTINE wrf_dm_shutdown
-      RETURN
-END SUBROUTINE wrf_dm_shutdown
-SUBROUTINE wrf_abort
-      STOP 'wrf_abort'
-END SUBROUTINE wrf_abort
+subroutine wrf_dm_shutdown
+      return
+end subroutine wrf_dm_shutdown
+subroutine wrf_abort
+      stop 'wrf_abort'
+end subroutine wrf_abort
 
-SUBROUTINE wrf_patch_to_global_real (buf,globbuf,domdesc,ndim,&
+subroutine wrf_patch_to_global_real (buf,globbuf,domdesc,ndim,&
                                        ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe )
-   IMPLICIT NONE
-   INTEGER                             ids,ide,jds,jde,kds,kde,&
+   implicit none
+   integer                             ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe
-   INTEGER fid,domdesc,ndim,glen(3),llen(3)
-   REAL globbuf(*)
-   REAL buf(*)
-   RETURN
-END SUBROUTINE wrf_patch_to_global_real
+   integer fid,domdesc,ndim,glen(3),llen(3)
+   real globbuf(*)
+   real buf(*)
+   return
+end subroutine wrf_patch_to_global_real
 
-SUBROUTINE wrf_global_to_patch_real (globbuf,buf,domdesc,ndim,&
+subroutine wrf_global_to_patch_real (globbuf,buf,domdesc,ndim,&
                                        ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe )
-   IMPLICIT NONE
-   INTEGER                             ids,ide,jds,jde,kds,kde,&
+   implicit none
+   integer                             ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe
-   INTEGER fid,domdesc,ndim,glen(3),llen(3)
-   REAL globbuf(*)
-   REAL buf(*)
-   RETURN
-END SUBROUTINE wrf_global_to_patch_real
+   integer fid,domdesc,ndim,glen(3),llen(3)
+   real globbuf(*)
+   real buf(*)
+   return
+end subroutine wrf_global_to_patch_real
 
 
-SUBROUTINE wrf_patch_to_global_double (buf,globbuf,domdesc,ndim,&
+subroutine wrf_patch_to_global_double (buf,globbuf,domdesc,ndim,&
                                        ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe )
-   IMPLICIT NONE
-   INTEGER                             ids,ide,jds,jde,kds,kde,&
+   implicit none
+   integer                             ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe
-   INTEGER fid,domdesc,ndim,glen(3),llen(3)
-   DOUBLE PRECISION globbuf(*)
-   DOUBLE PRECISION buf(*)
-   RETURN
-END SUBROUTINE wrf_patch_to_global_double
+   integer fid,domdesc,ndim,glen(3),llen(3)
+   double precision globbuf(*)
+   double precision buf(*)
+   return
+end subroutine wrf_patch_to_global_double
 
-SUBROUTINE wrf_global_to_patch_double (globbuf,buf,domdesc,ndim,&
+subroutine wrf_global_to_patch_double (globbuf,buf,domdesc,ndim,&
                                        ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe )
-   IMPLICIT NONE
-   INTEGER                             ids,ide,jds,jde,kds,kde,&
+   implicit none
+   integer                             ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe
-   INTEGER fid,domdesc,ndim,glen(3),llen(3)
-   DOUBLE PRECISION globbuf(*)
-   DOUBLE PRECISION buf(*)
-   RETURN
-END SUBROUTINE wrf_global_to_patch_double
+   integer fid,domdesc,ndim,glen(3),llen(3)
+   double precision globbuf(*)
+   double precision buf(*)
+   return
+end subroutine wrf_global_to_patch_double
 
-SUBROUTINE wrf_patch_to_global_integer (buf,globbuf,domdesc,ndim,&
+subroutine wrf_patch_to_global_integer (buf,globbuf,domdesc,ndim,&
                                        ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe )
-   IMPLICIT NONE
-   INTEGER                             ids,ide,jds,jde,kds,kde,&
+   implicit none
+   integer                             ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe
-   INTEGER fid,domdesc,ndim,glen(3),llen(3)
-   INTEGER globbuf(*)
-   INTEGER buf(*)
-   RETURN
-END SUBROUTINE wrf_patch_to_global_integer
+   integer fid,domdesc,ndim,glen(3),llen(3)
+   integer globbuf(*)
+   integer buf(*)
+   return
+end subroutine wrf_patch_to_global_integer
 
-SUBROUTINE wrf_global_to_patch_integer (globbuf,buf,domdesc,ndim,&
+subroutine wrf_global_to_patch_integer (globbuf,buf,domdesc,ndim,&
                                        ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe )
-   IMPLICIT NONE
-   INTEGER                             ids,ide,jds,jde,kds,kde,&
+   implicit none
+   integer                             ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe
-   INTEGER fid,domdesc,ndim,glen(3),llen(3)
-   INTEGER globbuf(*)
-   INTEGER buf(*)
-   RETURN
-END SUBROUTINE wrf_global_to_patch_integer
+   integer fid,domdesc,ndim,glen(3),llen(3)
+   integer globbuf(*)
+   integer buf(*)
+   return
+end subroutine wrf_global_to_patch_integer
 
-SUBROUTINE wrf_patch_to_global_logical (buf,globbuf,domdesc,ndim,&
+subroutine wrf_patch_to_global_logical (buf,globbuf,domdesc,ndim,&
                                        ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe )
-   IMPLICIT NONE
-   INTEGER                             ids,ide,jds,jde,kds,kde,&
+   implicit none
+   integer                             ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe
-   INTEGER fid,domdesc,ndim,glen(3),llen(3)
-   LOGICAL globbuf(*)
-   LOGICAL buf(*)
-   RETURN
-END SUBROUTINE wrf_patch_to_global_logical
+   integer fid,domdesc,ndim,glen(3),llen(3)
+   logical globbuf(*)
+   logical buf(*)
+   return
+end subroutine wrf_patch_to_global_logical
 
-SUBROUTINE wrf_global_to_patch_LOGICAL (globbuf,buf,domdesc,ndim,&
+subroutine wrf_global_to_patch_LOGICAL (globbuf,buf,domdesc,ndim,&
                                        ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe )
-   IMPLICIT NONE
-   INTEGER                             ids,ide,jds,jde,kds,kde,&
+   implicit none
+   integer                             ids,ide,jds,jde,kds,kde,&
                                        ims,ime,jms,jme,kms,kme,&
                                        ips,ipe,jps,jpe,kps,kpe
-   INTEGER fid,domdesc,ndim,glen(3),llen(3)
-   LOGICAL globbuf(*)
-   LOGICAL buf(*)
-   RETURN
-END SUBROUTINE wrf_global_to_patch_LOGICAL
+   integer fid,domdesc,ndim,glen(3),llen(3)
+   logical globbuf(*)
+   logical buf(*)
+   return
+end subroutine wrf_global_to_patch_LOGICAL
 
 #if ( HWRF == 1 )
-   SUBROUTINE hwrf_coupler_init
-   END SUBROUTINE hwrf_coupler_init
+   subroutine hwrf_coupler_init
+   end subroutine hwrf_coupler_init
 #endif
 
-   SUBROUTINE push_communicators_for_domain( id )
-      IMPLICIT NONE
-      INTEGER, OPTIONAL, INTENT(IN) :: id   ! if specified also does an instate for grid id
-   END SUBROUTINE push_communicators_for_domain
-   SUBROUTINE pop_communicators_for_domain
-   END SUBROUTINE pop_communicators_for_domain
-   SUBROUTINE instate_communicators_for_domain( id )
-      IMPLICIT NONE
-      INTEGER, INTENT(IN) :: id
-   END SUBROUTINE instate_communicators_for_domain
-   SUBROUTINE store_communicators_for_domain( id )
-      IMPLICIT NONE
-      INTEGER, INTENT(IN) :: id
-   END SUBROUTINE store_communicators_for_domain
+   subroutine push_communicators_for_domain( id )
+      implicit none
+      integer, optional, intent(in) :: id   ! if specified also does an instate for grid id
+   end subroutine push_communicators_for_domain
+   subroutine pop_communicators_for_domain
+   end subroutine pop_communicators_for_domain
+   subroutine instate_communicators_for_domain( id )
+      implicit none
+      integer, intent(in) :: id
+   end subroutine instate_communicators_for_domain
+   subroutine store_communicators_for_domain( id )
+      implicit none
+      integer, intent(in) :: id
+   end subroutine store_communicators_for_domain
 
 !------------------------------------------------
 
-INTEGER FUNCTION get_unused_unit()
+integer function get_unused_unit()
 
-    IMPLICIT NONE
+    implicit none
 
-    INTEGER, PARAMETER :: min_unit_number = 30
-    INTEGER, PARAMETER :: max_unit_number = 99
+    integer, parameter :: min_unit_number = 30
+    integer, parameter :: max_unit_number = 99
 
-    LOGICAL :: opened
+    logical :: opened
 
-    DO get_unused_unit = min_unit_number, max_unit_number
+    do get_unused_unit = min_unit_number, max_unit_number
        INQUIRE(UNIT=get_unused_unit, OPENED=opened)
-       IF ( .NOT. opened ) RETURN
-    END DO
+       if ( .NOT. opened ) return
+    end do
 
     get_unused_unit = -1
 
-    RETURN
+    return
 
-END FUNCTION get_unused_unit
+end function get_unused_unit
 
  !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
@@ -791,17 +791,17 @@ END FUNCTION get_unused_unit
 ! The subroutines were first developed by and put together in this module
 ! by C. Carouge.
 !-----------------------------------------------------------------------
-MODULE module_ra_clWRF_support
+module module_ra_clWRF_support
 
-  USE module_wrf_error
+  use module_wrf_error
 
-  IMPLICIT NONE
-  PRIVATE
-  INTEGER, PARAMETER               :: r8 = 8
+  implicit none
+  private
+  integer, parameter               :: r8 = 8
   integer, parameter               :: cyr = 1800     ! maximum num. of lines in 'CAMtr_volume_mixing_ratio' file
-  integer, DIMENSION(1:cyr), SAVE  :: yrdata
-  real, DIMENSION(1:cyr), SAVE  :: juldata
-  real(r8), DIMENSION(1:cyr), SAVE :: co2r, n2or, ch4r, cfc11r, cfc12r
+  integer, dimension(1:cyr), save  :: yrdata
+  real, dimension(1:cyr), save  :: juldata
+  real(r8), dimension(1:cyr), save :: co2r, n2or, ch4r, cfc11r, cfc12r
 
 
   ! Same values as in module_ra_cam_support.F
@@ -875,97 +875,97 @@ MODULE module_ra_clWRF_support
        773.1207, 780.702, 788.4033, 796.2249, 804.1667, 812.2289, 820.4118,    &
        828.6444, 828.6444 /)
 
-  PUBLIC :: read_CAMgases
+  public :: read_CAMgases
 
-CONTAINS
+contains
   
-  SUBROUTINE read_CAMgases(yr, julian, model, co2vmr, n2ovmr, ch4vmr, cfc11vmr, cfc12vmr) 
+  subroutine read_CAMgases(yr, julian, model, co2vmr, n2ovmr, ch4vmr, cfc11vmr, cfc12vmr) 
 
-    INTEGER, INTENT(IN)            :: yr
-    REAL, INTENT(IN)               :: julian
-    CHARACTER(LEN=*), INTENT(IN)   :: model           ! Radiation scheme name
-    REAL(r8), OPTIONAL, INTENT(OUT)    :: co2vmr, n2ovmr, ch4vmr, cfc11vmr, cfc12vmr
+    integer, intent(in)            :: yr
+    real, intent(in)               :: julian
+    character(LEN=*), intent(in)   :: model           ! Radiation scheme name
+    real(r8), optional, intent(out)    :: co2vmr, n2ovmr, ch4vmr, cfc11vmr, cfc12vmr
 
 !Local
     
-    INTEGER                                          :: yearIN, found_yearIN, iyear  &
+    integer                                          :: yearIN, found_yearIN, iyear  &
                                                        ,yr1,yr2
-    INTEGER                                         :: mondata(1:cyr)
-    LOGICAL, EXTERNAL                                :: wrf_dm_on_monitor
-    INTEGER, EXTERNAL                                :: get_unused_unit
+    integer                                         :: mondata(1:cyr)
+    logical, external                                :: wrf_dm_on_monitor
+    integer, external                                :: get_unused_unit
       
-    INTEGER                                          :: istatus, iunit, idata        
-    INTEGER, SAVE                             :: VARCAM_in_years
+    integer                                          :: istatus, iunit, idata        
+    integer, save                             :: VARCAM_in_years
     integer                                          :: nyrm, nyrp, njulm, njulp
-    LOGICAL                                          :: exists
-    LOGICAL, SAVE                                    :: READtrFILE=.FALSE.
-    CHARACTER(LEN=256)                               :: message
-    INTEGER                                   :: monday(13)=(/0,31,28,31,30,31,30,31,31,30,31,30,31/)
-    INTEGER                                   :: mondayi(13)
-    INTEGER                                   :: my1,my2,my3, tot_valid
+    logical                                          :: exists
+    logical, save                                    :: READtrFILE=.FALSE.
+    character(LEN=256)                               :: message
+    integer                                   :: monday(13)=(/0,31,28,31,30,31,30,31,31,30,31,30,31/)
+    integer                                   :: mondayi(13)
+    integer                                   :: my1,my2,my3, tot_valid
     
 ! CLWRF-UC June.09  (Copy from share/wrf_tsin.F)
-    IF ( .NOT. READtrFILE ) THEN
+    if ( .NOT. READtrFILE ) then
        READtrFILE= .TRUE.
        
        INQUIRE(FILE='CAMtr_volume_mixing_ratio', EXIST=exists)
        
-       IF (exists) THEN
+       if (exists) then
           iunit = get_unused_unit()
-          IF ( iunit <= 0 ) THEN
-             IF ( wrf_dm_on_monitor() ) THEN
-                CALL wrf_error_fatal('Error in module_ra_rrtm: could not find a free Fortran unit.')
-             END IF
-          END IF
+          if ( iunit <= 0 ) then
+             if ( wrf_dm_on_monitor() ) then
+                call wrf_error_fatal('Error in module_ra_rrtm: could not find a free Fortran unit.')
+             end if
+          end if
           
           ! Read volume mixing ratio 
-          OPEN(UNIT=iunit, FILE='CAMtr_volume_mixing_ratio', FORM='formatted', &
+          open(UNIT=iunit, FILE='CAMtr_volume_mixing_ratio', FORM='formatted', &
                STATUS='old', IOSTAT=istatus)
           
-          IF (istatus == 0) THEN
+          if (istatus == 0) then
              ! Ignore first two lines which constitute a header
-             READ(UNIT=iunit, FMT='(1X)')
-             READ(UNIT=iunit, FMT='(1X)')
+             read(UNIT=iunit, FMT='(1X)')
+             read(UNIT=iunit, FMT='(1X)')
              
              istatus = 0
              idata = 1
-             DO WHILE (istatus == 0)
-                READ(UNIT=iunit, FMT='(I4, 1x, F8.3,1x, 4(F10.3,1x))', IOSTAT=istatus)    &
+             do WHILE (istatus == 0)
+                read(UNIT=iunit, FMT='(I4, 1x, F8.3,1x, 4(F10.3,1x))', IOSTAT=istatus)    &
                      yrdata(idata), co2r(idata), n2or(idata), ch4r(idata), cfc11r(idata), &
                      cfc12r(idata)
-                IF ( wrf_dm_on_monitor() ) THEN
-                   WRITE(message,*)'CLWRF reading...: istatus:',istatus,' idata:',idata,   &
+                if ( wrf_dm_on_monitor() ) then
+                   write(message,*)'CLWRF reading...: istatus:',istatus,' idata:',idata,   &
                         ' year:', yrdata(idata), ' co2: ',co2r(idata), ' n2o: ',&
                         n2or(idata),' ch4:',ch4r(idata)
                    call wrf_debug( 0, message) 
-                ENDIF
+                endif
                 mondata(idata) = 6
                 
                 idata=idata+1
-             END DO
+             end do
 
-             IF (istatus /= -1) THEN
-                PRINT *,'CLWRF -- clwrf -- CLWRF ALERT!'
-                PRINT *,"   Not normal ending of 'CAMtr_volume_mixing_ratio' file"
-                PRINT *,"   Lecture ends with 'IOSTAT'=",istatus
-             END IF
+             if (istatus /= -1) then
+                print *,'CLWRF -- clwrf -- CLWRF ALERT!'
+                print *,"   Not normal ending of 'CAMtr_volume_mixing_ratio' file"
+                print *,"   Lecture ends with 'IOSTAT'=",istatus
+             end if
              VARCAM_in_years = idata - 1
-             CLOSE(iunit)
+             close(iunit)
 
              ! Calculate the julian day for each month.
-             DO idata=1,VARCAM_in_years
+             do idata=1,VARCAM_in_years
                 mondayi = monday
                 MY1=MOD(yrdata(idata),4)
                 MY2=MOD(yrdata(idata),100)
                 MY3=MOD(yrdata(idata),400)
-                IF(MY1.EQ.0.AND.MY2.NE.0.OR.MY3.EQ.0) mondayi(3)=29
+                if(MY1.EQ.0.AND.MY2.NE.0.OR.MY3.EQ.0) mondayi(3)=29
                 juldata(idata) = sum(mondayi(1:mondata(idata)))+real(mondayi(mondata(idata)+1))/2.-0.5   ! 1st Jan 00:00 = 0 julian day
-             ENDDO
-          ENDIF
-       ELSE
-          PRINT *,"CLWRF -- clwrf -- CLWRF ALERT!"
-          PRINT *,"   'CAMtr_volume_mixing_ratio' does not exists"
-          PRINT *,'   Recovering original concentrations'
+             enddo
+          endif
+       else
+          print *,"CLWRF -- clwrf -- CLWRF ALERT!"
+          print *,"   'CAMtr_volume_mixing_ratio' does not exists"
+          print *,'   Recovering original concentrations'
           
           !ccc Fake yrdata. Won't be use but a value > yr is needed so that
           ! everything work.
@@ -981,51 +981,51 @@ CONTAINS
           cfc12r = -9999.999
 
           ! For CAM model, recovers original data sets.
-          IF (model .eq. "CAM") THEN
+          if (model .eq. "CAM") then
              yrdata(1:VARCAM_in_years) = yr_CAM
              co2r(1:VARCAM_in_years)   = co2r_CAM
-          ENDIF
-       ENDIF ! CAMtr_volume_mixing_ratio exists
+          endif
+       endif ! CAMtr_volume_mixing_ratio exists
        
-    ENDIF ! File already opened and read 
+    endif ! File already opened and read 
     
     found_yearIN=0
     iyear=1
     !ccc Crash if iyear get > cyr (max. # of years in the mixing ratio file) ?
     !DO WHILE (found_yearIN == 0) 
-    DO WHILE (found_yearIN == 0 .and. iyear <= cyr)
-       IF (yrdata(iyear) .GT. yr )  THEN
+    do WHILE (found_yearIN == 0 .and. iyear <= cyr)
+       if (yrdata(iyear) .GT. yr )  then
           yearIN=iyear
           found_yearIN=1
-       ELSE IF ((yrdata(iyear) .EQ. yr) .AND. (juldata(iyear) .GT. julian)) THEN
+       else if ((yrdata(iyear) .EQ. yr) .AND. (juldata(iyear) .GT. julian)) then
           yearIN=iyear
           found_yearIN = 1
-       ENDIF
+       endif
        iyear=iyear+1
-    ENDDO
+    enddo
     
     ! Prevent yr > last year in data
 !    IF (yearIN .ge. VARCAM_in_years) yearIN=VARCAM_in_years-1
-    IF (iyear .ge. VARCAM_in_years) then
+    if (iyear .ge. VARCAM_in_years) then
        yearIN=VARCAM_in_years-1
        found_yearIN = 1
-    ENDIF
+    endif
     
-    IF (found_yearIN .NE. 0 ) THEN
-       if (yearIN .eq. 1) yearIN = yearIN + 1    ! To take 2 first lines of the file
+    if (found_yearIN .NE. 0 ) then
+       if (yearIN .eq. 1) yearIN = yearIN + 1    ! to take 2 first lines of the file
        nyrm = yrdata(yearIN-1)
        njulm = juldata(yearIN-1)
        nyrp = yrdata(yearIN)
        njulp = juldata(yearIN)
-    ENDIF
+    endif
 
-    IF (PRESENT(co2vmr)) THEN
+    if (PRESENT(co2vmr)) then
        co2vmr=-9999.999
        if (found_yearIN /= 0) then
           ! Interpolate data only if we have at least 2 valid concentrations.
           tot_valid = count(co2r(1:VARCAM_in_years) > 0)
-          IF (tot_valid >= 2 ) THEN
-             CALL valid_years(yearIN, co2r, VARCAM_in_years,yr1, yr2)
+          if (tot_valid >= 2 ) then
+             call valid_years(yearIN, co2r, VARCAM_in_years,yr1, yr2)
 
              ! Set nyrm, njulm, nyrp, njulp
              nyrm = yrdata(yr1)
@@ -1033,27 +1033,27 @@ CONTAINS
              nyrp = yrdata(yr2)
              njulp = juldata(yr2)
 
-             CALL interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, co2r, co2vmr)
-          ENDIF
+             call interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, co2r, co2vmr)
+          endif
        endif
        ! Verification of interpolated values. In case of no value 
        ! original values extracted from ghg_surfvals.F90 module
 
-       IF (co2vmr < 0. .or. found_yearIN == 0) THEN
-          CALL orig_val("CO2",model,co2vmr)
-       ELSE
+       if (co2vmr < 0. .or. found_yearIN == 0) then
+          call orig_val("CO2",model,co2vmr)
+       else
           ! If extrapolation, need to bound the data to pre-industrial concentrations
           if (co2vmr < 270.) co2vmr = 270.
           co2vmr=co2vmr*1.e-06
-       END IF
-    ENDIF
+       end if
+    endif
 
-    IF (PRESENT(n2ovmr)) THEN
+    if (PRESENT(n2ovmr)) then
        n2ovmr=-9999.999
        if (found_yearIN /= 0) then
           tot_valid = count(n2or(1:VARCAM_in_years) > 0)
-          IF (tot_valid >= 2 ) THEN
-             CALL valid_years(yearIN, n2or, VARCAM_in_years,yr1, yr2)
+          if (tot_valid >= 2 ) then
+             call valid_years(yearIN, n2or, VARCAM_in_years,yr1, yr2)
 
              ! Set nyrm, njulm, nyrp, njulp
              nyrm = yrdata(yr1)
@@ -1061,26 +1061,26 @@ CONTAINS
              nyrp = yrdata(yr2)
              njulp = juldata(yr2)
 
-             CALL interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, n2or, n2ovmr)
-          ENDIF
+             call interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, n2or, n2ovmr)
+          endif
        endif
        
-       IF (n2ovmr < 0. .or. found_yearIN == 0) THEN
-          CALL orig_val("N2O",model,n2ovmr)
-       ELSE
+       if (n2ovmr < 0. .or. found_yearIN == 0) then
+          call orig_val("N2O",model,n2ovmr)
+       else
           ! If extrapolation, need to bound the data to pre-industrial concentrations
           if (n2ovmr < 270.) n2ovmr = 270.          
           n2ovmr=n2ovmr*1.e-09
-       ENDIF
+       endif
        
-    ENDIF
+    endif
     
-    IF (PRESENT(ch4vmr)) THEN
+    if (PRESENT(ch4vmr)) then
        ch4vmr=-9999.999
        if (found_yearIN /= 0) then
           tot_valid = count(ch4r(1:VARCAM_in_years) > 0)
-          IF (tot_valid >= 2 ) THEN
-             CALL valid_years(yearIN, ch4r, VARCAM_in_years,yr1, yr2)
+          if (tot_valid >= 2 ) then
+             call valid_years(yearIN, ch4r, VARCAM_in_years,yr1, yr2)
 
              ! Set nyrm, njulm, nyrp, njulp
              nyrm = yrdata(yr1)
@@ -1088,25 +1088,25 @@ CONTAINS
              nyrp = yrdata(yr2)
              njulp = juldata(yr2)
 
-             CALL interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, ch4r, ch4vmr)
+             call interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, ch4r, ch4vmr)
           endif
        endif
        
-       IF (ch4vmr < 0. .or. found_yearIN == 0) THEN
-          CALL orig_val("CH4",model,ch4vmr)
-       ELSE
+       if (ch4vmr < 0. .or. found_yearIN == 0) then
+          call orig_val("CH4",model,ch4vmr)
+       else
           ! If extrapolation, need to bound the data to pre-industrial concentrations
           if (ch4vmr < 700. ) ch4vmr = 700.
           ch4vmr=ch4vmr*1.e-09
-       ENDIF
-    ENDIF
+       endif
+    endif
     
-    IF (PRESENT(cfc11vmr)) THEN
+    if (PRESENT(cfc11vmr)) then
        cfc11vmr = -9999.999
        if (found_yearIN /= 0) then
           tot_valid = count(cfc11r(1:VARCAM_in_years) > 0)
-          IF (tot_valid >= 2 ) THEN
-             CALL valid_years(yearIN, cfc11r, VARCAM_in_years,yr1, yr2)
+          if (tot_valid >= 2 ) then
+             call valid_years(yearIN, cfc11r, VARCAM_in_years,yr1, yr2)
 
              ! Set nyrm, njulm, nyrp, njulp
              nyrm = yrdata(yr1)
@@ -1114,23 +1114,23 @@ CONTAINS
              nyrp = yrdata(yr2)
              njulp = juldata(yr2)
 
-             CALL interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, cfc11r, cfc11vmr)
+             call interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, cfc11r, cfc11vmr)
           endif
        endif
        
-       IF (cfc11vmr < 0. .or. found_yearIN == 0) THEN
-          CALL orig_val("CFC11",model,cfc11vmr)
-       ELSE
+       if (cfc11vmr < 0. .or. found_yearIN == 0) then
+          call orig_val("CFC11",model,cfc11vmr)
+       else
           cfc11vmr=cfc11vmr*1.e-12
-       ENDIF
-    ENDIF
+       endif
+    endif
     
-    IF (PRESENT(cfc12vmr)) THEN
+    if (PRESENT(cfc12vmr)) then
        cfc12vmr = -9999.999
        if (found_yearIN /= 0) then
           tot_valid = count(cfc12r(1:VARCAM_in_years) > 0)
-          IF (tot_valid >= 2 ) THEN
-             CALL valid_years(yearIN, cfc12r, VARCAM_in_years,yr1, yr2)
+          if (tot_valid >= 2 ) then
+             call valid_years(yearIN, cfc12r, VARCAM_in_years,yr1, yr2)
 
              ! Set nyrm, njulm, nyrp, njulp
              nyrm = yrdata(yr1)
@@ -1138,28 +1138,28 @@ CONTAINS
              nyrp = yrdata(yr2)
              njulp = juldata(yr2)
 
-             CALL interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, cfc12r, cfc12vmr)
+             call interpolate_CAMgases(yr, julian, nyrm, njulm, yr1, yr2, nyrp, njulp, cfc12r, cfc12vmr)
           endif
        endif
        
-       IF (cfc12vmr < 0. .or. found_yearIN == 0) THEN
-          CALL orig_val("CFC12",model,cfc12vmr)
-       ELSE
+       if (cfc12vmr < 0. .or. found_yearIN == 0) then
+          call orig_val("CFC12",model,cfc12vmr)
+       else
           cfc12vmr=cfc12vmr*1.e-12
-       ENDIF
-    ENDIF
+       endif
+    endif
        
-  END SUBROUTINE read_CAMgases
+  end subroutine read_CAMgases
   
-  SUBROUTINE valid_years(yearIN, gas, tot_years, yr1, yr2)
+  subroutine valid_years(yearIN, gas, tot_years, yr1, yr2)
 
 ! Find 
-    INTEGER, INTENT(IN) :: yearIN, tot_years
-    INTEGER, INTENT(OUT) :: yr2, yr1
-    REAL(r8), INTENT(IN) :: gas(:)
+    integer, intent(in) :: yearIN, tot_years
+    integer, intent(out) :: yr2, yr1
+    real(r8), intent(in) :: gas(:)
 
     ! Local variables
-    INTEGER :: yr_loc, idata
+    integer :: yr_loc, idata
     
 
     yr_loc = yearIN
@@ -1168,75 +1168,75 @@ CONTAINS
     
     ! If all valid dates are > yearIN then find the 2 lowest dates with
     ! valid data.
-    IF (count(gas(1:yr_loc-1) > 0.) == 0) THEN
+    if (count(gas(1:yr_loc-1) > 0.) == 0) then
 !ccc       DO idata = yr_loc-1, tot_years-1
-       DO idata = yr_loc, tot_years-1
-          IF (gas(idata) > 0.) THEN
+       do idata = yr_loc, tot_years-1
+          if (gas(idata) > 0.) then
              yr1 = idata
-             EXIT
-          ENDIF
-       ENDDO
+             exit
+          endif
+       enddo
 !ccc       DO idata = yr1, tot_years
-       DO idata = yr1+1, tot_years
-          IF (gas(idata) > 0.) THEN
+       do idata = yr1+1, tot_years
+          if (gas(idata) > 0.) then
              yr2 = idata
-             EXIT
-          ENDIF
-       ENDDO
-    ELSE  ! There is at least 1 valid year below yearIN
-       IF (gas(yr_loc) < 0.) THEN
+             exit
+          endif
+       enddo
+    else  ! There is at least 1 valid year below yearIN
+       if (gas(yr_loc) < 0.) then
           
           ! Find the closest valid year, look for higher year first
-          IF (any(gas(yr_loc:tot_years) > 0)) THEN
-             DO idata=yr_loc+1, tot_years
-                IF (gas(idata) > 0) THEN
+          if (any(gas(yr_loc:tot_years) > 0)) then
+             do idata=yr_loc+1, tot_years
+                if (gas(idata) > 0) then
                    yr2 = idata
                    exit
-                ENDIF
-             ENDDO
-          ELSE  ! Need to take lower years and extrapolate data.
-             DO idata=yr_loc-1,2,-1
-                IF (gas(idata) > 0) THEN
+                endif
+             enddo
+          else  ! Need to take lower years and extrapolate data.
+             do idata=yr_loc-1,2,-1
+                if (gas(idata) > 0) then
                    yr2 = idata
                    exit
-                ENDIF
-             ENDDO
-          ENDIF
-       ENDIF
+                endif
+             enddo
+          endif
+       endif
        
        yr_loc = min(yr_loc-1, yr2-1)
-       IF (gas(yr_loc) < 0.) THEN
+       if (gas(yr_loc) < 0.) then
           
           ! Find the closest valid year, lower than yr1
-          IF (any(gas(1:yr_loc-1) > 0)) THEN
-             DO idata=yr_loc-1,1,-1
-                IF (gas(idata) > 0) THEN
+          if (any(gas(1:yr_loc-1) > 0)) then
+             do idata=yr_loc-1,1,-1
+                if (gas(idata) > 0) then
                    yr1 = idata
                    exit
-                ENDIF
-             ENDDO
-          ELSE  ! Need to take higher years and extrapolate data.
+                endif
+             enddo
+          else  ! Need to take higher years and extrapolate data.
              print*, 'Problem: this case should never happen'
-          ENDIF
-       ELSE ! Then yr1 is yr_loc (first valid date < yr2)
+          endif
+       else ! then yr1 is yr_loc (first valid date < yr2)
           yr1 = yr_loc
-       ENDIF
-    ENDIF
-  END SUBROUTINE valid_years
+       endif
+    endif
+  end subroutine valid_years
 
-  SUBROUTINE interpolate_CAMgases(yr, julian, yeari, juli, yr1, yr2, yearf, julf, gas, interp_gas)
-    IMPLICIT NONE
+  subroutine interpolate_CAMgases(yr, julian, yeari, juli, yr1, yr2, yearf, julf, gas, interp_gas)
+    implicit none
 ! These subroutine interpolates a trace gas concentration from a non-homogeneously 
 ! distributed gas concentration evolution
-    INTEGER, INTENT (IN)                      :: yr, yeari, yr1, yr2, yearf, juli, julf
-    REAL, INTENT (IN)                         :: julian
-    REAL(r8), DIMENSION(500), INTENT (IN)         :: gas
-    REAL(r8), INTENT (OUT)                    :: interp_gas
+    integer, intent (in)                      :: yr, yeari, yr1, yr2, yearf, juli, julf
+    real, intent (in)                         :: julian
+    real(r8), dimension(500), intent (in)         :: gas
+    real(r8), intent (out)                    :: interp_gas
 !Local
-    REAL(r8)                                  :: yearini, yearend, gas1, gas2
-    REAL                                      :: doymodel, doydatam, doydatap,    &
+    real(r8)                                  :: yearini, yearend, gas1, gas2
+    real                                      :: doymodel, doydatam, doydatap,    &
                                                  deltat, fact1, fact2, x
-    INTEGER                                   :: ny, my1,my2,my3,nday, maxyear, minyear
+    integer                                   :: ny, my1,my2,my3,nday, maxyear, minyear
  
     
     ! Add support for leap-years
@@ -1251,13 +1251,13 @@ CONTAINS
     x = julian
 
     ! Calculate the julian day (day 0 = 1 Jan minyear at 00:00)
-    DO ny=minyear, maxyear-1
+    do ny=minyear, maxyear-1
        nday = 365
        ! Leap-year?
        MY1=MOD(ny,4)
        MY2=MOD(ny,100)
        MY3=MOD(ny,400)
-       IF(MY1.EQ.0.AND.MY2.NE.0.OR.MY3.EQ.0) nday=366
+       if(MY1.EQ.0.AND.MY2.NE.0.OR.MY3.EQ.0) nday=366
        
        if (ny < yeari) then
           fact2 = fact2+nday
@@ -1276,166 +1276,166 @@ CONTAINS
 
     interp_gas = gas(yr1)*fact1+gas(yr2)*fact2 
 
-    IF (interp_gas .LT. 0. ) THEN
+    if (interp_gas .LT. 0. ) then
        interp_gas=-99999.
-    ENDIF
+    endif
     
-  END SUBROUTINE interpolate_CAMgases
+  end subroutine interpolate_CAMgases
 
-  SUBROUTINE interpolate_lin(x1,y1,x2,y2,x0,y)
-    IMPLICIT NONE
+  subroutine interpolate_lin(x1,y1,x2,y2,x0,y)
+    implicit none
 ! Program to interpolate values y=a+b*x with:
 !       a=y1
 !       b=(y2-y1)/(x2-x1)
 !       x=abs(x1-x0)
 
-    REAL, INTENT (IN)                       :: x1,x2,x0
-    REAL(r8), INTENT (IN)                   :: y1,y2
-    REAL(r8), INTENT (OUT)                  :: y
-    REAL(r8)                                :: a,b,x
+    real, intent (in)                       :: x1,x2,x0
+    real(r8), intent (in)                   :: y1,y2
+    real(r8), intent (out)                  :: y
+    real(r8)                                :: a,b,x
     
     a=y1
     b=(y2-y1)/(x2-x1)
     
-    IF (x0 .GE. x1) THEN
+    if (x0 .GE. x1) then
        x=x0-x1
-    ELSE
+    else
        x=x1-x0
        b=-b
-    ENDIF
+    endif
     
     y=a+b*x
     
-  END SUBROUTINE interpolate_lin
+  end subroutine interpolate_lin
 
 
-  SUBROUTINE orig_val(tracer,model,out)
+  subroutine orig_val(tracer,model,out)
 
-    CHARACTER(LEN=*), INTENT(IN) :: tracer  ! The trace gas name
-    CHARACTER(LEN=*), INTENT(IN) :: model   ! The radiation scheme name
-    REAL(r8), INTENT(INOUT)      :: out     ! The output value
+    character(LEN=*), intent(in) :: tracer  ! The trace gas name
+    character(LEN=*), intent(in) :: model   ! The radiation scheme name
+    real(r8), intent(inout)      :: out     ! The output value
 !Local
-    LOGICAL, EXTERNAL            :: wrf_dm_on_monitor
-    CHARACTER(LEN=256)           :: message
+    logical, external            :: wrf_dm_on_monitor
+    character(LEN=256)           :: message
 
 
-    IF (model .eq. "CAM") THEN
-       IF (tracer .eq. "CO2") THEN
+    if (model .eq. "CAM") then
+       if (tracer .eq. "CO2") then
           out = 3.55e-4
 
-       ELSE IF (tracer .eq. "N2O") THEN
+       else if (tracer .eq. "N2O") then
           out = 0.311e-6
 
-       ELSE IF (tracer .eq. "CH4") THEN
+       else if (tracer .eq. "CH4") then
           out = 1.714e-6
 
-       ELSE IF (tracer .eq. "CFC11") THEN
+       else if (tracer .eq. "CFC11") then
           out = 0.280e-9
 
-       ELSE IF (tracer .eq. "CFC12") THEN
+       else if (tracer .eq. "CFC12") then
           out = 0.503e-9
 
-       ELSE
-          IF ( wrf_dm_on_monitor() ) THEN
-             WRITE(message,*) 'CLWRF : Trace gas ',tracer,' not valid for scheme ',model
-             CALL wrf_error_fatal(message)
-          ENDIF
-       ENDIF
+       else
+          if ( wrf_dm_on_monitor() ) then
+             write(message,*) 'CLWRF : Trace gas ',tracer,' not valid for scheme ',model
+             call wrf_error_fatal(message)
+          endif
+       endif
 
-    ELSE IF (model .eq. "RRTM") THEN
-       IF (tracer .eq. "CO2") THEN
+    else if (model .eq. "RRTM") then
+       if (tracer .eq. "CO2") then
           out = 3.300e-4
 
-       ELSE IF ((tracer .eq. "N2O") .or. &
-                (tracer .eq. "CH4")) THEN
+       else if ((tracer .eq. "N2O") .or. &
+                (tracer .eq. "CH4")) then
           out = 0.
-       ELSE
-          IF ( wrf_dm_on_monitor() ) THEN
-             WRITE(message,*) 'CLWRF : Trace gas ',tracer,' not valid for scheme ',model
-             CALL wrf_error_fatal(message)
-          ENDIF
-       ENDIF
+       else
+          if ( wrf_dm_on_monitor() ) then
+             write(message,*) 'CLWRF : Trace gas ',tracer,' not valid for scheme ',model
+             call wrf_error_fatal(message)
+          endif
+       endif
 
-    ELSE IF (model .eq. "RRTMG") THEN
-       IF (tracer .eq. "CO2") THEN
+    else if (model .eq. "RRTMG") then
+       if (tracer .eq. "CO2") then
           out = 379.e-6
 
-       ELSE IF (tracer .eq. "N2O") THEN
+       else if (tracer .eq. "N2O") then
           out = 319e-9
 
-       ELSE IF (tracer .eq. "CH4") THEN
+       else if (tracer .eq. "CH4") then
           out = 1774.e-9
 
-       ELSE IF (tracer .eq. "CFC11") THEN
+       else if (tracer .eq. "CFC11") then
           out = 0.251e-9
 
-       ELSE IF (tracer .eq. "CFC12") THEN
+       else if (tracer .eq. "CFC12") then
           out = 0.538e-9
 
-       ELSE
-          IF ( wrf_dm_on_monitor() ) THEN
-             WRITE(message,*) 'CLWRF : Trace gas ',tracer,' not valid for scheme ',model
-             CALL wrf_error_fatal(message)
-          ENDIF
-       ENDIF
+       else
+          if ( wrf_dm_on_monitor() ) then
+             write(message,*) 'CLWRF : Trace gas ',tracer,' not valid for scheme ',model
+             call wrf_error_fatal(message)
+          endif
+       endif
 
-    ELSE
-       IF ( wrf_dm_on_monitor() ) THEN
-          WRITE(message,*) 'CLWRF not implemented for the ',model,' radiative scheme.'
-          CALL wrf_error_fatal(message)
-       ENDIF
-    ENDIF
+    else
+       if ( wrf_dm_on_monitor() ) then
+          write(message,*) 'CLWRF not implemented for the ',model,' radiative scheme.'
+          call wrf_error_fatal(message)
+       endif
+    endif
 
-  END SUBROUTINE orig_val
+  end subroutine orig_val
 
-END MODULE module_ra_clWRF_support
+end module module_ra_clWRF_support
 
 
  !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 
-MODULE module_ra_rrtmg_wrf
+module module_ra_rrtmg_wrf
 
-    IMPLICIT NONE
+    implicit none
 
     integer :: stderrlog=1
 
-CONTAINS
+contains
 
 ! ------------------------------------------------------------------------------
 
-SUBROUTINE wrf_error_fatal3( file_str, line, str )
+subroutine wrf_error_fatal3( file_str, line, str )
 !!!  USE module_wrf_error
 #ifdef ESMFIO
 ! 5.2.0r  USE ESMF_Mod
-  USE ESMF
+  use ESMF
 #endif
-  IMPLICIT NONE
-  CHARACTER*(*) file_str
-  INTEGER , INTENT (IN) :: line  ! only print file and line if line > 0
-  CHARACTER*(*) str
-  CHARACTER*256 :: line_str
+  implicit none
+  character*(*) file_str
+  integer , intent (in) :: line  ! only print file and line if line > 0
+  character*(*) str
+  character*256 :: line_str
 
   write(line_str,'(i6)') line
 
   ! Fatal errors are printed to stdout and stderr regardless of
   ! any &logging namelist settings.
 
-  CALL wrf_message( '-------------- FATAL CALLED ---------------' )
+  call wrf_message( '-------------- FATAL CALLED ---------------' )
   ! only print file and line if line is positive
-  IF ( line > 0 ) THEN
-    CALL wrf_message( 'FATAL CALLED FROM FILE:  '//file_str//'  LINE:  '//TRIM(line_str) )
-  ENDIF
-  CALL wrf_message( str )
-  CALL wrf_message( '-------------------------------------------' )
+  if ( line > 0 ) then
+    call wrf_message( 'FATAL CALLED FROM FILE:  '//file_str//'  LINE:  '//TRIM(line_str) )
+  endif
+  call wrf_message( str )
+  call wrf_message( '-------------------------------------------' )
 
   force_stderr: if(stderrlog==0) then
-  CALL wrf_message2( '-------------- FATAL CALLED ---------------' )
+  call wrf_message2( '-------------- FATAL CALLED ---------------' )
   ! only print file and line if line is positive
-  IF ( line > 0 ) THEN
-        CALL wrf_message2( 'FATAL CALLED FROM FILE:  '//file_str//'  LINE:  '//TRIM(line_str) )
-  ENDIF
-     CALL wrf_message2( trim(str) )
-  CALL wrf_message2( '-------------------------------------------' )
+  if ( line > 0 ) then
+        call wrf_message2( 'FATAL CALLED FROM FILE:  '//file_str//'  LINE:  '//TRIM(line_str) )
+  endif
+     call wrf_message2( trim(str) )
+  call wrf_message2( '-------------------------------------------' )
   endif force_stderr
 
   ! Flush all streams.
@@ -1447,27 +1447,27 @@ SUBROUTINE wrf_error_fatal3( file_str, line, str )
 
 #ifdef ESMFIO
 ! 5.2.0r  CALL esmf_finalize(terminationflag=ESMF_ABORT)
-  CALL esmf_finalize(endflag=ESMF_END_ABORT)
+  call esmf_finalize(endflag=ESMF_END_ABORT)
 #endif
 
 #ifdef TRACEBACKQQ
-  CALL tracebackqq
+  call tracebackqq
 #endif
-  CALL wrf_abort
-END SUBROUTINE wrf_error_fatal3
+  call wrf_abort
+end subroutine wrf_error_fatal3
 
 ! ------------------------------------------------------------------------------
 
-SUBROUTINE wrf_error_fatal( str )
+subroutine wrf_error_fatal( str )
 !!!  USE module_wrf_error
-  IMPLICIT NONE
-  CHARACTER*(*) str
-  CALL wrf_error_fatal3 ( ' ', 0, str )
-END SUBROUTINE wrf_error_fatal
+  implicit none
+  character*(*) str
+  call wrf_error_fatal3 ( ' ', 0, str )
+end subroutine wrf_error_fatal
 
 ! ------------------------------------------------------------------------------
 
-END MODULE module_ra_rrtmg_wrf
+end module module_ra_rrtmg_wrf
 
  !-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-!
 

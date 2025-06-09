@@ -140,7 +140,7 @@
  if (has_qc) then
    do k = kts,kte
      do i = its,ite
-       if (rqc(i,k).le.R1) CYCLE
+       if (rqc(i,k).le.R1) cycle
        lamdac = (pidnc*nc0/rqc(i,k))**obmr
        re_qc(i,k) =  max(2.51E-6,min(1.5*(1.0/lamdac),re_qc_max))
      enddo
@@ -150,7 +150,7 @@
  if (has_qi) then
    do k = kts,kte
      do i = its,ite
-       if (rqi(i,k).le.R1 .or. rni(i,k).le.R2) CYCLE
+       if (rqi(i,k).le.R1 .or. rni(i,k).le.R2) cycle
        diai = 11.9*sqrt(rqi(i,k)/ni(i,k))
        re_qi(i,k) = max(10.01E-6,min(0.75*0.163*diai,re_qi_max))
      enddo
@@ -160,7 +160,7 @@
  if (has_qs) then
    do i = its,ite
      do k = kts,kte
-       if (rqs(i,k).le.R1) CYCLE
+       if (rqs(i,k).le.R1) cycle
        supcol = t0c-t(i,k)
        n0sfac = max(min(exp(alpha*supcol),n0smax/n0s),1.)
        lamdas = sqrt(sqrt(pidn0s*n0sfac/rqs(i,k)))

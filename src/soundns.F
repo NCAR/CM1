@@ -1,11 +1,11 @@
-  MODULE soundns_module
+  module soundns_module
 
   implicit none
 
   private
   public :: soundns
 
-  CONTAINS
+  contains
 
       subroutine soundns(xh,rxh,arh1,arh2,uh,xf,uf,yh,vh,yf,vf,           &
                          zh,mh,c1,c2,mf,zf,pi0,thv0,rr0,rf0,              &
@@ -109,7 +109,7 @@
 
 !-----
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
 
         if(sbc.eq.2.and.ibs.eq.1)then
 !$omp parallel do default(shared)   &
@@ -133,13 +133,13 @@
           call   ssopenbcn(vh,rds,sigma,rdsf,sigmaf,gz,rgzv,gy,radbcn,dum1,v3d,vten,dttmp)
         endif
 
-      ENDIF
+      endif
 
 !-----
 
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
 
         tem1=dttmp*rdx*cp*0.5
         tem2=dttmp*rdy*cp*0.5
@@ -159,11 +159,11 @@
           enddo
         enddo
 
-        IF( do_ib )THEN
+        if( do_ib )then
           call zero_out_uv(bndy,kbdy,u3d,v3d)
-        ENDIF
+        endif
 
-      ELSE
+      else
 
         tem1=dttmp*rdx*cp*0.5
 
@@ -179,9 +179,9 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ELSE
+    else
 
         ! Cartesian grid with terrain:
 
@@ -227,44 +227,44 @@
           enddo
         enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------
 !  convergence forcing:
 
-        IF( convinit.eq.1 )THEN
-          IF( rtime.le.convtime .and. nx.gt.1 )THEN
+        if( convinit.eq.1 )then
+          if( rtime.le.convtime .and. nx.gt.1 )then
             call convinitu(myid,ib,ie,jb,je,kb,ke,ni,nj,nk,ibw,ibe,   &
                            zdeep,lamx,lamy,xcent,ycent,aconv,    &
                            xf,yh,zh,u0,u3d)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !----------------------------------------------
 !  convergence forcing:
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
 
-        IF( convinit.eq.1 )THEN
-          IF( rtime.le.convtime .and. ny.gt.1 )THEN
+        if( convinit.eq.1 )then
+          if( rtime.le.convtime .and. ny.gt.1 )then
             call convinitv(myid,ib,ie,jb,je,kb,ke,ni,nj,nk,ibs,ibn,   &
                            zdeep,lamx,lamy,xcent,ycent,aconv,    &
                            xh,yf,zh,v0,v3d)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
-      ENDIF
+      endif
 
 !-----
 
-      IF( wnudge.eq.1 )THEN
+      if( wnudge.eq.1 )then
         !  updraft nudging tendency:
-        IF( (mtime+dttmp).le.t2_wnudge )THEN
+        if( (mtime+dttmp).le.t2_wnudge )then
           call get_wnudge(mtime,dttmp,xh,yh,zf,w3d,dum1)
-        ENDIF
-      ENDIF
+        endif
+      endif
 
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
         ! without terrain:
 
 !$omp parallel do default(shared)   &
@@ -280,7 +280,7 @@
         enddo
         enddo
 
-      ELSE
+      else
         ! with terrain:
 
 !$omp parallel do default(shared)   &
@@ -296,11 +296,11 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-      IF( wnudge.eq.1 )THEN
+      if( wnudge.eq.1 )then
         !  apply updraft nudging:
-        IF( (mtime+dttmp).le.t2_wnudge )THEN
+        if( (mtime+dttmp).le.t2_wnudge )then
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=2,nk
@@ -310,12 +310,12 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ENDIF
+        endif
+      endif
 
-      IF( do_ib )THEN
+      if( do_ib )then
           call zero_out_w(bndy,kbdy,w3d)
-      ENDIF
+      endif
 
         if(timestats.ge.1) time_sound=time_sound+mytime()
 
@@ -341,4 +341,4 @@
 
       end subroutine soundns
 
-  END MODULE soundns_module
+  end module soundns_module

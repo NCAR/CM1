@@ -1,20 +1,20 @@
 !WRF:MODEL_LAYER:PHYSICS
 !
-MODULE module_sf_slab
+module module_sf_slab
 
    !---SPECIFY CONSTANTS AND LAYERS FOR SOIL MODEL
    !---SOIL DIFFUSION CONSTANT SET (M^2/S)
 
-   REAL, PARAMETER :: DIFSL=5.e-7
+   real, parameter :: DIFSL=5.e-7
 
    !---FACTOR TO MAKE SOIL STEP MORE CONSERVATIVE
 
-   REAL , PARAMETER :: SOILFAC=1.25
+   real , parameter :: SOILFAC=1.25
 
-CONTAINS
+contains
 
 !----------------------------------------------------------------
-   SUBROUTINE SLAB(T3D,QV3D,P3D,FLHC,FLQC,                      &
+   subroutine SLAB(T3D,QV3D,P3D,FLHC,FLQC,                      &
                    PSFC,XLAND,TMN,HFX,QFX,LH,TSK,QSFC,CHKLOWQ,  &
                    GSW,GLW,CAPG,THC,SNOWC,EMISS,MAVAIL,         &
                    DELTSM,ROVCP,XLV,lv1,lv2,DTMIN,IFSNOW,       &
@@ -26,7 +26,7 @@ CONTAINS
                    ims,ime, jms,jme, kms,kme,                   &
                    its,ite, jts,jte, kts,kte                    )
 !----------------------------------------------------------------
-    IMPLICIT NONE
+    implicit none
 !----------------------------------------------------------------
 !                                                                        
 !     SUBROUTINE SLAB CALCULATES THE GROUND TEMPERATURE TENDENCY 
@@ -99,34 +99,34 @@ CONTAINS
 !-- kts         start index for k in tile
 !-- kte         end index for k in tile
 !----------------------------------------------------------------
-   INTEGER,  INTENT(IN   )   ::     ids,ide, jds,jde, kds,kde,  &
+   integer,  intent(in   )   ::     ids,ide, jds,jde, kds,kde,  &
                                     ims,ime, jms,jme, kms,kme,  &
                                     its,ite, jts,jte, kts,kte
 
-   INTEGER, INTENT(IN)       ::     num_soil_layers
-   LOGICAL, INTENT(IN)       ::     radiation
+   integer, intent(in)       ::     num_soil_layers
+   logical, intent(in)       ::     radiation
 
-   INTEGER,  INTENT(IN   )   ::     IFSNOW
+   integer,  intent(in   )   ::     IFSNOW
 
 !
-   REAL,     INTENT(IN   )   ::     DTMIN,XLV,lv1,lv2,ROVCP,DELTSM
+   real,     intent(in   )   ::     DTMIN,XLV,lv1,lv2,ROVCP,DELTSM
 
-   REAL,     INTENT(IN )     ::     SVP1,SVP2,SVP3,SVPT0
-   REAL,     INTENT(IN )     ::     EP2,KARMAN,EOMEG,STBOLT
-   REAL,     INTENT(IN )     ::     P1000mb
+   real,     intent(in )     ::     SVP1,SVP2,SVP3,SVPT0
+   real,     intent(in )     ::     EP2,KARMAN,EOMEG,STBOLT
+   real,     intent(in )     ::     P1000mb
 
-   REAL,     DIMENSION( ims:ime , jms:jme , 1:num_soil_layers ), &
-             INTENT(INOUT)   :: TSLB
+   real,     dimension( ims:ime , jms:jme , 1:num_soil_layers ), &
+             intent(inout)   :: TSLB
 
-   REAL,     DIMENSION(1:num_soil_layers), INTENT(IN)::ZS,DZS
+   real,     dimension(1:num_soil_layers), intent(in)::ZS,DZS
 
-   REAL,    DIMENSION( ims:ime, jms:jme, kms:kme )            , &
-            INTENT(IN   )    ::                           QV3D, &
+   real,    dimension( ims:ime, jms:jme, kms:kme )            , &
+            intent(in   )    ::                           QV3D, &
                                                            P3D, &
                                                            T3D
 !
-   REAL,    DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(IN   )    ::                          SNOWC, &
+   real,    dimension( ims:ime, jms:jme )                     , &
+            intent(in   )    ::                          SNOWC, &
                                                          XLAND, &
                                                          EMISS, &
                                                         MAVAIL, &
@@ -137,8 +137,8 @@ CONTAINS
 
 !CHKLOWQ is declared as memory size
 !
-   REAL,    DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(INOUT)    ::                            HFX, &
+   real,    dimension( ims:ime, jms:jme )                     , &
+            intent(inout)    ::                            HFX, &
                                                            QFX, &
                                                             LH, &
                                                           CAPG, &
@@ -146,43 +146,43 @@ CONTAINS
                                                           QSFC, &
                                                        CHKLOWQ
 
-   REAL,     DIMENSION( ims:ime, jms:jme )                    , &
-             INTENT(IN   )               ::               PSFC
+   real,     dimension( ims:ime, jms:jme )                    , &
+             intent(in   )               ::               PSFC
 !
-   REAL,    DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) ::     &
+   real,    dimension( ims:ime, jms:jme ), intent(inout) ::     &
                                                           FLHC, &
                                                           FLQC
 
 ! LOCAL VARS
 
-   REAL,     DIMENSION( its:ite ) ::                      QV1D, &
+   real,     dimension( its:ite ) ::                      QV1D, &
                                                            P1D, &
                                                            T1D
-   REAL,     DIMENSION( its:ite , 1:num_soil_layers ) :: TSLB2D
-   INTEGER ::  I,J,n
+   real,     dimension( its:ite , 1:num_soil_layers ) :: TSLB2D
+   integer ::  I,J,n
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,n,t1d,qv1d,p1d,tslb2d)
-   DO J=jts,jte
+   do J=jts,jte
 
-      DO i=its,ite
+      do i=its,ite
          T1D(i) =T3D(i,j,1)
          QV1D(i)=QV3D(i,j,1)
          P1D(i) =P3D(i,j,1)
-      ENDDO
+      enddo
 
-      DO n=1,num_soil_layers
-      DO i=its,ite
+      do n=1,num_soil_layers
+      do i=its,ite
          TSLB2D(i,n) = TSLB(i,j,n)
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 
 ! the indices to the PSFC argument in the following call look
 ! wrong; however, it is correct to call with its (and not ims)
 ! because of the way PSFC is defined in SLAB1D. Whether *that*
 ! is a good idea or not, this commenter cannot comment. JM
 
-      CALL SLAB1D(J,T1D,QV1D,P1D,FLHC(ims,j),FLQC(ims,j),       &
+      call SLAB1D(J,T1D,QV1D,P1D,FLHC(ims,j),FLQC(ims,j),       &
            PSFC(ims,j),XLAND(ims,j),TMN(ims,j),HFX(ims,j),      &
            QFX(ims,j),TSK(ims,j),QSFC(ims,j),CHKLOWQ(ims,j),    &
            LH(ims,j),GSW(ims,j),GLW(ims,j),                     &
@@ -195,18 +195,18 @@ CONTAINS
            ims,ime, jms,jme, kms,kme,                           &
            its,ite, jts,jte, kts,kte                            )
 
-      DO n=1,num_soil_layers
-      DO i=its,ite
+      do n=1,num_soil_layers
+      do i=its,ite
          TSLB(i,j,n) = TSLB2D(i,n)
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 
-   ENDDO
+   enddo
 
-   END SUBROUTINE SLAB
+   end subroutine SLAB
 
 !----------------------------------------------------------------
-   SUBROUTINE SLAB1D(J,T1D,QV1D,P1D,FLHC,FLQC,                  &
+   subroutine SLAB1D(J,T1D,QV1D,P1D,FLHC,FLQC,                  &
                    PSFCPA,XLAND,TMN,HFX,QFX,TSK,QSFC,CHKLOWQ,   &
                    LH,GSW,GLW,CAPG,THC,SNOWC,EMISS,MAVAIL,      &
                    DELTSM,ROVCP,XLV,lv1,lv2,DTMIN,IFSNOW,       &
@@ -218,7 +218,7 @@ CONTAINS
                    ims,ime, jms,jme, kms,kme,                   &
                    its,ite, jts,jte, kts,kte                    )
 !----------------------------------------------------------------
-    IMPLICIT NONE
+    implicit none
 !----------------------------------------------------------------
 !                                                                        
 !     SUBROUTINE SLAB CALCULATES THE GROUND TEMPERATURE TENDENCY 
@@ -236,29 +236,29 @@ CONTAINS
 !                                                                      
 !----------------------------------------------------------------          
 
-   INTEGER,  INTENT(IN   )   ::     ids,ide, jds,jde, kds,kde,  &
+   integer,  intent(in   )   ::     ids,ide, jds,jde, kds,kde,  &
                                     ims,ime, jms,jme, kms,kme,  &
                                     its,ite, jts,jte, kts,kte,J 
 
-   INTEGER , INTENT(IN)      ::     num_soil_layers
-   LOGICAL,  INTENT(IN   )   ::     radiation
+   integer , intent(in)      ::     num_soil_layers
+   logical,  intent(in   )   ::     radiation
 
-   INTEGER,  INTENT(IN   )   ::     IFSNOW
+   integer,  intent(in   )   ::     IFSNOW
 !
-   REAL,     INTENT(IN   )   ::     DTMIN,XLV,lv1,lv2,ROVCP,DELTSM
+   real,     intent(in   )   ::     DTMIN,XLV,lv1,lv2,ROVCP,DELTSM
 
-   REAL,     INTENT(IN )     ::     SVP1,SVP2,SVP3,SVPT0
-   REAL,     INTENT(IN )     ::     EP2,KARMAN,EOMEG,STBOLT
-   REAL,     INTENT(IN )     ::     P1000mb
+   real,     intent(in )     ::     SVP1,SVP2,SVP3,SVPT0
+   real,     intent(in )     ::     EP2,KARMAN,EOMEG,STBOLT
+   real,     intent(in )     ::     P1000mb
 
-   REAL,     DIMENSION( its:ite , 1:num_soil_layers ),          &
-             INTENT(INOUT)   :: TSLB2D
+   real,     dimension( its:ite , 1:num_soil_layers ),          &
+             intent(inout)   :: TSLB2D
 
-   REAL,     DIMENSION(1:num_soil_layers), INTENT(IN)::ZS,DZS
+   real,     dimension(1:num_soil_layers), intent(in)::ZS,DZS
 
 !
-   REAL,    DIMENSION( ims:ime )                              , &
-            INTENT(INOUT)    ::                            HFX, &
+   real,    dimension( ims:ime )                              , &
+            intent(inout)    ::                            HFX, &
                                                            QFX, &
                                                             LH, &
                                                           CAPG, &
@@ -266,8 +266,8 @@ CONTAINS
                                                           QSFC, &
                                                        CHKLOWQ
 !
-   REAL,    DIMENSION( ims:ime )                              , &
-            INTENT(IN   )    ::                          SNOWC, &
+   real,    dimension( ims:ime )                              , &
+            intent(in   )    ::                          SNOWC, &
                                                          XLAND, &
                                                          EMISS, &
                                                         MAVAIL, &
@@ -276,28 +276,28 @@ CONTAINS
                                                            GLW, &
                                                            THC
 !
-   REAL,    DIMENSION( its:ite )                              , &
-            INTENT(IN   )    ::                           QV1D, &
+   real,    dimension( its:ite )                              , &
+            intent(in   )    ::                           QV1D, &
                                                            P1D, &
                                                            T1D
 !
-   REAL,     DIMENSION( ims:ime )                             , &
-             INTENT(IN   )               ::             PSFCPA
+   real,     dimension( ims:ime )                             , &
+             intent(in   )               ::             PSFCPA
 
 !
-   REAL,    DIMENSION( ims:ime ), INTENT(INOUT) ::              &
+   real,    dimension( ims:ime ), intent(inout) ::              &
                                                           FLHC, &
                                                           FLQC
 ! LOCAL VARS
 
-   REAL,    DIMENSION( its:ite )          ::              PSFC
+   real,    dimension( its:ite )          ::              PSFC
 
-   REAL,    DIMENSION( its:ite )          ::                    &
+   real,    dimension( its:ite )          ::                    &
                                                            THX, &
                                                             QX, &
                                                           SCR3 
 
-   REAL,    DIMENSION( its:ite )          ::            DTHGDT, &
+   real,    dimension( its:ite )          ::            DTHGDT, &
                                                            TG0, &
                                                          THTMN, &
                                                           XLD1, &
@@ -310,11 +310,11 @@ CONTAINS
                                                             QS, &
                                                          DTSDT
 !
-   REAL, DIMENSION( its:ite, num_soil_layers )        :: FLUX
+   real, dimension( its:ite, num_soil_layers )        :: FLUX
 !
-   INTEGER :: I,K,NSOIL,ITSOIL,L,NK,RADSWTCH
-   REAL    :: PS,PS1,XLDCOL,TSKX,RNSOIL,RHOG1,RHOG2,RHOG3,LAMDAG
-   REAL    :: THG,ESG,QSG,HFXT,QFXT,CS,CSW,LAMG(4),THCON,PL
+   integer :: I,K,NSOIL,ITSOIL,L,NK,RADSWTCH
+   real    :: PS,PS1,XLDCOL,TSKX,RNSOIL,RHOG1,RHOG2,RHOG3,LAMDAG
+   real    :: THG,ESG,QSG,HFXT,QFXT,CS,CSW,LAMG(4),THCON,PL
  
 !----------------------------------------------------------------------          
 !-----DETERMINE IF ANY POINTS IN COLUMN ARE LAND (RATHER THAN OCEAN)             
@@ -323,16 +323,16 @@ CONTAINS
 !                                                                                
 ! from sfcrad   
 !----------------------------------------------------------------------
-   DATA CSW/4.183E6/
-   DATA LAMG/1.407E-8, -1.455E-5, 6.290E-3, 0.16857/
+   data CSW/4.183E6/
+   data LAMG/1.407E-8, -1.455E-5, 6.290E-3, 0.16857/
 
-   DO i=its,ite
+   do i=its,ite
 ! in cmb
       PSFC(I)=PSFCPA(I)/1000.
-   ENDDO
+   enddo
 
 
-      DO I=its,ite
+      do I=its,ite
 ! PL cmb
          PL=P1D(I)/1000.
          SCR3(I)=T1D(I)
@@ -340,55 +340,55 @@ CONTAINS
          THCON=(P1000mb*0.001/PL)**ROVCP
          THX(I)=SCR3(I)*THCON
          QX(I)=0.
-      ENDDO
+      enddo
 
 !     IF(IDRY.EQ.1) GOTO 81
-      DO I=its,ite
+      do I=its,ite
          QX(I)=QV1D(I)
-      ENDDO
-   81 CONTINUE
+      enddo
+   81 continue
 
 !
 !-----THE SLAB THERMAL CAPACITY CAPG(I) ARE DEPENDENT ON:
 !     THC(I) - SOIL THERMAL INERTIAL, ONLY.
 !
-      DO I=its,ite
+      do I=its,ite
          CAPG(I)=3.298E6*THC(I)
-         IF(num_soil_layers .gt. 1)THEN
+         if(num_soil_layers .gt. 1)then
 
 ! CAPG REPRESENTS SOIL HEAT CAPACITY (J/K/M^3) WHEN DIFSL=5.E-7 (M^2/S)
 ! TO GIVE A CORRECT THERMAL INERTIA (=CAPG*DIFSL^0.5)
 
             CAPG(I)=5.9114E7*THC(I)
-         ENDIF
-      ENDDO
+         endif
+      enddo
 !        
       XLDCOL=2.0                                                                 
-      DO 10 I=its,ite
+      do 10 I=its,ite
         XLDCOL=AMIN1(XLDCOL,XLAND(I))                                          
-   10 CONTINUE                                                                   
+   10 continue                                                                   
 !                                                                                
-      IF(XLDCOL.GT.1.5)GOTO 90                                                   
+      if(XLDCOL.GT.1.5)GOTO 90                                                   
 !                                                                                
 !                                                                                
 !-----CONVERT SLAB TEMPERATURE TO POTENTIAL TEMPERATURE AND                      
 !     SET XLD1(I) = 0. FOR OCEAN POINTS:                                         
 !                                                                                
 !                                                                                
-      DO 20 I=its,ite
-        IF((XLAND(I)-1.5).GE.0)THEN                                            
+      do 20 I=its,ite
+        if((XLAND(I)-1.5).GE.0)then                                            
           XLD1(I)=0.                                                             
-        ELSE                                                                     
+        else                                                                     
           XLD1(I)=1.                                                             
-        ENDIF                                                                    
-   20 CONTINUE                                                                   
+        endif                                                                    
+   20 continue                                                                   
 !                                                                                
 !-----CONVERT 'TSK(THETAG)' TO 'TG' FOR 'IUP' CALCULATION ....                   
 !       IF WE ARE USING THE BLACKADAR MULTI-LEVEL (HIGH-RESOLUTION)              
 !       PBL MODEL                                                                
 !                                                                                
-      DO 50 I=its,ite
-        IF(XLD1(I).LT.0.5)GOTO 50                                                
+      do 50 I=its,ite
+        if(XLD1(I).LT.0.5)GOTO 50                                                
 
 ! PS cmb
         PS=PSFC(I)
@@ -396,22 +396,22 @@ CONTAINS
 ! TSK is Temperature at gound sfc
 !       TG0(I)=TSK(I)*(PS*0.01)**ROVCP                                         
         TG0(I)=TSK(I)
-   50 CONTINUE                                                                   
+   50 continue                                                                   
 !                                                                                
 !-----COMPUTE THE SURFACE ENERGY BUDGET:                                         
 !                                                                                
 !     IF(ISOIL.EQ.1)NSOIL=1                                                      
-      IF(num_soil_layers .gt. 1)NSOIL=1                                                      
+      if(num_soil_layers .gt. 1)NSOIL=1                                                      
 
 
-      IF (radiation) then
+      if (radiation) then
         RADSWTCH=1
-      ELSE
+      else
         RADSWTCH=0
-      ENDIF
+      endif
 
-      DO 70 I=its,ite
-        IF(XLD1(I).LT.0.5)GOTO 70
+      do 70 I=its,ite
+        if(XLD1(I).LT.0.5)GOTO 70
 !        OLTG(I)=TSK(I)*(100./PSFC(I))**ROVCP
         OLTG(I)=TSK(I)*(P1000mb*0.001/PSFC(I))**ROVCP
         UPFLUX(I)=RADSWTCH*STBOLT*TG0(I)**4                            
@@ -427,24 +427,24 @@ CONTAINS
                 LH(I)=QFX(I)*( lv1-lv2*tsk(I) )
         QS(I)=HFX(I)+QFX(I)*( lv1-lv2*tsk(I) )
 !       IF(ISOIL.EQ.0)THEN                                                       
-        IF(num_soil_layers .EQ. 1)THEN                                                       
+        if(num_soil_layers .EQ. 1)then                                                       
           DTHGDT(I)=(RNET(I)-QS(I))/CAPG(I)-HM(I)                              
-        ELSE
+        else
           DTHGDT(I)=0.                                                           
-        ENDIF                                                                    
-   70 CONTINUE                                                                   
+        endif                                                                    
+   70 continue                                                                   
 !     IF(ISOIL.EQ.1)THEN                                                         
-      IF(num_soil_layers .gt. 1)THEN                                                         
+      if(num_soil_layers .gt. 1)then                                                         
         NSOIL=1+IFIX(SOILFAC*4*DIFSL/DZS(1)*DELTSM/DZS(1))   
         RNSOIL=1./FLOAT(NSOIL)                                                   
 !                                                                                
 !     SOIL SUB-TIMESTEP                                                          
 !                                                                                
-        DO ITSOIL=1,NSOIL                                                        
-          DO I=its,ite
-             DO L=1,num_soil_layers-1
-              IF(XLD1(I).LT.0.5)GOTO 75                                          
-              IF(L.EQ.1.AND.ITSOIL.GT.1)THEN                                     
+        do ITSOIL=1,NSOIL                                                        
+          do I=its,ite
+             do L=1,num_soil_layers-1
+              if(XLD1(I).LT.0.5)GOTO 75                                          
+              if(L.EQ.1.AND.ITSOIL.GT.1)then                                     
 !                PS1=(PSFC(I)*0.01)**ROVCP    
                 PS1=(PSFCPA(I)/P1000mb)**ROVCP    
 
@@ -461,60 +461,60 @@ CONTAINS
 !     SUM HFX AND QFX OVER SOIL TIMESTEPS                                        
                 HFX(I)=HFX(I)+HFXT                                           
                 QFX(I)=QFX(I)+QFXT                                           
-              ENDIF                                                              
+              endif                                                              
               FLUX(I,1)=RNET(I)-QS(I)                                            
               FLUX(I,L+1)=-DIFSL*CAPG(I)*(TSLB2D(I,L+1)-TSLB2D(I,L))/( & 
                           ZS(L+1)-ZS(L))                                         
               DTSDT(I)=-(FLUX(I,L+1)-FLUX(I,L))/(DZS(L)*CAPG(I))               
               TSLB2D(I,L)=TSLB2D(I,L)+DTSDT(I)*DELTSM*RNSOIL                     
-              IF(IFSNOW.EQ.1.AND.L.EQ.1)THEN                              
-                IF((SNOWC(I).GT.0..AND.TSLB2D(I,1).GT.273.16))THEN             
+              if(IFSNOW.EQ.1.AND.L.EQ.1)then                              
+                if((SNOWC(I).GT.0..AND.TSLB2D(I,1).GT.273.16))then             
                   TSLB2D(I,1)=273.16                                             
-                ENDIF                                                            
-              ENDIF                                                              
-              IF(L.EQ.1)DTHGDT(I)=DTHGDT(I)+RNSOIL*DTSDT(I)                      
-              IF(ITSOIL.EQ.NSOIL.AND.L.EQ.1)THEN                                 
+                endif                                                            
+              endif                                                              
+              if(L.EQ.1)DTHGDT(I)=DTHGDT(I)+RNSOIL*DTSDT(I)                      
+              if(ITSOIL.EQ.NSOIL.AND.L.EQ.1)then                                 
 !     AVERAGE HFX AND QFX OVER SOIL TIMESTEPS FOR OUTPUT TO PBL                  
                 HFX(I)=HFX(I)*RNSOIL                                         
                 QFX(I)=QFX(I)*RNSOIL                                         
                 LH(I)=QFX(I)*( lv1-lv2*tsk(I) )
-              ENDIF                                                              
-   75         CONTINUE                                                           
-            ENDDO                                                                
-          ENDDO                                                                  
-        ENDDO                                                                    
-      ENDIF                                                                      
+              endif                                                              
+   75         continue                                                           
+            enddo                                                                
+          enddo                                                                  
+        enddo                                                                    
+      endif                                                                      
 !                                                                                
-      DO 80 I=its,ite
-        IF(XLD1(I).LT.0.5) GOTO 80                                                
+      do 80 I=its,ite
+        if(XLD1(I).LT.0.5) GOTO 80                                                
         TSKX=TG0(I)+DELTSM*DTHGDT(I)                                             
 
 ! TSK is temperature
 !       TSK(I)=TSKX*(100./PS1)**ROVCP                                          
         TSK(I)=TSKX
-   80 CONTINUE                                                                   
+   80 continue                                                                   
 
 !                                                                                
 !-----MODIFY THE THE GROUND TEMPERATURE IF THE SNOW COVER EFFECTS ARE            
 !     CONSIDERED: LIMIT THE GROUND TEMPERATURE UNDER 0 C.                        
 !                                                                                
-      IF(IFSNOW.EQ.0)GOTO 90                                              
-      DO 85 I=its,ite
-        IF(XLD1(I).LT.0.5)GOTO 85                                                
+      if(IFSNOW.EQ.0)GOTO 90                                              
+      do 85 I=its,ite
+        if(XLD1(I).LT.0.5)GOTO 85                                                
 !       PS1=(PSFC(I)*0.01)**ROVCP             
 !       TSCVN(I)=TSK(I)*PS1                                            
         TSCVN(I)=TSK(I)
-        IF((SNOWC(I).GT.0..AND.TSCVN(I).GT.273.16))THEN                        
+        if((SNOWC(I).GT.0..AND.TSCVN(I).GT.273.16))then                        
           TSCVN(I)=273.16                                                        
-        ELSE                                                                     
+        else                                                                     
           TSCVN(I)=TSCVN(I)                                                      
-        ENDIF                                                                    
+        endif                                                                    
 !       TSK(I)=TSCVN(I)/PS1                                                    
         TSK(I)=TSCVN(I)
-   85 CONTINUE                                                                   
+   85 continue                                                                   
 !                                                                                
-   90 CONTINUE                                                                   
-      DO I=its,ite
+   90 continue                                                                   
+      do I=its,ite
 ! QSFC and CHKLOWQ needed by Eta PBL
 ! WA added check for flqc = 0 to accomodate TEMF (and others?)
         if ( FLQC(I) .ne. 0.) then
@@ -523,49 +523,49 @@ CONTAINS
            QSFC(I) = QX(I)
         end if
         CHKLOWQ(I)=MAVAIL(I)
-      ENDDO
+      enddo
 !                                                                                
-  140 CONTINUE                                                                   
+  140 continue                                                                   
 
-   END SUBROUTINE SLAB1D
+   end subroutine SLAB1D
 
 !================================================================
-   SUBROUTINE slabinit(TSK,TMN,                                 &
+   subroutine slabinit(TSK,TMN,                                 &
                        TSLB,ZS,DZS,num_soil_layers,             &
                        allowed_to_read, start_of_simulation,    &
                        ids,ide, jds,jde, kds,kde,               &
                        ims,ime, jms,jme, kms,kme,               &
                        its,ite, jts,jte, kts,kte                )
 !----------------------------------------------------------------
-   IMPLICIT NONE
+   implicit none
 !----------------------------------------------------------------
-   LOGICAL , INTENT(IN)      ::      allowed_to_read
-   LOGICAL , INTENT(IN)      ::      start_of_simulation
-   INTEGER, INTENT(IN   )    ::      ids,ide, jds,jde, kds,kde, &
+   logical , intent(in)      ::      allowed_to_read
+   logical , intent(in)      ::      start_of_simulation
+   integer, intent(in   )    ::      ids,ide, jds,jde, kds,kde, &
                                      ims,ime, jms,jme, kms,kme, &
                                      its,ite, jts,jte, kts,kte
 
-   INTEGER, INTENT(IN   )    ::      num_soil_layers
+   integer, intent(in   )    ::      num_soil_layers
 !   
-   REAL,     DIMENSION( ims:ime , 1:num_soil_layers , jms:jme ), INTENT(INOUT) :: TSLB
+   real,     dimension( ims:ime , 1:num_soil_layers , jms:jme ), intent(inout) :: TSLB
 
-   REAL,     DIMENSION(1:num_soil_layers), INTENT(IN)  ::  ZS,DZS
+   real,     dimension(1:num_soil_layers), intent(in)  ::  ZS,DZS
 
-   REAL,    DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(IN)    ::                               TSK, &
+   real,    dimension( ims:ime, jms:jme )                     , &
+            intent(in)    ::                               TSK, &
                                                            TMN
 
 !  LOCAR VAR
 
-   INTEGER                   ::      L,J,I,itf,jtf
-   CHARACTER*1024 message
+   integer                   ::      L,J,I,itf,jtf
+   character*1024 message
 
 !----------------------------------------------------------------
  
    itf=min0(ite,ide-1)
    jtf=min0(jte,jde-1)
 
-   END SUBROUTINE slabinit
+   end subroutine slabinit
 !-------------------------------------------------------------------          
 
-END MODULE module_sf_slab
+end module module_sf_slab

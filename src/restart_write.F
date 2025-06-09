@@ -1,11 +1,11 @@
-  MODULE restart_write_module
+  module restart_write_module
 
   implicit none
 
   private
   public :: restart_write,readrbcwe,readrbcsn
 
-  CONTAINS
+  contains
 
       subroutine restart_write(nstep,srec,sirec,urec,vrec,wrec,nrec,mrec,prec,      &
                                trecs,trecw,arecs,arecw,                             &
@@ -170,14 +170,14 @@
 
 !-----------------------------------------------------------------------
 
-  IF( restart_format.eq.1 )THEN
+  if( restart_format.eq.1 )then
     ! unformatted direct-access (grads) format:
 
-  IF( restart_filetype.eq.1 )THEN
+  if( restart_filetype.eq.1 )then
 
     !------------------
     ! one restart file (per stagger type):
-    IF(myid.eq.nodeleader)THEN
+    if(myid.eq.nodeleader)then
       do i=1,maxstring
         fname(i:i) = ' '
       enddo
@@ -213,13 +213,13 @@
       orecw = 1
 
       if(dowr) write(outfile,*)
-    ENDIF
+    endif
 
-  ELSEIF( restart_filetype.eq.2 )THEN
+  elseif( restart_filetype.eq.2 )then
 
     !------------------
     ! one restart file (per restart time):
-    IF(myid.eq.nodeleader)THEN
+    if(myid.eq.nodeleader)then
       do i=1,maxstring
         fname(i:i) = ' '
       enddo
@@ -260,13 +260,13 @@
       orecw = 1
 
       if(dowr) write(outfile,*)
-    ENDIF
+    endif
 
-  ELSEIF( restart_filetype.eq.3 )THEN
+  elseif( restart_filetype.eq.3 )then
 
     !------------------
     ! one restart file per node (cm1r17 format):
-    IF(myid.eq.nodeleader)THEN
+    if(myid.eq.nodeleader)then
 
       do i=1,maxstring
         fname(i:i) = ' '
@@ -284,13 +284,13 @@
       if(dowr) write(outfile,*)
 
       open(unit=50,file=fname,form='unformatted',status='unknown')
-    ENDIF
-  ELSE
+    endif
+  else
     stop 12388
-  ENDIF
+  endif
 
 #ifdef NETCDF
-  ELSEIF( restart_format.eq.2 )THEN
+  elseif( restart_format.eq.2 )then
     ! netcdf format:
 
     if( myid.eq.0 )then
@@ -299,7 +299,7 @@
     endif
 
 #endif
-  ELSE
+  else
 
     if( myid.eq.0 )then
       print *
@@ -313,13 +313,13 @@
 #endif
     call stopcm1
 
-  ENDIF
+  endif
 
 !---------------------------------------------------------------
 ! metadata:
 
-  IF( restart_format.eq.1 )THEN
-    IF(myid.eq.0)THEN
+  if( restart_format.eq.1 )then
+    if(myid.eq.0)then
       ! only processor 0 does this:
       write(50) cm1rversion
       write(50) nx
@@ -425,11 +425,11 @@
       write(50) yfref
       write(50) sigma
       write(50) sigmaf
-    ENDIF
+    endif
 #ifdef NETCDF
-  ELSEIF( restart_format.eq.2 )THEN
+  elseif( restart_format.eq.2 )then
 
-    IF(myid.eq.0)THEN
+    if(myid.eq.0)then
 
       call disp_err( nf90_inq_varid(ncid,"cm1rversion",varid) , .true. )
       call disp_err( nf90_put_var(ncid,varid,cm1rversion,(/time_index/)) , .true. )
@@ -608,9 +608,9 @@
       call disp_err( nf90_inq_varid(ncid,"avgsfcp",varid) , .true. )
       call disp_err( nf90_put_var(ncid,varid,avgsfcp,(/time_index/)) , .true. )
 
-    ENDIF
+    endif
 #endif
-  ENDIF
+  endif
 
 !-----------------------------------------------------------------------
 #ifdef MPI
@@ -650,14 +650,14 @@
 !-----------------------------------------------------------------------
 ! budget variables:
 
-    IF( myid.eq.0 )THEN
+    if( myid.eq.0 )then
 
-      IF( restart_format.eq.1 )THEN
+      if( restart_format.eq.1 )then
         write(50) qbudget
         write(50) asq
         write(50) bsq
 #ifdef NETCDF
-      ELSEIF( restart_format.eq.2 )THEN
+      elseif( restart_format.eq.2 )then
         call disp_err( nf90_inq_varid(ncid,"qbudget",varid) , .true. )
         call disp_err( nf90_put_var(ncid,varid,qbudget,(/1,time_index/),(/nbudget,1/)) , .true. )
         call disp_err( nf90_inq_varid(ncid,"asq",varid) , .true. )
@@ -665,24 +665,24 @@
         call disp_err( nf90_inq_varid(ncid,"bsq",varid) , .true. )
         call disp_err( nf90_put_var(ncid,varid,bsq,(/1,time_index/),(/numq,1/)) , .true. )
 #endif
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
 !---------------------------------------------------------------
 
     if( myid.eq.0 )then
-      IF( restart_format.eq.1 )THEN
+      if( restart_format.eq.1 )then
         write(50) ug
         write(50) vg
 #ifdef NETCDF
-      ELSEIF( restart_format.eq.2 )THEN
+      elseif( restart_format.eq.2 )then
         call disp_err( nf90_inq_varid(ncid,"ug",varid) , .true. )
         call disp_err( nf90_put_var(ncid,varid,ug(1:nk),(/1,time_index/),(/nk,1/)) , .true. )
         call disp_err( nf90_inq_varid(ncid,"vg",varid) , .true. )
         call disp_err( nf90_put_var(ncid,varid,vg(1:nk),(/1,time_index/),(/nk,1/)) , .true. )
 #endif
-      ENDIF
+      endif
     endif
 
 !---------------------------------------------------------------
@@ -806,7 +806,7 @@
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
     endif
-    IF(imoist.eq.1)THEN
+    if(imoist.eq.1)then
     do n=1,numq
       text1 = '        '
       write(text1(1:3),156) qname(n)
@@ -816,7 +816,7 @@
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
     enddo
-    ENDIF
+    endif
     if(imoist.eq.1.and.eqtset.eq.2)then
       call writer(ni,nj,1,nk,nx,ny,qpten(ib,jb,1),'qpten   ',      &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
@@ -1305,7 +1305,7 @@
 
 !---------------------------------------------------------------
 
-    IF( ipbl.eq.4 .or. ipbl.eq.5 .or. sfcmodel.eq.6 )THEN
+    if( ipbl.eq.4 .or. ipbl.eq.5 .or. sfcmodel.eq.6 )then
       if(myid.eq.0) print *,'  writing mynn vars ... '
       call writer(ni,nj,1,nk,nx,ny,qke(ib,jb,1),'qke     ',        &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
@@ -1452,11 +1452,11 @@
 
 
       if(myid.eq.0) print *,'  ... done writing mynn vars '
-    ENDIF
+    endif
 
 !---------------------------------------------------------------
 
-    IF(ipbl.eq.6)THEN
+    if(ipbl.eq.6)then
       if(myid.eq.0) print *,'  writing myj vars ... '
       call writer(ni,nj,1,nk,nx,ny,tke_myj(ib,jb,1),'tke_myj ',    &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
@@ -1466,8 +1466,8 @@
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
-    IF(sfcmodel.eq.7)THEN
+    endif
+    if(sfcmodel.eq.7)then
       call writer(ni,nj,1,1,nx,ny,mixht(ib,jb),'mixht   ',        &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
@@ -1554,7 +1554,7 @@
 !---------------------------------------------------------------
 !  convection param.
 
-    IF( cuparam.ge.1 )THEN
+    if( cuparam.ge.1 )then
       call writer(ni,nj,1,1,nx,ny,raincv(ib,jb,1),'raincv  ',      &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
@@ -1588,7 +1588,7 @@
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
+    endif
 
 !---------------------------------------------------------------
 !  2-part turbulence param:
@@ -1668,7 +1668,7 @@
 !---------------------------------------------------------------
 !  time-average vars:
 
-      IF( dotimeavg )THEN
+      if( dotimeavg )then
 
         if( myid.eq.0 )then
           write(50) ntim
@@ -1771,7 +1771,7 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !---------------------------------------------------------------
 !  parcels:
@@ -1792,17 +1792,17 @@
         ! only write position info:
         if(myid.eq.0)then
           if( .not. terrain_flag )then
-            DO np=1,nparcels
+            do np=1,nparcels
               ploc(np,1)=pdata(np,prx)
               ploc(np,2)=pdata(np,pry)
               ploc(np,3)=pdata(np,prz)
-            ENDDO
+            enddo
           else
-            DO np=1,nparcels
+            do np=1,nparcels
               ploc(np,1)=pdata(np,prx)
               ploc(np,2)=pdata(np,pry)
               ploc(np,3)=pdata(np,prsig)
-            ENDDO
+            enddo
           endif
           if( restart_format.eq.1 )then
             write(50) ploc
@@ -1997,7 +1997,7 @@
 !  150820:  optional variables
 
 
-    IF( restart_file_theta )THEN
+    if( restart_file_theta )then
       do k=1,nk
       do j=1,nj
       do i=1,ni
@@ -2009,78 +2009,78 @@
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
-    IF( restart_file_u0 .or. do_lsnudge .or. do_adapt_move )THEN
+    endif
+    if( restart_file_u0 .or. do_lsnudge .or. do_adapt_move )then
       call writer(ni+1,nj,1,nk,nx+1,ny,u0(ib,jb,1),'u0      ',     &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecu,52,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2iu,d2ju,d3iu,d3ju)
-    ENDIF
-    IF( restart_file_v0 .or. do_lsnudge .or. do_adapt_move )THEN
+    endif
+    if( restart_file_v0 .or. do_lsnudge .or. do_adapt_move )then
       call writer(ni,nj+1,1,nk,nx,ny+1,v0(ib,jb,1),'v0      ',     &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecv,53,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2iv,d2jv,d3iv,d3jv)
-    ENDIF
-    IF( restart_file_dbz .and. qd_dbz.ge.1 )THEN
+    endif
+    if( restart_file_dbz .and. qd_dbz.ge.1 )then
       ! cm1r19:
       call writer(ni,nj,1,nk,nx,ny,qdiag(ibdq,jbdq,1,qd_dbz),'dbz     ',        &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
+    endif
     !-----
-    IF( restart_file_th0 )THEN
+    if( restart_file_th0 )then
       call writer(ni,nj,1,nk,nx,ny,th0(ib,jb,1),'th0     ',        &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
-    IF( restart_file_prs0 )THEN
+    endif
+    if( restart_file_prs0 )then
       call writer(ni,nj,1,nk,nx,ny,prs0(ib,jb,1),'prs0    ',       &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
-    IF( restart_file_pi0 )THEN
+    endif
+    if( restart_file_pi0 )then
       call writer(ni,nj,1,nk,nx,ny,pi0(ib,jb,1),'pi0     ',        &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
-    IF( restart_file_rho0 )THEN
+    endif
+    if( restart_file_rho0 )then
       call writer(ni,nj,1,nk,nx,ny,rho0(ib,jb,1),'rho0    ',       &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
-    IF( restart_file_qv0 )THEN
+    endif
+    if( restart_file_qv0 )then
       call writer(ni,nj,1,nk,nx,ny,qv0(ib,jb,1),'qv0     ',        &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
+    endif
     !-----
-    IF( restart_file_zs )THEN
+    if( restart_file_zs )then
       call writer(ni,nj,1,1,nx,ny,zs(ib,jb),'zs      ',            &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
-    IF( restart_file_zh )THEN
+    endif
+    if( restart_file_zh )then
       call writer(ni,nj,1,nk,nx,ny,zh(ib,jb,1),'zhalf   ',         &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
-    IF( restart_file_zf )THEN
+    endif
+    if( restart_file_zf )then
       call writer(ni,nj,1,nk+1,nx,ny,zf(ib,jb,1),'zfull   ',       &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecw,54,   &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p, &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
+    endif
 
-    IF( restart_file_diags )THEN
+    if( restart_file_diags )then
       if( td_diss.gt.0 )                                                 &
       call writer(ni,nj,1,nk,nx,ny,tdiag(ib,jb,1,td_diss),'dissheat',    &
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,         &
@@ -2116,26 +2116,26 @@
                   ni,nj,ngxy,myid,numprocs,nodex,nodey,orecs,51,         &
                   ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p,       &
                   dat1(1,1),dat2(1,1),dat3(1,1,1),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2is,d2js,d3is,d3js)
-    ENDIF
+    endif
 
 !---------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !---------------------------------------------------------------
 
 
-    IF( restart_format.eq.1 )THEN
-      IF(myid.eq.0) close(unit=50)
-      IF(myid.eq.nodeleader) close(unit=51)
-      IF(myid.eq.nodeleader) close(unit=52)
-      IF(myid.eq.nodeleader) close(unit=53)
-      IF(myid.eq.nodeleader) close(unit=54)
+    if( restart_format.eq.1 )then
+      if(myid.eq.0) close(unit=50)
+      if(myid.eq.nodeleader) close(unit=51)
+      if(myid.eq.nodeleader) close(unit=52)
+      if(myid.eq.nodeleader) close(unit=53)
+      if(myid.eq.nodeleader) close(unit=54)
 #ifdef NETCDF
-    ELSEIF( restart_format.eq.2 )THEN
+    elseif( restart_format.eq.2 )then
       if( myid.eq.0 )then
         call disp_err( nf90_close(ncid) , .true. )
       endif
 #endif
-    ENDIF
+    endif
 
 #ifdef MPI
       if(timestats.ge.1)then
@@ -2185,14 +2185,14 @@
         dumy(j) = radbc(j,k)
       enddo
 #else
-      IF(myid.ne.0)THEN
+      if(myid.ne.0)then
         if( ibndy.eq.1 )then
           call MPI_ISEND(nj,1,MPI_INTEGER,0,30,MPI_COMM_WORLD,req1,ierr)
           call MPI_ISEND(radbc(1,k),nj,MPI_REAL,0,31,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(req1,mpi_status_ignore,ierr)
           call MPI_WAIT(reqs,mpi_status_ignore,ierr)
         endif
-      ELSE
+      else
         if( (aname.eq.'radbcw') .or. (aname.eq.'radbce' .and. nodex.eq.1) )then
           do j=1,nj
             dumy(j) = radbc(j,k)
@@ -2215,7 +2215,7 @@
           call MPI_IRECV(dumy(fooj),njrecv,MPI_REAL,proc,31,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(reqs,mpi_status_ignore,ierr)
         enddo
-      ENDIF
+      endif
 #endif
 
       end subroutine writerbcwe
@@ -2250,14 +2250,14 @@
         dumx(i) = radbc(i,k)
       enddo
 #else
-      IF(myid.ne.0)THEN
+      if(myid.ne.0)then
         if( ibndy.eq.1 )then
           call MPI_ISEND(ni,1,MPI_INTEGER,0,33,MPI_COMM_WORLD,req1,ierr)
           call MPI_ISEND(radbc(1,k),ni,MPI_REAL,0,32,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(req1,mpi_status_ignore,ierr)
           call MPI_WAIT(reqs,mpi_status_ignore,ierr)
         endif
-      ELSE
+      else
         if( (aname.eq.'radbcs') .or. (aname.eq.'radbcn' .and. nodey.eq.1) )then
           do i=1,ni
             dumx(i) = radbc(i,k)
@@ -2280,7 +2280,7 @@
           call MPI_IRECV(dumx(fooi),nirecv,MPI_REAL,proc,32,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(reqs,mpi_status_ignore,ierr)
         enddo
-      ENDIF
+      endif
 #endif
 
       end subroutine writerbcsn
@@ -2315,14 +2315,14 @@
         radbc(j,k) = dumy(j)
       enddo
 #else
-      IF(myid.ne.0)THEN
+      if(myid.ne.0)then
         if( ibndy.eq.1 )then
           call MPI_ISEND(nj,1,MPI_INTEGER,0,30,MPI_COMM_WORLD,req1,ierr)
           call MPI_IRECV(radbc(1,k),nj,MPI_REAL,0,33,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(req1,mpi_status_ignore,ierr)
           call MPI_WAIT(reqs,mpi_status_ignore,ierr)
         endif
-      ELSE
+      else
         if( (aname.eq.'radbcw') .or. (aname.eq.'radbce' .and. nodex.eq.1) )then
           do j=1,nj
             radbc(j,k) = dumy(j)
@@ -2344,7 +2344,7 @@
           call MPI_ISEND(dumy(myj1p(proc+1)),njrecv,MPI_REAL,proc,33,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(reqs,mpi_status_ignore,ierr)
         enddo
-      ENDIF
+      endif
 #endif
 
       end subroutine  readrbcwe
@@ -2379,14 +2379,14 @@
         radbc(i,k) = dumx(i)
       enddo
 #else
-      IF(myid.ne.0)THEN
+      if(myid.ne.0)then
         if( ibndy.eq.1 )then
           call MPI_ISEND(ni,1,MPI_INTEGER,0,33,MPI_COMM_WORLD,req1,ierr)
           call MPI_IRECV(radbc(1,k),ni,MPI_REAL,0,34,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(req1,mpi_status_ignore,ierr)
           call MPI_WAIT(reqs,mpi_status_ignore,ierr)
         endif
-      ELSE
+      else
         if( (aname.eq.'radbcs') .or. (aname.eq.'radbcn' .and. nodey.eq.1) )then
           do i=1,ni
             radbc(i,k) = dumx(i)
@@ -2408,7 +2408,7 @@
           call MPI_ISEND(dumx(myi1p(proc+1)),nirecv,MPI_REAL,proc,34,MPI_COMM_WORLD,reqs,ierr)
           call MPI_WAIT(reqs,mpi_status_ignore,ierr)
         enddo
-      ENDIF
+      endif
 #endif
 
       end subroutine  readrbcsn
@@ -2462,7 +2462,7 @@
 
 !-------------------------------------------------------------------------------
 
-    rf1:  IF( restart_filetype.eq.1 .or. restart_filetype.eq.2 )THEN
+    rf1:  if( restart_filetype.eq.1 .or. restart_filetype.eq.2 )then
 
     if(myid.eq.0) print *,aname
 
@@ -2477,7 +2477,7 @@
     tag = 1
 #endif
 
-    kloop:  DO k=numk1,numk2
+    kloop:  do k=numk1,numk2
 
 #ifndef MPI
       !-------------------- non-MPI section --------------------!
@@ -2499,7 +2499,7 @@
       endif
 #endif
 #else
-      iamnodeleader:  IF(myid.ne.nodeleader)THEN
+      iamnodeleader:  if(myid.ne.nodeleader)then
         ! ordinary processor ... send data to nodeleader:
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -2511,7 +2511,7 @@
         call MPI_ISEND(dat1(1,1),d3i*d3j,MPI_REAL,nodeleader,tag,MPI_COMM_WORLD,reqs,ierr)
         call MPI_WAIT(reqs,MPI_STATUS_IGNORE,ierr)
         ! DONE, ordinary processors
-      ELSE
+      else
         ! begin nodeleader section:
         if( recv1 )then
           ! start receives from all other processors on a node:
@@ -2519,7 +2519,7 @@
             call MPI_IRECV(dat3(1,1,proc),d3i*d3j,MPI_REAL,proc,tag,MPI_COMM_WORLD,reqt(proc-myid),ierr)
           enddo
         endif
-        iammsk:  IF(myid.ne.msk)THEN
+        iammsk:  if(myid.ne.msk)then
           ! nodeleader, not proc msk:
 !$omp parallel do default(shared)  &
 !$omp private(i,j)
@@ -2536,7 +2536,7 @@
           call MPI_WAIT(reqs,MPI_STATUS_IGNORE,ierr)
           recv1 = .true.
           ! DONE, nodeleader (not proc msk)
-        ELSE
+        else
           ! proc msk:
           if( recv2 )then
             ! start receives from other nodeleaders:
@@ -2629,7 +2629,7 @@
           enddo
           ! DONE, proc msk
           ! processor is ready to write.
-          IF( k.lt.numk2 )THEN
+          if( k.lt.numk2 )then
             ! start receives for next level:
             do proc=myid+1,myid+(ppnode-1)
               call MPI_IRECV(dat3(1,1,proc),d3i*d3j,MPI_REAL,proc,tag+2,MPI_COMM_WORLD,reqt(proc-myid),ierr)
@@ -2644,18 +2644,18 @@
               recv2 = .false.
 !!!            ENDIF
 !!!#endif
-          ENDIF
-        ENDIF  iammsk
-      ENDIF  iamnodeleader
+          endif
+        endif  iammsk
+      endif  iamnodeleader
 #endif
 
         ! WRITE DATA:
-        IF( myid.eq.msk )THEN
+        if( myid.eq.msk )then
           !---   write data   ------------------!
-          IF( restart_format.eq.1 )THEN
+          if( restart_format.eq.1 )then
             write(nfile,rec=orec) ((dat2(i,j),i=1,nxr),j=1,nyr)
 #ifdef NETCDF
-          ELSEIF( restart_format.eq.2 )THEN
+          elseif( restart_format.eq.2 )then
             ! ----- netcdf format -----
             if(numk1.eq.numk2)then
               status = nf90_put_var(ncid,varid,dat2,(/1,1,time_index/),(/d2i,d2j,1/))
@@ -2668,36 +2668,36 @@
               call stopcm1
             endif
 #endif
-          ENDIF
-        ENDIF
+          endif
+        endif
 
       !---  prepare for next level   -------!
-      IF( restart_format.eq.1 )THEN
+      if( restart_format.eq.1 )then
         orec = orec+1
 !!!#ifdef MPI
 !!!        msk = msk+ppnode
 !!!        if( msk.ge.numprocs ) msk = msk-numprocs
 !!!#endif
-      ENDIF
+      endif
 #ifdef MPI
       tag = tag+2
 #endif
       !---  done with this level   ---------!
-    ENDDO  kloop
+    enddo  kloop
 
-    ENDIF  rf1
+    endif  rf1
 
 !-------------------------------------------------------------------------------
 
 #ifdef MPI
-    rf2:  IF( restart_filetype.eq.3 )THEN
+    rf2:  if( restart_filetype.eq.3 )then
 
       call    writer2(numi,numj,numk1,numk2,nxr,nyr,var,aname,           &
                       ni,nj,ngxy,myid,numprocs,nodex,nodey,orec,nfile,   &
                       ncid,time_index,restart_format,restart_filetype,myi1p,myi2p,myj1p,myj2p,   &
                       dat1(1,1),dat2(1,1),dat3(1,1,0),reqt,ppnode,d3n,d3t,mynode,nodeleader,nodes,d2i,d2j,d3i,d3j)
 
-    ENDIF  rf2
+    endif  rf2
 #endif
 
 !-------------------------------------------------------------------------------
@@ -2799,8 +2799,8 @@
     integer :: reqs,index,index2,n,nn,nnn,fooi,fooj,proc,ierr,ntot,n1,n2,tag
     logical :: recv1,recv2
 
-    DO k=numk1,numk2
-      IF(myid.ne.nodeleader)THEN
+    do k=numk1,numk2
+      if(myid.ne.nodeleader)then
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
         do j=1,numj
@@ -2810,7 +2810,7 @@
         enddo
         call MPI_ISEND(dat1,d3i*d3j,MPI_REAL,nodeleader,k,MPI_COMM_WORLD,reqs,ierr)
         call MPI_WAIT(reqs,mpi_status_ignore,ierr)
-      ELSE
+      else
         do proc=myid+1,myid+(ppnode-1)
           call MPI_IRECV(dat3(1,1,proc),d3i*d3j,MPI_REAL,proc,k,MPI_COMM_WORLD,reqt(proc-myid),ierr)
         enddo
@@ -2835,8 +2835,8 @@
           enddo
         enddo
         write(50) dat2
-      ENDIF
-    ENDDO
+      endif
+    enddo
 
     return
     end subroutine writer2
@@ -2847,4 +2847,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE restart_write_module
+  end module restart_write_module

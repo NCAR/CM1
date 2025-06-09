@@ -1,4 +1,4 @@
-  MODULE adv_module
+  module adv_module
 
   implicit none
 
@@ -9,7 +9,7 @@
                                          !  2 = uv terms
                                          !  3 = uvw & uv terms
 
-  CONTAINS
+  contains
 
       subroutine advs(nrk,wflag,bflag,bsq,xh,rxh,arh1,arh2,uh,ruh,xf,vh,rvh,gz,rgz,mh,rmh,  &
                        rho0,rr0,rf0,rrf0,advx,advy,advz,dumx,dumy,dumz,mass,subs,divx,      &
@@ -73,13 +73,13 @@
 !----------------------------------------------------------------
 
       doweno = .false.
-      IF( wflag.eq.1 )THEN
-        IF( (advwenos.eq.1) .or. (advwenos.eq.2.and.nrk.eq.nrkmax) ) doweno = .true.
-      ENDIF
+      if( wflag.eq.1 )then
+        if( (advwenos.eq.1) .or. (advwenos.eq.2.and.nrk.eq.nrkmax) ) doweno = .true.
+      endif
 
-      IF(diffit.eq.1)THEN
+      if(diffit.eq.1)then
         coef = kdiff6/64.0/dt
-      ENDIF
+      endif
 
 !-----------------
 
@@ -96,15 +96,15 @@
       if( bflag.eq.1 )then
 !$omp parallel do default(shared)   &
 !$omp private(k)
-        DO k=1,nk
+        do k=1,nk
           dumk1(k) = 0.0d0
           dumk2(k) = 0.0d0
-        ENDDO
+        enddo
       endif
 
 !-----------------
 
-    hadvsection:  IF(axisymm.eq.1)THEN
+    hadvsection:  if(axisymm.eq.1)then
       call advsaxi(doweno,bflag,bsq,xh,rxh,arh1,arh2,uh,ruh,xf,vh,rvh,rmh,gz,rgz, &
                    rho0,rr0,rf0,rrf0,advx,dumx,mass,rru,s0,s,pdef,dt,weps,   &
                    hadvorder,flag,sw31,sw32,se31,se32,ss31,ss32,sn31,sn32)
@@ -117,12 +117,12 @@
       enddo
       enddo
       enddo
-    ELSE
+    else
 
 !----------------------------------------------------------------
 ! Advection in horizontal directions
 
-    IF( doweno )THEN
+    if( doweno )then
 
       if(     weno_order.eq.3 )then
 
@@ -147,7 +147,7 @@
 
       endif
 
-    ELSE
+    else
 
       if(     hadvorder.eq.2 )then
 
@@ -192,15 +192,15 @@
 
       endif
 
-    ENDIF
+    endif
 
-    IF( do_ib .and. hadvorder.ge.3 )THEN
-      IF( doweno )THEN
+    if( do_ib .and. hadvorder.ge.3 )then
+      if( doweno )then
         call   ib_side_weno(  1 ,ni,nj,nk,c1,c2,rru,rrv,dumx,dumy,s,hadvorder,bndy,hflxw,hflxe,hflxs,hflxn,weps,out3d)
-      ELSE
+      else
         call   ib_side_flx(  1 ,ni,nj,nk,c1,c2,rru,rrv,dumx,dumy,s,hadvorder,bndy,hflxw,hflxe,hflxs,hflxn,out3d)
-      ENDIF
-    ENDIF
+      endif
+    endif
 
     !-------------------------------------------------------
     !  open bc:  set hadv to zero at inflow
@@ -209,56 +209,56 @@
         i=1
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           if(rru(i,j,k).ge.0.0)then
             dumx(i,j,k)=dumx(i+1,j,k)
           endif
           dumk1(k) = dumk1(k)+dumx(1,j,k)*rvh(j)*rmh(1,j,k)
         enddo
-        ENDDO
+        enddo
       endif
 
       if(doite)then
         i=ni+1
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           if(rru(i,j,k).le.0.0)then
             dumx(i,j,k)=dumx(i-1,j,k)
           endif
           dumk1(k) = dumk1(k)-dumx(ni+1,j,k)*rvh(j)*rmh(ni+1,j,k)
         enddo
-        ENDDO
+        enddo
       endif
 
       if(doits)then
         j=1
 !$omp parallel do default(shared)   &
 !$omp private(i,k)
-        DO k=1,nk
+        do k=1,nk
         do i=1,ni
           if(rrv(i,j,k).ge.0.0)then
             dumy(i,j,k)=dumy(i,j+1,k)
           endif
           dumk2(k) = dumk2(k)+dumy(i,1,k)*ruh(i)*rmh(i,1,k)
         enddo
-        ENDDO
+        enddo
       endif
 
       if(doitn)then
         j=nj+1
 !$omp parallel do default(shared)   &
 !$omp private(i,k)
-        DO k=1,nk
+        do k=1,nk
         do i=1,ni
           if(rrv(i,j,k).le.0.0)then
             dumy(i,j,k)=dumy(i,j-1,k)
           endif
           dumk2(k) = dumk2(k)-dumy(i,nj+1,k)*ruh(i)*rmh(i,nj+1,k)
         enddo
-        ENDDO
+        enddo
       endif
 
     !-------------------------------------------------------
@@ -280,75 +280,75 @@
     !  open bc:  set hadv to zero at inflow
     !            (here, we subtract-off the divx piece)
 
-      IF(doitw)THEN
+      if(doitw)then
         i=1
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           if(rru(1,j,k).ge.0.0)then
             advx(i,j,k)=advx(i,j,k)-s(i,j,k)*(rru(i+1,j,k)-rru(i,j,k))*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
-      IF(doite)THEN
+      if(doite)then
         i=ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
           if(rru(ni+1,j,k).le.0.0)then
             advx(i,j,k)=advx(i,j,k)-s(i,j,k)*(rru(i+1,j,k)-rru(i,j,k))*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
-      IF(doits)THEN
+      if(doits)then
         j=1
 !$omp parallel do default(shared)   &
 !$omp private(i,k)
-        DO k=1,nk
+        do k=1,nk
         do i=1,ni
           if(rrv(i,1,k).ge.0.0)then
             advy(i,j,k)=advy(i,j,k)-s(i,j,k)*(rrv(i,j+1,k)-rrv(i,j,k))*rdy*vh(j)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
-      IF(doitn)THEN
+      if(doitn)then
         j=nj
 !$omp parallel do default(shared)   &
 !$omp private(i,k)
-        DO k=1,nk
+        do k=1,nk
         do i=1,ni
           if(rrv(i,nj+1,k).le.0.0)then
             advy(i,j,k)=advy(i,j,k)-s(i,j,k)*(rrv(i,j+1,k)-rrv(i,j,k))*rdy*vh(j)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
     !-------------------------------------------------------
     ! 6th-order diffusion-s:
-    IF(diffit.eq.1)THEN
-      IF( dobud .and. nrk.eq.nrkmax .and. sd_hediff.ge.1 )THEN
+    if(diffit.eq.1)then
+      if( dobud .and. nrk.eq.nrkmax .and. sd_hediff.ge.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           diag(i,j,k,sd_hediff) = (advx(i,j,k)+advy(i,j,k))
         enddo
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       do i=1,ni+1
         dumx(i,j,k)=( 10.0*(s(i  ,j,k)-s(i-1,j,k))     &
@@ -393,58 +393,58 @@
         advy(i,j,k)=advy(i,j,k)+coef*(dumy(i,j+1,k)-dumy(i,j,k))*ri(i,j,k)*rho0(i,j,k)
       enddo
       enddo
-    ENDDO
-      IF( dobud .and. nrk.eq.nrkmax .and. sd_hediff.ge.1 )then
+    enddo
+      if( dobud .and. nrk.eq.nrkmax .and. sd_hediff.ge.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           diag(i,j,k,sd_hediff) = (advx(i,j,k)+advy(i,j,k))-diag(i,j,k,sd_hediff)
         enddo
         enddo
-        ENDDO
-      ENDIF
-    ENDIF
+        enddo
+      endif
+    endif
     !-------------------------------------------------------
 
 
 !----------------------------------------------------------------
 !  Misc for x-direction
 
-      IF(stat_qsrc.eq.1.and.(wbc.eq.2.or.ebc.eq.2).and.bflag.eq.1)THEN
+      if(stat_qsrc.eq.1.and.(wbc.eq.2.or.ebc.eq.2).and.bflag.eq.1)then
         tem0=dt*dy*dz
         do k=1,nk
           bsq=bsq+dumk1(k)*tem0
         enddo
-      ENDIF
+      endif
 
-      IF(pdscheme.eq.1 .and. pdef.eq.1)THEN
+      if(pdscheme.eq.1 .and. pdef.eq.1)then
         if(timestats.ge.1) time_advs=time_advs+mytime()
         call pdefx1(xh,arh1,arh2,uh,rho0,gz,rgz,rru,advx,dumx,mass,s0,s,dt,flag,sw31,sw32,se31,se32,reqsx)
-      ENDIF
+      endif
 
 !----------------------------------------------------------------
 !  Misc for y-direction
 
-      IF(stat_qsrc.eq.1.and.(sbc.eq.2.or.nbc.eq.2).and.bflag.eq.1)THEN
+      if(stat_qsrc.eq.1.and.(sbc.eq.2.or.nbc.eq.2).and.bflag.eq.1)then
         tem0=dt*dx*dz
         do k=1,nk
           bsq=bsq+dumk2(k)*tem0
         enddo
-      ENDIF
+      endif
 
-      IF(pdscheme.eq.1 .and. pdef.eq.1)THEN
+      if(pdscheme.eq.1 .and. pdef.eq.1)then
         if(timestats.ge.1) time_advs=time_advs+mytime()
         call pdefy1(vh,rho0,gz,rgz,rrv,advy,dumy,mass,s0,s,dt,flag,ss31,ss32,sn31,sn32,reqsy)
-      ENDIF
+      endif
 
-    ENDIF  hadvsection
+    endif  hadvsection
 
 !----------------------------------------------------------------
 ! Advection in z-direction
 
-    IF( doweno )THEN
+    if( doweno )then
 
       if(     weno_order.eq.3 )then
 
@@ -469,7 +469,7 @@
 
       endif
 
-    ELSE
+    else
 
       if(     vadvorder.eq.2 )then
 
@@ -514,19 +514,19 @@
 
       endif
 
-    ENDIF
+    endif
 
-    IF( do_ib .and. vadvorder.ge.3 )THEN
-      IF( doweno )THEN
+    if( do_ib .and. vadvorder.ge.3 )then
+      if( doweno )then
         call   ib_lwr_weno( 1 ,ni,nj,nk,c1,c2,rrw,dumz,s,kbdy,vadvorder,weps)
-      ELSE
+      else
         call   ib_lwr_flx(  1 ,ni,nj,nk,c1,c2,rrw,dumz,s,kbdy,vadvorder)
-      ENDIF
-    ENDIF
+      endif
+    endif
 
 !------
 
-    IF(terrain_flag)THEN
+    if(terrain_flag)then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j)
@@ -547,7 +547,7 @@
       enddo
       enddo
 
-    ELSE
+    else
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j)
@@ -568,12 +568,12 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 !  Large-scale subsidence:
 
-    IF( dobud .and. nrk.eq.nrkmax )THEN
+    if( dobud .and. nrk.eq.nrkmax )then
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
       do k=1,nk
@@ -583,9 +583,9 @@
       enddo
       enddo
       enddo
-    ENDIF
+    endif
 
-    IF( dolsw )THEN
+    if( dolsw )then
       ! vertical advection from specified large-scale w profile:
 
       call     wsub(ni  ,nj  ,nk  ,s  ,wprof,c1,c2,mh,rr0,rf0,weps,dumz,subs)
@@ -602,29 +602,29 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 !  Misc for z-direction
 
-      IF(pdscheme.eq.1 .and. pdef.eq.1)THEN
+      if(pdscheme.eq.1 .and. pdef.eq.1)then
         if(timestats.ge.1) time_advs=time_advs+mytime()
         call pdefz(mh,rho0,gz,rgz,rdsf,rrw,advz,dumz,mass,s0,s,dt,flag)
-      ENDIF
+      endif
 
 !----------------------------------------------------------------
 !  Finish pdefxy:
 
-      IF(pdscheme.eq.1 .and. pdef.eq.1 .and. axisymm.eq.0)THEN
+      if(pdscheme.eq.1 .and. pdef.eq.1 .and. axisymm.eq.0)then
         if(timestats.ge.1) time_advs=time_advs+mytime()
         call pdefx2(xh,arh1,arh2,uh,rho0,gz,rgz,rru,advx,dumx,mass,s0,s,dt,flag,sw31,sw32,se31,se32,reqsx)
         call pdefy2(vh,rho0,gz,rgz,rrv,advy,dumy,mass,s0,s,dt,flag,ss31,ss32,sn31,sn32,reqsy)
-      ENDIF
+      endif
 
 !----------------------------------------------------------------
 !  Total advection tendency:
 
-    IF(terrain_flag)THEN
+    if(terrain_flag)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -637,7 +637,7 @@
       enddo
       enddo
 
-    ELSE
+    else
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -650,18 +650,18 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 !  Diagnostics:
 
   doingsbud:  &
-  IF( dobud .and. nrk.eq.nrkmax )THEN
+  if( dobud .and. nrk.eq.nrkmax )then
   if( sd_hadv.ge.1 .and. sd_vadv.ge.1 )then
     !--------
     ! advective tendencies:
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -676,7 +676,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -689,8 +689,8 @@
                 + s(i,j,k)*( (rrw(i,j,k+1)-rrw(i,j,k))*rdz*mh(1,1,k) )  )*rr0(1,1,k)
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -705,10 +705,10 @@
         enddo
         enddo
         enddo
-    ENDIF
+    endif
   endif
     !--------
-    IF( sd_lsw.ge.1 )THEN
+    if( sd_lsw.ge.1 )then
       ! large-scale subsidence:
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -719,27 +719,27 @@
       enddo
       enddo
       enddo
-    ENDIF
+    endif
     !--------
-    IF( diffit.eq.1 .and. sd_hediff.ge.1 .and. sd_hadv.ge.1 )THEN
+    if( diffit.eq.1 .and. sd_hediff.ge.1 .and. sd_hadv.ge.1 )then
       ! subtract-off diffusion from advection:
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       do i=1,ni
         diag(i,j,k,sd_hadv) = diag(i,j,k,sd_hadv)-diag(i,j,k,sd_hediff)
       enddo
       enddo
-      ENDDO
-    ENDIF
+      enddo
+    endif
     !--------
     gethidiffs:  &
-    IF( sd_hidiff.ge.1 .and. sd_hadv.ge.1 )THEN
+    if( sd_hidiff.ge.1 .and. sd_hadv.ge.1 )then
       ! horiz implicit diffusion tendency:
       ! step1: get non-diffusive advective fluxes:
       ! buh31a !
-    IF( axisymm.eq.0 )THEN
+    if( axisymm.eq.0 )then
       if(     hadvorder.eq.3 .or. ( advwenos.ge.1 .and. weno_order.eq.3 ) )then
         call     hadv_flx4(  1 ,ni,nj,nk,c1,c2,rru,rrv,dumx,dumy,s)
       elseif( hadvorder.eq.5 .or. ( advwenos.ge.1 .and. weno_order.eq.5 ) )then
@@ -752,7 +752,7 @@
         print *,' 13941 '
         call stopcm1
       endif
-    ELSE
+    else
       if(     hadvorder.eq.3 .or. ( advwenos.ge.1 .and. weno_order.eq.3 ) )then
         hadv = 4
       elseif( hadvorder.eq.5 .or. ( advwenos.ge.1 .and. weno_order.eq.5 ) )then
@@ -768,11 +768,11 @@
       call advsaxi(.false.,bflag,bsq,xh,rxh,arh1,arh2,uh,ruh,xf,vh,rvh,rmh,gz,rgz, &
                    rho0,rr0,rf0,rrf0,advx,dumx,mass,rru,s0,s, 0  ,dt,weps,   &
                    hadv     ,flag,sw31,sw32,se31,se32,ss31,ss32,sn31,sn32)
-    ENDIF
+    endif
       ! step2: get non-diffusive and diffusive components of advection:
       ! buh41 !
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -790,7 +790,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -804,8 +804,8 @@
           diag(i,j,k,sd_hidiff) = tot-ndiff
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -823,11 +823,11 @@
         enddo
         enddo
         enddo
-    ENDIF
-    ENDIF  gethidiffs
+    endif
+    endif  gethidiffs
     !--------
     getvidiffs:  &
-    IF( sd_vidiff.ge.1 .and. sd_vadv.ge.1 )THEN
+    if( sd_vidiff.ge.1 .and. sd_vadv.ge.1 )then
       ! vert implicit diffusion tendency:
       ! step1: get non-diffusive advective fluxes:
       ! buh32a !
@@ -853,7 +853,7 @@
       enddo
       ! step2: get non-diffusive and diffusive components of advection:
       ! buh42a !
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
         ! no terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -869,7 +869,7 @@
         enddo
         enddo
         enddo
-    ELSE
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -885,10 +885,10 @@
         enddo
         enddo
         enddo
-    ENDIF
-    ENDIF  getvidiffs
+    endif
+    endif  getvidiffs
     !--------
-  ENDIF  doingsbud
+  endif  doingsbud
 
 !----------------------------------------------------------------
  
@@ -950,12 +950,12 @@
 !------------------------------------------------------------
 
       doweno = .false.
-      IF( (advwenov.eq.1) .or. (advwenov.eq.2.and.nrk.eq.nrkmax) ) doweno = .true.
+      if( (advwenov.eq.1) .or. (advwenov.eq.2.and.nrk.eq.nrkmax) ) doweno = .true.
       weps = 100.0*epsilon
 
-      IF( idiff.ge.1 .and. difforder.eq.6 )THEN
+      if( idiff.ge.1 .and. difforder.eq.6 )then
         coef = kdiff6/64.0/dt
-      ENDIF
+      endif
 
 !-----------------
 
@@ -977,8 +977,8 @@
       doitw = .false.
       doite = .false.
 
-      IF(wbc.eq.2 .and. ibw.eq.1) doitw = .true.
-      IF(ebc.eq.2 .and. ibe.eq.1) doite = .true.
+      if(wbc.eq.2 .and. ibw.eq.1) doitw = .true.
+      if(ebc.eq.2 .and. ibe.eq.1) doite = .true.
 
 !-----------------
 
@@ -988,12 +988,12 @@
       doits = .false.
       doitn = .false.
 
-      IF(sbc.eq.2 .and. ibs.eq.1) doits = .true.
-      IF(nbc.eq.2 .and. ibn.eq.1) doitn = .true.
+      if(sbc.eq.2 .and. ibs.eq.1) doits = .true.
+      if(nbc.eq.2 .and. ibn.eq.1) doitn = .true.
 
 !----------------------------------------------------------------
 
-    hadvsection:  IF(axisymm.eq.1)THEN
+    hadvsection:  if(axisymm.eq.1)then
       call advuaxi(doweno,arh1,arh2,xf,rxf,arf1,arf2,uf,vh,rho0,rr0,rf0,rrf0,dumx,advx,rru,u3d,hadvordrv)
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -1004,12 +1004,12 @@
       enddo
       enddo
       enddo
-    ELSE
+    else
 
 !----------------------------------------------------------------
 ! Advection in horizontal directions
 
-    IF( doweno )THEN
+    if( doweno )then
 
       if(     weno_order.eq.3 )then
 
@@ -1034,7 +1034,7 @@
 
       endif
 
-    ELSE
+    else
 
       if(     hadvordrv.eq.2 )then
 
@@ -1079,15 +1079,15 @@
 
       endif
 
-    ENDIF
+    endif
 
-    IF( do_ib .and. hadvordrv.ge.3 )THEN
-      IF( doweno )THEN
+    if( do_ib .and. hadvordrv.ge.3 )then
+      if( doweno )then
         call   ib_side_weno(  2 ,ni+1,nj,nk,c1,c2,rru,rrv,dumx,dumy,u3d,hadvordrv,bndy,hflxw,hflxe,hflxs,hflxn,weps)
-      ELSE
+      else
         call   ib_side_flx(  2 ,ni+1,nj,nk,c1,c2,rru,rrv,dumx,dumy,u3d,hadvordrv,bndy,hflxw,hflxe,hflxs,hflxn)
-      ENDIF
-    ENDIF
+      endif
+    endif
 
     !-------------------------------------------------------
     !  open bc:  set hadv to zero at inflow
@@ -1136,7 +1136,7 @@
     !  open bc:  set hadv to zero at inflow
     !            (here, we subtract-off the divx piece)
 
-      IF(doits)THEN
+      if(doits)then
         j=1
 !$omp parallel do default(shared)   &
 !$omp private(i,k)
@@ -1149,9 +1149,9 @@
           endif
         enddo
         enddo
-      ENDIF
+      endif
 
-      IF(doitn)THEN
+      if(doitn)then
         j=nj
 !$omp parallel do default(shared)   &
 !$omp private(i,k)
@@ -1164,25 +1164,25 @@
           endif
         enddo
         enddo
-      ENDIF
+      endif
 
     !-------------------------------------------------------
     ! 6th-order diffusion-u:
-    IF( idiff.ge.1 .and. difforder.eq.6 )THEN
-      IF( doubud .and. nrk.eq.nrkmax .and. ud_hediff.ge.1 )THEN
+    if( idiff.ge.1 .and. difforder.eq.6 )then
+      if( doubud .and. nrk.eq.nrkmax .and. ud_hediff.ge.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni+1
           udiag(i,j,k,ud_hediff) = (advx(i,j,k)+advy(i,j,k))
         enddo
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj
       do i=1,ni+2
         dumx(i,j,k)=( 10.0*(u3d(i  ,j,k)-u3d(i-1,j,k))     &
@@ -1227,30 +1227,30 @@
         advy(i,j,k)=advy(i,j,k)+coef*(dumy(i,j+1,k)-dumy(i,j,k))*(rho0(i-1,j,k)+rho0(i,j,k))/(rho(i-1,j,k)+rho(i,j,k))
       enddo
       enddo
-    ENDDO
-      IF( doubud .and. nrk.eq.nrkmax .and. ud_hediff.ge.1 )THEN
+    enddo
+      if( doubud .and. nrk.eq.nrkmax .and. ud_hediff.ge.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni+1
           udiag(i,j,k,ud_hediff) = (advx(i,j,k)+advy(i,j,k))-udiag(i,j,k,ud_hediff)
         enddo
         enddo
-        ENDDO
-      ENDIF
-    ENDIF
+        enddo
+      endif
+    endif
     !-------------------------------------------------------
 
 
-    ENDIF  hadvsection
+    endif  hadvsection
 
 !----------------------------------------------------------------
 ! Advection in z-direction  (Cartesian grid)
 
-  vadvu:  IF(axisymm.eq.0)THEN
+  vadvu:  if(axisymm.eq.0)then
 
-    IF( doweno )THEN
+    if( doweno )then
 
       if(     weno_order.eq.3 )then
 
@@ -1275,7 +1275,7 @@
 
       endif
 
-    ELSE
+    else
 
       if(     vadvordrv.eq.2 )then
 
@@ -1320,19 +1320,19 @@
 
       endif
 
-    ENDIF
+    endif
 
-    IF( do_ib .and. vadvordrv.ge.3 )THEN
-      IF( doweno )THEN
+    if( do_ib .and. vadvordrv.ge.3 )then
+      if( doweno )then
         call   ib_lwr_weno( 2 ,ni+1,nj,nk,c1,c2,rrw,dumz,u3d,kbdy,vadvordrv,weps)
-      ELSE
+      else
         call   ib_lwr_flx(  2 ,ni+1,nj,nk,c1,c2,rrw,dumz,u3d,kbdy,vadvordrv)
-      ENDIF
-    ENDIF
+      endif
+    endif
 
 !------
 
-    IF(terrain_flag)THEN
+    if(terrain_flag)then
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -1364,7 +1364,7 @@
         enddo
         enddo
 
-    ELSE
+    else
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -1388,7 +1388,7 @@
         enddo
 
           !-----------------------------------------------------------------------------------------------------------
-        IF( do_ib .and. ( gk00fix.eq.1 .or. gk00fix.eq.3 ) )THEN
+        if( do_ib .and. ( gk00fix.eq.1 .or. gk00fix.eq.3 ) )then
           ! apply fix from Gallus and Klemp (2000, MWR, pg 1160)
           ! replace -w du/dz with -w dw/dx
           do k=1,kmaxib
@@ -1413,9 +1413,9 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
           !-----------------------------------------------------------------------------------------------------------
-        IF( do_ib .and. ( gk00fix.eq.2 .or. gk00fix.eq.3 ) )THEN
+        if( do_ib .and. ( gk00fix.eq.2 .or. gk00fix.eq.3 ) )then
           ! apply fix from Gallus and Klemp (2000, MWR, pg 1160)
           ! replace -w du/dz with -w dw/dx
           do k=1,kmaxib
@@ -1456,7 +1456,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
           !-----------------------------------------------------------------------------------------------------------
 
       ! cm1ib: moved uten
@@ -1472,24 +1472,24 @@
         enddo
         enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 
-    IF( dolsw )THEN
+    if( dolsw )then
       ! vertical advection from specified large-scale w profile:
 
       call     wsub(ni+1,nj  ,nk  ,u3d,wprof,c1,c2,mh,rr0,rf0,weps,dumz,subs)
 
-    ENDIF
+    endif
 
 !  end vadvu for Cartesian grid
 !----------------------------------------------------------------
 ! Advection in z-direction  (axisymmetric grid)
 
-  ELSEIF(axisymm.eq.1)THEN  vadvu
+  elseif(axisymm.eq.1)then  vadvu
 
-      IF(ebc.eq.3.or.ebc.eq.4) i2 = ni
+      if(ebc.eq.3.or.ebc.eq.4) i2 = ni
 
       call       vadv_axiu(doweno,arf1,arf2,c1,c2,rrw,u3d,dumz,weps)
 
@@ -1522,10 +1522,10 @@
         enddo
         enddo
 
-  ELSE
+  else
     print *,' 54525 '
     call stopcm1
-  ENDIF  vadvu
+  endif  vadvu
 
 !  end vadvu for axisymmetric grid
 !----------------------------------------------------------------
@@ -1534,12 +1534,12 @@
 !  Diagnostics:
 
   doingubud:  &
-  IF( doubud .and. nrk.eq.nrkmax )THEN
+  if( doubud .and. nrk.eq.nrkmax )then
   if( ud_hadv.ge.1 .and. ud_vadv.ge.1 )then
     !--------
     ! advective tendencies:
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -1559,7 +1559,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -1576,8 +1576,8 @@
                                  )*rr0(1,1,k)
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -1597,10 +1597,10 @@
         enddo
         enddo
         enddo
-    ENDIF
+    endif
   endif
     !--------
-    IF( ud_lsw.ge.1 )THEN
+    if( ud_lsw.ge.1 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
       do k=1,nk
@@ -1610,29 +1610,29 @@
       enddo
       enddo
       enddo
-    ENDIF
+    endif
     !--------
-    IF( ud_hediff.ge.1 .and. ud_hadv.ge.1 )THEN
-    IF( idiff.ge.1 .and. difforder.eq.6 )THEN
+    if( ud_hediff.ge.1 .and. ud_hadv.ge.1 )then
+    if( idiff.ge.1 .and. difforder.eq.6 )then
       ! subtract-off diffusion from advection:
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj
       do i=1,ni+1
         udiag(i,j,k,ud_hadv) = udiag(i,j,k,ud_hadv)-udiag(i,j,k,ud_hediff)
       enddo
       enddo
-      ENDDO
-    ENDIF
-    ENDIF
+      enddo
+    endif
+    endif
     !--------
     gethidiffu:  &
-    IF( ud_hidiff.ge.1 .and. ud_hadv.ge.1 )THEN
+    if( ud_hidiff.ge.1 .and. ud_hadv.ge.1 )then
       ! horiz implicit diffusion tendency:
       ! step1: get non-diffusive advective fluxes:
       ! buh31a !
-    IF( axisymm.eq.0 )THEN
+    if( axisymm.eq.0 )then
       if(     hadvordrv.eq.3 .or. ( advwenov.ge.1 .and. weno_order.eq.3 ) )then
         call     hadv_flx4(  2 ,ni+1,nj,nk,c1,c2,rru,rrv,dumx,dumy,u3d)
       elseif( hadvordrv.eq.5 .or. ( advwenov.ge.1 .and. weno_order.eq.5 ) )then
@@ -1645,7 +1645,7 @@
         print *,' 13951 '
         call stopcm1
       endif
-    ELSE
+    else
       if(     hadvordrv.eq.3 .or. ( advwenov.ge.1 .and. weno_order.eq.3 ) )then
         hadv = 4
       elseif( hadvordrv.eq.5 .or. ( advwenov.ge.1 .and. weno_order.eq.5 ) )then
@@ -1659,11 +1659,11 @@
         call stopcm1
       endif
       call advuaxi(.false.,arh1,arh2,xf,rxf,arf1,arf2,uf,vh,rho0,rr0,rf0,rrf0,dumx,advx,rru,u3d,hadv)
-    ENDIF
+    endif
       ! step2: get non-diffusive and diffusive components of advection:
       ! buh41 !
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -1684,7 +1684,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -1700,8 +1700,8 @@
           udiag(i,j,k,ud_hidiff) = tot-ndiff
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -1722,11 +1722,11 @@
         enddo
         enddo
         enddo
-    ENDIF
-    ENDIF  gethidiffu
+    endif
+    endif  gethidiffu
     !--------
     getvidiffu:  &
-    IF( ud_vidiff.ge.1 .and. ud_vadv.ge.1 )THEN
+    if( ud_vidiff.ge.1 .and. ud_vadv.ge.1 )then
       ! vert implicit diffusion tendency:
       ! step1: get non-diffusive advective fluxes:
       ! buh32a !
@@ -1752,8 +1752,8 @@
       enddo
       ! step2: get non-diffusive and diffusive components of advection:
       ! buh42a !
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -1771,7 +1771,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -1788,8 +1788,8 @@
           udiag(i,j,k,ud_vidiff) = tot-ndiff
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -1807,14 +1807,14 @@
         enddo
         enddo
         enddo
-    ENDIF
-    ENDIF  getvidiffu
+    endif
+    endif  getvidiffu
     !--------
-  ENDIF  doingubud
+  endif  doingubud
 
 !----------------------------------------------------------------
 
-    IF( dolsw )THEN
+    if( dolsw )then
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
       do k=1,nk
@@ -1824,7 +1824,7 @@
       enddo
       enddo
       enddo
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 
@@ -1887,20 +1887,20 @@
 !------------------------------------------------------------
 
       doweno = .false.
-      IF( (advwenov.eq.1) .or. (advwenov.eq.2.and.nrk.eq.nrkmax) ) doweno = .true.
+      if( (advwenov.eq.1) .or. (advwenov.eq.2.and.nrk.eq.nrkmax) ) doweno = .true.
       weps = 100.0*epsilon
 
-      IF( idiff.ge.1 .and. difforder.eq.6 )THEN
+      if( idiff.ge.1 .and. difforder.eq.6 )then
         coef = kdiff6/64.0/dt
-      ENDIF
+      endif
 
 !-----------------
 
       doitw = .false.
       doite = .false.
 
-      IF(wbc.eq.2 .and. ibw.eq.1) doitw = .true.
-      IF(ebc.eq.2 .and. ibe.eq.1) doite = .true.
+      if(wbc.eq.2 .and. ibw.eq.1) doitw = .true.
+      if(ebc.eq.2 .and. ibe.eq.1) doite = .true.
 
 !-----------------
 
@@ -1922,12 +1922,12 @@
       doits = .false.
       doitn = .false.
 
-      IF(sbc.eq.2 .and. ibs.eq.1) doits = .true.
-      IF(nbc.eq.2 .and. ibn.eq.1) doitn = .true.
+      if(sbc.eq.2 .and. ibs.eq.1) doits = .true.
+      if(nbc.eq.2 .and. ibn.eq.1) doitn = .true.
 
 !----------------------------------------------------------------
 
-    hadvsection:  IF(axisymm.eq.1)THEN
+    hadvsection:  if(axisymm.eq.1)then
 
       j1 = 1
       j2 = 1
@@ -1943,11 +1943,11 @@
       enddo
       call advvaxi(doweno,xh,rxh,arh1,arh2,uh,xf,vf,rho0,rr0,rf0,rrf0,dumx,advx,advz,rru,hadvordrv)
 
-    ELSE
+    else
 
 !-----------------
 
-    IF( doweno )THEN
+    if( doweno )then
 
       if(     weno_order.eq.3 )then
 
@@ -1972,7 +1972,7 @@
 
       endif
 
-    ELSE
+    else
 
       if(     hadvordrv.eq.2 )then
 
@@ -2017,15 +2017,15 @@
 
       endif
 
-    ENDIF
+    endif
 
-    IF( do_ib .and. hadvordrv.ge.3 )THEN
-      IF( doweno )THEN
+    if( do_ib .and. hadvordrv.ge.3 )then
+      if( doweno )then
         call   ib_side_weno(  3 ,ni,nj+1,nk,c1,c2,rru,rrv,dumx,dumy,v3d,hadvordrv,bndy,hflxw,hflxe,hflxs,hflxn,weps)
-      ELSE
+      else
         call   ib_side_flx(  3 ,ni,nj+1,nk,c1,c2,rru,rrv,dumx,dumy,v3d,hadvordrv,bndy,hflxw,hflxe,hflxs,hflxn)
-      ENDIF
-    ENDIF
+      endif
+    endif
 
     !-------------------------------------------------------
     !  open bc:  set hadv to zero at inflow
@@ -2034,26 +2034,26 @@
         i=1
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=j1,j2
           if((rru(i,j,k)+rru(i,j-1,k)).ge.0.0)then
             dumx(i,j,k)=dumx(i+1,j,k)
           endif
         enddo
-        ENDDO
+        enddo
       endif
 
       if(doite)then
         i=ni+1
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=j1,j2
           if((rru(i,j,k)+rru(i,j-1,k)).le.0.0)then
             dumx(i,j,k)=dumx(i-1,j,k)
           endif
         enddo
-        ENDDO
+        enddo
       endif
 
     !-------------------------------------------------------
@@ -2074,11 +2074,11 @@
     !  open bc:  set hadv to zero at inflow
     !            (here, we subtract-off the divx piece)
 
-      IF(doitw)THEN
+      if(doitw)then
         i=1
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=j1,j2
           if((rru(1,j,k)+rru(1,j-1,k)).ge.0.0)then
             advx(i,j,k)=advx(i,j,k)-v3d(i,j,k)*0.5*(            &
@@ -2086,14 +2086,14 @@
                    +(rru(i+1,j  ,k)-rru(i,j  ,k)) )*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
-      IF(doite)THEN
+      if(doite)then
         i=ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=j1,j2
           if((rru(ni+1,j,k)+rru(ni+1,j-1,k)).le.0.0)then
             advx(i,j,k)=advx(i,j,k)-v3d(i,j,k)*0.5*(            &
@@ -2101,26 +2101,26 @@
                    +(rru(i+1,j  ,k)-rru(i,j  ,k)) )*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
     !-------------------------------------------------------
     ! 6th-order diffusion-v:
-    IF( idiff.ge.1 .and. difforder.eq.6 )THEN
-      IF( dovbud .and. nrk.eq.nrkmax .and. vd_hediff.ge.1 )THEN
+    if( idiff.ge.1 .and. difforder.eq.6 )then
+      if( dovbud .and. nrk.eq.nrkmax .and. vd_hediff.ge.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj+1
         do i=1,ni
           vdiag(i,j,k,vd_hediff) = (advx(i,j,k)+advy(i,j,k))
         enddo
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO k=1,nk
+    do k=1,nk
       do j=1,nj+1
       do i=1,ni+1
         dumx(i,j,k)=( 10.0*(v3d(i  ,j,k)-v3d(i-1,j,k))     &
@@ -2165,29 +2165,29 @@
         advy(i,j,k)=advy(i,j,k)+coef*(dumy(i,j+1,k)-dumy(i,j,k))*(rho0(i,j-1,k)+rho0(i,j,k))/(rho(i,j-1,k)+rho(i,j,k))
       enddo
       enddo
-    ENDDO
-      IF( dovbud .and. nrk.eq.nrkmax .and. vd_hediff.ge.1 )THEN
+    enddo
+      if( dovbud .and. nrk.eq.nrkmax .and. vd_hediff.ge.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj+1
         do i=1,ni
           vdiag(i,j,k,vd_hediff) = (advx(i,j,k)+advy(i,j,k))-vdiag(i,j,k,vd_hediff)
         enddo
         enddo
-        ENDDO
-      ENDIF
-    ENDIF
+        enddo
+      endif
+    endif
     !-------------------------------------------------------
 
 
-    ENDIF  hadvsection
+    endif  hadvsection
 
 !----------------------------------------------------------------
 ! Advection in z-direction
 
 
-    IF( doweno )THEN
+    if( doweno )then
 
       if(     weno_order.eq.3 )then
 
@@ -2212,7 +2212,7 @@
 
       endif
 
-    ELSE
+    else
 
       if(     vadvordrv.eq.2 )then
 
@@ -2257,19 +2257,19 @@
 
       endif
 
-    ENDIF
+    endif
 
-    IF( do_ib .and. vadvordrv.ge.3 )THEN
-      IF( doweno )THEN
+    if( do_ib .and. vadvordrv.ge.3 )then
+      if( doweno )then
         call   ib_lwr_weno( 3 ,ni,nj+1,nk,c1,c2,rrw,dumz,v3d,kbdy,vadvordrv,weps)
-      ELSE
+      else
         call   ib_lwr_flx(  3 ,ni,nj+1,nk,c1,c2,rrw,dumz,v3d,kbdy,vadvordrv)
-      ENDIF
-    ENDIF
+      endif
+    endif
 
 !------
 
-    IF(terrain_flag)THEN
+    if(terrain_flag)then
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -2301,10 +2301,10 @@
         enddo
         enddo
 
-    ELSE
+    else
 
     !--------
-    IF( axisymm.eq.0 )THEN
+    if( axisymm.eq.0 )then
       ! Cartesian grid:
 
         !$omp parallel do default(shared)   &
@@ -2329,7 +2329,7 @@
         enddo
 
           !-----------------------------------------------------------------------------------------------------------
-        IF( do_ib .and. ( gk00fix.eq.1 .or. gk00fix.eq.3 ) )THEN
+        if( do_ib .and. ( gk00fix.eq.1 .or. gk00fix.eq.3 ) )then
           ! apply fix from Gallus and Klemp (2000, MWR, pg 1160)
           do k=1,kmaxib
           do j=j1,j2
@@ -2353,9 +2353,9 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
           !-----------------------------------------------------------------------------------------------------------
-        IF( do_ib .and. ( gk00fix.eq.2 .or. gk00fix.eq.3 ) )THEN
+        if( do_ib .and. ( gk00fix.eq.2 .or. gk00fix.eq.3 ) )then
           ! apply fix from Gallus and Klemp (2000, MWR, pg 1160)
           do k=1,kmaxib
           do j=j1,j2
@@ -2391,7 +2391,7 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
           !-----------------------------------------------------------------------------------------------------------
 
       ! cm1ib: moved vten
@@ -2408,7 +2408,7 @@
         enddo
 
     !--------
-    ELSEIF( axisymm.eq.1 )THEN
+    elseif( axisymm.eq.1 )then
       ! axisymmetric grid:
 
         !$omp parallel do default(shared)   &
@@ -2438,30 +2438,30 @@
         enddo
         enddo
 
-    ENDIF
+    endif
         !--------
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 
-    IF( dolsw )THEN
+    if( dolsw )then
       ! vertical advection from specified large-scale w profile:
 
       call     wsub(ni  ,nj+1,nk  ,v3d,wprof,c1,c2,mh,rr0,rf0,weps,dumz,subs)
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 !  Diagnostics:
 
   doingvbud:  &
-  IF( dovbud .and. nrk.eq.nrkmax )THEN
-  if( vd_hadv.ge.1 .and. vd_vadv.ge.1 )THEN
+  if( dovbud .and. nrk.eq.nrkmax )then
+  if( vd_hadv.ge.1 .and. vd_vadv.ge.1 )then
     !--------
     ! advective tendencies:
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -2481,7 +2481,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -2496,8 +2496,8 @@
           vdiag(i,2,k,vd_vadv) = vdiag(i,1,k,vd_vadv)
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -2517,10 +2517,10 @@
         enddo
         enddo
         enddo
-    ENDIF
+    endif
   endif
     !--------
-    IF( vd_lsw.ge.1 )THEN
+    if( vd_lsw.ge.1 )then
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
       do k=1,nk
@@ -2530,29 +2530,29 @@
       enddo
       enddo
       enddo
-    ENDIF
+    endif
     !--------
-    IF( idiff.ge.1 .and. difforder.eq.6 )THEN
-    IF( vd_hediff.ge.1 .and. vd_hadv.ge.1 )THEN
+    if( idiff.ge.1 .and. difforder.eq.6 )then
+    if( vd_hediff.ge.1 .and. vd_hadv.ge.1 )then
       ! subtract-off diffusion from advection:
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
       do j=1,nj+1
       do i=1,ni
         vdiag(i,j,k,vd_hadv) = vdiag(i,j,k,vd_hadv)-vdiag(i,j,k,vd_hediff)
       enddo
       enddo
-      ENDDO
-    ENDIF
-    ENDIF
+      enddo
+    endif
+    endif
     !--------
     gethidiffv:  &
-    IF( vd_hidiff.ge.1 .and. vd_hadv.ge.1 )THEN
+    if( vd_hidiff.ge.1 .and. vd_hadv.ge.1 )then
       ! horiz implicit diffusion tendency:
       ! step1: get non-diffusive advective fluxes:
       ! buh31a !
-    IF( axisymm.eq.0 )THEN
+    if( axisymm.eq.0 )then
       if(     hadvordrv.eq.3 .or. ( advwenov.ge.1 .and. weno_order.eq.3 ) )then
         call     hadv_flx4(  3 ,ni,nj+1,nk,c1,c2,rru,rrv,dumx,dumy,v3d)
       elseif( hadvordrv.eq.5 .or. ( advwenov.ge.1 .and. weno_order.eq.5 ) )then
@@ -2565,7 +2565,7 @@
         print *,' 13961 '
         call stopcm1
       endif
-    ELSE
+    else
       if(     hadvordrv.eq.3 .or. ( advwenov.ge.1 .and. weno_order.eq.3 ) )then
         hadv = 4
       elseif( hadvordrv.eq.5 .or. ( advwenov.ge.1 .and. weno_order.eq.5 ) )then
@@ -2589,11 +2589,11 @@
       enddo
       enddo
       call advvaxi(.false.,xh,rxh,arh1,arh2,uh,xf,vf,rho0,rr0,rf0,rrf0,dumx,advx,advz,rru,hadv)
-    ENDIF
+    endif
       ! step2: get non-diffusive and diffusive components of advection:
       ! buh41 !
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -2614,7 +2614,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -2631,8 +2631,8 @@
           vdiag(i,2,k,vd_hidiff) = vdiag(i,1,k,vd_hidiff)
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -2653,11 +2653,11 @@
         enddo
         enddo
         enddo
-    ENDIF
-    ENDIF  gethidiffv
+    endif
+    endif  gethidiffv
     !--------
     getvidiffv:  &
-    IF( vd_vidiff.ge.1 .and. vd_vadv.ge.1 )THEN
+    if( vd_vidiff.ge.1 .and. vd_vadv.ge.1 )then
       ! vert implicit diffusion tendency:
       ! step1: get non-diffusive advective fluxes:
       ! buh32a !
@@ -2683,8 +2683,8 @@
       enddo
       ! step2: get non-diffusive and diffusive components of advection:
       ! buh42a !
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -2702,7 +2702,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -2719,8 +2719,8 @@
           vdiag(i,2,k,vd_vidiff) = vdiag(i,1,k,vd_vidiff)
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -2738,14 +2738,14 @@
         enddo
         enddo
         enddo
-    ENDIF
-    ENDIF  getvidiffv
+    endif
+    endif  getvidiffv
     !--------
-  ENDIF  doingvbud
+  endif  doingvbud
 
 !----------------------------------------------------------------
 
-    IF( dolsw )THEN
+    if( dolsw )then
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
       do k=1,nk
@@ -2755,7 +2755,7 @@
       enddo
       enddo
       enddo
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 
@@ -2820,12 +2820,12 @@
 !----------------------------------------------------------------
 
       doweno = .false.
-      IF( (advweno.eq.1) .or. (advweno.eq.2.and.nrk.eq.nrkmax) ) doweno = .true.
+      if( (advweno.eq.1) .or. (advweno.eq.2.and.nrk.eq.nrkmax) ) doweno = .true.
       weps = 100.0*epsilon
 
-      IF( idiff.ge.1 .and. difforder.eq.6 )THEN
+      if( idiff.ge.1 .and. difforder.eq.6 )then
         coef = kdiff6/64.0/dt
-      ENDIF
+      endif
 
 !-----------------
 
@@ -2839,7 +2839,7 @@
 
 !----------------------------------------------------------------
 
-    hadvsection:  IF(axisymm.eq.1)THEN
+    hadvsection:  if(axisymm.eq.1)then
       call advwaxi(doweno,xh,rxh,arh1,arh2,uh,xf,vh,rho0,rr0,rf0,rrf0,dumx,advx,rru,w3d,c1,c2,hadvorder)
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -2850,12 +2850,12 @@
       enddo
       enddo
       enddo
-    ELSE
+    else
 
 !----------------------------------------------------------------
 ! Advection in horizontal directions
 
-    IF( doweno )THEN
+    if( doweno )then
 
       if(     weno_order.eq.3 )then
 
@@ -2880,7 +2880,7 @@
 
       endif
 
-    ELSE
+    else
 
       if(     hadvorder.eq.2 )then
 
@@ -2925,15 +2925,15 @@
 
       endif
 
-    ENDIF
+    endif
 
-    IF( do_ib .and. hadvorder.ge.3 )THEN
-      IF( doweno )THEN
+    if( do_ib .and. hadvorder.ge.3 )then
+      if( doweno )then
         call   ib_side_weno(  4 ,ni,nj,nk+1,c1,c2,rru,rrv,dumx,dumy,w3d,hadvorder,bndy,hflxw,hflxe,hflxs,hflxn,weps)
-      ELSE
+      else
         call   ib_side_flx(  4 ,ni,nj,nk+1,c1,c2,rru,rrv,dumx,dumy,w3d,hadvorder,bndy,hflxw,hflxe,hflxs,hflxn)
-      ENDIF
-    ENDIF
+      endif
+    endif
 
     !-------------------------------------------------------
     !  open bc:  set hadv to zero at inflow
@@ -2942,7 +2942,7 @@
         i=1
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar,vbar,cc1,cc2)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
           cc2 = 0.5*(c2(i-1,j,k)+c2(i,j,k))
           cc1 = 1.0-cc2
@@ -2951,14 +2951,14 @@
             dumx(i,j,k)=dumx(i+1,j,k)
           endif
         enddo
-        ENDDO
+        enddo
       endif
 
       if(doite)then
         i=ni+1
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar,vbar,cc1,cc2)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
           cc2 = 0.5*(c2(i-1,j,k)+c2(i,j,k))
           cc1 = 1.0-cc2
@@ -2967,14 +2967,14 @@
            dumx(i,j,k)=dumx(i-1,j,k)
           endif
         enddo
-        ENDDO
+        enddo
       endif
 
       if(doits)then
         j=1
 !$omp parallel do default(shared)   &
 !$omp private(i,k,ubar,vbar,cc1,cc2)
-        DO k=2,nk
+        do k=2,nk
         do i=1,ni
           cc2 = 0.5*(c2(i,j-1,k)+c2(i,j,k))
           cc1 = 1.0-cc2
@@ -2983,14 +2983,14 @@
             dumy(i,j,k)=dumy(i,j+1,k)
           endif
         enddo
-        ENDDO
+        enddo
       endif
 
       if(doitn)then
         j=nj+1
 !$omp parallel do default(shared)   &
 !$omp private(i,k,ubar,vbar,cc1,cc2)
-        DO k=2,nk
+        do k=2,nk
         do i=1,ni
           cc2 = 0.5*(c2(i,j-1,k)+c2(i,j,k))
           cc1 = 1.0-cc2
@@ -2999,7 +2999,7 @@
             dumy(i,j,k)=dumy(i,j-1,k)
           endif
         enddo
-        ENDDO
+        enddo
       endif
 
     !-------------------------------------------------------
@@ -3020,11 +3020,11 @@
     !  open bc:  set hadv to zero at inflow
     !            (here, we subtract-off the divx piece)
 
-      IF(doitw)THEN
+      if(doitw)then
         i=1
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar,vbar,cc1,cc2)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
           cc2 = 0.5*(c2(0,j,k)+c2(1,j,k))
           cc1 = 1.0-cc2
@@ -3035,14 +3035,14 @@
                    +c2(i,j,k)*(rru(i+1,j,k  )-rru(i,j,k  )) )*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
-      IF(doite)THEN
+      if(doite)then
         i=ni
 !$omp parallel do default(shared)   &
 !$omp private(j,k,ubar,vbar,cc1,cc2)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
           cc2 = 0.5*(c2(ni,j,k)+c2(ni+1,j,k))
           cc1 = 1.0-cc2
@@ -3053,14 +3053,14 @@
                    +c2(i,j,k)*(rru(i+1,j,k  )-rru(i,j,k  )) )*rdx*uh(i)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
-      IF(doits)THEN
+      if(doits)then
         j=1
 !$omp parallel do default(shared)   &
 !$omp private(i,k,ubar,vbar,cc1,cc2)
-        DO k=2,nk
+        do k=2,nk
         do i=1,ni
           cc2 = 0.5*(c2(i,0,k)+c2(i,1,k))
           cc1 = 1.0-cc2
@@ -3071,14 +3071,14 @@
                           +c2(i,j,k)*(rrv(i,j+1,k  )-rrv(i,j,k  )) )*rdy*vh(j)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
-      IF(doitn)THEN
+      if(doitn)then
         j=nj
 !$omp parallel do default(shared)   &
 !$omp private(i,k,ubar,vbar,cc1,cc2)
-        DO k=2,nk
+        do k=2,nk
         do i=1,ni
           cc2 = 0.5*(c2(i,nj,k)+c2(i,nj+1,k))
           cc1 = 1.0-cc2
@@ -3089,26 +3089,26 @@
                           +c2(i,j,k)*(rrv(i,j+1,k  )-rrv(i,j,k  )) )*rdy*vh(j)
           endif
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
     !-------------------------------------------------------
     ! 6th-order diffusion-w:
-    IF( idiff.ge.1 .and. difforder.eq.6 )THEN
-      IF( dowbud .and. nrk.eq.nrkmax .and. wd_hediff.ge.1 )THEN
+    if( idiff.ge.1 .and. difforder.eq.6 )then
+      if( dowbud .and. nrk.eq.nrkmax .and. wd_hediff.ge.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
         do i=1,ni
           wdiag(i,j,k,wd_hediff) = (advx(i,j,k)+advy(i,j,k))
         enddo
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,cc1,cc2)
-    DO k=2,nk
+    do k=2,nk
       do j=1,nj
       do i=1,ni+1
         cc2 = 0.5*(c2(i-1,j,k)+c2(i,j,k))
@@ -3159,29 +3159,29 @@
         advy(i,j,k)=advy(i,j,k)+coef*(dumy(i,j+1,k)-dumy(i,j,k))*rf0(i,j,k)/(0.5*(rho(i,j,k-1)+rho(i,j,k)))
       enddo
       enddo
-    ENDDO
-      IF( dowbud .and. nrk.eq.nrkmax .and. wd_hediff.ge.1 )THEN
+    enddo
+      if( dowbud .and. nrk.eq.nrkmax .and. wd_hediff.ge.1 )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=2,nk
+        do k=2,nk
         do j=1,nj
         do i=1,ni
           wdiag(i,j,k,wd_hediff) = (advx(i,j,k)+advy(i,j,k))-wdiag(i,j,k,wd_hediff)
         enddo
         enddo
-        ENDDO
-      ENDIF
-    ENDIF
+        enddo
+      endif
+    endif
     !-------------------------------------------------------
 
 
-    ENDIF  hadvsection
+    endif  hadvsection
 
 !----------------------------------------------------------------
 ! Advection in z-direction
 
 
-    IF( doweno )THEN
+    if( doweno )then
 
       if(     weno_order.eq.3 )then
 
@@ -3206,7 +3206,7 @@
 
       endif
 
-    ELSE
+    else
 
       if(     vadvorder.eq.2 )then
 
@@ -3251,19 +3251,19 @@
 
       endif
 
-    ENDIF
+    endif
 
-    IF( do_ib .and. vadvorder.ge.3 )THEN
-      IF( doweno )THEN
+    if( do_ib .and. vadvorder.ge.3 )then
+      if( doweno )then
         call   ib_lwr_weno( 4 ,ni,nj,nk+1,c1,c2,rrw,dumz,w3d,kbdy,vadvorder,weps)
-      ELSE
+      else
         call   ib_lwr_flx(  4 ,ni,nj,nk+1,c1,c2,rrw,dumz,w3d,kbdy,vadvorder)
-      ENDIF
-    ENDIF
+      endif
+    endif
 
 !------
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -3277,7 +3277,7 @@
       enddo
       enddo
 
-      ELSE
+      else
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
@@ -3289,8 +3289,8 @@
       enddo
       enddo
 
-      IF( iamw )THEN
-        IF( do_ib .and. ( gk00fix.eq.1 .or. gk00fix.eq.3 ) )THEN
+      if( iamw )then
+        if( do_ib .and. ( gk00fix.eq.1 .or. gk00fix.eq.3 ) )then
           ! apply fix from Gallus and Klemp (2000, MWR, pg 1160)
           do k=2,kmaxib
           do j=1,nj
@@ -3330,8 +3330,8 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ENDIF
+        endif
+      endif
 
       ! cm1ib: moved wten
 
@@ -3346,18 +3346,18 @@
       enddo
       enddo
 
-      ENDIF
+      endif
 
 !----------------------------------------------------------------
 !  Diagnostics:
 
   doingwbud:  &
-  IF( dowbud .and. nrk.eq.nrkmax )THEN
+  if( dowbud .and. nrk.eq.nrkmax )then
   if( wd_hadv.ge.1 .and. wd_vadv.ge.1 )then
     !--------
     ! advective tendencies:
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -3377,7 +3377,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -3394,8 +3394,8 @@
                              )   )*rrf0(1,1,k)
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -3415,30 +3415,30 @@
         enddo
         enddo
         enddo
-    ENDIF
+    endif
   endif
     !--------
-    IF( idiff.ge.1 .and. difforder.eq.6 )THEN
-    IF( wd_hediff.ge.1 .and. wd_hadv.ge.1 )THEN
+    if( idiff.ge.1 .and. difforder.eq.6 )then
+    if( wd_hediff.ge.1 .and. wd_hadv.ge.1 )then
       ! subtract-off diffusion from advection:
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
-      DO k=2,nk
+      do k=2,nk
       do j=1,nj
       do i=1,ni
         wdiag(i,j,k,wd_hadv) = wdiag(i,j,k,wd_hadv)-wdiag(i,j,k,wd_hediff)
       enddo
       enddo
-      ENDDO
-    ENDIF
-    ENDIF
+      enddo
+    endif
+    endif
     !--------
     gethidiffw:  &
-    IF( wd_hidiff.ge.1 .and. wd_hadv.ge.1 )THEN
+    if( wd_hidiff.ge.1 .and. wd_hadv.ge.1 )then
       ! horiz implicit diffusion tendency:
       ! step1: get non-diffusive advective fluxes:
       ! buh31 !
-    IF( axisymm.eq.0 )THEN
+    if( axisymm.eq.0 )then
       if(     hadvorder.eq.3 .or. ( advwenov.ge.1 .and. weno_order.eq.3 ) )then
         call     hadv_flx4(  4 ,ni,nj,nk+1,c1,c2,rru,rrv,dumx,dumy,w3d)
       elseif( hadvorder.eq.5 .or. ( advwenov.ge.1 .and. weno_order.eq.5 ) )then
@@ -3451,7 +3451,7 @@
         print *,' 13971 '
         call stopcm1
       endif
-    ELSE
+    else
       if(     hadvorder.eq.3 .or. ( advwenov.ge.1 .and. weno_order.eq.3 ) )then
         hadv = 4
       elseif( hadvorder.eq.5 .or. ( advwenov.ge.1 .and. weno_order.eq.5 ) )then
@@ -3465,11 +3465,11 @@
         call stopcm1
       endif
       call advwaxi(.false.,xh,rxh,arh1,arh2,uh,xf,vh,rho0,rr0,rf0,rrf0,dumx,advx,rru,w3d,c1,c2,hadv)
-    ENDIF
+    endif
       ! step2: get non-diffusive and diffusive components of advection:
       ! buh41 !
-    IF(.not.terrain_flag)THEN
-      IF( axisymm.eq.0 )THEN
+    if(.not.terrain_flag)then
+      if( axisymm.eq.0 )then
         ! Cartesian grid:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -3490,7 +3490,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         ! axisymmetric grid:
         j=1
         !$omp parallel do default(shared)   &
@@ -3506,8 +3506,8 @@
           wdiag(i,j,k,wd_hidiff) = tot-ndiff
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -3528,11 +3528,11 @@
         enddo
         enddo
         enddo
-    ENDIF
-    ENDIF  gethidiffw
+    endif
+    endif  gethidiffw
     !--------
     getvidiffw:  &
-    IF( wd_vidiff.ge.1 .and. wd_vadv.ge.1 )THEN
+    if( wd_vidiff.ge.1 .and. wd_vadv.ge.1 )then
       ! vert implicit diffusion tendency:
       ! step1: get non-diffusive advective fluxes:
       ! buh32 !
@@ -3550,7 +3550,7 @@
       endif
       ! step2: get non-diffusive and diffusive components of advection:
       ! buh42a !
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
         ! without terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -3568,7 +3568,7 @@
         enddo
         enddo
         enddo
-    ELSE
+    else
         ! Cartesian with terrain:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,tot,ndiff)
@@ -3586,10 +3586,10 @@
         enddo
         enddo
         enddo
-    ENDIF
-    ENDIF  getvidiffw
+    endif
+    endif  getvidiffw
     !--------
-  ENDIF  doingwbud
+  endif  doingwbud
 
 !----------------------------------------------------------------
 
@@ -3603,4 +3603,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-  END MODULE adv_module
+  end module adv_module

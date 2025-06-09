@@ -1,13 +1,13 @@
 !LWRF:MODEL_LAYER:PHYSICS
 !
-MODULE module_bl_gfsedmf
+module module_bl_gfsedmf
 
 !!!#if (HWRF==1)
 
-CONTAINS
+contains
 
 !-------------------------------------------------------------------          
-   SUBROUTINE BL_GFSEDMF(U3D,V3D,TH3D,T3D,QV3D,QC3D,QI3D,P3D,PI3D, &
+   subroutine BL_GFSEDMF(U3D,V3D,TH3D,T3D,QV3D,QC3D,QI3D,P3D,PI3D, &
                   RUBLTEN,RVBLTEN,RTHBLTEN,                        &
                   RQVBLTEN,RQCBLTEN,RQIBLTEN,          	           & 
                   CP,G,ROVCP,R,ROVG,P_QI,P_FIRST_SCALAR,           &
@@ -31,10 +31,10 @@ CONTAINS
                   ims,ime, jms,jme, kms,kme,                       &
                   its,ite, jts,jte, kts,kte                        )
 !--------------------------------------------------------------------
-      USE MODULE_GFS_MACHINE , ONLY : kind_phys
+      use MODULE_GFS_MACHINE , ONLY : kind_phys
 !      USE MODULE_GFS_FUNCPHYS, only : fpvs
 !-------------------------------------------------------------------
-      IMPLICIT NONE
+      implicit none
 !-------------------------------------------------------------------
 !-- U3D         3D u-velocity interpolated to theta points (m/s)
 !-- V3D         3D v-velocity interpolated to theta points (m/s)
@@ -104,16 +104,16 @@ CONTAINS
 !-- kte         end index for k in tile
 !-------------------------------------------------------------------
 
-      INTEGER, INTENT(IN) ::            ids,ide, jds,jde, kds,kde,      &
+      integer, intent(in) ::            ids,ide, jds,jde, kds,kde,      &
                                         ims,ime, jms,jme, kms,kme,      &
                                         its,ite, jts,jte, kts,kte,      &
                                         P_QI,P_FIRST_SCALAR
 
 !!!#if (NMM_CORE==1)
-      LOGICAL , INTENT(IN)::            DISHEAT                                    !gopal's doing
+      logical , intent(in)::            DISHEAT                                    !gopal's doing
 !!!#endif
-      REAL,  DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(IN) ::  RTHRATEN         !Kwon
-      REAL,  DIMENSION(ims:ime, jms:jme), INTENT(OUT) ::              &
+      real,  dimension(ims:ime, jms:jme, kms:kme), intent(in) ::  RTHRATEN         !Kwon
+      real,  dimension(ims:ime, jms:jme), intent(out) ::              &
                                         HPBL2D,                         &    !ADDED BY KWON FOR SHALLOW CONV.
                                         EVAP2D,                         &    !ADDED BY KWON FOR SHALLOW CONV.
                                         HEAT2D                               !ADDED BY KWON FOR SHALLOW CONV.
@@ -125,16 +125,16 @@ CONTAINS
       logical,intent(in) :: pert_pbl
 !!!#endif
 !wang
-       REAL,  DIMENSION(ims:ime, jms:jme), INTENT(IN) ::              &
+       real,  dimension(ims:ime, jms:jme), intent(in) ::              &
                                          U10,                         &
                                          V10,                   &
                                          ZNT, xland
-       REAL,  DIMENSION(ims:ime, jms:jme), INTENT(INOUT) :: brcr,wscale,wscaleu,prkpp
+       real,  dimension(ims:ime, jms:jme), intent(inout) :: brcr,wscale,wscaleu,prkpp
 
-       REAL,  DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(OUT) :: DKU3D,DKT3D
+       real,  dimension(ims:ime, jms:jme, kms:kme), intent(out) :: DKU3D,DKT3D
 !wang
 
-      REAL,    INTENT(IN) ::                                            &
+      real,    intent(in) ::                                            &
                                         CP,                             &
                                         DT,                             &
                                         EP1,                            &
@@ -144,7 +144,7 @@ CONTAINS
                                         ROVCP,                          &
                                         ROVG 
 
-      REAL,    DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(IN) ::      & 
+      real,    dimension(ims:ime, jms:jme, kms:kme), intent(in) ::      & 
                                         DZ8W,                           &
                                         P3D,                            &
                                         PI3D,                           &
@@ -158,7 +158,7 @@ CONTAINS
                                         Z   
 
 
-      REAL,    DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(INOUT) ::   &
+      real,    dimension(ims:ime, jms:jme, kms:kme), intent(inout) ::   &
                                         RTHBLTEN,                       &
                                         RQCBLTEN,                       &
                                         RQIBLTEN,                       &
@@ -166,7 +166,7 @@ CONTAINS
                                         RUBLTEN,                        &
                                         RVBLTEN                        
 
-      REAL,    DIMENSION(ims:ime, jms:jme), INTENT(IN) ::               &
+      real,    dimension(ims:ime, jms:jme), intent(in) ::               &
                                         BR,                             &
                                         GZ1OZ0,                         &
                                         HFX,                            &
@@ -176,24 +176,24 @@ CONTAINS
                                         QFX,                            &
                                         TSK
  
-      REAL,    DIMENSION(ims:ime, jms:jme), INTENT(INOUT) ::            & 
+      real,    dimension(ims:ime, jms:jme), intent(inout) ::            & 
                                         PBL,                            &
                                         UST,                            &
                                         stau,                           &
                                         WSPD
 
-      REAL,    DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(INOUT) ::   &
+      real,    dimension(ims:ime, jms:jme, kms:kme), intent(inout) ::   &
                                         dissten,                        &
                                         dheat
 
-      INTEGER, DIMENSION(ims:ime, jms:jme), INTENT(OUT) ::              &
+      integer, dimension(ims:ime, jms:jme), intent(out) ::              &
                                         KPBL2D                         
 
 
 !--------------------------- LOCAL VARS ------------------------------
 
 
-      REAL     (kind=kind_phys), DIMENSION(its:ite, kts:kte) ::         &
+      real     (kind=kind_phys), dimension(its:ite, kts:kte) ::         &
                                         DEL,                            &
                                         DU,                             &
                                         DV,                             &
@@ -206,18 +206,18 @@ CONTAINS
                                         THRATEN,                        & !Kwon
                                         U1,                             &
                                         V1
-      REAL     (kind=kind_phys), DIMENSION(its:ite, 0:kte) :: diss
-      REAL     (kind=kind_phys), DIMENSION(its:ite, kts:kte-1) ::DKU,DKT
+      real     (kind=kind_phys), dimension(its:ite, 0:kte) :: diss
+      real     (kind=kind_phys), dimension(its:ite, kts:kte-1) ::DKU,DKT
 
-      REAL     (kind=kind_phys), DIMENSION(its:ite, kts:kte+1) ::       &
+      real     (kind=kind_phys), dimension(its:ite, kts:kte+1) ::       &
                                         PHII,                           & 
                                         PRSI
 
-      REAL     (kind=kind_phys), DIMENSION(its:ite, kts:kte, 3) ::      &
+      real     (kind=kind_phys), dimension(its:ite, kts:kte, 3) ::      &
                                         Q1,                             &
                                         RTG
 
-      REAL     (kind=kind_phys), DIMENSION(its:ite) ::                  &
+      real     (kind=kind_phys), dimension(its:ite) ::                  &
                                         DQSFC,                          &
                                         DTSFC,                          &
                                         DUSFC,                          &
@@ -238,17 +238,17 @@ CONTAINS
                                         TSEA,      &
                                         zorl,u10m,v10m,zol, xland1,brcr1d,wscale1d,wscaleu1d,prinv1d
 
-      REAL     (kind=kind_phys) ::                                      &
+      real     (kind=kind_phys) ::                                      &
                                         CPM,                            &
                                         cpmikj,                         &
                                         DELTIM,                         &
                                         FMTMP,                          &
                                         RRHOX
 
-      INTEGER, DIMENSION( its:ite ) ::                                  &
+      integer, dimension( its:ite ) ::                                  &
                                         KPBL , kinver
 
-      INTEGER ::                                                        &
+      integer ::                                                        &
                                         I,                              &
                                         IM,                             &
                                         J,                              &
@@ -282,15 +282,15 @@ CONTAINS
 
 !    write(0,*)'in gfsedmf PBL'
 
-   IF (P_QI.ge.P_FIRST_SCALAR) NTRAC=3
+   if (P_QI.ge.P_FIRST_SCALAR) NTRAC=3
 
  !! note 2015,08-19, if we consider rain water, then ntrac=4, and set q1(i,k,4)=QR
  !! here, we do not consider rain water
 
    jloop:  &
-   DO J=jts,jte
+   do J=jts,jte
 
-      DO i=its,ite
+      do i=its,ite
         RRHOX=(R*T3D(I,J,KTS)*(1.+EP1*QV3D(I,J,KTS)))/PSFC(I,J)
         CPM=CP*(1.+0.8*QV3D(i,j,kts))
         FMTMP=GZ1OZ0(i,j)-PSIM(i,j)
@@ -317,10 +317,10 @@ CONTAINS
         v10m(i)=v10(i,j)
         xland1(i)=xland(i,j)
         kinver(i)=kx
-      ENDDO
+      enddo
 
-      DO k=kts,kte
-        DO i=its,ite 
+      do k=kts,kte
+        do i=its,ite 
           DV(I,K) = 0.
           DU(I,K) = 0.
           TAU(I,K) = 0.
@@ -336,48 +336,48 @@ CONTAINS
           Q1(I,K,2) = QC3D(i,j,k)/(1.+QC3D(i,j,k))
           PRSL(I,K)=P3D(i,j,k)*.001
           dishx(i,k) = 0.0
-        ENDDO
-      ENDDO
+        enddo
+      enddo
 
-      DO k=kts,kte
-        DO i=its,ite 
+      do k=kts,kte
+        do i=its,ite 
           PRSLK(I,K)=(PRSL(i,k)*.01)**ROVCP
-        ENDDO
-      ENDDO
+        enddo
+      enddo
 
 
-      DO k=kts+1,kte
+      do k=kts+1,kte
         km=k-1
-        DO i=its,ite 
+        do i=its,ite 
           DEL(i,km)=PRSL(i,km)/ROVG*dz8w(i,j,km)/T3D(i,j,km)
           PRSI(i,k)=PRSI(i,km)-DEL(i,km)
           PHII(I,K)=(Z(i,j,k)-Z(i,j,kts))*G
           PHIL(I,KM)=0.5*(Z(i,j,k)+Z(i,j,km)-2.*Z(i,j,kts))*G
-        ENDDO
-      ENDDO
+        enddo
+      enddo
 
-      DO i=its,ite 
+      do i=its,ite 
         DEL(i,kte)=DEL(i,ktem)
         PRSI(i,ktep)=PRSI(i,kte)-DEL(i,ktem)
         PHII(I,KTEP)=PHII(I,KTE)+dz8w(i,j,kte)*G
         PHIL(I,KTE)=PHII(I,KTE)-PHIL(I,KTEM)+PHII(I,KTE)
-      ENDDO
+      enddo
 
-      IF (P_QI.ge.P_FIRST_SCALAR) THEN
-        DO k=kts,kte
-          DO i=its,ite 
+      if (P_QI.ge.P_FIRST_SCALAR) then
+        do k=kts,kte
+          do i=its,ite 
             Q1(I,K,3) = QI3D(i,j,k)/(1.+QI3D(i,j,k))
-          ENDDO
-        ENDDO
-      ENDIF
+          enddo
+        enddo
+      endif
 
-      DO l=1,ntrac
-        DO k=kts,kte
-          DO i=its,ite
+      do l=1,ntrac
+        do k=kts,kte
+          do i=its,ite
             RTG(I,K,L) = 0.
-          ENDDO
-        ENDDO
-      ENDDO
+          enddo
+        enddo
+      enddo
 
       wscale1d = 0.0
       wscaleu1d = 0.0
@@ -427,8 +427,8 @@ CONTAINS
 !=============================================================================
 
 
-      DO k=kts,kte
-        DO i=its,ite
+      do k=kts,kte
+        do i=its,ite
           RVBLTEN(I,J,K)=DV(I,K)
           RUBLTEN(I,J,K)=DU(I,K)
           RTHBLTEN(I,J,K)=TAU(I,K)/PI3D(I,J,K)
@@ -436,18 +436,18 @@ CONTAINS
           RQCBLTEN(I,J,K)=RTG(I,K,2)/(1.-Q1(I,K,2))**2
           dheat(i,j,k)=dishx(i,k)
           dissten(i,j,k)=diss(i,k-1)
-        ENDDO
-      ENDDO
+        enddo
+      enddo
 
-      IF (P_QI.ge.P_FIRST_SCALAR) THEN
-        DO k=kts,kte
-          DO i=its,ite
+      if (P_QI.ge.P_FIRST_SCALAR) then
+        do k=kts,kte
+          do i=its,ite
             RQIBLTEN(I,J,K)=RTG(I,K,3)/(1.-Q1(I,K,3))**2
-          ENDDO
-        ENDDO
-      ENDIF
+          enddo
+        enddo
+      endif
 
-      DO i=its,ite
+      do i=its,ite
         UST(i,j)=SQRT(STRESS(i))
         WSPD(i,j)=SQRT(U3D(I,J,KTS)*U3D(I,J,KTS)+                       &
                        V3D(I,J,KTS)*V3D(I,J,KTS))+1.E-9
@@ -466,7 +466,7 @@ CONTAINS
         else
           prkpp(i,j)=-1.0e30
         endif
-      ENDDO
+      enddo
 
 !!!#if (HWRF==1)
 !!!     DO i=its,ite
@@ -476,23 +476,23 @@ CONTAINS
 !!!     ENDDO
 !!!     ENDDO
 
-     DO k=kts,kte-1
-     DO i=its,ite
+     do k=kts,kte-1
+     do i=its,ite
       DKU3D(I,J,K+1) = DKU(I,K)
       DKT3D(I,J,K+1) = DKT(I,K)
-     ENDDO
+     enddo
 
-     ENDDO
+     enddo
 !!!#endif
 
 
-    ENDDO  jloop
+    enddo  jloop
 
 
-   END SUBROUTINE BL_GFSEDMF
+   end subroutine BL_GFSEDMF
 
 !===================================================================
-   SUBROUTINE gfsedmfinit(RUBLTEN,RVBLTEN,RTHBLTEN,RQVBLTEN,       &
+   subroutine gfsedmfinit(RUBLTEN,RVBLTEN,RTHBLTEN,RQVBLTEN,       &
                       RQCBLTEN,RQIBLTEN,P_QI,P_FIRST_SCALAR,       &
                       restart,                                     &
                       allowed_to_read,                             &
@@ -500,63 +500,63 @@ CONTAINS
                       ims, ime, jms, jme, kms, kme,                &
                       its, ite, jts, jte, kts, kte                 )
 !-------------------------------------------------------------------          
-   IMPLICIT NONE
+   implicit none
 !-------------------------------------------------------------------          
-   LOGICAL , INTENT(IN)          ::  allowed_to_read,restart
-   INTEGER , INTENT(IN)          ::  ids, ide, jds, jde, kds, kde, &
+   logical , intent(in)          ::  allowed_to_read,restart
+   integer , intent(in)          ::  ids, ide, jds, jde, kds, kde, &
                                      ims, ime, jms, jme, kms, kme, &
                                      its, ite, jts, jte, kts, kte
-   INTEGER , INTENT(IN)          ::  P_QI,P_FIRST_SCALAR
+   integer , intent(in)          ::  P_QI,P_FIRST_SCALAR
 
-   REAL , DIMENSION( ims:ime , jms:jme , kms:kme ) , INTENT(OUT) ::         &
+   real , dimension( ims:ime , jms:jme , kms:kme ) , intent(out) ::         &
                                                          RUBLTEN, &
                                                          RVBLTEN, &
                                                          RTHBLTEN, &
                                                          RQVBLTEN, &
                                                          RQCBLTEN, & 
                                                          RQIBLTEN
-   INTEGER :: i, j, k, itf, jtf, ktf
+   integer :: i, j, k, itf, jtf, ktf
 
    jtf=min0(jte,jde-1)
    ktf=min0(kte,kde-1)
    itf=min0(ite,ide-1)
 
-   IF(.not.restart)THEN
-     DO j=jts,jtf
-     DO k=kts,ktf
-     DO i=its,itf
+   if(.not.restart)then
+     do j=jts,jtf
+     do k=kts,ktf
+     do i=its,itf
         RUBLTEN(i,j,k)=0.
         RVBLTEN(i,j,k)=0.
         RTHBLTEN(i,j,k)=0.
         RQVBLTEN(i,j,k)=0.
         RQCBLTEN(i,j,k)=0.
-     ENDDO
-     ENDDO
-     ENDDO
-   ENDIF
+     enddo
+     enddo
+     enddo
+   endif
 
-   IF (P_QI .ge. P_FIRST_SCALAR .and. .not.restart) THEN
-      DO j=jts,jtf
-      DO k=kts,ktf
-      DO i=its,itf
+   if (P_QI .ge. P_FIRST_SCALAR .and. .not.restart) then
+      do j=jts,jtf
+      do k=kts,ktf
+      do i=its,itf
          RQIBLTEN(i,j,k)=0.
-      ENDDO
-      ENDDO
-      ENDDO
-   ENDIF
+      enddo
+      enddo
+      enddo
+   endif
 
-   IF (P_QI .ge. P_FIRST_SCALAR) THEN
-      DO j=jts,jtf
-      DO k=kts,ktf
-      DO i=its,itf
+   if (P_QI .ge. P_FIRST_SCALAR) then
+      do j=jts,jtf
+      do k=kts,ktf
+      do i=its,itf
          RQIBLTEN(i,j,k)=0.
-      ENDDO
-      ENDDO
-      ENDDO
-   ENDIF
+      enddo
+      enddo
+      enddo
+   endif
 
 
-   END SUBROUTINE gfsedmfinit
+   end subroutine gfsedmfinit
 
 !----------------------------------------------------------------------
 
@@ -583,9 +583,9 @@ CONTAINS
 !!!#endif
      &   VAR_RIC,coef_ric_l,coef_ric_s,alpha,xland1,brcr1d,wscale1d,wscaleu1d,prinv1d)
 !
-      USE MODULE_GFS_MACHINE, only : kind_phys
+      use MODULE_GFS_MACHINE, only : kind_phys
 !      USE MODULE_GFS_FUNCPHYS, only : fpvs
-      USE MODULE_GFS_PHYSCONS, grav => con_g, rd => con_rd, cp => con_cp &
+      use MODULE_GFS_PHYSCONS, grav => con_g, rd => con_rd, cp => con_cp &
      &,             hvap => con_hvap, fv => con_fvirt
       ! ghb, 200126:
       use module_sf_gfdl, only : ran1
@@ -748,7 +748,7 @@ CONTAINS
       integer,save :: ens_random_seed_local,env_pp_local!zhang
       integer :: ensda_physics_pert !zhang
       real,save :: ens_pblamp_local   !zhang
-      CHARACTER(len=3) :: env_memb,env_pp
+      character(len=3) :: env_memb,env_pp
       data ens_random_seed_local/0/
       data env_pp_local/0/
 !!! ghb, 200126: commented-out
@@ -1017,10 +1017,10 @@ CONTAINS
            tem1 = 1.e-7 * robn
 !           crb(i) = 0.16 * (tem1 ** (-0.18))
           crb(i) = crbcon
-        IF(var_ric.eq.1.) THEN
-         IF(xland1(i).eq.1)  crb(I) = coef_ric_l*(tem1)**(-0.18)
-         IF(xland1(i).eq.2)  crb(I) = coef_ric_s*(tem1)**(-0.18)
-        ENDIF
+        if(var_ric.eq.1.) then
+         if(xland1(i).eq.1)  crb(I) = coef_ric_l*(tem1)**(-0.18)
+         if(xland1(i).eq.2)  crb(I) = coef_ric_s*(tem1)**(-0.18)
+        endif
            crb(i) = max(min(crb(i), crbmax), crbmin)
       enddo
 
@@ -1310,10 +1310,10 @@ CONTAINS
 !  zi(i,k) is AGL, right?  May not matter if applied only to water grid points
       if(ALPHA.lt.0)then
 
-       DO I=1,IM
+       do I=1,IM
          SPDK2 = 0.
          WSPM(i,1) = 0.
-         DO K = 1, KMPBL ! kmpbl is like a max possible pbl height
+         do K = 1, KMPBL ! kmpbl is like a max possible pbl height
           if(zi(i,k).le.500.and.zi(i,k+1).gt.500.)then ! find level bracketing 500 m
            SPDK2 = SQRT(U1(i,k)*U1(i,k)+V1(i,k)*V1(i,k)) ! wspd near 500 m
            WSPM(i,1) = SPDK2/0.6  ! now the Km limit for 500 m.  just store in K=1
@@ -1324,8 +1324,8 @@ CONTAINS
 !           if(i.eq.25) print *,' IK ',i,k,' ZI ',zi(i,k), ' WSPM1 ',wspm(i,1),'
 !           KMPBL ',kmpbl,' KPBL ',kpbl(i)
           endif
-         ENDDO
-       ENDDO ! i
+         enddo
+       enddo ! i
 
       endif ! ALPHA < 0
 !!!#endif
@@ -1408,7 +1408,7 @@ CONTAINS
 ! possible modification of first guess DKU, under certain conditions
 ! (1) this applies only to columns over water
 
-        IF(xland1(i).eq.2)then ! sea only
+        if(xland1(i).eq.2)then ! sea only
 
 ! (2) alpha test
 ! if alpha < 0, find alpha for each column and do the loop again
@@ -1895,7 +1895,7 @@ CONTAINS
 !c-----------------------------------------------------------------------
       subroutine tridi2(l,n,cl,cm,cu,r1,r2,au,a1,a2)
 !cc
-      USE MODULE_GFS_MACHINE, only : kind_phys
+      use MODULE_GFS_MACHINE, only : kind_phys
       implicit none
       integer             k,n,l,i
       real(kind=kind_phys) fk
@@ -1934,7 +1934,7 @@ CONTAINS
 !-----------------------------------------------------------------------
       subroutine tridin(l,n,nt,cl,cm,cu,r1,r2,au,a1,a2)
 !!
-      USE MODULE_GFS_MACHINE     , only : kind_phys
+      use MODULE_GFS_MACHINE     , only : kind_phys
       implicit none
       integer             is,k,kk,n,nt,l,i
       real(kind=kind_phys) fk(l)
@@ -2006,8 +2006,8 @@ CONTAINS
      &   zl,zm,thvx,q1,t1,u1,v1,hpbl,kpbl,                  &
      &   sflx,ustar,wstar,xmf,tcko,qcko,ucko,vcko)
 !
-      USE MODULE_GFS_MACHINE, only : kind_phys
-      USE MODULE_GFS_PHYSCONS, grav => con_g, cp => con_cp
+      use MODULE_GFS_MACHINE, only : kind_phys
+      use MODULE_GFS_PHYSCONS, grav => con_g, cp => con_cp
 !
       implicit none
 !
@@ -2324,4 +2324,4 @@ CONTAINS
       end subroutine mfpbl
 !----------------------------------------------------------------------
 !!!#endif
-      END MODULE module_bl_gfsedmf
+      end module module_bl_gfsedmf

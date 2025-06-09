@@ -1,4 +1,4 @@
-  MODULE input
+  module input
 
   implicit none
 
@@ -352,7 +352,7 @@
 
 !  End namelists:
 
-    CONTAINS
+    contains
 
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
@@ -388,4 +388,4 @@
 
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-  END MODULE input
+  end module input

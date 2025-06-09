@@ -1,4 +1,4 @@
-  MODULE solve3_module
+  module solve3_module
 
         ! solve3: finish primary dynamical solver
         ! (finish comms, update arrays, move surface)
@@ -72,7 +72,7 @@
   private
   public :: solve3
 
-  CONTAINS
+  contains
 
       subroutine solve3(nstep,num_soil_layers,                       &
                    dt,dtlast,mtime,dbldt,                            &
@@ -254,8 +254,8 @@
                                   rs31,rs32,rn31,rn32,reqs_y)
 #endif
 
-      IF( imoist.eq.1 )THEN
-          DO n=1,numq
+      if( imoist.eq.1 )then
+          do n=1,numq
             call bcs(q3d(ib,jb,kb,n))
 #ifdef MPI
             call comm_3s_start(q3d(ib,jb,kb,n)  &
@@ -263,11 +263,11 @@
                        ,qs31(1,1,1,n),qs32(1,1,1,n),qn31(1,1,1,n),qn32(1,1,1,n)     &
                        ,reqs_q(1,n) )
 #endif
-          ENDDO
-      ENDIF
+          enddo
+      endif
 
 
-      IF( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.6 .or. psolver.eq.7 )THEN
+      if( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.6 .or. psolver.eq.7 )then
         ! 180212: moved this out of sound,sounde,soundcb
 
         if( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.7 )then
@@ -303,7 +303,7 @@
         call comm_1p_start(ppx,zw1,zw2,ze1,ze2,zs1,zs2,zn1,zn2,reqs_z)
 #endif
 
-      ENDIF
+      endif
 
 
       call bcp(rho)
@@ -318,7 +318,7 @@
 !-----------------------------------------------------------------
 !  cm1r17:  diabatic tendencies for next timestep:
 
-        IF( imoist.eq.1 .and. eqtset.eq.2 .and. ptype.ge.1 )THEN
+        if( imoist.eq.1 .and. eqtset.eq.2 .and. ptype.ge.1 )then
           ! get diabatic tendencies (will be used in next timestep):
           rdt = 1.0/dt
           !$omp parallel do default(shared)  &
@@ -334,12 +334,12 @@
           enddo
           enddo
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
-        ENDIF
+        endif
 
 !-----------------------------------------------------------------
 !  Equate the two arrays
 
-      IF( dot2p )THEN
+      if( dot2p )then
         rdt = 1.0/dt
         ! 200413:  all tendencies except turbz term:
         do k=1,ntwk
@@ -352,7 +352,7 @@
         enddo
         enddo
         if(timestats.ge.1) time_turb=time_turb+mytime()
-      ENDIF
+      endif
 
       if( do_lsnudge .and. donudge .and. do_lsnudge_u )then
         if( myid.eq.0 ) print *,'  applying large-scale nudging to base-state and reference u profiles '
@@ -435,9 +435,9 @@
 !----------
 !  comms for parcels:
 
-      IF(iprcl.eq.1)THEN
+      if(iprcl.eq.1)then
         ! cm1r18:  use velocities averaged over small time steps (for psolver=2,3,6,7)
-        IF( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.6 .or. psolver.eq.7 )THEN
+        if( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.6 .or. psolver.eq.7 )then
           ! 180713:  now saved in ten1 arrays
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -447,23 +447,23 @@
               rru(i,j,k)=uten1(i,j,k)
             enddo
             enddo
-            IF(axisymm.eq.0)THEN
+            if(axisymm.eq.0)then
               ! Cartesian grid:
               do j=1,nj+1
               do i=1,ni
                 rrv(i,j,k)=vten1(i,j,k)
               enddo
               enddo
-            ENDIF
-            IF(k.gt.1)THEN
+            endif
+            if(k.gt.1)then
               do j=1,nj
               do i=1,ni
                 rrw(i,j,k)=wten1(i,j,k)
               enddo
               enddo
-            ENDIF
+            endif
           enddo
-        ELSE
+        else
           ! psolver=1,4,5:
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -473,23 +473,23 @@
               rru(i,j,k)=u3d(i,j,k)
             enddo
             enddo
-            IF(axisymm.eq.0)THEN
+            if(axisymm.eq.0)then
               ! Cartesian grid:
               do j=1,nj+1
               do i=1,ni
                 rrv(i,j,k)=v3d(i,j,k)
               enddo
               enddo
-            ENDIF
-            IF(k.gt.1)THEN
+            endif
+            if(k.gt.1)then
               do j=1,nj
               do i=1,ni
                 rrw(i,j,k)=w3d(i,j,k)
               enddo
               enddo
-            ENDIF
+            endif
           enddo
-        ENDIF
+        endif
         if(timestats.ge.1) time_parcels=time_parcels+mytime()
         ! bc/comms:
         call bcu(rru)
@@ -504,12 +504,12 @@
 #ifdef MPI
         call comm_3w_start(rrw,ww31,ww32,we31,we32,ws31,ws32,wn31,wn32,reqs_w)
 #endif
-      ENDIF
+      endif
 
 !----------
 !  Diagnostics (infrequent):
 
-      IF( doubud .and. nutk.ge.1 )THEN
+      if( doubud .and. nutk.ge.1 )then
         if( myid.eq.0 ) print *,'  save utk for domaindiag '
         rdt = 1.0/dt
         do k=1,nk
@@ -519,8 +519,8 @@
         enddo
         enddo
         enddo
-      ENDIF
-      IF( dovbud .and. nvtk.ge.1 )THEN
+      endif
+      if( dovbud .and. nvtk.ge.1 )then
         if( myid.eq.0 ) print *,'  save vtk for domaindiag '
         rdt = 1.0/dt
         do k=1,nk
@@ -530,8 +530,8 @@
         enddo
         enddo
         enddo
-      ENDIF
-      IF( dowbud .and. nwtk.ge.1 )THEN
+      endif
+      if( dowbud .and. nwtk.ge.1 )then
         if( myid.eq.0 ) print *,'  save wtk for domaindiag '
         rdt = 1.0/dt
         do k=1,nk+1
@@ -541,7 +541,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
 !----------
 
@@ -622,7 +622,7 @@
 !----------
 
       if(imoist.eq.1)then
-        DO n=1,numq
+        do n=1,numq
 #ifdef MPI
           call comm_3s_end(q3d(ib,jb,kb,n)  &
                      ,qw31(1,1,1,n),qw32(1,1,1,n),qe31(1,1,1,n),qe32(1,1,1,n)     &
@@ -639,16 +639,16 @@
           enddo
           enddo
           if(timestats.ge.1) time_integ=time_integ+mytime()
-        ENDDO
+        enddo
       endif
 
 !----------
 
 #ifdef MPI
-        IF( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.6 .or. psolver.eq.7 )THEN
+        if( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.6 .or. psolver.eq.7 )then
           call comm_1p_end1(ppx,zw1,zw2,ze1,ze2,zs1,zs2,zn1,zn2,reqs_z)
           call comm_1p_end2(reqs_z)
-        ENDIF
+        endif
 #endif
 
 #ifdef MPI
@@ -687,7 +687,7 @@
 !cc  Update parcel locations  ccccccccccccccccccccccccccccccccccccccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-      IF(iprcl.eq.1)THEN
+      if(iprcl.eq.1)then
         !  get corner info, ghost zone data, etc:
         !  (may not parallelize correctly if this is not done)
 #ifdef MPI
@@ -710,7 +710,7 @@
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
-          DO k=1,nk
+          do k=1,nk
             do j=0,nj+1
             do i=0,ni+2
               rru(i,j,k)=rru(i,j,k)*rgzu(i,j)
@@ -721,19 +721,19 @@
               rrv(i,j,k)=rrv(i,j,k)*rgzv(i,j)
             enddo
             enddo
-          ENDDO
+          enddo
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k,r1,r2)
-          DO k=1,nk
-            IF(k.eq.1)THEN
+          do k=1,nk
+            if(k.eq.1)then
               do j=0,nj+1
               do i=0,ni+1
                 rrw(i,j,   1) = 0.0
                 rrw(i,j,nk+1) = 0.0
               enddo
               enddo
-            ELSE
+            else
               r2 = (sigmaf(k)-sigma(k-1))*rds(k)
               r1 = 1.0-r2
               r1 = 0.5*r1
@@ -748,8 +748,8 @@
                            )*(sigmaf(k)-zt)*gz(i,j)*rzt
               enddo
               enddo
-            ENDIF
-          ENDDO
+            endif
+          enddo
 
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k,r1,r2)
@@ -768,7 +768,7 @@
         call     parcel_driver(dt,xh,uh,ruh,xf,yh,vh,rvh,yf,zh,mh,rmh,zf,mf,zs,    &
                                sigma,sigmaf,zntmp,rho,rru,rrv,rrw,pdata)
         if(timestats.ge.1) time_parcels=time_parcels+mytime()
-      ENDIF
+      endif
 
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -777,8 +777,8 @@
 
 
       ! cm1r19.6  (preliminary ... needs more testing)
-      IF( imove.eq.1 )THEN
-      IF( (sfcmodel.eq.2) .or. (sfcmodel.eq.3) .or. (sfcmodel.eq.4) )THEN
+      if( imove.eq.1 )then
+      if( (sfcmodel.eq.2) .or. (sfcmodel.eq.3) .or. (sfcmodel.eq.4) )then
 
         weps = 0.0001*epsilon
         call movesfc(0.0,dt,weps,uh,vh,znt(ib,jb),dum1(ib,jb,1),dum1(ib,jb,2),dum1(ib,jb,3), &
@@ -816,8 +816,8 @@
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
         enddo
 
-      ENDIF
-      ENDIF
+      endif
+      endif
 
 
 !!!#ifdef MPI
@@ -829,7 +829,7 @@
 !  Calculate surface "swaths."  Move surface (if necessary). 
 !--------------------------------------------------------------------
 
-    IF( output_rain.eq.1 )THEN
+    if( output_rain.eq.1 )then
 
       if(imove.eq.1.and.imoist.eq.1)then
         weps = 10.0*epsilon
@@ -838,9 +838,9 @@
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
 
-    ENDIF
+    endif
 
-    IF( output_rain.eq.1 .and. cuparam.ge.1 )THEN
+    if( output_rain.eq.1 .and. cuparam.ge.1 )then
 
       if(imove.eq.1.and.imoist.eq.1)then
         weps = 10.0*epsilon
@@ -849,13 +849,13 @@
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
 
-    ENDIF
+    endif
 
 !--------------------------------------------------------------------
 ! Maximum horizontal wind speed at lowest model level: 
 ! (include domain movement in calculation)
 
-    IF( output_sws.eq.1 )THEN
+    if( output_sws.eq.1 )then
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,n,tem)
@@ -877,15 +877,15 @@
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
 
-    ENDIF
+    endif
 
 !--------------------------------------------------------------------
 !  Maximum vertical vorticity at lowest model level:
 
-  IF( output_svs.eq.1 )THEN
+  if( output_svs.eq.1 )then
 
-  IF(axisymm.eq.0)THEN
-    IF(.not.terrain_flag)THEN
+  if(axisymm.eq.0)then
+    if(.not.terrain_flag)then
       ! Cartesian grid, without terrain:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,n,tem)
@@ -898,7 +898,7 @@
         enddo
       enddo
       enddo
-    ELSE
+    else
       ! Cartesian grid, with terrain:
       ! dum1 stores u at w-pts:
       ! dum2 stores v at w-pts:
@@ -939,8 +939,8 @@
         enddo
       enddo
       enddo
-    ENDIF
-  ELSE
+    endif
+  else
       ! Axisymmetric grid:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,n,tem)
@@ -952,7 +952,7 @@
         enddo
       enddo
       enddo
-  ENDIF
+  endif
       if(timestats.ge.1) time_swath=time_swath+mytime()
 
       if(imove.eq.1)then
@@ -962,12 +962,12 @@
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
 
-  ENDIF
+  endif
 
 !--------------------------------------------------------------------
 !  Minimum pressure perturbation at lowest model level:
 
-  IF( output_sps.eq.1 )THEN
+  if( output_sps.eq.1 )then
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,n,tem)
@@ -988,14 +988,14 @@
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
 
-  ENDIF
+  endif
 
 !--------------------------------------------------------------------
 !  Maximum rainwater mixing ratio (qr) at lowest model level:
 
-  IF( output_srs.eq.1 )THEN
+  if( output_srs.eq.1 )then
 
-    IF(imoist.eq.1.and.nqr.ne.0)THEN
+    if(imoist.eq.1.and.nqr.ne.0)then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,n,tem)
       do j=1,nj
@@ -1014,16 +1014,16 @@
                      reqs_s,sw31(1,1,1),sw32(1,1,1),se31(1,1,1),se32(1,1,1),               &
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
-    ENDIF
+    endif
 
-  ENDIF
+  endif
 
 !--------------------------------------------------------------------
 !  Maximum graupel/hail mixing ratio (qg) at lowest model level:
 
-  IF( output_sgs.eq.1 )THEN
+  if( output_sgs.eq.1 )then
 
-    IF(imoist.eq.1.and.nqg.ne.0)THEN
+    if(imoist.eq.1.and.nqg.ne.0)then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,n,tem)
       do j=1,nj
@@ -1042,13 +1042,13 @@
                      reqs_s,sw31(1,1,1),sw32(1,1,1),se31(1,1,1),se32(1,1,1),               &
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
-    ENDIF
+    endif
 
-  ENDIF
+  endif
 
 !--------------------------------------------------------------------
 
-  IF( output_sus.eq.1 )THEN
+  if( output_sus.eq.1 )then
 
       ! get height AGL:
       if( .not. terrain_flag )then
@@ -1104,12 +1104,12 @@
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
 
-    ENDIF
+    endif
 
 !--------------------------------------------------------------------
 !  Maximum integrated updraft helicity:
 
-    IF( output_shs.eq.1 )THEN
+    if( output_shs.eq.1 )then
 
       ! dum3 is zh (agl), wten is zf (agl)
       call calcuh(uf,vf,dum3,wten,ua,va,wa,dum1(ib,jb,1),dum2,dum5,dum6, &
@@ -1132,7 +1132,7 @@
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif
 
-    ENDIF
+    endif
 
 !  Done with "swaths"
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1143,4 +1143,4 @@
       end subroutine solve3
 
 
-  END MODULE solve3_module
+  end module solve3_module

@@ -7,7 +7,7 @@
 !> The following references best describe the code within
 !!    Olson et al. (2019, NOAA Technical Memorandum)
 !!    Nakanishi and Niino (2009) \cite NAKANISHI_2009
-      MODULE module_bl_mynn_wrapper
+      module module_bl_mynn_wrapper
 
       use module_bl_mynn_common
 
@@ -27,39 +27,39 @@
 
         implicit none
         
-        LOGICAL,INTENT(IN) :: ALLOWED_TO_READ,RESTART
+        logical,intent(in) :: ALLOWED_TO_READ,RESTART
 
-        INTEGER,INTENT(IN) :: IDS,IDE,JDS,JDE,KDS,KDE,  &
+        integer,intent(in) :: IDS,IDE,JDS,JDE,KDS,KDE,  &
              &                IMS,IME,JMS,JME,KMS,KME,  &
              &                ITS,ITE,JTS,JTE,KTS,KTE
 
 
-        REAL,DIMENSION(IMS:IME,KMS:KME,JMS:JME),INTENT(INOUT) :: &
+        real,dimension(IMS:IME,KMS:KME,JMS:JME),intent(inout) :: &
              &RUBLTEN,RVBLTEN,RTHBLTEN,RQVBLTEN,                 &
              &RQCBLTEN,RQIBLTEN,QKE
 
-        INTEGER,  intent(in) :: P_QC,P_QI,PARAM_FIRST_SCALAR
+        integer,  intent(in) :: P_QC,P_QI,PARAM_FIRST_SCALAR
 
-        INTEGER :: I,J,K,ITF,JTF,KTF
+        integer :: I,J,K,ITF,JTF,KTF
 
         JTF=MIN0(JTE,JDE-1)
         KTF=MIN0(KTE,KDE-1)
         ITF=MIN0(ITE,IDE-1)
 
-        IF (.NOT.RESTART) THEN
-         DO J=JTS,JTF
-          DO K=KTS,KTF
-           DO I=ITS,ITF
+        if (.NOT.RESTART) then
+         do J=JTS,JTF
+          do K=KTS,KTF
+           do I=ITS,ITF
               RUBLTEN(i,k,j)=0.
               RVBLTEN(i,k,j)=0.
               RTHBLTEN(i,k,j)=0.
               RQVBLTEN(i,k,j)=0.
               if( p_qc >= param_first_scalar ) RQCBLTEN(i,k,j)=0.
               if( p_qi >= param_first_scalar ) RQIBLTEN(i,k,j)=0.
-           ENDDO
-          ENDDO
-         ENDDO
-        ENDIF
+           enddo
+          enddo
+         enddo
+        endif
 
       end subroutine mynnedmf_wrapper_init
 
@@ -70,7 +70,7 @@
 !> \section arg_table_mynnedmf_wrapper_run Argument Table
 !! \htmlinclude mynnedmf_wrapper_run.html
 !!
-SUBROUTINE mynnedmf_wrapper_run(                 &
+subroutine mynnedmf_wrapper_run(                 &
      &  initflag,restart,cycling,                &
      &  delt,dz,dxc,znt,                         &
      &  u,v,w,th,                                &
@@ -172,10 +172,10 @@ SUBROUTINE mynnedmf_wrapper_run(                 &
       logical, parameter :: FLAG_OZONE = .false.
 
 !MYNN-1D
-      REAL,    intent(in) :: delt, dxc
-      LOGICAL, intent(in) :: restart
-      INTEGER :: i, j, k, itf, jtf, ktf, n
-      INTEGER, intent(in) :: initflag,                      &
+      real,    intent(in) :: delt, dxc
+      logical, intent(in) :: restart
+      integer :: i, j, k, itf, jtf, ktf, n
+      integer, intent(in) :: initflag,                      &
      &           IDS,IDE,JDS,JDE,KDS,KDE,                   &
      &           IMS,IME,JMS,JME,KMS,KME,                   &
      &           ITS,ITE,JTS,JTE,KTS,KTE
@@ -501,7 +501,7 @@ SUBROUTINE mynnedmf_wrapper_run(                 &
       endif
 
 !print*,"In mynn wrapper, calling mynn_bl_driver"
-              CALL  mynn_bl_driver(                                    &
+              call  mynn_bl_driver(                                    &
      &        initflag=initflag,restart=restart,cycling=cycling,       &
      &        delt=delt,dz=dz(:,:,j),dx=dx,znt=znt(:,j),               &
      &        u=u(:,:,j),v=v(:,:,j),w=w(:,:,j),                        &
@@ -697,10 +697,10 @@ SUBROUTINE mynnedmf_wrapper_run(                 &
 
 !print*,"In mynn wrapper, at end"
 
-  CONTAINS
+  contains
 
 ! ==================================================================
-  SUBROUTINE moisture_check2(kte, delt, dp, exner, &
+  subroutine moisture_check2(kte, delt, dp, exner, &
                              qv, qc, qi, th        )
   !
   ! If qc < qcmin, qi < qimin, or qv < qvmin happens in any layer,
@@ -781,10 +781,10 @@ SUBROUTINE mynnedmf_wrapper_run(                 &
 
     return
 
-  END SUBROUTINE moisture_check2
+  end subroutine moisture_check2
 
-  END SUBROUTINE mynnedmf_wrapper_run
+  end subroutine mynnedmf_wrapper_run
 
 !###=================================================================
 
-END MODULE module_bl_mynn_wrapper
+end module module_bl_mynn_wrapper

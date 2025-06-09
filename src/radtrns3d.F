@@ -1,4 +1,4 @@
-  MODULE radtrns3d_module
+  module radtrns3d_module
 
   use radlib3d_module
 
@@ -81,11 +81,11 @@
 !
 !-----------------------------------------------------------------------
 !
-  INTEGER, public :: n2d_radiat  ! number of 2-d arrays in the buffer
-  INTEGER, public :: n3d_radiat  ! number of 3-d arrays in the buffer
+  integer, public :: n2d_radiat  ! number of 2-d arrays in the buffer
+  integer, public :: n3d_radiat  ! number of 3-d arrays in the buffer
 
-  PARAMETER ( n2d_radiat = 27 )
-  PARAMETER ( n3d_radiat = 44 )
+  parameter ( n2d_radiat = 27 )
+  parameter ( n3d_radiat = 44 )
 !
 !-----------------------------------------------------------------------
 !
@@ -95,8 +95,8 @@
 !
 !-----------------------------------------------------------------------
 !
-  INTEGER, public :: nrad2d   ! Number of 2-D arrays in radiation buffer array
-  PARAMETER ( nrad2d = 10 )
+  integer, public :: nrad2d   ! Number of 2-D arrays in radiation buffer array
+  parameter ( nrad2d = 10 )
            ! Buffur array to carry the variables calculated or used in
 ! radiation calculation. The last index defines the variables:
 ! 1  = nrsirbm,  Solar IR surface albedo for beam
@@ -115,40 +115,40 @@
 ! 10 = nfdifpar, all-sky diffuse downward par flux
 !                at the surface
 
-  INTEGER, public :: nrsirbm  ! Index for solar IR surface albedo for beam
-  PARAMETER ( nrsirbm  = 1 )
+  integer, public :: nrsirbm  ! Index for solar IR surface albedo for beam
+  parameter ( nrsirbm  = 1 )
 
-  INTEGER, public :: nrsirdf  ! Index for solar IR surface albedo for diffuse
-  PARAMETER ( nrsirdf  = 2 )
+  integer, public :: nrsirdf  ! Index for solar IR surface albedo for diffuse
+  parameter ( nrsirdf  = 2 )
 
-  INTEGER, public :: nrsuvbm  ! Index for solar UV surface albedo for beam
-  PARAMETER ( nrsuvbm  = 3 )
+  integer, public :: nrsuvbm  ! Index for solar UV surface albedo for beam
+  parameter ( nrsuvbm  = 3 )
 
-  INTEGER, public :: nrsuvdf  ! Index for solar UV surface albedo for diffuse
-  PARAMETER ( nrsuvdf  = 4 )
+  integer, public :: nrsuvdf  ! Index for solar UV surface albedo for diffuse
+  parameter ( nrsuvdf  = 4 )
 
-  INTEGER, public :: ncosz    ! Index for cosine of solar zenith angle
-  PARAMETER ( ncosz = 5 )
+  integer, public :: ncosz    ! Index for cosine of solar zenith angle
+  parameter ( ncosz = 5 )
 
-  INTEGER, public :: ncosss   ! Index for cosine of angle between sun light and
+  integer, public :: ncosss   ! Index for cosine of angle between sun light and
                       ! terrain slope
-  PARAMETER ( ncosss = 6 )
+  parameter ( ncosss = 6 )
 
-  INTEGER, public :: nfdirir  ! Index for all-sky direct downward IR flux
+  integer, public :: nfdirir  ! Index for all-sky direct downward IR flux
                       !           (0.7-10 micron) at the surface
-  PARAMETER ( nfdirir = 7 )
+  parameter ( nfdirir = 7 )
 
-  INTEGER, public :: nfdifir  ! Index for all-sky diffuse downward IR flux
+  integer, public :: nfdifir  ! Index for all-sky diffuse downward IR flux
                       !           at the surface
-  PARAMETER ( nfdifir = 8 )
+  parameter ( nfdifir = 8 )
 
-  INTEGER, public :: nfdirpar ! Index for all-sky direct downward and par flux
+  integer, public :: nfdirpar ! Index for all-sky direct downward and par flux
                       !           (0.4-0.7 micron) at the surface
-  PARAMETER ( nfdirpar = 9 )
+  parameter ( nfdirpar = 9 )
 
-  INTEGER, public :: nfdifpar ! Index for all-sky diffuse downward and par flux
+  integer, public :: nfdifpar ! Index for all-sky diffuse downward and par flux
                       !           at the surface
-  PARAMETER ( nfdifpar = 10 )
+  parameter ( nfdifpar = 10 )
 !
 !-----------------------------------------------------------------------
 !
@@ -156,9 +156,9 @@
 !
 !-----------------------------------------------------------------------
 !
-  REAL :: co2
+  real :: co2
 
-  PARAMETER ( co2 = 370.0E-6 )  ! in mppv
+  parameter ( co2 = 370.0E-6 )  ! in mppv
 !
 !-----------------------------------------------------------------------
 !
@@ -166,7 +166,7 @@
 !
 !-----------------------------------------------------------------------
 !
-  REAL, public :: roqr,tnw,roqs,tns,roqg,tng
+  real, public :: roqr,tnw,roqs,tns,roqg,tng
 !!!  COMMON /radmicro/ roqr,tnw,roqs,tns,roqg,tng
 
 !  These are specific to Goddard LFO scheme
@@ -185,25 +185,25 @@
 !
 !-----------------------------------------------------------------------
 !
-  INTEGER :: ir2d1,ir2d2,ir2d3,ir2d4,ir2d5,ir2d6     ! for 2-d arrays
+  integer :: ir2d1,ir2d2,ir2d3,ir2d4,ir2d5,ir2d6     ! for 2-d arrays
 
 !!!  COMMON /ir2dcmn/ ir2d1,ir2d2,ir2d3,ir2d4,ir2d5,ir2d6
 
-  INTEGER :: ir3d1, ir3d2, ir3d3, ir3d4, ir3d5     ! for 3-d arrays
-  INTEGER :: ir3d6, ir3d7, ir3d8, ir3d9, ir3d10    ! for 3-d arrays
-  INTEGER :: ir3d11,ir3d12,ir3d13,ir3d14,ir3d15    ! for 3-d arrays
-  INTEGER :: ir3d16
+  integer :: ir3d1, ir3d2, ir3d3, ir3d4, ir3d5     ! for 3-d arrays
+  integer :: ir3d6, ir3d7, ir3d8, ir3d9, ir3d10    ! for 3-d arrays
+  integer :: ir3d11,ir3d12,ir3d13,ir3d14,ir3d15    ! for 3-d arrays
+  integer :: ir3d16
 
 !!!  COMMON /ir3dcmn/ ir3d1, ir3d2, ir3d3, ir3d4, ir3d5,                   &
 !!!                   ir3d6, ir3d7, ir3d8, ir3d9, ir3d10,                  &
 !!!                   ir3d11,ir3d12,ir3d13,ir3d14,ir3d15,                  &
 !!!                   ir3d16
 
-  INTEGER :: ir4d1, ir4d2                          ! for 4-d arrays
+  integer :: ir4d1, ir4d2                          ! for 4-d arrays
 
 !!!  COMMON /ir4dcmn/ ir4d1, ir4d2
 
-  INTEGER :: ir5d1                                 ! for 5-d arrays
+  integer :: ir5d1                                 ! for 5-d arrays
 
 !!!  COMMON /ir5dcmn/ ir5d1
 !
@@ -214,11 +214,11 @@
 !
 !-----------------------------------------------------------------------
 !
-  INTEGER :: so2d1, so2d2, so2d3, so2d4, so2d5     ! for 2-d arrays
-  INTEGER :: so2d6, so2d7, so2d8, so2d9, so2d10
-  INTEGER :: so2d11,so2d12,so2d13,so2d14,so2d15
-  INTEGER :: so2d16,so2d17,so2d18,so2d19,so2d20
-  INTEGER :: so2d21,so2d22,so2d23
+  integer :: so2d1, so2d2, so2d3, so2d4, so2d5     ! for 2-d arrays
+  integer :: so2d6, so2d7, so2d8, so2d9, so2d10
+  integer :: so2d11,so2d12,so2d13,so2d14,so2d15
+  integer :: so2d16,so2d17,so2d18,so2d19,so2d20
+  integer :: so2d21,so2d22,so2d23
 
 !!!  COMMON /so2dcmn/ so2d1, so2d2, so2d3, so2d4, so2d5,                   &
 !!!                   so2d6, so2d7, so2d8, so2d9, so2d10,                  &
@@ -226,19 +226,19 @@
 !!!                   so2d16,so2d17,so2d18,so2d19,so2d20,                  &
 !!!                   so2d21,so2d22,so2d23
 
-  INTEGER :: so3d1, so3d2, so3d3, so3d4, so3d5     ! for 3-d arrays
-  INTEGER :: so3d6, so3d7, so3d8, so3d9, so3d10    ! for 3-d arrays
-  INTEGER :: so3d11,so3d12,so3d13,so3d14           ! for 3-d arrays
+  integer :: so3d1, so3d2, so3d3, so3d4, so3d5     ! for 3-d arrays
+  integer :: so3d6, so3d7, so3d8, so3d9, so3d10    ! for 3-d arrays
+  integer :: so3d11,so3d12,so3d13,so3d14           ! for 3-d arrays
 
 !!!  COMMON /so3dcmn/ so3d1, so3d2, so3d3, so3d4, so3d5,                   &
 !!!                   so3d6, so3d7, so3d8, so3d9, so3d10,                  &
 !!!                   so3d11,so3d12,so3d13,so3d14
 
-  INTEGER :: so4d1, so4d2, so4d3, so4d4, so4d5     ! for 4-d arrays
+  integer :: so4d1, so4d2, so4d3, so4d4, so4d5     ! for 4-d arrays
 
 !!!  COMMON /so4dcmn/ so4d1, so4d2, so4d3, so4d4, so4d5
 
-  INTEGER :: so5d1, so5d2, so5d3, so5d4, so5d5     ! for 5-d arrays
+  integer :: so5d1, so5d2, so5d3, so5d4, so5d5     ! for 5-d arrays
 
 !!!  COMMON /so5dcmn/ so5d1, so5d2, so5d3, so5d4, so5d5
 
@@ -248,28 +248,28 @@
 !
 !-----------------------------------------------------------------------
 !
-  INTEGER :: nradstp         ! Time steps to update radiation
+  integer :: nradstp         ! Time steps to update radiation
                              ! calculation
 
-  REAL :: cldh2m             ! Height in meter that separates high cloud
+  real :: cldh2m             ! Height in meter that separates high cloud
                              ! and middle cloud
-  REAL :: cldm2l             ! Height in meter that separates middle cloud
+  real :: cldm2l             ! Height in meter that separates middle cloud
                              ! and low cloud
 
 !!!  INTEGER :: ict             ! Vertical indices of height cldh2m
 !!!  INTEGER :: icb             ! Vertical indices of height cldm2l
 
-  PARAMETER ( cldh2m = 5500.0, cldm2l = 3000.0 )   ! in meter
+  parameter ( cldh2m = 5500.0, cldm2l = 3000.0 )   ! in meter
 
-  REAL :: solarc    ! Solar constant
-  PARAMETER ( solarc = 1353.0 )
+  real :: solarc    ! Solar constant
+  parameter ( solarc = 1353.0 )
 
 !augustin
 !!!  COMMON  /arps500/ nradstp
 
 !-----------------------------------------------------------------------
 
-  CONTAINS
+  contains
 
 !
 !##################################################################
@@ -285,7 +285,7 @@
 !##################################################################
 !
 
-SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
+subroutine radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
            ib,ie,jb,je,kb,ke,xh,yh,prs0s,olr,dsr,                       &  ! MS add olr, dsr
            ptprt,pprt,qv,qc,qr,qi,qs,qh,cvm,                            &
            ptbar,pbar,ppi, o31, rhostr, tsfc, zp,                       &
@@ -338,10 +338,10 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !
   use irrad3d_module, only : irrad
   use sorad3d_module, only : sorad
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER, intent(in) :: nx,ny,nz
-  INTEGER, intent(in) :: rbufsz
+  integer, intent(in) :: nx,ny,nz
+  integer, intent(in) :: rbufsz
   integer, intent(in) :: tipa,myid
   real, intent(in) :: dx,dy
   integer, intent(in) :: ib,ie,jb,je,kb,ke
@@ -356,50 +356,50 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !
 !-----------------------------------------------------------------------
 !
-  REAL :: x(nx+1)
-  REAL :: y(ny+1)
+  real :: x(nx+1)
+  real :: y(ny+1)
 !!!  REAL :: z(nz)
 !!!  REAL :: za(nz)
-  REAL :: zp(nx,ny,nz)
+  real :: zp(nx,ny,nz)
 
-  REAL :: ptprt (nx,ny,nz)
-  REAL :: pprt  (nx,ny,nz)
-  REAL :: qv    (nx,ny,nz)
-  REAL :: qc    (nx,ny,nz)
-  REAL :: qr    (nx,ny,nz)
-  REAL :: qi    (nx,ny,nz)
-  REAL :: qs    (nx,ny,nz)
-  REAL :: qh    (nx,ny,nz)
-  REAL :: cvm   (nx,ny,nz)
+  real :: ptprt (nx,ny,nz)
+  real :: pprt  (nx,ny,nz)
+  real :: qv    (nx,ny,nz)
+  real :: qc    (nx,ny,nz)
+  real :: qr    (nx,ny,nz)
+  real :: qi    (nx,ny,nz)
+  real :: qs    (nx,ny,nz)
+  real :: qh    (nx,ny,nz)
+  real :: cvm   (nx,ny,nz)
 
-  REAL :: ptbar (nx,ny,nz)
-  REAL :: pbar  (nx,ny,nz)
-  REAL :: ppi   (nx,ny,nz)
-  REAL :: o31   (nx,ny,nz)
+  real :: ptbar (nx,ny,nz)
+  real :: pbar  (nx,ny,nz)
+  real :: ppi   (nx,ny,nz)
+  real :: o31   (nx,ny,nz)
 
-  REAL :: rhostr(nx,ny,nz)
+  real :: rhostr(nx,ny,nz)
 
-  REAL :: tsfc  (nx,ny)     ! Surface temperature (K)
+  real :: tsfc  (nx,ny)     ! Surface temperature (K)
 
-  REAL, intent(inout) ::  swfrc(nx,ny,nz)  ! Radiation forcing (K/s)
-  REAL, intent(inout) ::  lwfrc(nx,ny,nz)  ! Radiation forcing (K/s)
+  real, intent(inout) ::  swfrc(nx,ny,nz)  ! Radiation forcing (K/s)
+  real, intent(inout) ::  lwfrc(nx,ny,nz)  ! Radiation forcing (K/s)
 
-  REAL :: radsw (nx,ny)     ! Solar radiation reaching the surface
-  REAL :: rnflx (nx,ny)     ! Net upward radiation flux
-  REAL :: radswnet(nx,ny)   ! Net solar radiation at surface
-  REAL :: radlwin(nx,ny)    ! Incoming longwave radiation at surface
-  REAL :: flxd(nx,ny)         
+  real :: radsw (nx,ny)     ! Solar radiation reaching the surface
+  real :: rnflx (nx,ny)     ! Net upward radiation flux
+  real :: radswnet(nx,ny)   ! Net solar radiation at surface
+  real :: radlwin(nx,ny)    ! Incoming longwave radiation at surface
+  real :: flxd(nx,ny)         
   ! MS addition
-  REAL :: olr(nx,ny)        ! TOA outgoing longwave
-  REAL :: dsr(nx,ny)        ! TOA outgoing shortwave
+  real :: olr(nx,ny)        ! TOA outgoing longwave
+  real :: dsr(nx,ny)        ! TOA outgoing shortwave
 
-  REAL :: cosz  (nx,ny)     ! Cosine of zenith
-  REAL :: cosss (nx,ny)     ! Cosine of angle between sun light and
+  real :: cosz  (nx,ny)     ! Cosine of zenith
+  real :: cosss (nx,ny)     ! Cosine of angle between sun light and
                             ! surface terrain slope
 
-  REAL :: az, zen           ! Solar angles
+  real :: az, zen           ! Solar angles
 
-  REAL :: sh(nx,ny)         ! augustin add sh
+  real :: sh(nx,ny)         ! augustin add sh
 !
 !-----------------------------------------------------------------------
 !
@@ -407,23 +407,23 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !
 !-----------------------------------------------------------------------
 !
-  REAL :: rsirbm(nx,ny)     ! Solar IR surface albedo for beam radiation
-  REAL :: rsirdf(nx,ny)     ! Solar IR surface albedo for diffuse radiation
-  REAL :: rsuvbm(nx,ny)     ! Solar UV surface albedo for beam radiation
-  REAL :: rsuvdf(nx,ny)     ! Solar UV surface albedo for diffuse radiation
+  real :: rsirbm(nx,ny)     ! Solar IR surface albedo for beam radiation
+  real :: rsirdf(nx,ny)     ! Solar IR surface albedo for diffuse radiation
+  real :: rsuvbm(nx,ny)     ! Solar UV surface albedo for beam radiation
+  real :: rsuvdf(nx,ny)     ! Solar UV surface albedo for diffuse radiation
 
-  REAL :: fdirir (nx,ny)    ! all-sky direct downward IR flux
+  real :: fdirir (nx,ny)    ! all-sky direct downward IR flux
                             ! (0.7-10 micron) at the surface
-  REAL :: fdifir (nx,ny)    ! all-sky diffuse downward IR flux
+  real :: fdifir (nx,ny)    ! all-sky diffuse downward IR flux
                             ! at the surface
-  REAL :: fdirpar(nx,ny)    ! all-sky direct downward par flux
+  real :: fdirpar(nx,ny)    ! all-sky direct downward par flux
                             ! (0.4-0.7 micron) at the surface
-  REAL :: fdifpar(nx,ny)    ! all-sky diffuse downward par flux
+  real :: fdifpar(nx,ny)    ! all-sky diffuse downward par flux
                             ! at the surface
 ! MS add
-  REAL :: fdiruv(nx,ny)    ! all-sky direct downward uv flux
+  real :: fdiruv(nx,ny)    ! all-sky direct downward uv flux
                             ! (<0.4 micron) at the surface
-  REAL :: fdifuv(nx,ny)    ! all-sky diffuse downward uv flux
+  real :: fdifuv(nx,ny)    ! all-sky diffuse downward uv flux
                             ! at the surface
 
 !!!  REAL :: st4(nx,ny)        ! Emission by the surface
@@ -435,37 +435,37 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !
 !-----------------------------------------------------------------------
 !
-  REAL :: plinv (nx,ny,nz)  ! Pressure in mb at scalar points
+  real :: plinv (nx,ny,nz)  ! Pressure in mb at scalar points
                  ! GHB:  I think plinv is really p at w points
-  REAL :: tinv  (nx,ny,nz)  ! Temperature
-  REAL :: qvinv (nx,ny,nz)  ! Water vapor mixing ratio (g/g)
+  real :: tinv  (nx,ny,nz)  ! Temperature
+  real :: qvinv (nx,ny,nz)  ! Water vapor mixing ratio (g/g)
 
-  REAL :: o3a   (nx,ny,nz)  ! Ozone (o3) mixing ratio (g/g)
-  REAL :: ccld  (nx,ny,nz)  ! Cloud coverage (fraction)
+  real :: o3a   (nx,ny,nz)  ! Ozone (o3) mixing ratio (g/g)
+  real :: ccld  (nx,ny,nz)  ! Cloud coverage (fraction)
 
-  REAL :: flxir (nx,ny,nz)  ! all-sky net downward flux
-  REAL :: flcir (nx,ny,nz)  ! clear-sky net downward flux
+  real :: flxir (nx,ny,nz)  ! all-sky net downward flux
+  real :: flcir (nx,ny,nz)  ! clear-sky net downward flux
 
-  REAL :: flxuv (nx,ny,nz)  ! all-sky solar flux (downward minus upward)
-  REAL :: flcuv (nx,ny,nz)  ! clear-sky solar flux (downward minus upward)
+  real :: flxuv (nx,ny,nz)  ! all-sky solar flux (downward minus upward)
+  real :: flcuv (nx,ny,nz)  ! clear-sky solar flux (downward minus upward)
 
-  REAL :: dfdts (nx,ny,nz)  ! Sensitivity of net downward flux to surface
+  real :: dfdts (nx,ny,nz)  ! Sensitivity of net downward flux to surface
                             ! temperature
 
-  REAL :: tauir (nx,ny,nz)  ! Cloud optical depth for LW IR
-  REAL :: taual (nx,ny,nz)  ! Aerosol optical thickness
+  real :: tauir (nx,ny,nz)  ! Cloud optical depth for LW IR
+  real :: taual (nx,ny,nz)  ! Aerosol optical thickness
 
-  REAL :: tauswi(nx,ny,nz)  ! Cloud optical depth for solar IR for
+  real :: tauswi(nx,ny,nz)  ! Cloud optical depth for solar IR for
                             ! ice particles
-  REAL :: tauswl(nx,ny,nz)  ! Cloud optical depth for solar IR for
+  real :: tauswl(nx,ny,nz)  ! Cloud optical depth for solar IR for
                             ! liquid particles
 
-  REAL :: reffi (nx,ny,nz)  ! Effective cloud-particle size for
+  real :: reffi (nx,ny,nz)  ! Effective cloud-particle size for
                             ! ice particles
-  REAL :: reffl (nx,ny,nz)  ! Effective cloud-particle size for
+  real :: reffl (nx,ny,nz)  ! Effective cloud-particle size for
                             ! liquid particles
 
-  REAL :: tem1 (nx,ny,nz)   ! Work array for message passing
+  real :: tem1 (nx,ny,nz)   ! Work array for message passing
 
 ! hm 8/20/12
   real, intent(in), dimension(nz) :: effc,effi,effs,effr,effg,effis
@@ -522,7 +522,7 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !
 !-----------------------------------------------------------------------
 !
-  REAL :: radbuf( rbufsz )
+  real :: radbuf( rbufsz )
 !
 !-----------------------------------------------------------------------
 !
@@ -530,20 +530,20 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !
 !-----------------------------------------------------------------------
 !
-  INTEGER :: nxy, nxyz
-  INTEGER :: i,j,k
-  INTEGER :: im,jm,km, ij, ijm
+  integer :: nxy, nxyz
+  integer :: i,j,k
+  integer :: im,jm,km, ij, ijm
 
-  INTEGER :: istgr, jstgr
-  INTEGER :: nxodd, nyodd, jeven, jodd
+  integer :: istgr, jstgr
+  integer :: nxodd, nyodd, jeven, jodd
 
-  INTEGER :: m, n
+  integer :: m, n
 
-  INTEGER :: night           ! Flag for night time
+  integer :: night           ! Flag for night time
 
-  REAL :: tqe, dp, coolrate,heatrate
-  REAL :: pk,psfc,tk,qvsat,rh,hgtagl,ccld1,ccld2,aden,psqc,aersum
-  REAL :: gcp,grav
+  real :: tqe, dp, coolrate,heatrate
+  real :: pk,psfc,tk,qvsat,rh,hgtagl,ccld1,ccld2,aden,psqc,aersum
+  real :: gcp,grav
 
 !  REAL, ALLOCATABLE :: difir(:,:)
 !  REAL, ALLOCATABLE :: difpa(:,:)
@@ -558,14 +558,14 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !  REAL, ALLOCATABLE :: c_rate(:,:,:)
   real, dimension(nx,ny,nz) :: h_rate,c_rate
 
-  LOGICAL :: high
+  logical :: high
 
-  INTEGER :: rh2cldopt
-  REAL :: rhcldwgt,qcwgt
-  PARAMETER (rh2cldopt=0,rhcldwgt=0.667)
+  integer :: rh2cldopt
+  real :: rhcldwgt,qcwgt
+  parameter (rh2cldopt=0,rhcldwgt=0.667)
 
-  INTEGER :: ict             ! Vertical indices of height cldh2m
-  INTEGER :: icb             ! Vertical indices of height cldm2l
+  integer :: ict             ! Vertical indices of height cldh2m
+  integer :: icb             ! Vertical indices of height cldm2l
 
 !-----------------------------------------------------------------------
 
@@ -616,11 +616,11 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !
 !-----------------------------------------------------------------------
 !
-  REAL :: padd                ! Additional pressure level (mb) to TOA
-  REAL :: tadd                ! Temperature for additional layer to TOA
+  real :: padd                ! Additional pressure level (mb) to TOA
+  real :: tadd                ! Temperature for additional layer to TOA
 
-  PARAMETER (padd =  1.0)
-  PARAMETER (tadd =223.0)
+  parameter (padd =  1.0)
+  parameter (tadd =223.0)
 
  
 
@@ -644,11 +644,11 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !  ALLOCATE(h_rate(nx,ny,nz))
 !  ALLOCATE(c_rate(nx,ny,nz))
 
-  IF ( rlwopt == 0 ) THEN
+  if ( rlwopt == 0 ) then
     high = .false.
-  ELSE
+  else
     high = .true.
-  END IF
+  end if
 
   sh = 1.0
 
@@ -661,15 +661,15 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
   nxyz = nxy*nz
   qcwgt=1.-rhcldwgt
 
-  IF ( (pbar(1,1,nz-1)*0.01) <= padd ) THEN
+  if ( (pbar(1,1,nz-1)*0.01) <= padd ) then
 !    WRITE (6,'(a/a)')                                                   &
 !        'The pressure at the top of atmosphere was too low to add ',    &
 !        'additional levels. Check the sounding profile.',               &
 !        'Program stopped in RADTRNS.'
 !    CALL arpsstop('arpsstop stopped RADTRNS pressure to low at the top ',1)
-    print *,'Program stopped in RADTRNS.'
+    print *,'program stopped in RADTRNS.'
     call stopcm1
-  END IF
+  end if
 
 !!! 700   CONTINUE   
   ! replace go-to with do loop:   GHB, 100729
@@ -679,13 +679,13 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !---------------
 
 
-  DO j=1,ny
-    DO i=1,nx
-      DO k=1,nz-1
+  do j=1,ny
+    do i=1,nx
+      do k=1,nz-1
         o3a(i,j,k)=qc(i,j,k)
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 !
 !-----------------------------------------------------------------------
 !
@@ -704,13 +704,13 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
   m = nx
   n = ny
 
-  IF ( radstgr == 0 ) THEN
+  if ( radstgr == 0 ) then
 !    WARNING: this loop is repeated for radstgr=1, changes made here must
 !    also be made there as well.
-      DO j=1,n
-        DO i=1,m
+      do j=1,n
+        do i=1,m
           psfc = prs0s + pprt(i,j,1)
-    DO km=3,nz-1
+    do km=3,nz-1
       k = nz+1-km
           pk = pbar(i,j,k)+pprt(i,j,k)
           ! plinv is pressure (in mb) at w points:
@@ -730,13 +730,13 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
             if( (zp(i,j,k)-zp(i,j,2)).le.cldm2l )  icb = km
           endif
 
-          IF( rh2cldopt > 0 ) THEN
+          if( rh2cldopt > 0 ) then
             stop 22222
-          ELSE
+          else
             ccld(i,j,km) = MIN(1.0, MAX(0.0, 0.25*ALOG10(tqe)+1.5))
 !  borrow o3a to store psuedo-cloud
             o3a(i,j,k) = qc(i,j,k)
-          END IF
+          end if
 
 !!!          psfc = 0.5* (pbar(i,j,1)+pprt(i,j,1) +                        &
 !!!                       pbar(i,j,2)+pprt(i,j,2) )
@@ -744,9 +744,9 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
           aden=2.0*aeroden(pk,psfc)
           taual(i,j,km)=aden*0.5*((pbar(i,j,k-1)+pprt(i,j,k-1))         &
                                  -(pbar(i,j,k+1)+pprt(i,j,k+1)))
-        END DO
-      END DO
-    END DO
+        end do
+      end do
+    end do
 
     if( ict.eq.0 .or. icb.eq.0 )then
       print *
@@ -759,8 +759,8 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 
 !    WARNING: this loop is repeated for radstgr=1, changes made here must
 !    also be made there as well.
-    DO j=1,n
-      DO i=1,m
+    do j=1,n
+      do i=1,m
         ij = nx*(j-1) + i
         radbuf(ij) = tsfc(i,j)
 
@@ -785,19 +785,19 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
         plinv(i,j,nz) = 0.01*( cgs1*(pbar(i,j,2) + pprt(i,j,2)) &
                               +cgs2*(pbar(i,j,3) + pprt(i,j,3)) &
                               +cgs3*(pbar(i,j,4) + pprt(i,j,4)) )
-      END DO
-    END DO
+      end do
+    end do
 
-  ELSE IF ( radstgr == 1 ) THEN
+  else if ( radstgr == 1 ) then
     stop 77771
 
-  END IF
+  end if
 
-  DO km=1,nz-1
-    DO j=1,n
-      DO i=1,m
+  do km=1,nz-1
+    do j=1,n
+      do i=1,m
         dp = plinv(i,j,km+1) - plinv(i,j,km)
-        IF ( dp <= 0.0 ) THEN
+        if ( dp <= 0.0 ) then
         print*, 'dp is=',dp
         print*, 'location is=', i  ,j,  km
         print*, 'plinv =',plinv(i,j,:)
@@ -808,12 +808,12 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !              runname(1:lfnkey)//'.sound, or the data sets.',           &
 !              'Program stopped in RADTRNS.'
 !          CALL arpsstop('arpsstop stopped RADTRNS problem with sounding',1)
-          print *,'Program stopped in RADTRNS.'
+          print *,'program stopped in RADTRNS.'
           call stopcm1
-        END IF
-      END DO
-    END DO
-  END DO
+        end if
+      end do
+    end do
+  end do
 
 !
 !-----------------------------------------------------------------------
@@ -839,14 +839,14 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !-----------------------------------------------------------------------
 !
 !  note borrowed o3a to store psuedo-cloud in place of qc.
-  CALL cldoptd(nx,ny,m,n,nz, radstgr,                                   &
+  call cldoptd(nx,ny,m,n,nz, radstgr,                                   &
                plinv,tinv,o3a,qr,qi,qs,qh, rhostr, zp,                  &
                tauir,tauswi,tauswl,reffi,reffl,zen,                     &
                effc,effi,effs,effr,effg,effis,ptype)   ! hm 8/20/12
 
-  IF ( radstgr == 1 ) THEN
+  if ( radstgr == 1 ) then
     stop 77771
-  END IF
+  end if
 !
 !-----------------------------------------------------------------------
 !
@@ -904,7 +904,7 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !
 !-----------------------------------------------------------------------
 !
- IF (doirrad) THEN
+ if (doirrad) then
   ! (arps code is absurd ... interpolate, then intepolate back?  ugh.)
   ! give irrad the pressure at scalar pts directly:
   do j=1,ny
@@ -921,7 +921,7 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
   enddo
   m = nx
   n = ny
-  CALL irrad(nx,ny,m,n,nz-1,                                            &
+  call irrad(nx,ny,m,n,nz-1,                                            &
              tauir(1,1,1),ccld(1,1,1), plinv(1,1,1),tinv(1,1,1),qvinv(1,1,1),o3a(1,1,1), co2,radbuf(1),           &
              high,flxd(1,1),flxir(1,1,1),flcir(1,1,1),dfdts(1,1,1),rnflx(1,1),                        &
 !!!           fclr,dbs,trant,th2o,tcon,tco2,                               &
@@ -937,11 +937,11 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
              radbuf(ir3d13),radbuf(ir3d14),radbuf(ir3d15),              &
              radbuf(ir3d16),radbuf(ir4d1),radbuf(ir4d2),                &
              radbuf(ir5d1))
-  IF( eqtset.eq.1 )THEN
-    DO k=2,nz-2
+  if( eqtset.eq.1 )then
+    do k=2,nz-2
       km=nz+1-k          ! inverse vertical coordinates to ARPS grid
-      DO j=1,ny
-        DO i=1,nx
+      do j=1,ny
+        do i=1,nx
           ! NOTE:  plinv is pressure (in mb) at w points:
 !!!          c_rate(i,j,k) = 9.770687E-05               & ! = g/cp in cgs unit
 !!!               * ( flxir(i,j,km+1) - flxir(i,j,km) )                    &
@@ -950,14 +950,14 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
           c_rate(i,j,k) = gcp                        & ! = g/cp in cgs unit
                    * ( flxir(i,j,km+1) - flxir(i,j,km) )                    &
                    / ( plinv(i,j,km) - plinv(i,j,km+1) )
-        END DO
-      END DO
-    END DO
-  ELSEIF( eqtset.eq.2 )THEN
-    DO k=2,nz-2
+        end do
+      end do
+    end do
+  elseif( eqtset.eq.2 )then
+    do k=2,nz-2
       km=nz+1-k          ! inverse vertical coordinates to ARPS grid
-      DO j=1,ny
-        DO i=1,nx
+      do j=1,ny
+        do i=1,nx
           ! NOTE:  plinv is pressure (in mb) at w points:
 !!!          c_rate(i,j,k) = 9.770687E-05               & ! = g/cp in cgs unit
 !!!               * ( flxir(i,j,km+1) - flxir(i,j,km) )                    &
@@ -966,12 +966,12 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
           c_rate(i,j,k) = grav                       & ! = g/cp in cgs unit
                    * ( flxir(i,j,km+1) - flxir(i,j,km) )                    &
                    / ( cvm(i,j,k)*( plinv(i,j,km) - plinv(i,j,km+1) ) )
-        END DO
-      END DO
-    END DO
-  ENDIF
+        end do
+      end do
+    end do
+  endif
 
- END IF
+ end if
 !
 !-----------------------------------------------------------------------
 !
@@ -1043,19 +1043,19 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !-----------------------------------------------------------------------
 !
  ! GHB, 100729:
- IF( dosorad )THEN
+ if( dosorad )then
 
   night = 1
-  DO j=1,n
-    DO i=1,m
-      IF ( cosz(i,j) > 0.0 ) THEN
+  do j=1,n
+    do i=1,m
+      if ( cosz(i,j) > 0.0 ) then
         night = 0
-        GO TO 500
-      END IF
-    END DO
-  END DO
+        go to 500
+      end if
+    end do
+  end do
 
-  500   CONTINUE
+  500   continue
 
 !  aersum=0.
 !  DO 505 k=1,nz-1
@@ -1063,12 +1063,12 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 ! 505 CONTINUE
 !  write(6,'(a,f10.4))') ' Total aerosol optical depth: ',aersum
 
-  IF ( night == 0 ) THEN
+  if ( night == 0 ) then
 
     m = nx
     n = ny
 
-    CALL sorad(nx,ny,m,n,nz-1, plinv,tinv,qvinv,o3a,co2,                &
+    call sorad(nx,ny,m,n,nz-1, plinv,tinv,qvinv,o3a,co2,                &
          tauswi,tauswl,reffi,reffl,ccld,ict,icb,                        &
          taual,rsirbm,rsirdf,rsuvbm,rsuvdf,cosz,                        &
          flxuv,flcuv,fdirir,fdifir,fdirpar,fdifpar,                     &
@@ -1088,30 +1088,30 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
          radbuf(so5d1), radbuf(so5d2),                                  &
          radbuf(so5d3), radbuf(so5d4), radbuf(so5d5))
 
-  ELSE
+  else
 
-    DO k=1,nz
-      DO j=1,n
-        DO i=1,m
+    do k=1,nz
+      do j=1,n
+        do i=1,m
           flxuv(i,j,k) = 0.0
-        END DO
-      END DO
-    END DO
+        end do
+      end do
+    end do
 
-    DO j=1,n
-      DO i=1,m
+    do j=1,n
+      do i=1,m
         fdirir (i,j) = 0.0
         fdifir (i,j) = 0.0
         fdirpar(i,j) = 0.0
         fdifpar(i,j) = 0.0
         fdiruv(i,j) = 0.0 ! MS add
         fdifuv(i,j) = 0.0 ! MS add
-      END DO
-    END DO
+      end do
+    end do
 
-  ENDIF
+  endif
 
- ENDIF
+ endif
 
 !------------------------------------------------------------------------------
 
@@ -1243,18 +1243,18 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !    ptmp = plinv
 !  END IF
 
-  IF ( radstgr == 0 ) THEN
+  if ( radstgr == 0 ) then
 
-  IF( night.eq.0 .and. dosorad )THEN
+  if( night.eq.0 .and. dosorad )then
 
 ! moved calculation of coolrate up near irrad to avoid unnecessary
 ! calculations when using tipa:  GHB, 100726
 
-  IF( eqtset.eq.1 )THEN
-    DO k=2,nz-2
+  if( eqtset.eq.1 )then
+    do k=2,nz-2
       km=nz+1-k          ! inverse vertical coordinates to ARPS grid
-      DO j=1,ny
-        DO i=1,nx
+      do j=1,ny
+        do i=1,nx
           ! NOTE:  plinv is pressure (in mb) at w points:
 !!!          h_rate(i,j,k) = solarc * cosz(i,j) * 9.770687E-05                  &
 !!!                   * ( flxuv(i,j,km+1) - flxuv(i,j,km) )                &
@@ -1263,14 +1263,14 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
           h_rate(i,j,k) = solarc * cosz(i,j) * gcp                           &
                    * ( flxuv(i,j,km+1) - flxuv(i,j,km) )                &
                    / ( plinv(i,j,km) - plinv(i,j,km+1) )
-        END DO
-      END DO
-    END DO
-  ELSEIF( eqtset.eq.2 )THEN
-    DO k=2,nz-2
+        end do
+      end do
+    end do
+  elseif( eqtset.eq.2 )then
+    do k=2,nz-2
       km=nz+1-k          ! inverse vertical coordinates to ARPS grid
-      DO j=1,ny
-        DO i=1,nx
+      do j=1,ny
+        do i=1,nx
           ! NOTE:  plinv is pressure (in mb) at w points:
 !!!          h_rate(i,j,k) = solarc * cosz(i,j) * 9.770687E-05                  &
 !!!                   * ( flxuv(i,j,km+1) - flxuv(i,j,km) )                &
@@ -1279,41 +1279,41 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
           h_rate(i,j,k) = solarc * cosz(i,j) * grav                          &
                    * ( flxuv(i,j,km+1) - flxuv(i,j,km) )                &
                    / ( cvm(i,j,k)*( plinv(i,j,km) - plinv(i,j,km+1) ) )
-        END DO
-      END DO
-    END DO
-  ENDIF
+        end do
+      end do
+    end do
+  endif
 
-  ELSE
+  else
     h_rate = 0.0
-  ENDIF
+  endif
 
 
 !!!    radfrc = 0
 
-  IF( doirrad )THEN
-    DO k=2,nz-2
-      DO j=1,ny
-        DO i=1,nx
+  if( doirrad )then
+    do k=2,nz-2
+      do j=1,ny
+        do i=1,nx
           lwfrc(i,j,k) = c_rate(i,j,k)
-        END DO
-      END DO
-    END DO
-    DO j=1,ny
-      DO i=1,nx
+        end do
+      end do
+    end do
+    do j=1,ny
+      do i=1,nx
         radlwin(i,j) = flxd(i,j) 
-      END DO
-    END DO
-  ENDIF
+      end do
+    end do
+  endif
 
-  IF( dosorad )THEN
-    DO k=2,nz-2
-      DO j=1,ny
-        DO i=1,nx
+  if( dosorad )then
+    do k=2,nz-2
+      do j=1,ny
+        do i=1,nx
           swfrc(i,j,k) = h_rate(i,j,k)  
-        END DO
-      END DO
-    END DO
+        end do
+      end do
+    end do
 
     ! MS altered code begin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ! MS altered this calculation to include UV (<0.4 micron) radiation
@@ -1321,8 +1321,8 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
     ! also changed to use cosz instead of cosss. In my view this is more correct in 
     ! the presence of terrain than cosss. 
 
-    DO j=1,ny
-      DO i=1,nx
+    do j=1,ny
+      do i=1,nx
         ! net radiation at the surface
         rnflx(i,j) = solarc * radsw(i,j) * cosz(i,j)                    & ! radsw = a2dr2
                  * ( sh(i,j)*(1.0-rsirbm(i,j)) * fdirir(i,j)            &
@@ -1350,15 +1350,15 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
                      * ( sh(i,j)*(fdirir(i,j) + fdirpar(i,j)+ fdiruv(i,j))  &
                        + fdifir(i,j) + fdifpar(i,j) + fdifuv(i,j) )
 
-      END DO
-    END DO
+      end do
+    end do
     ! MS end altered code !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  ENDIF
+  endif
 
-  ELSE IF ( radstgr == 1 ) THEN
+  else if ( radstgr == 1 ) then
     stop 77773
 
-  END IF
+  end if
 
 !---------------------------------------------------------------------
 !
@@ -1423,9 +1423,9 @@ SUBROUTINE radtrns(nx,ny,nz,rbufsz,tipa,myid,dx,dy,                     &
 !  DEALLOCATE(h_rate)
 !  DEALLOCATE(c_rate)
 
-  RETURN
+  return
 
-END SUBROUTINE radtrns
+end subroutine radtrns
 !
 !
 !##################################################################
@@ -1441,7 +1441,7 @@ END SUBROUTINE radtrns
 !##################################################################
 !
 
-SUBROUTINE setradwrk( nx,ny,nz )
+subroutine setradwrk( nx,ny,nz )
 !
 !-----------------------------------------------------------------------
 !
@@ -1474,10 +1474,10 @@ SUBROUTINE setradwrk( nx,ny,nz )
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: nx,ny,nz       ! The number grid points in 3 directions
-  INTEGER :: nxy, nxyz
+  integer :: nx,ny,nz       ! The number grid points in 3 directions
+  integer :: nxy, nxyz
 !
 !-----------------------------------------------------------------------
 !
@@ -1590,8 +1590,8 @@ SUBROUTINE setradwrk( nx,ny,nz )
   so5d4  = 1+26*nxy+36*nxyz
   so5d5  = 1+26*nxy+40*nxyz
 
-  RETURN
-END SUBROUTINE setradwrk
+  return
+end subroutine setradwrk
 !
 !##################################################################
 !##################################################################
@@ -1624,7 +1624,7 @@ END SUBROUTINE setradwrk
 !##################################################################
 !
 
-SUBROUTINE cldoptd(nx,ny,m,n,nz, radstgr,                               &
+subroutine cldoptd(nx,ny,m,n,nz, radstgr,                               &
            pres,temp,qc,qr,qi,qs,qh, rhostr, zp,                        &
            tauir,tauswi,tauswl,reffi,reffl,zen,                         &
            effc,effi,effs,effr,effg,effis,ptype)  ! hm 8/20/12
@@ -1680,46 +1680,46 @@ SUBROUTINE cldoptd(nx,ny,m,n,nz, radstgr,                               &
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: nx,ny,nz
-  INTEGER :: m,n
-  INTEGER :: radstgr
+  integer :: nx,ny,nz
+  integer :: m,n
+  integer :: radstgr
 
-  REAL :: pres  (nx,ny,nz)      ! in mb
-  REAL :: temp  (nx,ny,nz)      ! in K
-  REAL :: qc    (nx,ny,nz)      ! in g/g
-  REAL :: qr    (nx,ny,nz)      ! in g/g
-  REAL :: qi    (nx,ny,nz)      ! in g/g
-  REAL :: qs    (nx,ny,nz)      ! in g/g
-  REAL :: qh    (nx,ny,nz)      ! in g/g
-  REAL :: rhostr(nx,ny,nz)      ! in kg/m**3
-  REAL :: zp    (nx,ny,nz)      ! in kg/m**3
+  real :: pres  (nx,ny,nz)      ! in mb
+  real :: temp  (nx,ny,nz)      ! in K
+  real :: qc    (nx,ny,nz)      ! in g/g
+  real :: qr    (nx,ny,nz)      ! in g/g
+  real :: qi    (nx,ny,nz)      ! in g/g
+  real :: qs    (nx,ny,nz)      ! in g/g
+  real :: qh    (nx,ny,nz)      ! in g/g
+  real :: rhostr(nx,ny,nz)      ! in kg/m**3
+  real :: zp    (nx,ny,nz)      ! in kg/m**3
 
-  REAL :: tauir (nx,ny,nz)
-  REAL :: tauswi(nx,ny,nz)
-  REAL :: tauswl(nx,ny,nz)
-  REAL :: reffi (nx,ny,nz)
-  REAL :: reffl (nx,ny,nz)
+  real :: tauir (nx,ny,nz)
+  real :: tauswi(nx,ny,nz)
+  real :: tauswl(nx,ny,nz)
+  real :: reffi (nx,ny,nz)
+  real :: reffl (nx,ny,nz)
 
-  REAL :: tauqc
-  REAL :: tauqr
-  REAL :: tauqi
-  REAL :: tauqs
-  REAL :: tauqh
-  REAL :: reff1
-  REAL :: reff2
-  REAL :: zen
+  real :: tauqc
+  real :: tauqr
+  real :: tauqi
+  real :: tauqs
+  real :: tauqh
+  real :: reff1
+  real :: reff2
+  real :: zen
 
-  REAL :: w1, effrad
+  real :: w1, effrad
 
-  REAL :: cpi,twco, dpg, rho
+  real :: cpi,twco, dpg, rho
 
 ! hm 8/20/12
   real, intent(in), dimension(nz) :: effc,effi,effs,effr,effg,effis
   integer, intent(in) :: ptype
 
-  INTEGER :: i,j,k, im,jm,km
+  integer :: i,j,k, im,jm,km
 !!!  INTEGER :: istgr, jstgr, jodd
 
       real, parameter :: g      = 9.81
@@ -1751,11 +1751,11 @@ SUBROUTINE cldoptd(nx,ny,m,n,nz, radstgr,                               &
 
   if( nx.ne.1 .or. ny.ne.1 ) stop 23323
 
-  DO km=3,nz-1
+  do km=3,nz-1
     k = nz+1-km
 
-    DO j=1,ny
-      DO i=1,nx
+    do j=1,ny
+      do i=1,nx
 
         im = i
         jm = j
@@ -1766,38 +1766,38 @@ SUBROUTINE cldoptd(nx,ny,m,n,nz, radstgr,                               &
         !          use actual rho and actual delta-z
         dpg = 0.1*rhostr(i,j,k)*(zp(i,j,k+1)-zp(i,j,k))
 
-        IF ( qc(i,j,k) >= twco ) THEN
+        if ( qc(i,j,k) >= twco ) then
           w1     = dpg*qc(i,j,k)
           effrad = 0.0015
 ! hm 8/20/12
           if(ptype.eq.5) effrad = effc(k)*1.e-4 !convert from micron to cm
           tauqc  = w1/effrad
           reff2  = effrad*1.0E4
-        ELSE
+        else
           tauqc = 0.0
           reff2 = 0.0
-        END IF
+        end if
 
-        IF ( qr(i,j,k) >= twco ) THEN
+        if ( qr(i,j,k) >= twco ) then
           w1     = dpg*qr(i,j,k)
           effrad = 3./((cpi*tnw*roqr/(rho*qr(i,j,k)))**.25)
 ! hm 8/20/12
           if(ptype.eq.5) effrad = effr(k)*1.e-4 !convert from micron to cm 
           tauqr  = w1/effrad
-        ELSE
+        else
           tauqr=0.0
-        END IF
+        end if
 
-        IF ( qi(i,j,k)+qs(i,j,k) >= twco ) THEN
+        if ( qi(i,j,k)+qs(i,j,k) >= twco ) then
           w1 = 1.e4*dpg*(qi(i,j,k)+qs(i,j,k))
 
-          IF ( temp(im,jm,km) > 243.16 ) THEN
+          if ( temp(im,jm,km) > 243.16 ) then
             effrad = 0.0125
-          ELSE IF ( temp(im,jm,km) < 223.16 ) THEN
+          else if ( temp(im,jm,km) < 223.16 ) then
             effrad = 0.0025
-          ELSE
+          else
             effrad = 0.0125+(temp(im,jm,km)-243.16)*0.00050
-          END IF
+          end if
 
 ! hm 8/20/12 overwrite with predicted effective radii
           if(ptype.eq.5) effrad = effs(k)*1.e-4
@@ -1808,21 +1808,21 @@ SUBROUTINE cldoptd(nx,ny,m,n,nz, radstgr,                               &
 ! hm 8/20/12 combined cloud ice + snow effective radius
           if(ptype.eq.5) effrad = effis(k)*1.e-4 ! micron to cm
           reff1 = effrad*1.0E4
-        ELSE
+        else
           tauqi = 0.0
           tauqs = 0.0
           reff1 = 0.0
-        END IF
+        end if
 
-        IF ( qh(i,j,k) >= twco ) THEN
+        if ( qh(i,j,k) >= twco ) then
           w1     = dpg*qh(i,j,k)
           effrad = 3./((cpi*tng*roqg/(rho*qh(i,j,k)))**.25)
 ! hm 8/20/12
           if(ptype.eq.5) effrad = effg(k)*1.e-4 ! micron to cm
           tauqh  = w1/effrad
-        ELSE
+        else
           tauqh  = 0.0
-        END IF
+        end if
 
 !!!        tauswi(im,jm,km) = tauqs + tauqh
         ! GHB, bug fix (I think):  include qi  (130903)
@@ -1831,16 +1831,16 @@ SUBROUTINE cldoptd(nx,ny,m,n,nz, radstgr,                               &
         reffi (im,jm,km) = reff1
         reffl (im,jm,km) = reff2
         tauir (im,jm,km)  = 0.5 * tauswl(im,jm,km) + tauqi + tauqh
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
-  IF ( radstgr /= 0 .AND. MOD(ny,2) == 0 ) THEN
+  if ( radstgr /= 0 .AND. MOD(ny,2) == 0 ) then
     stop 77775
-  END IF
+  end if
 
-  DO jm=1,n
-    DO im=1,m
+  do jm=1,n
+    do im=1,m
       tauswi(im,jm,1) = 0.0
       tauswl(im,jm,1) = 0.0
       reffi (im,jm,1) = 0.0
@@ -1852,11 +1852,11 @@ SUBROUTINE cldoptd(nx,ny,m,n,nz, radstgr,                               &
       reffi (im,jm,2) = 0.0
       reffl (im,jm,2) = 0.0
       tauir (im,jm,2) = 0.0
-    END DO
-  END DO
+    end do
+  end do
 
-  RETURN
-END SUBROUTINE cldoptd
+  return
+end subroutine cldoptd
 !
 !##################################################################
 !##################################################################
@@ -1874,7 +1874,7 @@ END SUBROUTINE cldoptd
 !##################################################################
 !
 
-SUBROUTINE fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
+subroutine fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
 !
 !-----------------------------------------------------------------------
 !
@@ -1901,13 +1901,13 @@ SUBROUTINE fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: nx,ny,np
-  INTEGER :: m,n
+  integer :: nx,ny,np
+  integer :: m,n
 
-  REAL :: pl(nx,ny,np+1)      ! Model pressure (mb)
-  REAL :: ao(nx,ny,np+1)        ! Model o3 mixing ratio (g/g)
+  real :: pl(nx,ny,np+1)      ! Model pressure (mb)
+  real :: ao(nx,ny,np+1)        ! Model o3 mixing ratio (g/g)
 
   integer, intent(in) :: ib,ie,jb,je,kb,ke,nk
   real, dimension(ib:ie,jb:je,kb:ke) :: prs0,o30
@@ -1918,28 +1918,28 @@ SUBROUTINE fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
 !
 !-----------------------------------------------------------------------
 !
-  INTEGER :: lay
-  PARAMETER (lay=75)
+  integer :: lay
+  parameter (lay=75)
 
 !  integer iop(2),itab(3),iflag(5)
-  INTEGER :: iop(2),itab(3)
+  integer :: iop(2),itab(3)
 
-  REAL :: pa(lay)       ! Local layer pressure (mb)
-  REAL :: ta(lay)       ! Local layer temperature (K)
-  REAL :: wa(lay)       ! Local layer water vapor mixing ratio (g/g)
-  REAL :: oa(lay)       ! Local layer o3 mixing ratio (g/g)
+  real :: pa(lay)       ! Local layer pressure (mb)
+  real :: ta(lay)       ! Local layer temperature (K)
+  real :: wa(lay)       ! Local layer water vapor mixing ratio (g/g)
+  real :: oa(lay)       ! Local layer o3 mixing ratio (g/g)
 
 !  real tsi(5)
 !  real w(lay)
-  REAL :: tab(3)
-  REAL :: wk(lay,4)
+  real :: tab(3)
+  real :: wk(lay,4)
 
-  INTEGER :: i,j,k
-  INTEGER :: INT, ix
+  integer :: i,j,k
+  integer :: INT, ix
 !  integer lun
 
 !  real y
-  REAL :: p
+  real :: p
 !
 !----- ix=        1:trp; 2:mls; 3:mlw; 4:sas; 5:saw
 !  data iflag/  1   ,  0   ,  0   ,  0   ,  0   /
@@ -1951,7 +1951,7 @@ SUBROUTINE fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
 !
 !-----------------------------------------------------------------------
 !
-  DATA (pa(k),k=1,lay)/                                                 &
+  data (pa(k),k=1,lay)/                                                 &
            .0003,    .0008,    .0011,    .0015,     .0021,              &
            .0029,    .0041,    .0058,    .0081,     .0113,              &
            .0158,    .0221,    .0310,    .0435,     .0609,              &
@@ -1968,7 +1968,7 @@ SUBROUTINE fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
         787.1400, 810.9150, 834.6900, 858.4650,  882.2400,              &
         906.0150, 929.7850, 953.5600, 977.3350, 1001.1100/
 
-  DATA (ta(k),k=1,lay)/                                                 &
+  data (ta(k),k=1,lay)/                                                 &
         209.86, 210.20, 210.73, 211.27, 211.81,                         &
         212.35, 212.89, 213.44, 213.98, 214.53,                         &
         215.08, 215.62, 216.17, 216.74, 218.11,                         &
@@ -1986,7 +1986,7 @@ SUBROUTINE fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
         290.11, 291.03, 291.91, 292.76, 293.59/
 
 
-  DATA (wa(k),k=1,lay)/                                                 &
+  data (wa(k),k=1,lay)/                                                 &
         0.400E-05, 0.400E-05, 0.400E-05, 0.400E-05, 0.400E-05,          &
         0.400E-05, 0.400E-05, 0.400E-05, 0.400E-05, 0.400E-05,          &
         0.400E-05, 0.400E-05, 0.400E-05, 0.400E-05, 0.400E-05,          &
@@ -2003,7 +2003,7 @@ SUBROUTINE fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
         0.560E-02, 0.619E-02, 0.680E-02, 0.742E-02, 0.805E-02,          &
         0.869E-02, 0.935E-02, 0.100E-01, 0.107E-01, 0.113E-01/
 
-  DATA (oa(k),k=1,lay)/                                                 &
+  data (oa(k),k=1,lay)/                                                 &
        .643E-07, .202E-06, .246E-06, .290E-06, .334E-06,                &
        .378E-06, .422E-06, .467E-06, .512E-06, .557E-06,                &
        .603E-06, .648E-06, .694E-06, .740E-06, .793E-06,                &
@@ -2032,27 +2032,27 @@ SUBROUTINE fito3(nx,ny,m,n,np,pl,ao,prs0,o30,ib,ie,jb,je,kb,ke,nk)
   iop(2)=4
   INT=1
 
-  CALL coeff(lay,pa,oa,wa,iop,INT,wk)
+  call coeff(lay,pa,oa,wa,iop,INT,wk)
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,p,tab,itab)
-  DO k=kb,ke
-    DO j=jb,je
-      DO i=ib,ie
+  do k=kb,ke
+    do j=jb,je
+      do i=ib,ie
         itab(1)=1
         itab(2)=0
         itab(3)=0
 !!!        p = 0.5 * ( pl(i,j,k+1) + pl(i,j,k) )
         p = 0.01*prs0(i,j,k)
-        CALL terp1(lay,pa,oa,wa,p,INT,tab,itab)
+        call terp1(lay,pa,oa,wa,p,INT,tab,itab)
 !!!        ao(i,j,k)=tab(1)
         o30(i,j,nk+1-k)=tab(1)
-      END DO
-    END DO
-  END DO
+      end do
+    end do
+  end do
 
-  RETURN
-END SUBROUTINE fito3
+  return
+end subroutine fito3
 !
 !##################################################################
 !##################################################################
@@ -2067,7 +2067,7 @@ END SUBROUTINE fito3
 !##################################################################
 !
 
-  REAL FUNCTION aeroden(p,psfc)
+  real function aeroden(p,psfc)
 !
 !-----------------------------------------------------------------------
 !
@@ -2092,19 +2092,19 @@ END SUBROUTINE fito3
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
-  REAL :: p,psfc
+  implicit none
+  real :: p,psfc
 !!!  REAL :: aeroden
 !
-  IF (p < (.225*psfc)) THEN
+  if (p < (.225*psfc)) then
     aeroden=0.
-  ELSE IF (p < (.80*psfc)) THEN
+  else if (p < (.80*psfc)) then
     aeroden=0.025/(0.575*psfc)
-  ELSE
+  else
     aeroden=0.050/(0.2*psfc)
-  END IF
-  RETURN
-  END FUNCTION aeroden
+  end if
+  return
+  end function aeroden
 
 !##################################################################
 !##################################################################
@@ -2119,7 +2119,7 @@ END SUBROUTINE fito3
 !##################################################################
 !
 
-SUBROUTINE julday( year, month, day, jday )
+subroutine julday( year, month, day, jday )
 !
 !-----------------------------------------------------------------------
 !
@@ -2161,13 +2161,13 @@ SUBROUTINE julday( year, month, day, jday )
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: year, month, day, jday
-  INTEGER :: lpyear, lp
+  integer :: year, month, day, jday
+  integer :: lpyear, lp
 
-  INTEGER :: mndys(12)     ! Day numbers for each month
-  DATA mndys/0,31,59,90,120,151,181,212,243,273,304,334/
+  integer :: mndys(12)     ! Day numbers for each month
+  data mndys/0,31,59,90,120,151,181,212,243,273,304,334/
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
@@ -2175,20 +2175,20 @@ SUBROUTINE julday( year, month, day, jday )
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
-  IF ( MOD(year,400) == 0 .OR.                                          &
-         (MOD(year,4) == 0 .AND. MOD(year,100) /= 0 ) ) THEN
+  if ( MOD(year,400) == 0 .OR.                                          &
+         (MOD(year,4) == 0 .AND. MOD(year,100) /= 0 ) ) then
     lpyear = 1
-  ELSE
+  else
     lpyear = 0
-  END IF
+  end if
 
   lp = 0
-  IF ( month > 2 ) lp = lpyear
+  if ( month > 2 ) lp = lpyear
 
   jday = mndys(month) + day + lp
 
-  RETURN
-END SUBROUTINE julday
+  return
+end subroutine julday
 
 !
 !
@@ -2204,7 +2204,7 @@ END SUBROUTINE julday
 !##################################################################
 !##################################################################
 !
-SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
+subroutine zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
            rjday,tloc, latscl,lonscl, slpmag,slpdir,                    &
            tem1,tem2,saltitude,sazimuth,dx,dy,dtbig,curtim,             &
            ctrlat,ctrlon,year,month,day,hour,minute,second,jday)
@@ -2272,25 +2272,25 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: nx,ny
+  integer :: nx,ny
   real :: dx,dy
   real :: dtbig,curtim
   real :: ctrlat,ctrlon
   integer :: year,month,day,hour,minute,second,jday
 
-  REAL :: hterain(nx,ny)
+  real :: hterain(nx,ny)
 
-  REAL :: cosz(nx,ny),   cosss(nx,ny), a2dr2(nx,ny)
-  REAL :: rjday(nx,ny),  tloc(nx,ny)
-  REAL :: latscl(nx,ny), lonscl(nx,ny)
-  REAL :: slpmag(nx,ny), slpdir(nx,ny)
+  real :: cosz(nx,ny),   cosss(nx,ny), a2dr2(nx,ny)
+  real :: rjday(nx,ny),  tloc(nx,ny)
+  real :: latscl(nx,ny), lonscl(nx,ny)
+  real :: slpmag(nx,ny), slpdir(nx,ny)
 !augustin add saltitude and sazimuth in the outputs of zenanlg
-  REAL :: saltitude
-  REAL :: sazimuth
+  real :: saltitude
+  real :: sazimuth
 
-  REAL :: tem1(nx,ny), tem2(nx,ny)
+  real :: tem1(nx,ny), tem2(nx,ny)
 !
 !-----------------------------------------------------------------------
 !
@@ -2311,24 +2311,24 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 !
 !-----------------------------------------------------------------------
 !
-  INTEGER :: i,j
+  integer :: i,j
 
-  REAL :: xs, ys
+  real :: xs, ys
 
 !!!  REAL :: hour0, yrday
 !!!  REAL :: deg2rad, pi, pi2
 
-  REAL :: etau, shrangl, sdeclin
-  REAL :: azimuth, sinz
-  REAL :: dpsi, sinpsi, cospsi
+  real :: etau, shrangl, sdeclin
+  real :: azimuth, sinz
+  real :: dpsi, sinpsi, cospsi
 
-  REAL :: anncyc
+  real :: anncyc
 
-  REAL :: hr, days2k, lsun, gsun, obliq, lambda, xsun, ysun
+  real :: hr, days2k, lsun, gsun, obliq, lambda, xsun, ysun
 !!!  REAL :: asun, alpha, rad2deg
-  REAL :: asun, alpha
+  real :: asun, alpha
 
-  LOGICAL :: firstcall        ! First call flag of this subroutine
+  logical :: firstcall        ! First call flag of this subroutine
 
 !!!  include 'radzen.incl'
 
@@ -2339,7 +2339,7 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 !!!  INTEGER :: nxmid, nymid, source 
 !!!  SAVE nxmid, nymid, source
 
-  REAL :: shrangl_mid
+  real :: shrangl_mid
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
@@ -2382,12 +2382,12 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 
 !!! not considering map projections, for now:  GHB, 100720
 !  IF ( mapproj == 0 ) THEN
-    DO j=1,ny
-      DO i=1,nx
+    do j=1,ny
+      do i=1,nx
         latscl(i,j) = ctrlat
         lonscl(i,j) = ctrlon
-      END DO
-    END DO
+      end do
+    end do
 !  ELSE
 !    DO j=1,ny
 !      ys = 0.5*(y(j)+y(j+1))
@@ -2406,8 +2406,8 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 !
 !-----------------------------------------------------------------------
 !
-  DO j=1,ny
-    DO i=1,nx
+  do j=1,ny
+    do i=1,nx
 
       latscl(i,j) = deg2rad * latscl(i,j)        ! lat: -90 to 90
 
@@ -2418,19 +2418,19 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 
       tloc(i,j) = MOD( tloc(i,j), 24.0 )
 
-      IF ( tloc(i,j) < 0. ) THEN
+      if ( tloc(i,j) < 0. ) then
         tloc(i,j) = tloc(i,j) + 24.0            ! Local time
         rjday(i,j) = MOD( rjday(i,j)-1, yrday ) ! Julian day at each pts
-      END IF
+      end if
 
-    END DO
-  END DO
+    end do
+  end do
 
 !!!  print *,'  curtim,dtbig = ',curtim,dtbig
 !!!  print *,'  tloc,rjday,latscl = ',tloc(2,2),rjday(2,2),latscl(2,2)
 
-  DO j=1,ny
-    DO i=1,nx
+  do j=1,ny
+    do i=1,nx
       anncyc = pi2 * ( rjday(i,j) - 1.0 ) / yrday
 
       a2dr2(i,j) = 1.000110                                             &
@@ -2446,45 +2446,45 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
               + 275 * month / 9 + day - 730531.5 + hr / 24.
 
       lsun = 280.461 + 0.9856474 * days2k     ! Mean Longitude of the Sun
-      950     IF ( lsun < 0 ) THEN
+      950     if ( lsun < 0 ) then
         lsun = lsun + 360.
-        GO TO 950
-      ELSE IF ( lsun > 360 ) THEN
+        go to 950
+      else if ( lsun > 360 ) then
         lsun = lsun - 360.
-        GO TO 950
-      END IF
+        go to 950
+      end if
 
       gsun = 357.528 + 0.9856003 * days2k     ! Mean anomaly of the Sun
-      960     IF ( gsun < 0 ) THEN
+      960     if ( gsun < 0 ) then
         gsun = gsun + 360.
-        GO TO 960
-      ELSE IF ( gsun > 360 ) THEN
+        go to 960
+      else if ( gsun > 360 ) then
         gsun = gsun - 360.
-        GO TO 960
-      END IF
+        go to 960
+      end if
 
       lambda = lsun + 1.915 * SIN(gsun*deg2rad)  & ! Ecliptic longitude
           + 0.02 * SIN(2*gsun*deg2rad)
-      970     IF ( lambda < 0 ) THEN
+      970     if ( lambda < 0 ) then
         lambda = lambda + 360.
-        GO TO 970
-      ELSE IF ( lambda > 360 ) THEN
+        go to 970
+      else if ( lambda > 360 ) then
         lambda = lambda - 360.
-        GO TO 970
-      END IF
+        go to 970
+      end if
 
       obliq = 23.439 - 0.0000004 * days2k     ! Obliquity of the ecliptic
 
       xsun = COS(lambda*deg2rad)
       ysun = COS(obliq*deg2rad) * SIN(lambda*deg2rad)
       asun = ATAN(ysun/xsun)*rad2deg
-      IF ( xsun < 0. ) THEN
+      if ( xsun < 0. ) then
         alpha = asun + 180   ! Right Ascension (RA)
-      ELSE IF ( ( ysun < 0. ) .AND. ( xsun > 0. ) ) THEN
+      else if ( ( ysun < 0. ) .AND. ( xsun > 0. ) ) then
         alpha = asun + 360
-      ELSE
+      else
         alpha = asun
-      END IF
+      end if
 
       etau = ( lsun - alpha ) * 4. / 60.      ! Equation of time in hour
 
@@ -2532,7 +2532,7 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 ! added to calculate saltitude and sazimuth later for shading
 !     IF( radshade /= 0) THEN  want azimuth regardless of shading
 
-        IF (i == nxmid .AND. j == nymid) THEN
+        if (i == nxmid .AND. j == nymid) then
   
 ! augustin
 ! computes the solar altitudes and azimuth,
@@ -2557,12 +2557,12 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 
         shrangl_mid = shrangl
 
-       END IF
+       end if
 
  !     END IF  !  end of radshade if block..!want azimuth regardless of rshade
 
-    END DO
-  END DO
+    end do
+  end do
 
  ! IF( radshade /= 0) THEN
 
@@ -2586,20 +2586,20 @@ SUBROUTINE zenangl(nx,ny,      hterain, cosz, cosss, a2dr2,             &
 ! between -pi and pi
 
 
-    IF ((shrangl_mid > pi) .AND. (shrangl_mid < pi2)) THEN
+    if ((shrangl_mid > pi) .AND. (shrangl_mid < pi2)) then
       shrangl_mid = shrangl_mid - pi2
-    END IF
-    IF ((shrangl_mid > pi2) .AND. (shrangl_mid < pi2+pi)) THEN
+    end if
+    if ((shrangl_mid > pi2) .AND. (shrangl_mid < pi2+pi)) then
       shrangl_mid = shrangl_mid - pi2
-    END IF
+    end if
 
-    IF (shrangl_mid > 0) THEN
+    if (shrangl_mid > 0) then
       sazimuth = pi2 - sazimuth
-    END IF
+    end if
 
  ! END IF  !  end of radshade if block...
 
-  RETURN
-END SUBROUTINE zenangl
+  return
+end subroutine zenangl
 
-  END MODULE radtrns3d_module
+  end module radtrns3d_module

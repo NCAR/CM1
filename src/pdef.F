@@ -1,11 +1,11 @@
-  MODULE pdef_module
+  module pdef_module
 
   implicit none
 
   private
   public :: pdefx1,pdefx2,pdefy1,pdefy2,pdefz
 
-  CONTAINS
+  contains
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -34,8 +34,8 @@
 !----------------------------------------------------------------
 ! cm1r17:  include divx component
 
-      IF(.not.terrain_flag)THEN
-        IF(axisymm.eq.0)THEN
+      if(.not.terrain_flag)then
+        if(axisymm.eq.0)then
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=1,nk
@@ -46,7 +46,7 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=1,nk
@@ -57,8 +57,8 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ELSE
+        endif
+      else
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
           do k=1,nk
@@ -69,7 +69,7 @@
           enddo
           enddo
           enddo
-      ENDIF
+      endif
 
         if(wbc.eq.2 .and. ibw.eq.1)then
           i=1
@@ -141,11 +141,11 @@
 
         rdt=1.0/dt
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k,foo1,foo2,foo3)
-      DO k=1,nk
+      do k=1,nk
 
         do j=1,nj
         do i=-1,ni+2
@@ -172,10 +172,10 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
         !-----
-        IF(.not.terrain_flag)THEN
+        if(.not.terrain_flag)then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -189,7 +189,7 @@
         enddo
         enddo
         !-----
-        ELSE
+        else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -202,14 +202,14 @@
         enddo
         enddo
         enddo
-        ENDIF
+        endif
         !-----
 
-    ELSE
+    else
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k,foo1,foo2,foo3)
-      DO k=1,nk
+      do k=1,nk
 
         do j=1,nj
         do i=-1,ni+2
@@ -237,7 +237,7 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,foo1,foo2,foo3)
@@ -252,7 +252,7 @@
         enddo
         enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------------------------
 
@@ -288,7 +288,7 @@
 !----------------------------------------------------------------
 ! cm1r17:  include divx component
 
-      IF(.not.terrain_flag)THEN
+      if(.not.terrain_flag)then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -299,7 +299,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -310,7 +310,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
         if(sbc.eq.2 .and. ibs.eq.1)then
           j=1
@@ -382,7 +382,7 @@
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k,foo1,foo2,foo3)
-      DO k=1,nk
+      do k=1,nk
 
         do j=-1,nj+2
         do i=1,ni
@@ -409,12 +409,12 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
         rdt=1.0/dt
 
         !-----
-        IF(.not.terrain_flag)THEN
+        if(.not.terrain_flag)then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -428,7 +428,7 @@
         enddo
         enddo
         !-----
-        ELSE
+        else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -441,7 +441,7 @@
         enddo
         enddo
         enddo
-        ENDIF
+        endif
         !-----
 
 !----------------------------------------------------------------
@@ -473,7 +473,7 @@
 
 !----------------------------------------------------------------
 
-      IF(.not.terrain_flag)THEN
+      if(.not.terrain_flag)then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -484,7 +484,7 @@
         enddo
         enddo
         enddo
-      ELSE
+      else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -495,7 +495,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j)
@@ -544,7 +544,7 @@
         rdt=1.0/dt
 
         !-----
-        IF(.not.terrain_flag)THEN
+        if(.not.terrain_flag)then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -558,7 +558,7 @@
         enddo
         enddo
         !-----
-        ELSE
+        else
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
         do k=1,nk
@@ -571,7 +571,7 @@
         enddo
         enddo
         enddo
-        ENDIF
+        endif
         !-----
 
 !----------------------------------------------------------------
@@ -581,4 +581,4 @@
       end subroutine pdefz
 
 
-  END MODULE pdef_module
+  end module pdef_module

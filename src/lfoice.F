@@ -1,4 +1,4 @@
-  MODULE lfoice_module
+  module lfoice_module
 
   implicit none
 
@@ -123,7 +123,7 @@
 !-----------------------------------------
 
 
-  CONTAINS
+  contains
 
 !-------------------------------------------------------------------------------
 !   lfo_ice_drive
@@ -213,43 +213,43 @@
 
       i = 1
       j = 1
-      DO k = 1,nk                   !MSG might need to change to nk instead of nk-1
+      do k = 1,nk                   !MSG might need to change to nk instead of nk-1
        dzc(k)  =   mf(i,j,k)*rdz
        sb(k,1) =  th0(i,j,k)
        sb(k,2) =  qv0(i,j,k)
        rinit(k)= rho0(i,j,k)
        pinit(k)= prs0(i,j,k)
-      ENDDO
+      enddo
 
 !     Copy 3-D arrays from CM1 to 3-ICE.
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
-      DO k = 1, nk
-      DO j = 1, nj
-      DO i = 1, ni
+      do k = 1, nk
+      do j = 1, nj
+      do i = 1, ni
        pn(i,j,k)   = prs(i,j,k) - pinit(k)       !perturbation pressure (Pascals)
-      ENDDO
-      ENDDO
-      ENDDO
+      enddo
+      enddo
+      enddo
 
 !     Make sure vq array is zero, by default
 
-      DO n = 1, numq
+      do n = 1, numq
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
-        DO k = 1, nk
-        DO j = 1, nj
-        DO i = 1, ni
+        do k = 1, nk
+        do j = 1, nj
+        do i = 1, ni
           vq(i,j,k,n) = 0.0
-        ENDDO
-        ENDDO
-        ENDDO
-      ENDDO
+        enddo
+        enddo
+        enddo
+      enddo
 
 ! DO MICROPHYSICS
 
-           CALL LFO_ICE (ni,nj,nk,numq,dt,dzc,sb,th3d,q3d,vq,rinit,pn,pinit,nstep, &
+           call LFO_ICE (ni,nj,nk,numq,dt,dzc,sb,th3d,q3d,vq,rinit,pn,pinit,nstep, &
                          ib,ie,jb,je,kb,ke,ibm,iem,jbm,jem,kbm,kem)
 
 !-------------------------------------------------------------------------------
@@ -268,7 +268,7 @@
       if(timestats.ge.1) time_microphy=time_microphy+mytime()
 
 
-      END subroutine lfo_ice_drive
+      end subroutine lfo_ice_drive
 !--------------------------------------------------------------------------
 !
 !
@@ -299,7 +299,7 @@
 !--------------------------------------------------------------------------
 !          CALL LFO_ICE (ni,nj,nk,numq,dt,dzc,sb,th3d,q3d,rinit,pn,pinit,nstep, &
 !                        ib,ie,jb,je,kb,ke,ibm,iem,jbm,jem,kbm,kem)
-      SUBROUTINE LFO_ICE(nx,ny,nz,numq,dtp,dzc,ab,th3d,q3d,vq,   db,pn,   pb,nstep, &
+      subroutine LFO_ICE(nx,ny,nz,numq,dtp,dzc,ab,th3d,q3d,vq,   db,pn,   pb,nstep, &
                          ib,ie,jb,je,kb,ke,ibm,iem,jbm,jem,kbm,kem)
 !--------------------------------------------------------------------------
 ! RELEASE NOTES
@@ -758,9 +758,9 @@
       kgs(ngscnt) = kz
       if ( ngscnt .eq. ngs ) goto 1100
       end if
-      ENDDO     !MSG - i loop
+      enddo     !MSG - i loop
       nxmpb = 1
-      ENDDO     !MSG - k loop
+      enddo     !MSG - k loop
  1100 continue
       if ( ngscnt .eq. 0 ) go to 9998
       if ( ndebug .eq. 1 ) print*,'dbg = 5'
@@ -1008,12 +1008,12 @@
 
 ! Berry (1968) Autoconversion == 0 (critical qc) or ==1 (critical diameter from Ferrier 1994)
 
-      IF( autoconversion .eq. 0 ) THEN
+      if( autoconversion .eq. 0 ) then
        qdiff  = max((qcw(mgs)-qcmincwrn),0.)
-      ELSE
+      else
        qccrit = (pi/6.)*((ccw(mgs)*cwdiap**3)*cwdn)/dnz(mgs)
        qdiff  = max((qcw(mgs)-qccrit),0.)
-      ENDIF
+      endif
 
       qrcnw(mgs) =  0.0
       if ( qdiff .gt. 0.0 ) then
@@ -1066,8 +1066,8 @@
 !
       qhacip(mgs)= qhaci(mgs)		!ehi=0 case
       qhacsp(mgs)= qhacs(mgs)		!ehs=0 case
-      IF ( ehi(mgs) .gt. 0.0 ) qhacip(mgs) = min(qhaci(mgs)/ehi(mgs),qi5dt)
-      IF ( ehs(mgs) .gt. 0.0 ) qhacsp(mgs) = min(qhacs(mgs)/ehs(mgs),qs5dt)
+      if ( ehi(mgs) .gt. 0.0 ) qhacip(mgs) = min(qhaci(mgs)/ehi(mgs),qi5dt)
+      if ( ehs(mgs) .gt. 0.0 ) qhacsp(mgs) = min(qhacs(mgs)/ehs(mgs),qs5dt)
 
       xcwt = 1.0/( elf +cw*temcg(mgs) )
 
@@ -1130,11 +1130,11 @@
 !  vapor to pristine ice crystals 
 !
       qiint(mgs) = 0.0
-      IF ( ssi(mgs) .gt. 1.0 ) THEN
+      if ( ssi(mgs) .gt. 1.0 ) then
         dqisdt(mgs)= (qwv(mgs)-qis(mgs))/ (1.0 + xiint*qis(mgs)/tsqr(mgs))
         cnnt       = cci(mgs)
         qiint(mgs) = (1.0/dtp) *min((1.0e-12)*cnnt/dnz(mgs), 0.50*dqisdt(mgs)) 
-      ENDIF
+      endif
 !
 !  Domain totals for source terms 
 !
@@ -1635,7 +1635,7 @@
 !
 !---------------------------------
 ! new, 071008, GHB (from MSG):
-      if ( (ix+1 .gt. nx-istag) .and. &   ! x&z at end. Exit.       !MSG Corrected logic on 5 Oct 2007
+      if ( (ix+1 .gt. nx-istag) .and. &   ! x&z at end. exit.       !MSG Corrected logic on 5 Oct 2007
            (kz+1 .gt. nz-kstag-1) ) then
         go to 1200
       else if (ix+1 .gt. nx-istag ) then  ! x at end. Reset x & inc z
@@ -1952,11 +1952,11 @@
        write(outfile,101) 'CNOS/DENS:        ',cnos, swdn
        write(outfile,101) 'CNOH/DENH/DRAGH:  ',cnoh, hwdn,dragh
        write(outfile,*)   'TIME STEP:        ', dtp
-         IF( autoconversion .eq. 0 ) THEN
+         if( autoconversion .eq. 0 ) then
         write(outfile,*) 'Berry (1968) Critical qc g/g for autoconversion= ',qcmincwrn
-         ELSE
+         else
         write(outfile,*) 'Berry (1968) Critical qc diam for autoconversion= ',cwdiap*1e6,' microns'
-         ENDIF
+         endif
        write(outfile,*) '-----------------------------------------------------------------------'
        write(outfile,*)
 
@@ -2048,10 +2048,10 @@
         cs10(ibb) = bfa1(ibb)*cm50a
         cs11(ibb) = dtp/(cbtim(ibb)*cmi50)
 !       write(6,*) 'ibb, cbtim(ibb)=',ibb, cbtim(ibb)
-      ENDDO
+      enddo
 
       end subroutine lfoice_init
 
 !--------------------------------------------------------------------------
 
-  END MODULE lfoice_module
+  end module lfoice_module

@@ -172,8 +172,8 @@
 
 
 
-MODULE module_mp_nssl_2mom
-  IMPLICIT NONE
+module module_mp_nssl_2mom
+  implicit none
   
   public nssl_2mom_driver
   public nssl_2mom_init
@@ -183,7 +183,7 @@ MODULE module_mp_nssl_2mom
   private gammadp
   
   logical, private :: cleardiag = .false.
-  PRIVATE
+  private
 
 #if ( WRF_CHEM == 1 )
   integer, parameter :: wrfchem_flag = 1
@@ -191,7 +191,7 @@ MODULE module_mp_nssl_2mom
   integer, parameter :: wrfchem_flag = 0
 #endif
 
-   LOGICAL, PRIVATE:: is_aerosol_aware = .false.
+   logical, private:: is_aerosol_aware = .false.
       
       logical, private :: turn_on_cin = .false.
   
@@ -211,7 +211,7 @@ MODULE module_mp_nssl_2mom
   real, parameter  :: roqimax = 2.08e22*dimax**8
   
 ! Params for dbz:
-  integer  :: iuseferrier = 1  ! =1: use dry graupel only from Ferrier 1994; = 0: Use Smith (wet graupel)
+  integer  :: iuseferrier = 1  ! =1: use dry graupel only from Ferrier 1994; = 0: use Smith (wet graupel)
   integer  :: idbzci      = 1
   integer  :: iusewetgraupel = 1 ! =1 to turn on use of QHW for graupel reflectivity (only for ZVDM -- mixedphase)
                                  ! =2 turn on for graupel density less than 300. only 
@@ -297,7 +297,7 @@ MODULE module_mp_nssl_2mom
   real   , private :: cdhldnmin = 500., cdhldnmax = 800.0  ! defaults for hail (icdx=4)
   real   , public :: vtmaxsed = 70. ! Limit on fall speed (m/s, all moments) for sedimentation calculations. Not applied to fall speeds for microphysical rates
   
-  integer :: rssflg = 1   ! Rain size-sorting allowed (1, default), or disallowed (0).  If 0, sets N and Z-weighted fall speeds to q-weighted value
+  integer :: rssflg = 1   ! Rain size-sorting allowed (1, default), or disallowed (0).  if 0, sets N and Z-weighted fall speeds to q-weighted value
   integer :: sssflg = 1   ! As above but for snow
   integer :: hssflg = 1   ! As above but for graupel
   integer :: hlssflg = 1  ! As above but for hail
@@ -361,7 +361,7 @@ MODULE module_mp_nssl_2mom
 
 ! 0,2, 5.00e-10, 1, 0, 0, 0      : itype1,itype2,cimas0,icfn,ihrn,ibfc,iacr
   integer, public :: itype1 = 0, itype2 = 2  ! controls Hallett-Mossop process
-  integer, private :: in_freeze_rain_first = 0 ! =1 use IN to freezed rain drops (if none, then freeze droplets)
+  integer, private :: in_freeze_rain_first = 0 ! =1 use in to freezed rain drops (if none, then freeze droplets)
   integer, public :: icenucopt = 1       ! =1 Meyers/Ferrier primary ice nucleation; =2 Thompson/Cooper, =3 Phillips (Meyers/Demott), =4 DeMott (2010)
   real, public :: naer = 1.0e6  ! background large aerosol conc. for DeMott
   integer, private :: icfn = 2                ! contact freezing: 0 = off; 1 = hack (ok for single moment); 2 = full Cotton/Meyers version
@@ -408,7 +408,7 @@ MODULE module_mp_nssl_2mom
   real    :: ehr0 = 1.0          ! constant or max assumed graupel-rain collection efficiency
   real    :: efr0 = 1.0          ! constant or max assumed graupel-rain collection efficiency
   real    :: ehlr0 = 1.0         ! constant or max assumed hail-rain collection efficiency
-  real   , public :: exwmindiam = 0.0    ! minimum diameter of droplets for riming. If set > 0, will exclude that fraction of mass/number from accretion (idea from Furtado and Field 2017 JAS but also Fierro and Mansell 2017)
+  real   , public :: exwmindiam = 0.0    ! minimum diameter of droplets for riming. if set > 0, will exclude that fraction of mass/number from accretion (idea from Furtado and Field 2017 JAS but also Fierro and Mansell 2017)
   
 
   real   , private :: esilfo0 = 1.0       ! factor for LFO collection efficiency of snow for cloud ice.
@@ -607,7 +607,7 @@ MODULE module_mp_nssl_2mom
   integer, public  :: ibiggsnow   = 3 ! 1 = switch conversion over to snow for small frozen drops from Bigg freezing
                                        ! 2 = switch conversion over to snow for small frozen drops from rain-ice interaction
                                        ! 3 = switch conversion over to snow for small frozen drops from both
-  real    :: biggsnowdiam = -1.0 ! If >0, use for ibiggsnow threshold
+  real    :: biggsnowdiam = -1.0 ! if >0, use for ibiggsnow threshold
   
   integer, public  :: ixtaltype = 1 ! =1 column, =2 disk (similar to Takahashi)
 
@@ -631,7 +631,7 @@ MODULE module_mp_nssl_2mom
   integer, public :: iqhlacwshr = 1  ! turn on/off qhlacw for T > 0
   real, public :: binmlrmxdia = 40.e-3 ! threshold diameter (graupel/hail) to switch bin-bulk melting to use standard chmlr
   real, public :: binmlrzrrfac = 1.0 ! factor for reflectivity change ice that sheds while melting
-  real, public :: snowmeltdia = 0 ! If nonzero, sets the size of rain drops from melting snow.
+  real, public :: snowmeltdia = 0 ! if nonzero, sets the size of rain drops from melting snow.
   real, public :: alphasmlr0 = 14.0 ! shape parameter for drops formed from melting/shedding snow
   real, public :: delta_alphamlr = 0.5 ! offset from alphamax at which melting does not further collapse the shape parameter
   
@@ -647,7 +647,7 @@ MODULE module_mp_nssl_2mom
   real    :: ssmxuf = 4.0 ! supersaturation at which to start using "ultrafine" CCN (if ccnuf > 0.)
   
 
-  integer, parameter :: icespheres = 0 ! turn ice spheres (frozen droplets) on (1) or off (0). NOT COMPLETE IN WRF/ARPS/1 CODE!
+  integer, parameter :: icespheres = 0 ! turn ice spheres (frozen droplets) on (1) or off (0). NOT COMPLETE in WRF/ARPS/1 CODE!
   integer, parameter :: lqmx = 30
   integer, parameter :: lt = 1
   integer, parameter :: lv = 2
@@ -825,9 +825,9 @@ MODULE module_mp_nssl_2mom
     integer, parameter :: ngdnmm = 9
     real :: mmgraupvt(ngdnmm,3)  ! Milbrandt and Morrison (2013) fall speed coefficients for graupel/hail
 
-    DATA mmgraupvt(:,1) / 50., 150., 250., 350., 450., 550., 650., 750., 850./
-    DATA mmgraupvt(:,2) / 62.923, 94.122, 114.74, 131.21, 145.26, 157.71, 168.98, 179.36, 189.02 /
-    DATA mmgraupvt(:,3) / 0.67819, 0.63789, 0.62197, 0.61240, 0.60572, 0.60066, 0.59663, 0.59330, 0.59048 /
+    data mmgraupvt(:,1) / 50., 150., 250., 350., 450., 550., 650., 750., 850./
+    data mmgraupvt(:,2) / 62.923, 94.122, 114.74, 131.21, 145.26, 157.71, 168.98, 179.36, 189.02 /
+    data mmgraupvt(:,3) / 0.67819, 0.63789, 0.62197, 0.61240, 0.60572, 0.60066, 0.59663, 0.59330, 0.59048 /
 
       integer lsc(lc:lqmx)
       integer ln(lc:lqmx)
@@ -948,8 +948,8 @@ MODULE module_mp_nssl_2mom
 
       real, parameter :: cp = 1004.0, rd = 287.04
       real, parameter :: rw = 461.5              ! gas const. for water vapor
-      REAL, PRIVATE, parameter ::      cpl = 4190.0
-      REAL, PRIVATE, parameter ::      cpigb = 2106.0
+      real, private, parameter ::      cpl = 4190.0
+      real, private, parameter ::      cpigb = 2106.0
       real, parameter :: cpi = 1./cp
       real, parameter :: cap = rd/cp
       real, parameter :: tfrcbw = tfr - cbw
@@ -965,7 +965,7 @@ MODULE module_mp_nssl_2mom
      ! GHB: Needed for eqtset=2 in cm1
 !     REAL, PRIVATE ::      cv = cp - rd
       real, private, parameter ::      cv = 717.0             ! specific heat at constant volume - air
-      REAL, PRIVATE, parameter ::      cvv = 1408.5
+      real, private, parameter ::      cvv = 1408.5
      ! GHB
 
       real, parameter ::  bfnu0 = (rnu + 2.0)/(rnu + 1.0) 
@@ -1142,23 +1142,23 @@ MODULE module_mp_nssl_2mom
 ! #####################################################################
 ! #####################################################################
 
- CONTAINS
+ contains
 
 ! #####################################################################
 ! #####################################################################
 
 
- REAL FUNCTION fqvs(t)
+ real function fqvs(t)
   implicit none
   real :: t
   fqvs = exp(caw*(t-273.15)/(t-cbw))
- END FUNCTION fqvs
+ end function fqvs
 
- REAL FUNCTION fqis(t)
+ real function fqis(t)
   implicit none
   real :: t
   fqis = exp(cai*(t-273.15)/(t-cbi))
- END FUNCTION fqis
+ end function fqis
  
 
 
@@ -1167,7 +1167,7 @@ MODULE module_mp_nssl_2mom
 
 ! #####################################################################
 ! #####################################################################
-       SUBROUTINE nssl_2mom_init(  &
+       subroutine nssl_2mom_init(  &
      & ipctmp, mixphase,ihvol,idoniconlytmp,eqtset_tmp, index_ccna, index_cina, outfile, &
      & nssl_graupelfallfac, &
      & nssl_hailfallfac, &
@@ -1248,31 +1248,31 @@ MODULE module_mp_nssl_2mom
 !        igvol_local = igvol
 !      ENDIF
       
-      IF ( present( nssl_hail_on ) ) THEN
-        IF ( nssl_hail_on ) THEN
+      if ( present( nssl_hail_on ) ) then
+        if ( nssl_hail_on ) then
           hail_on = 1
-        ELSE
+        else
           hail_on = 0
-        ENDIF
-      ENDIF
+        endif
+      endif
 
-      IF ( present( nssl_density_on ) ) THEN
-        IF ( nssl_density_on ) THEN
+      if ( present( nssl_density_on ) ) then
+        if ( nssl_density_on ) then
           density_on = 1
-        ELSE
+        else
           density_on = 0
-        ENDIF
-      ENDIF
+        endif
+      endif
       
-      IF ( present( nssl_icecrystals_on ) ) THEN
-        IF ( nssl_icecrystals_on ) THEN
+      if ( present( nssl_icecrystals_on ) ) then
+        if ( nssl_icecrystals_on ) then
           icecrystals_on = 1
-        ELSE
+        else
           icecrystals_on = 0
           ! renucfrac = 1.0 ! why was this set to 1?
           ffrzs = 1.0
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 
 !
@@ -1283,55 +1283,55 @@ MODULE module_mp_nssl_2mom
 !         read(20,nml=micro_params)
 !      close(unit=20)
 
-      IF ( present( eqtset_tmp ) ) eqtset = eqtset_tmp
-      IF ( present( index_ccna ) ) THEN
-        IF ( index_ccna > 1 ) turn_on_ccna = .true.
-      ENDIF
-      IF ( present( index_cina ) ) THEN
-        IF ( index_cina > 1 ) turn_on_cina = .true.
-      ENDIF
+      if ( present( eqtset_tmp ) ) eqtset = eqtset_tmp
+      if ( present( index_ccna ) ) then
+        if ( index_ccna > 1 ) turn_on_ccna = .true.
+      endif
+      if ( present( index_cina ) ) then
+        if ( index_cina > 1 ) turn_on_cina = .true.
+      endif
 
 
 
-      IF ( present(nssl_graupelfallfac) ) graupelfallfac = nssl_graupelfallfac
-      IF ( present(nssl_hailfallfac) ) hailfallfac = nssl_hailfallfac
-      IF ( present(nssl_ehw0) ) THEN
-        IF ( nssl_ehw0 > 0.0 ) ehw0 = nssl_ehw0
-      ENDIF
-      IF ( present(nssl_ehlw0) ) THEN
-        IF ( nssl_ehlw0 > 0.0 ) ehlw0 = nssl_ehlw0
-      ENDIF
-      IF ( present(nssl_icdx) ) icdx = nssl_icdx
-      IF ( present(nssl_icdxhl) ) icdxhl = nssl_icdxhl
-      IF ( present(nssl_icefallfac) ) icefallfac = nssl_icefallfac
-      IF ( present(nssl_snowfallfac) ) snowfallfac = nssl_snowfallfac
-      IF ( present(nssl_cccn) ) THEN
-        IF (nssl_cccn > 1 ) ccn = nssl_cccn
-      ENDIF
-      IF ( present(nssl_alphah) ) THEN
-        IF ( nssl_alphah > -1. ) alphah = nssl_alphah
-      ENDIF
-      IF ( present(nssl_alphahl) ) THEN
-        IF ( nssl_alphahl > -1. ) alphahl = nssl_alphahl
-      ENDIF
-      IF ( present(nssl_alphar) ) THEN
-        IF ( nssl_alphar > -1.0 ) alphar = nssl_alphar
-      ENDIF
+      if ( present(nssl_graupelfallfac) ) graupelfallfac = nssl_graupelfallfac
+      if ( present(nssl_hailfallfac) ) hailfallfac = nssl_hailfallfac
+      if ( present(nssl_ehw0) ) then
+        if ( nssl_ehw0 > 0.0 ) ehw0 = nssl_ehw0
+      endif
+      if ( present(nssl_ehlw0) ) then
+        if ( nssl_ehlw0 > 0.0 ) ehlw0 = nssl_ehlw0
+      endif
+      if ( present(nssl_icdx) ) icdx = nssl_icdx
+      if ( present(nssl_icdxhl) ) icdxhl = nssl_icdxhl
+      if ( present(nssl_icefallfac) ) icefallfac = nssl_icefallfac
+      if ( present(nssl_snowfallfac) ) snowfallfac = nssl_snowfallfac
+      if ( present(nssl_cccn) ) then
+        if (nssl_cccn > 1 ) ccn = nssl_cccn
+      endif
+      if ( present(nssl_alphah) ) then
+        if ( nssl_alphah > -1. ) alphah = nssl_alphah
+      endif
+      if ( present(nssl_alphahl) ) then
+        if ( nssl_alphahl > -1. ) alphahl = nssl_alphahl
+      endif
+      if ( present(nssl_alphar) ) then
+        if ( nssl_alphar > -1.0 ) alphar = nssl_alphar
+      endif
 
 
     ipconc = ipctmp
     
-    IF ( ipconc < 5 ) THEN
+    if ( ipconc < 5 ) then
        ihlcnh = 0
-    ENDIF
+    endif
 
-    IF ( ihlcnh <= 0 ) THEN
-      IF ( ipconc == 5 ) THEN
+    if ( ihlcnh <= 0 ) then
+      if ( ipconc == 5 ) then
        ihlcnh = 3
-      ELSEIF ( ipconc >= 6 ) THEN
+      elseif ( ipconc >= 6 ) then
        ihlcnh = 3
-      ENDIF
-    ENDIF
+      endif
+    endif
 
       
 
@@ -1341,93 +1341,93 @@ MODULE module_mp_nssl_2mom
       rewind(15)
       read(15,NML=nssl_mp_params,iostat=istat)
       close(15)
-      IF ( istat /= 0 ) THEN
+      if ( istat /= 0 ) then
 #ifdef WRF_ELEC
-        IF ( wrf_dm_on_monitor() ) THEN
+        if ( wrf_dm_on_monitor() ) then
         write(0,*) 'NSSL_2MOM_INIT: PROBLEM WITH NSSL_MP_PARAMS namelist: not found or bad token'
-        ENDIF
+        endif
 #else
        ! write(0,*) 'NSSL_2MOM_INIT: PROBLEM WITH NSSL_MP_PARAMS namelist: not found or bad token'
 #endif
-      ENDIF
-      IF ( istat /= 0 ) THEN
-        IF ( present(myrank) ) THEN
-          IF ( myrank == 0 ) write(0,*) 'READ_NAMELIST: PROBLEM WITH NSSL_MP_PARAMS namelist: not found or bad token'
-        ENDIF
-      ELSE
-        IF ( present(myrank) ) THEN
-          IF ( myrank == 0 ) write(0,*) 'Read nssl_mp_params'
-        ENDIF
-      ENDIF
+      endif
+      if ( istat /= 0 ) then
+        if ( present(myrank) ) then
+          if ( myrank == 0 ) write(0,*) 'READ_NAMELIST: PROBLEM WITH NSSL_MP_PARAMS namelist: not found or bad token'
+        endif
+      else
+        if ( present(myrank) ) then
+          if ( myrank == 0 ) write(0,*) 'read nssl_mp_params'
+        endif
+      endif
 !        IF ( present( outfile ) ) THEN
 !          IF ( outfile >= 0 ) THEN
 !          write(outfile,NML=nssl_mp_params)
 !          ENDIF
 !        ENDIF
-        IF ( present(myrank) ) THEN
+        if ( present(myrank) ) then
           myrankcm1 = myrank
-          IF ( myrank == 0 ) THEN
+          if ( myrank == 0 ) then
            open(15,file='nssl_mp_params.out',status='unknown',form='formatted')
            write(15,NML=nssl_mp_params)
            close(15)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 
 
-      IF ( iufccn > 0 ) THEN ! make sure to use option that uses UF ccn
+      if ( iufccn > 0 ) then ! make sure to use option that uses UF ccn
         irenuc = 7
-        IF ( ccnuf <= 0.0 ) decayufccn = .true. ! assume surface emission and need decay
-        IF ( i_uf_or_ccn > 0 ) THEN
+        if ( ccnuf <= 0.0 ) decayufccn = .true. ! assume surface emission and need decay
+        if ( i_uf_or_ccn > 0 ) then
           ufbackground = 0.0
           ccntimeconst = ufccntimeconst
-        ENDIF
-      ENDIF
+        endif
+      endif
 
-        IF ( present( nssl_ccn_on ) ) THEN
-          IF ( nssl_ccn_on ) THEN
+        if ( present( nssl_ccn_on ) ) then
+          if ( nssl_ccn_on ) then
             ccn_on = 1
-          ELSE
+          else
             ccn_on = 0
             irenuc = 2
-          ENDIF
-        ENDIF
+          endif
+        endif
 
-      IF ( irenuc >= 5 ) THEN
+      if ( irenuc >= 5 ) then
         turn_on_ccna = .true.
-        IF ( present( nssl_ccn_on ) ) THEN
-          IF ( .not. nssl_ccn_on ) THEN
+        if ( present( nssl_ccn_on ) ) then
+          if ( .not. nssl_ccn_on ) then
       write(0,*) 'NSSL_MP Error: Must have nssl_ccn_on=1 for irenuc >= 5!'
-        STOP
-          ENDIF
-        ENDIF
-      ENDIF
+        stop
+          endif
+        endif
+      endif
 
-      IF ( present( ccn_is_ccna ) .and. ccn_on == 1 ) THEN
-        IF ( ccn_is_ccna > 0 ) THEN
+      if ( present( ccn_is_ccna ) .and. ccn_on == 1 ) then
+        if ( ccn_is_ccna > 0 ) then
           turn_on_ccna = .true.
-        ELSE
-          IF ( irenuc >= 5 ) THEN
+        else
+          if ( irenuc >= 5 ) then
             ccn_is_ccna = 1
-          ENDIF
-        ENDIF
-      ENDIF
+          endif
+        endif
+      endif
 
       cwccn = ccn
 
       lhab = 8
       lhl = 8
-      IF ( icespheres >= 1 ) THEN
+      if ( icespheres >= 1 ) then
         lhab = lhab + 1
         lis = li + 1
         ls = ls + 1
         lh = lh + 1
         lhl = lhl + 1
-      ENDIF
-      IF ( hail_on == -1 ) THEN ! hail_on is not set
+      endif
+      if ( hail_on == -1 ) then ! hail_on is not set
         hail_on = 1
-        IF ( ihvol <= -1 .or. ihvol == 2 ) THEN
-          IF ( ihvol == -1 .or. ihvol == -2 ) THEN
+        if ( ihvol <= -1 .or. ihvol == 2 ) then
+          if ( ihvol == -1 .or. ihvol == -2 ) then
           lhab = lhab - 1  ! turns off hail 
           lhl = 0
           hail_on = 0
@@ -1435,27 +1435,27 @@ MODULE module_mp_nssl_2mom
           ! ehw0 = 0.75
           ! iehw = 2
           ! dfrz = Max( dfrz, 0.5e-3 )
-          ENDIF
-          IF ( ihvol == -2 .or. ihvol == 2 .or. icecrystals_on == 0 ) THEN ! ice crystals are turned off
+          endif
+          if ( ihvol == -2 .or. ihvol == 2 .or. icecrystals_on == 0 ) then ! ice crystals are turned off
            ! a value of 2? means to turn off ice crystals but turn on hail
            ! renucfrac = 1.0 ! why?
             ffrzs = 1.0
            ! idoci = 0 ! try this later
-          ENDIF
-        ENDIF
+          endif
+        endif
       
-      ELSE ! hail_on is set
-        IF ( hail_on == 0 ) THEN
+      else ! hail_on is set
+        if ( hail_on == 0 ) then
           lhab = lhab - 1  ! turns off hail 
           lhl = 0
-        ELSE
+        else
           ! assume default that hail is on
-        ENDIF
-      ENDIF
+        endif
+      endif
       
-      IF ( density_on == -1 ) THEN ! density flag not set, so default is to predict it
+      if ( density_on == -1 ) then ! density flag not set, so default is to predict it
         density_on = 1
-      ENDIF
+      endif
 
 
 !      write(0,*) 'wrf_init: lhab,lhl,hail_on,density_on = ',lhab,lhl,hail_on,density_on
@@ -1468,15 +1468,15 @@ MODULE module_mp_nssl_2mom
 
       do l = 1,nqsat
       temq = 163.15 + (l-1)*fqsat
-      IF ( iqvsopt == 0 ) THEN
+      if ( iqvsopt == 0 ) then
       tabqvs(l) = exp(caw*(temq-273.15)/(temq-cbw))
       dtabqvs(l) = ((-caw*(-273.15 + temq))/(temq - cbw)**2 + &
      &                 caw/(temq - cbw))*tabqvs(l)
-      ELSE
+      else
       tabqvs(l) = exp(caw*(temq-273.15)/(temq-cbw))
       dtabqvs(l) = ((-cawbolton*(-273.15 + temq))/(temq - cbwbolton)**2 + &
      &                 cawbolton/(temq - cbwbolton))*tabqvs(l)
-      ENDIF
+      endif
       tabqis(l) = exp(cai*(temq-273.15)/(temq-cbi))
       dtabqis(l) = ((-cai*(-273.15 + temq))/(temq - cbi)**2 + &
      &                 cai/(temq - cbi))*tabqis(l)
@@ -1487,42 +1487,42 @@ MODULE module_mp_nssl_2mom
       fx(lr) = 135.477
 
       
-      IF ( icdx == 6 ) THEN
+      if ( icdx == 6 ) then
         bx(lh) = 0.6 ! Milbrandt and Morrison (2013) for density of 550.
         ax(lh) = 157.71
 !      ELSEIF ( icdx == 1 ) THEN
 !        bx(lh) = bxh
 !        ax(lh) = axh
-      ELSEIF ( icdx > 1 ) THEN
+      elseif ( icdx > 1 ) then
         bx(lh) = 0.5
         ax(lh) = 75.7149
-      ELSEIF ( icdx == 0 ) THEN
+      elseif ( icdx == 0 ) then
         bx(lh) = 0.37 ! 0.6  ! Ferrier 1994 graupel
         ax(lh) = 19.3
-      ELSE ! icdx < 0
+      else ! icdx < 0
 !        ax(lh) = 206.984 ! Ferrier 1994 hail/frozen drops
 !        bx(lh) = 0.6384
         bx(lh) = bxh
         ax(lh) = axh
-      ENDIF
+      endif
 
 !      bx(lh) = 0.6
 
-      IF ( lhl .gt. 1 ) THEN
-        IF ( icdxhl == 6 ) THEN
+      if ( lhl .gt. 1 ) then
+        if ( icdxhl == 6 ) then
           bx(lhl) = 0.593 ! Milbrandt and Morrison (2013) for density of 750.
           ax(lhl) = 179.36
-        ELSEIF (icdxhl == 0 ) THEN
+        elseif (icdxhl == 0 ) then
           ax(lhl) = 206.984 ! Ferrier 1994
           bx(lhl) = 0.6384
-        ELSEIF (icdxhl > 0 ) THEN
+        elseif (icdxhl > 0 ) then
          bx(lhl) = 0.5
          ax(lhl) = 75.7149
-        ELSE
+        else
          bx(lhl) = bxhl
          ax(lhl) = axhl
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 ! fill in the complete gamma function lookup table
      gmoi(0) = 1.d32
@@ -1540,11 +1540,11 @@ MODULE module_mp_nssl_2mom
       bxhl1 = bx(Max(lh,lhl))
       
 !      DO j = 0,nqiacralpha
-      DO j = ialpstart,nqiacralpha
+      do j = ialpstart,nqiacralpha
       alp = float(j)*dqiacralpha
       y = gamma_dpr(1.+alp)
       y2 = gamma_dpr(2.+alp)
-      DO i = 0,nqiacrratio
+      do i = 0,nqiacrratio
         ratio = float(i)*dqiacrratio
         x = gamxinfdp( 1.+alp, ratio )
 !        write(0,*) 'i, x/y = ',i, x/y
@@ -1570,33 +1570,33 @@ MODULE module_mp_nssl_2mom
         gamxinflu(i,j,9,2) = gamxinflu(i,j,9,1)
         gamxinflu(i,j,10,2)= gamxinflu(i,j,10,1)
 
-      IF ( alp > 1.1 ) THEN
+      if ( alp > 1.1 ) then
 !       gamxinflu(i,j,7,1) = gamxinfdp( alp - 1., ratio )/y
        gamxinflu(i,j,7,1) = (gamma_dpr(alp - 1.) - gamxinfdp( alp - 1., ratio ))/y
 !       gamxinflu(i,j,8,1) = gamxinfdp( alp - 0.5 + 0.5*bxh, ratio )/y
        gamxinflu(i,j,8,1) = (gamma_dpr(alp - 0.5 + 0.5*bxh1) - gamxinfdp( alp - 0.5 + 0.5*bxh1, ratio ))/y
 !       gamxinflu(i,j,8,2) = gamxinfdp( alp - 0.5 + 0.5*bxhl1, ratio )/y
        gamxinflu(i,j,8,2) = (gamma_dpr(alp - 0.5 + 0.5*bxhl1) - gamxinfdp( alp - 0.5 + 0.5*bxhl1, ratio ))/y
-      ELSE
+      else
 !       gamxinflu(i,j,7,1) = gamxinfdp( .1, ratio )/y
        gamxinflu(i,j,7,1) = (gamma_dpr(0.1) - gamxinfdp( 0.1, ratio ) )/y
 !       gamxinflu(i,j,8,1) = gamxinfdp( 1.1 - 0.5 + 0.5*bxh1, ratio )/y
 !       gamxinflu(i,j,8,2) = gamxinfdp( 1.1 - 0.5 + 0.5*bxhl1, ratio )/y
        gamxinflu(i,j,8,1) = (gamma_dpr(1.1 - 0.5 + 0.5*bxh1) - gamxinfdp( 1.1 - 0.5 + 0.5*bxh1, ratio ) )/y
        gamxinflu(i,j,8,2) = (gamma_dpr(1.1 - 0.5 + 0.5*bxhl1) - gamxinfdp( 1.1 - 0.5 + 0.5*bxhl1, ratio ) )/y
-      ENDIF
+      endif
         
         gamxinflu(i,j,7,2) = gamxinflu(i,j,7,1)
 
-      ENDDO
-      ENDDO
+      enddo
+      enddo
       ciacrratio(0,:) = 1.0
 
-      DO j = ialpstart,nqiacralpha
+      do j = ialpstart,nqiacralpha
       alp = float(j)*dqiacralpha
       y = gamma_sp(4.+alp)
       y7 = gamma_sp(7.+alp)
-      DO i = 0,nqiacrratio
+      do i = 0,nqiacrratio
         ratio = float(i)*dqiacrratio
         
         ! mass fraction
@@ -1612,8 +1612,8 @@ MODULE module_mp_nssl_2mom
         gamxinflu(i,j,11,1) = x/y7
         gamxinflu(i,j,11,2) = x/y7
 
-      ENDDO
-      ENDDO
+      enddo
+      enddo
       qiacrratio(0,:) = 1.0
 
 
@@ -1641,22 +1641,22 @@ MODULE module_mp_nssl_2mom
 !      lccn = 9
 
 
-    IF ( ipconc == 0 ) THEN
-       IF ( hail_on == 1 ) THEN ! turn on graupel density for 1-moment scheme
+    if ( ipconc == 0 ) then
+       if ( hail_on == 1 ) then ! turn on graupel density for 1-moment scheme
        lvh = 9
        ltmp = 9
        denscale(lvh) = 1
-       ELSE ! no hail, 'LFO' scheme
+       else ! no hail, 'LFO' scheme
        ltmp = lhab
        lhl = 0
-       ENDIF
-    ELSEIF ( ipconc == 5 ) THEN
+       endif
+    elseif ( ipconc == 5 ) then
       ltmp = lhab
-      IF ( iufccn > 0 ) THEN
+      if ( iufccn > 0 ) then
         ltmp = ltmp+1
         lccnuf = ltmp
         denscale(lccnuf) = 1
-      ENDIF
+      endif
       lccn= ltmp+1 ! 9
       lnc = ltmp+2 ! 10
       lnr = ltmp+3 ! 11
@@ -1664,40 +1664,40 @@ MODULE module_mp_nssl_2mom
       lns = ltmp+5 !13
       lnh = ltmp+6 !14
       ltmp = lnh
-      IF ( hail_on == 1 ) THEN
+      if ( hail_on == 1 ) then
       ltmp = ltmp + 1
       lnhl = ltmp ! lhab+7 ! 15
-      ENDIF
-      IF ( density_on >= 1 ) THEN
+      endif
+      if ( density_on >= 1 ) then
       ltmp = ltmp + 1
       lvh = ltmp ! lhab+8 + isub ! 16 + isub ! isub adjusts to 15 if hail is off
 !      ltmp = lvh
-      ENDIF
+      endif
       denscale(lccn:ltmp) = 1
-      IF ( density_on == 1 .and. hail_on == 1 ) THEN
+      if ( density_on == 1 .and. hail_on == 1 ) then
        ltmp = ltmp + 1
        lvhl = ltmp
 !       ltmp = lvhl
        denscale(lvhl) = 1
-      ENDIF
-      IF ( mixedphase ) THEN
+      endif
+      if ( mixedphase ) then
       ltmp = ltmp + 1
       lsw  = ltmp
       ltmp = ltmp + 1
       lhw  = ltmp
-        IF ( lhl > 1 ) THEN
+        if ( lhl > 1 ) then
           ltmp = ltmp + 1
           lhlw = ltmp
-        ENDIF
+        endif
 !      ltmp = lhlw
-      ENDIF
-    ELSEIF ( ipconc >= 6 ) THEN
+      endif
+    elseif ( ipconc >= 6 ) then
       ltmp = lhab
-      IF ( iufccn > 0 ) THEN
+      if ( iufccn > 0 ) then
         ltmp = ltmp+1
         lccnuf = ltmp
         denscale(lccnuf) = 1
-      ENDIF
+      endif
 
       lccn= ltmp+1 ! 9
       lnc = ltmp+2 ! 10
@@ -1706,83 +1706,83 @@ MODULE module_mp_nssl_2mom
       lns = ltmp+5 !13
       lnh = ltmp+6 !14
       ltmp = lnh
-      IF ( lhl > 0 ) THEN
+      if ( lhl > 0 ) then
       ltmp = ltmp + 1
       lnhl = ltmp ! lhab+7 ! 15
-      ENDIF
-      IF ( density_on == 1 ) THEN
+      endif
+      if ( density_on == 1 ) then
       ltmp = ltmp + 1
       lvh = ltmp ! lhab+8 + isub ! 16 + isub ! isub adjusts to 15 if hail is off
-      ENDIF
+      endif
 !      ltmp = lvh
       denscale(lccn:ltmp) = 1
-      IF ( density_on == 1 .and. hail_on == 1 ) THEN
+      if ( density_on == 1 .and. hail_on == 1 ) then
        ltmp = ltmp + 1
        lvhl = ltmp
 !       ltmp = lvhl
        denscale(lvhl) = 1
-      ENDIF
+      endif
 
-      IF ( ipconc == 6 ) THEN
+      if ( ipconc == 6 ) then
        ltmp = ltmp + 1
        lzh = ltmp
-      ELSEIF ( ipconc == 7 ) THEN
-       ltmp = ltmp + 1
-       lzh = ltmp
-       ltmp = ltmp + 1
-       lzr = ltmp
-      ELSEIF ( ipconc == 8 ) THEN
+      elseif ( ipconc == 7 ) then
        ltmp = ltmp + 1
        lzh = ltmp
        ltmp = ltmp + 1
        lzr = ltmp
-       IF ( lhl > 1 ) THEN
+      elseif ( ipconc == 8 ) then
+       ltmp = ltmp + 1
+       lzh = ltmp
+       ltmp = ltmp + 1
+       lzr = ltmp
+       if ( lhl > 1 ) then
          ltmp = ltmp + 1
          lzhl = ltmp
-       ENDIF
+       endif
       ! write(0,*) 'ipcon,lzr = ',ipconc,lzr,lzh,lzhl
-      ENDIF
+      endif
 !      ltmp = lvh
  !     denscale(lccn:lvh) = 1
-      IF ( mixedphase ) THEN
+      if ( mixedphase ) then
       ltmp = ltmp + 1
       lsw  = ltmp
       ltmp = ltmp + 1
       lhw  = ltmp
-        IF ( lhl > 1 ) THEN
+        if ( lhl > 1 ) then
           ltmp = ltmp + 1
           lhlw = ltmp
-        ENDIF
+        endif
 !      ltmp = lhlw
-      ENDIF
-    ELSE
+      endif
+    else
       write(0,*) 'nssl_2mom_init: Invalid value of ipctmp'
-      STOP
-    ENDIF
+      stop
+    endif
 
 
 
       ! write(0,*) 'wrf_init: lh,lhl,lzh,lzhl = ',lh,lhl,lzh,lzhl 
       ! write(0,*) 'wrf_init: ipconc = ',ipconc
       ! write(0,*) 'wrf_init: irenuc, turn_on_ccna = ',irenuc, turn_on_ccna 
-      IF ( turn_on_ccna ) THEN
+      if ( turn_on_ccna ) then
         ltmp = ltmp + 1
         lccna = ltmp
         denscale(ltmp) = 1
-      ENDIF
+      endif
 
-      IF ( turn_on_cina ) THEN
+      if ( turn_on_cina ) then
         ltmp = ltmp + 1
         lcina = ltmp
         denscale(ltmp) = 1
-      ENDIF
+      endif
 
-      IF ( turn_on_cin .or. is_aerosol_aware ) THEN
+      if ( turn_on_cin .or. is_aerosol_aware ) then
         ltmp = ltmp + 1
         lcin = ltmp
         denscale(ltmp) = 1
 !debug        write(0,*) 'Setting lcin to ',lcin
-      ENDIF
+      endif
       na = ltmp
       
       ln(lc) = lnc
@@ -1790,21 +1790,21 @@ MODULE module_mp_nssl_2mom
       ln(li) = lni
       ln(ls) = lns
       ln(lh) = lnh
-      IF ( lhl .gt. 1 ) ln(lhl) = lnhl
+      if ( lhl .gt. 1 ) ln(lhl) = lnhl
 
       ipc(lc) = 2
       ipc(lr) = 3
       ipc(li) = 1
       ipc(ls) = 4
       ipc(lh) = 5
-      IF ( lhl .gt. 1 ) ipc(lhl) = 5
+      if ( lhl .gt. 1 ) ipc(lhl) = 5
       
       ldovol = .false.
       lvol(:) = 0
       lvol(li) = lvi
       lvol(ls) = lvs
       lvol(lh) = lvh
-      IF ( lhl .gt. 1 .and. lvhl .gt. 1 ) lvol(lhl) = lvhl
+      if ( lhl .gt. 1 .and. lvhl .gt. 1 ) lvol(lhl) = lvhl
       
       lne = Max(lnh,lnhl)
       lne = Max(lne,lvh)
@@ -1817,12 +1817,12 @@ MODULE module_mp_nssl_2mom
       lsc(li) = lsci
       lsc(ls) = lscs
       lsc(lh) = lsch
-      IF ( lhl .gt. 1 ) lsc(lhl) = lschl
+      if ( lhl .gt. 1 ) lsc(lhl) = lschl
 
 
-      DO il = lc,lhab
+      do il = lc,lhab
         ldovol = ldovol .or. ( lvol(il) .gt. 1 )
-      ENDDO
+      enddo
 
 !      write(0,*) 'nssl_2mom_init: ldovol = ',ldovol
 
@@ -1831,36 +1831,36 @@ MODULE module_mp_nssl_2mom
       lz(li) = lzi
       lz(ls) = lzs
       lz(lh) = lzh
-      IF ( lhl .gt. 1 .and. lzhl > 1 ) lz(lhl) = lzhl
+      if ( lhl .gt. 1 .and. lzhl > 1 ) lz(lhl) = lzhl
 
       lliq(:) = 0
       lliq(ls) = lsw
       lliq(lh) = lhw
-      IF ( lhl .gt. 1 ) lliq(lhl) = lhlw
-      IF ( mixedphase ) THEN
+      if ( lhl .gt. 1 ) lliq(lhl) = lhlw
+      if ( mixedphase ) then
 !       write(0,*) 'lsw,lhw,lhlw = ',lsw,lhw,lhlw
-      ENDIF
+      endif
 
 
 
       xnu(lc) = cnu
       xmu(lc) = 1.
       
-      IF ( imurain == 3 ) THEN
+      if ( imurain == 3 ) then
         xnu(lr) = rnu
         xmu(lr) = 1.
-      ELSEIF ( imurain == 1 ) THEN
+      elseif ( imurain == 1 ) then
         xnu(lr) = (alphar - 2.0)/3.0
         xmu(lr) = 1./3.
-      ENDIF
+      endif
 
       xnu(li) = cinu
       xmu(li) = 1.
 
-      IF ( lis >= 1 ) THEN
+      if ( lis >= 1 ) then
       xnu(lis) = 0.0
       xmu(lis) = 1.
-      ENDIF
+      endif
 
       dnu(lc) = 3.*xnu(lc) + 2. ! alphac
       dmu(lc) = 3.*xmu(lc)
@@ -1882,7 +1882,7 @@ MODULE module_mp_nssl_2mom
       xmu(lh) = dmuh/3.
 
 
-      IF ( imurain == 3 ) THEN ! rain is gamma of volume
+      if ( imurain == 3 ) then ! rain is gamma of volume
       rz =  ((4. + alphah)*(5. + alphah)*(6. + alphah)*(1. + xnu(lr)))/ & 
      &  ((1 + alphah)*(2 + alphah)*(3 + alphah)*(2. + xnu(lr)))
 
@@ -1893,7 +1893,7 @@ MODULE module_mp_nssl_2mom
 
       rzs =  1. ! assume rain and snow are both gamma volume
 
-      ELSE ! rain is gamma of diameter
+      else ! rain is gamma of diameter
       
       rz =  ((4. + alphah)*(5. + alphah)*(6. + alphah)*(1. + alphar)*(2. + alphar)*(3. + alphar))/ & 
      &  ((1 + alphah)*(2 + alphah)*(3 + alphah)*(4. + alphar)*(5. + alphar)*(6. + alphar))
@@ -1907,21 +1907,21 @@ MODULE module_mp_nssl_2mom
      &  ((4. + alphar)*(5. + alphar)*(6. + alphar)*(1. + xnu(ls)))
        
 
-      ENDIF
+      endif
 
-      IF ( ipconc <= 5 ) THEN 
+      if ( ipconc <= 5 ) then 
         imltshddmr = Min(1, imltshddmr)
         ibinhmlr = 0
         ibinhlmlr = 0
-      ENDIF
+      endif
 
-      IF ( ipconc > 5 .and. (ibinhmlr == 0 .and. ibinhlmlr == 0 ) ) THEN 
+      if ( ipconc > 5 .and. (ibinhmlr == 0 .and. ibinhlmlr == 0 ) ) then 
         imltshddmr = Min(1, imltshddmr)
-      ENDIF
+      endif
 
 !      write(0,*) 'rz,rzhl = ', rz,rzhl
 
-      IF ( ipconc .lt. 4 ) THEN
+      if ( ipconc .lt. 4 ) then
 
       dnu(ls) = alphas
       dmu(ls) = 1.
@@ -1930,9 +1930,9 @@ MODULE module_mp_nssl_2mom
       xmu(ls) = 1./3.
 
 
-      ENDIF
+      endif
 
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
 
       dnu(lhl) = alphahl
       dmu(lhl) = dmuhl
@@ -1940,14 +1940,14 @@ MODULE module_mp_nssl_2mom
       xnu(lhl) = (dnu(lhl) - 2.)/3.
       xmu(lhl) = dmuhl/3.
 
-      ENDIF
+      endif
 
       cno(lc)  = 1.0e+08
-      IF ( li .gt. 1 ) cno(li)  = 1.0e+08
+      if ( li .gt. 1 ) cno(li)  = 1.0e+08
       cno(lr)  = cnor
-      IF ( ls .gt. 1 ) cno(ls)  = cnos ! 8.0e+06
-      IF ( lh .gt. 1 ) cno(lh)  = cnoh ! 4.0e+05
-      IF ( lhl .gt. 1 ) cno(lhl)  = cnohl ! 4.0e+05
+      if ( ls .gt. 1 ) cno(ls)  = cnos ! 8.0e+06
+      if ( lh .gt. 1 ) cno(lh)  = cnoh ! 4.0e+05
+      if ( lhl .gt. 1 ) cno(lhl)  = cnohl ! 4.0e+05
 !
 !  density maximums and minimums
 !
@@ -1958,7 +1958,7 @@ MODULE module_mp_nssl_2mom
       xdnmx(li) =  917.0
       xdnmx(ls) =  300.0
       xdnmx(lh) =  900.0
-      IF ( lhl .gt. 1 ) xdnmx(lhl) = 900.0
+      if ( lhl .gt. 1 ) xdnmx(lhl) = 900.0
 !
       xdnmn(:) = 900.0
 
@@ -1967,7 +1967,7 @@ MODULE module_mp_nssl_2mom
       xdnmn(li) =  100.0
       xdnmn(ls) =  100.0
       xdnmn(lh) =  hdnmn
-      IF ( lhl .gt. 1 ) xdnmn(lhl) = hldnmn
+      if ( lhl .gt. 1 ) xdnmn(lhl) = hldnmn
 
       xdn0(:) = 900.0
 
@@ -1976,7 +1976,7 @@ MODULE module_mp_nssl_2mom
       xdn0(lr) = 1000.0
       xdn0(ls) = rho_qs ! 100.0
       xdn0(lh) = rho_qh ! (0.5)*(xdnmn(lh)+xdnmx(lh))
-      IF ( lhl .gt. 1 ) xdn0(lhl) = rho_qhl ! 800.0
+      if ( lhl .gt. 1 ) xdn0(lhl) = rho_qhl ! 800.0
 
 !
 !  Set terminal velocities...
@@ -1985,51 +1985,51 @@ MODULE module_mp_nssl_2mom
       cdx(lr) = 0.60
       cdx(lh) = 0.8 ! 1.0 ! 0.45
       cdx(ls) = 2.00
-      IF ( lhl .gt. 1 ) cdx(lhl) = 0.45
+      if ( lhl .gt. 1 ) cdx(lhl) = 0.45
 
       ido(lc) = idocw
       ido(lr) = idorw
       ido(li) = idoci
       ido(ls) = idosw
       ido(lh)  = idohw
-      IF ( lhl .gt. 1 ) ido(lhl) = idohl
+      if ( lhl .gt. 1 ) ido(lhl) = idohl
 
-      IF ( irfall .lt. 0 ) irfall = infall
-      IF ( isfall .lt. 0 ) isfall = infall
-      IF ( lzr > 0 ) irfall = 0
+      if ( irfall .lt. 0 ) irfall = infall
+      if ( isfall .lt. 0 ) isfall = infall
+      if ( lzr > 0 ) irfall = 0
 
       qccn = ccn/rho00
       qccnuf = ccnuf/rho00
-      IF ( old_cccn > 0.0 ) THEN
+      if ( old_cccn > 0.0 ) then
          old_qccn = old_cccn/rho00
-      ELSE
+      else
          old_qccn = qccn
-      ENDIF
+      endif
 !      xvcmx = (4./3.)*pi*xcradmx**3
 
 ! set max rain diameter
-      IF ( xvdmx .gt. 0.0 ) THEN
+      if ( xvdmx .gt. 0.0 ) then
         xvrmx = 0.523599*(xvdmx)**3
-      ELSE
+      else
         xvrmx = xvrmx0
-      ENDIF
+      endif
 
-         IF ( dhmn <= 0.0 ) THEN
+         if ( dhmn <= 0.0 ) then
            xvhmn = xvhmn0
 !           xvhmn = Min(xvhmn0, 0.523599*(dfrz)**3 )
-         ELSE
+         else
            xvhmn = 0.523599*(dhmn)**3
 !           xvhmn = 0.523599*(Min(dhmn,dfrz))**3
-         ENDIF
+         endif
 
-         IF ( dhmx <= 0.0 ) THEN
+         if ( dhmx <= 0.0 ) then
            xvhmx = xvhmx0
-         ELSE
+         else
            xvhmx = 0.523599*(dhmx)**3
-         ENDIF
+         endif
          
-         IF ( qhdpvdn < 0. ) qhdpvdn = xdnmn(lh)
-         IF ( qhacidn < 0. ) qhacidn = xdnmn(lh)
+         if ( qhdpvdn < 0. ) qhdpvdn = xdnmn(lh)
+         if ( qhacidn < 0. ) qhacidn = xdnmn(lh)
 
 ! load max/min diameters
       xvmn(lc) = xvcmn
@@ -2044,10 +2044,10 @@ MODULE module_mp_nssl_2mom
       xvmx(ls) = xvsmx
       xvmx(lh) = xvhmx
 
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
       xvmn(lhl) = xvhlmn
       xvmx(lhl) = xvhlmx
-      ENDIF
+      endif
 
 !
 !  cloud water constants in mks units
@@ -2058,19 +2058,19 @@ MODULE module_mp_nssl_2mom
 !      cwradn = 5.0e-6     ! minimum radius
 !      cwmasx = 5.25e-10   ! maximum mass, defined by radius of 50.0e-6
 !      mwfac = 6.0**(1./3.)
-      IF ( ipconc .ge. 2 ) THEN
+      if ( ipconc .ge. 2 ) then
 !        cwmasn = xvmn(lc)*1000.  ! minimum mass, defined by minimum droplet volume
 !        cwradn = 1.0e-6          ! minimum radius
 !        cwmasx = xvmx(lc)*1000.  ! maximum mass, defined by maximum droplet volume
         
-      ENDIF
+      endif
 !        rwmasn = xvmn(lr)*1000.  ! minimum mass, defined by minimum rain volume
 !        rwmasx = xvmx(lr)*1000.  ! maximum mass, defined by maximum rain volume
 
-      IF ( lhl < 1 ) ifrzg = 1
+      if ( lhl < 1 ) ifrzg = 1
 
       ventr = 1.
-      IF ( imurain == 3 ) THEN
+      if ( imurain == 3 ) then
 !       IF ( izwisventr == 1 ) THEN
         ventr = Gamma_sp(rnu + 4./3.)/((rnu + 1.)**(1./3.)*Gamma_sp(rnu + 1.)) ! Ziegler 1985
 !       ELSE
@@ -2078,13 +2078,13 @@ MODULE module_mp_nssl_2mom
 !        ventr = Gamma_sp(rnu + 4./3.)/((rnu + 1.)**(1./3.)*Gamma_sp(rnu + 1.)) ! Ziegler 1985, still use for first term in rwvent
 !        ventr  = Gamma_sp(rnu + 4./3.)/Gamma_sp(rnu + 1.) 
 !       ENDIF
-      ELSE ! imurain == 1
+      else ! imurain == 1
 !       IF ( iferwisventr == 1 ) THEN
         ventr = Gamma_sp(2. + alphar)  ! Ferrier 1994
 !       ELSEIF ( iferwisventr == 2 ) THEN
         ventrn =  Gamma_sp(alphar + 2.5 + br/2.)/Gamma_sp(alphar + 1.) ! adapted from Wisner et al. 1972
 !       ENDIF
-      ENDIF
+      endif
       ventc   = Gamma_sp(cnu + 4./3.)/(cnu + 1.)**(1./3.)/Gamma_sp(cnu + 1.)
       c1sw = Gamma_sp(snu + 4./3.)*(snu + 1.0)**(-1./3.)/gamma_sp(snu + 1.0)
 
@@ -2094,18 +2094,18 @@ MODULE module_mp_nssl_2mom
 
       qxmin(lc) = 1.e-9
       qxmin(lr) = 1.e-7
-      IF ( li > 1 ) qxmin(li) = 1.e-12
-      IF ( ls > 1 ) qxmin(ls) = 1.e-7
-      IF ( lh > 1 ) qxmin(lh) = 1.e-7
-      IF ( lhl .gt. 1 ) qxmin(lhl) = 1.e-7
+      if ( li > 1 ) qxmin(li) = 1.e-12
+      if ( ls > 1 ) qxmin(ls) = 1.e-7
+      if ( lh > 1 ) qxmin(lh) = 1.e-7
+      if ( lhl .gt. 1 ) qxmin(lhl) = 1.e-7
 
-      IF ( lc .gt. 1 .and. lnc .gt. 1 ) qxmin(lc) = 1.0e-13
-      IF ( lr .gt. 1 .and. lnr .gt. 1 ) qxmin(lr) = 1.0e-12
+      if ( lc .gt. 1 .and. lnc .gt. 1 ) qxmin(lc) = 1.0e-13
+      if ( lr .gt. 1 .and. lnr .gt. 1 ) qxmin(lr) = 1.0e-12
 
-      IF ( li .gt. 1 .and. lni .gt. 1 ) qxmin(li ) = 1.0e-13
-      IF ( ls .gt. 1 .and. lns .gt. 1 ) qxmin(ls ) = 1.0e-13
-      IF ( lh .gt. 1 .and. lnh .gt. 1 ) qxmin(lh ) = 1.0e-12
-      IF ( lhl.gt. 1 .and. lnhl.gt. 1 ) qxmin(lhl) = 1.0e-12
+      if ( li .gt. 1 .and. lni .gt. 1 ) qxmin(li ) = 1.0e-13
+      if ( ls .gt. 1 .and. lns .gt. 1 ) qxmin(ls ) = 1.0e-13
+      if ( lh .gt. 1 .and. lnh .gt. 1 ) qxmin(lh ) = 1.0e-12
+      if ( lhl.gt. 1 .and. lnhl.gt. 1 ) qxmin(lhl) = 1.0e-12
 
       qxmin_init(:) = 1.0e-8 ! threshold for considering single-moment initial condition mixing ratios
   ! constants for droplet nucleation
@@ -2118,12 +2118,12 @@ MODULE module_mp_nssl_2mom
       ccne = ccnefac*1.e6*(1.e-6*Abs(cwccn))**(2./(2.+cck))
       ccne0 = ccnefac*1.e6*(1.e-6)**(2./(2.+cck))
 !      write(0,*) 'cwccn, cck, ccne = ',cwccn,cck,ccne,ccnefac,cnexp
-      IF ( cwccn .lt. 0.0 ) THEN
+      if ( cwccn .lt. 0.0 ) then
       cwccn = Abs(cwccn)
       ccwmx = 50.e9 ! cwccn
-      ELSE
+      else
       ccwmx = 50.e9 ! cwccn ! *1.4
-      ENDIF
+      endif
 
 !
 !
@@ -2131,54 +2131,54 @@ MODULE module_mp_nssl_2mom
 !
       bb(:) = 1.0/3.0
       bb(li) = 0.3429
-      DO il = lc,lhab
+      do il = lc,lhab
         da0(il) = delbk(bb(il), xnu(il), xmu(il), 0)
         da1(il) = delbk(bb(il), xnu(il), xmu(il), 1)
 
 !        write(0,*) 'il, da0, da1, xnu, xmu = ', il, da0(il), da1(il), xnu(il), xmu(il)
-      ENDDO
+      enddo
 
       dab0(:,:) = 0.0
       dab1(:,:) = 0.0
 
-      DO il = lc,lhab
-        DO j = lc,lhab
-          IF ( il .ne. j ) THEN
+      do il = lc,lhab
+        do j = lc,lhab
+          if ( il .ne. j ) then
 
             dab0(il,j) = delabk(bb(il), bb(j), xnu(il), xnu(j), xmu(il), xmu(j), 0)
             dab1(il,j) = delabk(bb(il), bb(j), xnu(il), xnu(j), xmu(il), xmu(j), 1)
 
 !           write(0,*) 'il, j, dab0, dab1 = ',il, j, dab0(il,j), dab1(il,j)
-          ENDIF
-        ENDDO
-      ENDDO
+          endif
+        enddo
+      enddo
 
       dab0lu(:,:,:,:) = 0.0
       dab1lu(:,:,:,:) = 0.0
       
-      IF ( ipconc >= 6 ) THEN
-      DO il = lc,lhab ! collector
-        DO j = lc,lhab ! collected
-          IF ( il .ne. j ) THEN
+      if ( ipconc >= 6 ) then
+      do il = lc,lhab ! collector
+        do j = lc,lhab ! collected
+          if ( il .ne. j ) then
 
-            DO jj = ialpstart,nqiacralpha
+            do jj = ialpstart,nqiacralpha
                 alpjj = float(jj)*dqiacralpha
                 xnujj = (alpjj - 2.)/3.
-            DO ii = ialpstart,nqiacralpha
+            do ii = ialpstart,nqiacralpha
                 alpii = float(ii)*dqiacralpha
                 xnuii = (alpii - 2.)/3.
           
             dab0lu(ii,jj,il,j) = delabk(bb(il), bb(j), xnuii, xnujj, xmu(il), xmu(j), 0)
             dab1lu(ii,jj,il,j) = delabk(bb(il), bb(j), xnuii, xnujj, xmu(il), xmu(j), 1)
           
-            ENDDO
-            ENDDO
+            enddo
+            enddo
 !           write(0,*) 'il, j, dab0, dab1 = ',il, j, dab0(il,j), dab1(il,j)
-          ENDIF
-        ENDDO
-      ENDDO
+          endif
+        enddo
+      enddo
       
-      ENDIF
+      endif
 
         gf4br = gamma_sp(4.0+br)
         gf4ds = gamma_sp(4.0+ds)
@@ -2195,8 +2195,8 @@ MODULE module_mp_nssl_2mom
         gsnow53 = gamma_sp(snu + 5./3.)
         gsnow73 = gamma_sp(snu + 7./3.)
 
-        IF ( lh  .gt. 1 ) cwchtmp0 = 6.0/pi*gamma_sp( (xnu(lh) + 1.)/xmu(lh) )/gamma_sp( (xnu(lh) + 2.)/xmu(lh) )
-        IF ( lhl .gt. 1 ) cwchltmp0 = 6.0/pi*gamma_sp( (xnu(lhl) + 1)/xmu(lhl) )/gamma_sp( (xnu(lhl) + 2)/xmu(lhl) )
+        if ( lh  .gt. 1 ) cwchtmp0 = 6.0/pi*gamma_sp( (xnu(lh) + 1.)/xmu(lh) )/gamma_sp( (xnu(lh) + 2.)/xmu(lh) )
+        if ( lhl .gt. 1 ) cwchltmp0 = 6.0/pi*gamma_sp( (xnu(lhl) + 1)/xmu(lhl) )/gamma_sp( (xnu(lhl) + 2)/xmu(lhl) )
 
 
       iexy(:,:)=0; ! sets to zero the ones Imight have forgotten
@@ -2210,22 +2210,22 @@ MODULE module_mp_nssl_2mom
       iexy(lh,lc) = iehwc ; iexy(lh,lr)  = iehwr ;
 
 !     hail
-      IF (lhl .gt. 1 ) THEN
+      if (lhl .gt. 1 ) then
       iexy(lhl,ls)  = iehlsw ; iexy(lhl,li) = iehli ;
       iexy(lhl,lc) = iehlc ; iexy(lhl,lr)  = iehlr ;
-      ENDIF
+      endif
       
 !      IF ( icefallfac /= 1.0 ) write(0,*) 'icefallfac = ',icefallfac
 !      IF ( snowfallfac /= 1.0 ) write(0,*) 'snowfallfac = ',snowfallfac
 
 
-  RETURN
-END SUBROUTINE nssl_2mom_init
+  return
+end subroutine nssl_2mom_init
 
 ! #####################################################################
 ! #####################################################################
 
-SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw, chl,  &
+subroutine nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw, chl,  &
                               cn, vhw, vhl, cna, cni, f_cn, f_cna, f_cina,              &
                               f_qc, f_qr, f_qi, f_qs, f_qh, f_qhl,                      &
                               cnuf, f_cnuf,                                             &
@@ -2345,7 +2345,7 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
       integer, intent(in) :: nrain
       real, dimension(ims:ime, jms:jme,nrain), intent(inout)::                                 &
                             rain                          ! accumulated precip (NC) and rate (NCV)
-      real, dimension(ims:ime, jms:jme), optional, INTENT(INOUT) :: prate
+      real, dimension(ims:ime, jms:jme), optional, intent(inout) :: prate
       real, dimension(ims:ime, jms:jme) ::                                 & ! used as local temp array in 1/COMMAS
                             RAINNC,RAINNCV          ! accumulated precip (NC) and rate (NCV)
       real, dimension(ims:ime, jms:jme), optional, intent(inout) ::                                 &
@@ -2354,7 +2354,7 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
       
 ! extra vars for cm1
       real*8, intent(inout) :: tcond,tevac,tevar,train
-      REAL, DIMENSION(ims:ime, jms:jme, kms:kme), INTENT(IN)::  rmh, rr
+      real, dimension(ims:ime, jms:jme, kms:kme), intent(in)::  rmh, rr
       real, intent(in), dimension(ims:ime) :: ruh
       real, intent(in), dimension(jms:jme) :: rvh
       logical, intent(in) :: dorad
@@ -2364,10 +2364,10 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 !     for cm1, set nproctot=44 (or as needed) to get domain total rates
       integer, parameter :: nproc = 1
       double precision :: proctot(nproc),proctotmpi(nproc)
-      REAL, DIMENSION(ims:ime, jms:jme, kms:kme), optional, INTENT(INOUT)::  re_cloud, re_ice, re_snow, &
+      real, dimension(ims:ime, jms:jme, kms:kme), optional, intent(inout)::  re_cloud, re_ice, re_snow, &
                                                                    re_rain, re_graup, re_hail
-      REAL, DIMENSION(ims:ime, jms:jme, kms:kme), optional, INTENT(IN):: tkediss
-      INTEGER, INTENT(IN), optional :: has_reqc, has_reqi, has_reqs, has_reqr, has_reqg, has_reqh
+      real, dimension(ims:ime, jms:jme, kms:kme), optional, intent(in):: tkediss
+      integer, intent(in), optional :: has_reqc, has_reqi, has_reqs, has_reqr, has_reqg, has_reqh
       real, dimension(ims:ime, jms:jme), intent(out), optional ::                                 &
                             rainncw2, rainnci2       ! liquid rain, ice, accumulation rates
       real, optional, intent(in) :: dx,dy
@@ -2380,11 +2380,11 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
       integer, optional, intent(in) :: ipelectmp, ke_diag
 
 
-  LOGICAL, INTENT(IN), OPTIONAL ::    nssl_progn   ! flags for wrf-chem 
+  logical, intent(in), optional ::    nssl_progn   ! flags for wrf-chem 
   
 !   REAL, DIMENSION(ims:ime, jms:jme, kms:kme), optional,INTENT(INOUT):: qndrop
-  LOGICAL :: flag_qndrop  ! wrf-chem
-  LOGICAL :: flag_qnifa , flag_qnwfa
+  logical :: flag_qndrop  ! wrf-chem
+  logical :: flag_qnifa , flag_qnwfa
   logical :: flag_cnuf = .false.
   logical :: flag_ccn = .false.
   logical :: flag_qi  = .true.
@@ -2397,15 +2397,15 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 ! rainprod - total tendency of conversion of cloud water/ice and graupel to rain (kg kg-1 s-1)
 ! evapprod - tendency of evaporation of rain (kg kg-1 s-1)
 ! 20130903 acd_ck_washout end
-   REAL, DIMENSION(ims:ime, jms:jme, kms:kme), optional,INTENT(INOUT)::  rainprod, evapprod
+   real, dimension(ims:ime, jms:jme, kms:kme), optional,intent(inout)::  rainprod, evapprod
 
 ! qrcuten, rain tendency from parameterized cumulus convection
 ! qscuten, snow tendency from parameterized cumulus convection
 ! qicuten, cloud ice tendency from parameterized cumulus convection
 ! mu : air mass in column
-   REAL, DIMENSION(ims:ime, jms:jme, kms:kme), optional, INTENT(IN):: qrcuten, qscuten, qicuten, qccuten
-   INTEGER, optional, intent(in) :: cu_used
-   LOGICAL, optional, intent(in) :: wetscav_on
+   real, dimension(ims:ime, jms:jme, kms:kme), optional, intent(in):: qrcuten, qscuten, qicuten, qccuten
+   integer, optional, intent(in) :: cu_used
+   logical, optional, intent(in) :: wetscav_on
 
       integer, intent(in) :: ib3d,ie3d,jb3d,je3d,kb3d,ke3d,nout3d
       real, intent(inout) , dimension(ib3d:ie3d,jb3d:je3d,kb3d:ke3d,nout3d) :: out3d
@@ -2474,7 +2474,7 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 #if defined(MPI) 
       integer, parameter :: ntot = 50
       double precision  mpitotindp(ntot), mpitotoutdp(ntot)
-      INTEGER :: mpi_error_code = 1
+      integer :: mpi_error_code = 1
 #endif
 
 ! -------------------------------------------------------------------
@@ -2482,7 +2482,7 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
       rdt = 1.0/dtp
       
-     IF ( debugdriver ) write(0,*) 'N2M: entering routine'
+     if ( debugdriver ) write(0,*) 'N2M: entering routine'
 
      flag_qndrop = .false.
      flag_qnifa = .false.
@@ -2491,68 +2491,68 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
      flag_ccn = .false.
      nwp_diagflag = .false.
      
-     IF ( PRESENT ( nssl_progn ) ) flag_qndrop = nssl_progn
-     IF ( present ( f_cnuf ) ) flag_cnuf = f_cnuf
-     IF ( present ( nwp_diagnostics ) ) nwp_diagflag = ( nwp_diagnostics > 0 )
+     if ( PRESENT ( nssl_progn ) ) flag_qndrop = nssl_progn
+     if ( present ( f_cnuf ) ) flag_cnuf = f_cnuf
+     if ( present ( nwp_diagnostics ) ) nwp_diagflag = ( nwp_diagnostics > 0 )
 
-     IF ( present ( f_cn ) .and. present( cn ) ) THEN 
+     if ( present ( f_cn ) .and. present( cn ) ) then 
        flag_ccn = f_cn
-     ELSEIF ( present( cn ) ) THEN
+     elseif ( present( cn ) ) then
        flag_ccn = .true.
-     ENDIF
+     endif
      
-     IF ( present( f_qi ) ) THEN
+     if ( present( f_qi ) ) then
        flag_qi = f_qi
-     ELSE
-       IF ( ffrzs < 1.0 ) THEN
+     else
+       if ( ffrzs < 1.0 ) then
          flag_qi = .true.
-       ELSE
+       else
          flag_qi = .false.
-       ENDIF
-     ENDIF
+       endif
+     endif
      
-     IF ( .not. flag_qi .and. ffrzs < 1.0 ) ffrzs = 1.0
+     if ( .not. flag_qi .and. ffrzs < 1.0 ) ffrzs = 1.0
 
      
-     IF ( PRESENT ( has_reqg ) ) has_reqg_local = has_reqg > 0
-     IF ( PRESENT ( has_reqh ) ) has_reqh_local = has_reqh > 0
+     if ( PRESENT ( has_reqg ) ) has_reqg_local = has_reqg > 0
+     if ( PRESENT ( has_reqh ) ) has_reqh_local = has_reqh > 0
      
      loopmax = 1
      outerloopcnt = 1
      lastlooptmp = .true.
-     IF ( present( ntmul ) .and. present( ntcnt ) .and. present( lastloop ) ) THEN
+     if ( present( ntmul ) .and. present( ntcnt ) .and. present( lastloop ) ) then
        loopmax = ntmul
        outerloopcnt = ntcnt
        lastlooptmp = lastloop
-     ENDIF
+     endif
           
 
          has_wetscav = .false.
-         IF ( wrfchem_flag > 0 ) THEN
-           IF ( PRESENT( wetscav_on ) ) THEN
+         if ( wrfchem_flag > 0 ) then
+           if ( PRESENT( wetscav_on ) ) then
              has_wetscav = wetscav_on
-           ENDIF
-         ENDIF
+           endif
+         endif
 
-     IF ( present( f_cna ) ) THEN
+     if ( present( f_cna ) ) then
        f_cnatmp = f_cna
-     ELSE 
+     else 
        f_cnatmp = .false.
-     ENDIF
+     endif
 
-     IF ( present( f_cina ) ) THEN
+     if ( present( f_cina ) ) then
        f_cinatmp = f_cina
-     ELSE 
+     else 
        f_cinatmp = .false.
-     ENDIF
+     endif
        
-     IF ( present( vzf ) ) vzflag0 = 1
+     if ( present( vzf ) ) vzflag0 = 1
      
-     IF ( present( ipelectmp ) ) THEN
+     if ( present( ipelectmp ) ) then
        ipelec = ipelectmp
-     ELSE
+     else
        ipelec = 0
-     ENDIF
+     endif
 !       IF ( present( dbz ) ) THEN
 !       DO jy = jts,jte
 !         DO kz = kts,kte
@@ -2563,22 +2563,22 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 !       ENDDO
 !       ENDIF
 
-     IF ( present( dx ) .and. present( dy ) ) THEN
+     if ( present( dx ) .and. present( dy ) ) then
         dx1 = dx
         dy1 = dy
-     ELSE
+     else
         dx1 = 1.0
         dy1 = 1.0
-     ENDIF
+     endif
 
      
      makediag = .true.
-     IF ( present( diagflag ) ) THEN
+     if ( present( diagflag ) ) then
       makediag = diagflag .or. itimestep == 1
-      IF ( diagflag ) cleardiag = .true.
-     ENDIF
+      if ( diagflag ) cleardiag = .true.
+     endif
 
-     IF ( debugdriver ) write(0,*) 'N2M: makediag = ',makediag
+     if ( debugdriver ) write(0,*) 'N2M: makediag = ',makediag
      
      
      nx = ite-its+1
@@ -2586,9 +2586,9 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
      nz = kte-kts+1
      ngs = 64
      
-     IF ( .not. flag_ccn ) THEN
+     if ( .not. flag_ccn ) then
        renucfrac = 1.0
-     ENDIF
+     endif
 
      
 
@@ -2600,18 +2600,18 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
       infdo = 2
       
-      IF ( infall .ne. 1 .or. iscfall .ge. 2 ) THEN
+      if ( infall .ne. 1 .or. iscfall .ge. 2 ) then
          infdo = 1
-      ELSE
+      else
          infdo = 0
-      ENDIF
+      endif
 
-      IF ( infall .ge. 3 .or. ipconc .ge. 6 ) THEN
+      if ( infall .ge. 3 .or. ipconc .ge. 6 ) then
          infdo = 2
-      ENDIF
+      endif
      
 
-      IF (present( HAILNCV ) ) HAILNCV(its:ite,jts:jte) = 0.
+      if (present( HAILNCV ) ) HAILNCV(its:ite,jts:jte) = 0.
 
       tke2d(:,:) = 0.0 ! initialize if not used
 
@@ -2620,13 +2620,13 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
        jye = jte
 
-     IF ( present( compdbz ) .and. makediag ) THEN
-     DO jy = jts,jye
-       DO ix = its,ite
+     if ( present( compdbz ) .and. makediag ) then
+     do jy = jts,jye
+       do ix = its,ite
         compdbz(ix,jy) = -3.0
-       ENDDO
-     ENDDO
-     ENDIF
+       enddo
+     enddo
+     endif
 
       zmaxsed = 0.0d0
       timevtcalc = 0.0d0
@@ -2640,7 +2640,7 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
 
 
-     IF ( debugdriver ) write(0,*) 'N2M: jy loop 1, lhl,na = ',lhl,na,present(qhl)
+     if ( debugdriver ) write(0,*) 'N2M: jy loop 1, lhl,na = ',lhl,na,present(qhl)
 
           ancuten(its:ite,1,kts:kte,:) = 0.0
           thproclocal(:,:) = 0.0
@@ -2655,113 +2655,113 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
 ! need to figure out how to treat thproc: with a critical section?
 
-     DO jy = jts,jye
+     do jy = jts,jye
      
 !     write(0,*) 'N2M: load an, jy,lccn = ',jy,lccn,qccn
 
-     IF ( present( pcc2 ) .and. makediag ) THEN
+     if ( present( pcc2 ) .and. makediag ) then
          axtra2d(its:ite,1,kts:kte,:) = 0.0
-     ENDIF
+     endif
 
-     IF ( nwp_diagflag ) THEN
+     if ( nwp_diagflag ) then
         alpha2d(its:ite,1,kts:kte,1) = alphar
         alpha2d(its:ite,1,kts:kte,2) = alphah
         alpha2d(its:ite,1,kts:kte,3) = alphahl
-     ENDIF
+     endif
 
 
 ! for now, only using thproclocal for domain totals
        thproclocal(:,:) = 0.0
    ! copy from 3D array to 2D slab
    
-       DO kz = kts,kte
-        DO ix = its,ite
+       do kz = kts,kte
+        do ix = its,ite
           an(ix,1,kz,lt) = th(ix,jy,kz)
           an(ix,1,kz,lv)   = qv(ix,jy,kz)
           an(ix,1,kz,lc)   = qc(ix,jy,kz)
           an(ix,1,kz,lr)   = qr(ix,jy,kz)
-          IF ( flag_qi ) THEN
+          if ( flag_qi ) then
             an(ix,1,kz,li)   = qi(ix,jy,kz)
-          ELSE
+          else
             an(ix,1,kz,li) = 0.0
-          ENDIF
+          endif
           an(ix,1,kz,ls)   = qs(ix,jy,kz)
           an(ix,1,kz,lh)   = qh(ix,jy,kz)
-          IF ( lhl > 1 ) an(ix,1,kz,lhl)  = qhl(ix,jy,kz)
-          IF ( lccn > 1 ) THEN
-           IF ( is_aerosol_aware .and. flag_qnwfa ) THEN
+          if ( lhl > 1 ) an(ix,1,kz,lhl)  = qhl(ix,jy,kz)
+          if ( lccn > 1 ) then
+           if ( is_aerosol_aware .and. flag_qnwfa ) then
             ! 
-           ELSEIF ( flag_ccn ) THEN
-             IF ( lccna > 1 .and. .not. ( present( cna ) .and. f_cnatmp ) ) THEN
+           elseif ( flag_ccn ) then
+             if ( lccna > 1 .and. .not. ( present( cna ) .and. f_cnatmp ) ) then
                an(ix,1,kz,lccna) = cn(ix,jy,kz)
                an(ix,1,kz,lccn) = qccn ! cn(ix,jy,kz)
-             ELSE
+             else
                an(ix,1,kz,lccn) = cn(ix,jy,kz)
-             ENDIF
-             IF ( i_uf_or_ccn > 0 .and. lccnuf > 1 ) THEN ! UF ccn are extra regular ccn
+             endif
+             if ( i_uf_or_ccn > 0 .and. lccnuf > 1 ) then ! UF ccn are extra regular ccn
                an(ix,1,kz,lccn) = an(ix,1,kz,lccn) + cnuf(ix,jy,kz)
-             ENDIF
-           ELSE
-            IF ( lccna == 0 .and. ( .not. f_cnatmp ) ) THEN
+             endif
+           else
+            if ( lccna == 0 .and. ( .not. f_cnatmp ) ) then
               an(ix,1,kz,lccn) = qccn - ccw(ix,jy,kz)
-            ELSE
+            else
               an(ix,1,kz,lccn) = qccn 
-            ENDIF
+            endif
            
-           ENDIF
-          ENDIF
+           endif
+          endif
 
-          IF ( lccnuf > 0 .and. flag_cnuf ) THEN
-            IF ( i_uf_or_ccn == 0 ) THEN ! UF are UF
+          if ( lccnuf > 0 .and. flag_cnuf ) then
+            if ( i_uf_or_ccn == 0 ) then ! UF are UF
               an(ix,1,kz,lccnuf) = Max(0.0, cnuf(ix,jy,kz) )
-            ELSE ! UF were added to lccn
+            else ! UF were added to lccn
               an(ix,1,kz,lccnuf) = 0.0
-            ENDIF
-          ENDIF
+            endif
+          endif
 
-          IF ( lccna > 1 ) THEN
-            IF ( present( cna ) .and. f_cnatmp ) THEN
+          if ( lccna > 1 ) then
+            if ( present( cna ) .and. f_cnatmp ) then
               an(ix,1,kz,lccna) = cna(ix,jy,kz)
-            ENDIF
-          ENDIF
+            endif
+          endif
 
-          IF ( lcina > 1 ) THEN
-            IF ( present( cni ) .and. f_cinatmp ) THEN
+          if ( lcina > 1 ) then
+            if ( present( cni ) .and. f_cinatmp ) then
               an(ix,1,kz,lcina) = cni(ix,jy,kz)
-            ENDIF
-          ENDIF
+            endif
+          endif
           
-          IF ( ipconc >= 5 ) THEN
+          if ( ipconc >= 5 ) then
              an(ix,1,kz,lnc)  = ccw(ix,jy,kz)
-          IF ( constccw > 0.0 ) THEN
+          if ( constccw > 0.0 ) then
             an(ix,1,kz,lnc)  = constccw
-          ENDIF
+          endif
           an(ix,1,kz,lnr)  = crw(ix,jy,kz)
-          IF ( present( cci ) ) THEN
+          if ( present( cci ) ) then
             an(ix,1,kz,lni)  = cci(ix,jy,kz)
-          ELSE
+          else
             an(ix,1,kz,lni) = 0.0
-          ENDIF
+          endif
           an(ix,1,kz,lns)  = csw(ix,jy,kz)
           an(ix,1,kz,lnh)  = chw(ix,jy,kz)
-          IF ( lhl > 1 ) an(ix,1,kz,lnhl) = chl(ix,jy,kz)
-          ENDIF
-          IF ( lvh > 0 ) an(ix,1,kz,lvh)  = vhw(ix,jy,kz)
-          IF ( lvhl > 0 .and. present( vhl ) ) an(ix,1,kz,lvhl)  = vhl(ix,jy,kz)
+          if ( lhl > 1 ) an(ix,1,kz,lnhl) = chl(ix,jy,kz)
+          endif
+          if ( lvh > 0 ) an(ix,1,kz,lvh)  = vhw(ix,jy,kz)
+          if ( lvhl > 0 .and. present( vhl ) ) an(ix,1,kz,lvhl)  = vhl(ix,jy,kz)
 
-          IF ( ipconc >= 6 ) THEN
-            IF ( lzr > 0 )  an(ix,1,kz,lzr)  = zrw(ix,jy,kz)*zscale
-            IF ( lzh > 0 )  an(ix,1,kz,lzh)  = zhw(ix,jy,kz)*zscale
-            IF ( lzhl > 0 ) an(ix,1,kz,lzhl) = zhl(ix,jy,kz)*zscale
-          ENDIF
+          if ( ipconc >= 6 ) then
+            if ( lzr > 0 )  an(ix,1,kz,lzr)  = zrw(ix,jy,kz)*zscale
+            if ( lzh > 0 )  an(ix,1,kz,lzh)  = zhw(ix,jy,kz)*zscale
+            if ( lzhl > 0 ) an(ix,1,kz,lzhl) = zhl(ix,jy,kz)*zscale
+          endif
           
 
 
-        ENDDO
-       ENDDO
+        enddo
+       enddo
        
-       DO kz = kts,kte
-        DO ix = its,ite
+       do kz = kts,kte
+        do ix = its,ite
 
           
           t0(ix,1,kz) = th(ix,jy,kz)*pii(ix,jy,kz) ! temperature (Kelvin)
@@ -2769,20 +2769,20 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
           t77(ix,1,kz) = pii(ix,jy,kz)
           dbz2d(ix,1,kz) = 0.0
           vzf2d(ix,1,kz) = 0.0
-        ENDDO
-       ENDDO
+        enddo
+       enddo
        
-       DO ix = its,ite
+       do ix = its,ite
          RAINNCV(ix,jy) = 0.0
-         IF ( present( GRPLNCV ) ) GRPLNCV(ix,jy) = 0.0
-         IF ( present( HAILNCV ) ) HAILNCV(ix,jy) = 0.0
-         IF ( present( SNOWNCV ) ) SNOWNCV(ix,jy) = 0.0
-       ENDDO
+         if ( present( GRPLNCV ) ) GRPLNCV(ix,jy) = 0.0
+         if ( present( HAILNCV ) ) HAILNCV(ix,jy) = 0.0
+         if ( present( SNOWNCV ) ) SNOWNCV(ix,jy) = 0.0
+       enddo
 
-      DO loopcnt = 1,loopmax
+      do loopcnt = 1,loopmax
        
-       DO kz = kts,kte
-        DO ix = its,ite
+       do kz = kts,kte
+        do ix = its,ite
 
           
           t1(ix,1,kz) = 0.0
@@ -2818,7 +2818,7 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
       if ( ssival .gt. 1.0 ) then
 !
-      IF ( icenucopt == 1 ) THEN
+      if ( icenucopt == 1 ) then
 
       if ( t0(ix,1,kz).le.268.15 ) then
 
@@ -2829,7 +2829,7 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 !
 !   Default value of imeyers5 turns off nucleation by Meyer at higher temperatures
 !  This is really from Ferrier (1994), eq. 4.31 - 4.34
-      IF ( imeyers5 ) THEN
+      if ( imeyers5 ) then
       if ( t0(ix,1,kz).lt.tfr .and. t0(ix,1,kz).gt.268.15 ) then
       qvapor = max(an(ix,1,kz,lv),0.0)
       ssifac = 0.0
@@ -2841,11 +2841,11 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
       end if
       t7(ix,1,kz) = dn1(ix,1,kz)/rho00*cnin10*ssifac*exp(-(t0(ix,1,kz)-tfr)*bta1)
       end if
-      ENDIF
+      endif
       
 !       t7max = Max(t7max,  t7(ix,1,kz) )
 
-      ELSEIF ( icenucopt == 2 ) THEN ! Thompson/Cooper; Note Thompson 2004 has constants of
+      elseif ( icenucopt == 2 ) then ! Thompson/Cooper; Note Thompson 2004 has constants of
                                      ! 0.005 and 0.304 because the line function was estimated from Cooper plot
                                      ! Here, the fit line values from Cooper 1986 are converted. Very little difference 
                                      ! in practice
@@ -2854,7 +2854,7 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
 !        write(0,*) 'Cooper t7,ssival = ',ix,kz,t7(ix,1,kz),ssival
       
-      ELSEIF ( icenucopt == 3 ) THEN ! Phillips (Meyers/DeMott)
+      elseif ( icenucopt == 3 ) then ! Phillips (Meyers/DeMott)
 
       if ( t0(ix,1,kz).le.268.15 .and.  t0(ix,1,kz) > 243.15 ) then ! Meyers with factor of Psi=0.06
         
@@ -2866,9 +2866,9 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
       
       end if
 
-      ELSEIF ( icenucopt == 4 ) THEN ! DeMott 2010
+      elseif ( icenucopt == 4 ) then ! DeMott 2010
 
-        IF ( t0(ix,1,kz) < 268.16 .and.  t0(ix,1,kz) > 223.15 .and. ssival > 1.001 ) THEN ! 
+        if ( t0(ix,1,kz) < 268.16 .and.  t0(ix,1,kz) > 223.15 .and. ssival > 1.001 ) then ! 
       
         ! a = 0.0000594, b = 3.33, c = 0.0264, d = 0.0033,
         ! nint = a*(-Tc)**b * naer**(c*(-Tc) + d)
@@ -2880,41 +2880,41 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
           dp1 = 1.e3*dn1(ix,1,kz)/rho00*0.0000594*(273.16 - t0(ix,1,kz))**3.33 * tmp**(0.0264*(273.16 - t0(ix,1,kz)) + 0.0033)
           t7(ix,1,kz) = Min(dp1, 1.0d30)
       
-        ELSE
+        else
        !   t7(ix,1,kz) = 0.0
-        ENDIF
+        endif
       
-      ENDIF ! icenucopt
+      endif ! icenucopt
 
 
 !
       end if ! ( ssival .gt. 1.0 )
 !
 
-        ENDDO ! ix
-       ENDDO ! kz
+        enddo ! ix
+       enddo ! kz
 
-      IF ( wrfchem_flag > 0 ) THEN
-          IF ( has_wetscav ) THEN
-            IF ( PRESENT( rainprod ) ) rainprod2d(its:ite,kts:kte) = 0
-            IF ( PRESENT( evapprod ) ) evapprod2d(its:ite,kts:kte) = 0
-          ENDIF
-      ENDIF
+      if ( wrfchem_flag > 0 ) then
+          if ( has_wetscav ) then
+            if ( PRESENT( rainprod ) ) rainprod2d(its:ite,kts:kte) = 0
+            if ( PRESENT( evapprod ) ) evapprod2d(its:ite,kts:kte) = 0
+          endif
+      endif
          
 
    ! transform from number mixing ratios to number conc.
      
-    IF ( loopcnt == 1 ) THEN
-     DO il = lnb,na
-       IF ( denscale(il) == 1 ) THEN
-         DO kz = kts,kte
-          DO ix = its,ite
+    if ( loopcnt == 1 ) then
+     do il = lnb,na
+       if ( denscale(il) == 1 ) then
+         do kz = kts,kte
+          do ix = its,ite
            an(ix,1,kz,il) = an(ix,1,kz,il)*dn1(ix,1,kz) ! dn(ix,jy,kz)
-          ENDDO
-         ENDDO
-       ENDIF
-     ENDDO ! il
-    ENDIF
+          enddo
+         enddo
+       endif
+     enddo ! il
+    endif
 
         
 ! sedimentation
@@ -2926,43 +2926,43 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
 ! #ifndef 1
 ! for real cases when hydrometeor mixing ratios have been initialized without concentrations
-       IF ( itimestep == 1 .and. ipconc > 0 .and. loopcnt == 1 ) THEN
+       if ( itimestep == 1 .and. ipconc > 0 .and. loopcnt == 1 ) then
          call calcnfromq(nx,ny,nz,an,na,nor,nor,dn1)
-       ENDIF
+       endif
 ! #endif
 
-      IF ( present(cu_used) .and.         &
+      if ( present(cu_used) .and.         &
            ( present( qrcuten ) .or. present( qscuten ) .or.  &
-             present( qicuten ) .or. present( qccuten ) ) ) THEN !{
+             present( qicuten ) .or. present( qccuten ) ) ) then !{
 
-       IF ( cu_used == 1 ) THEN !{
-       DO kz = kts,kte
-        DO ix = its,ite
+       if ( cu_used == 1 ) then !{
+       do kz = kts,kte
+        do ix = its,ite
 
-         IF ( present( qrcuten ) ) ancuten(ix,1,kz,lr) = dtp*qrcuten(ix,jy,kz)
-         IF ( present( qscuten ) ) ancuten(ix,1,kz,ls) = dtp*qscuten(ix,jy,kz)
-         IF ( present( qicuten ) ) ancuten(ix,1,kz,li) = dtp*qicuten(ix,jy,kz)
-         IF ( present( qccuten ) ) ancuten(ix,1,kz,lc) = dtp*qccuten(ix,jy,kz)
+         if ( present( qrcuten ) ) ancuten(ix,1,kz,lr) = dtp*qrcuten(ix,jy,kz)
+         if ( present( qscuten ) ) ancuten(ix,1,kz,ls) = dtp*qscuten(ix,jy,kz)
+         if ( present( qicuten ) ) ancuten(ix,1,kz,li) = dtp*qicuten(ix,jy,kz)
+         if ( present( qccuten ) ) ancuten(ix,1,kz,lc) = dtp*qccuten(ix,jy,kz)
          
-        ENDDO
-       ENDDO
+        enddo
+       enddo
        
          call calcnfromcuten(nx,ny,nz,ancuten,an,na,nor,nor,dn1)
 
-       DO kz = kts,kte
-        DO ix = its,ite
+       do kz = kts,kte
+        do ix = its,ite
 
 
-          IF ( ipconc >= 6 ) THEN
+          if ( ipconc >= 6 ) then
 !            IF ( lzr > 0 )  an(ix,1,kz,lzr)  = an(ix,1,kz,lzr) + ancuten(ix,1,kz,lzr) 
-          ENDIF
+          endif
          
-        ENDDO
-       ENDDO
+        enddo
+       enddo
        
-       ENDIF !}
+       endif !}
        
-      ENDIF !}
+      endif !}
       
       
 
@@ -2974,47 +2974,47 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
 ! copy xfall to appropriate places...
 
-     IF ( debugdriver ) write(0,*) 'N2M: end sediment, jy = ',jy
+     if ( debugdriver ) write(0,*) 'N2M: end sediment, jy = ',jy
 
-       DO ix = its,ite
-         IF ( lhl > 1 ) THEN
+       do ix = its,ite
+         if ( lhl > 1 ) then
          RAINNCV(ix,jy) = RAINNCV(ix,jy) + &
                           dtp*dn1(ix,1,1)*(xfall(ix,1,lr) + xfall(ix,1,ls)*1000./xdn0(lr) + &
               &            xfall(ix,1,lh)*1000./xdn0(lr) + xfall(ix,1,lhl)*1000./xdn0(lr) )
-         ELSE
+         else
          RAINNCV(ix,jy) = RAINNCV(ix,jy) + &
                            dtp*dn1(ix,1,1)*(xfall(ix,1,lr) + xfall(ix,1,ls)*1000./xdn0(lr) + &
               &            xfall(ix,1,lh)*1000./xdn0(lr) )
-         ENDIF
-         IF ( present ( rainncw2 ) ) THEN ! rain only
+         endif
+         if ( present ( rainncw2 ) ) then ! rain only
            rainncw2(ix,jy) =  rainncw2(ix,jy) +  dtp*dn1(ix,1,1)*xfall(ix,1,lr)
-         ENDIF
-         IF ( present ( rainnci2 ) ) THEN ! ice only
-           IF ( lhl > 1 ) THEN
+         endif
+         if ( present ( rainnci2 ) ) then ! ice only
+           if ( lhl > 1 ) then
              rainnci2(ix,jy) =rainnci2(ix,jy) + dtp*dn1(ix,1,1)*(xfall(ix,1,ls)*1000./xdn0(lr) + &
      &            xfall(ix,1,lh)*1000./xdn0(lr) + xfall(ix,1,lhl)*1000./xdn0(lr) )
-           ELSE
+           else
              rainnci2(ix,jy) = rainnci2(ix,jy) + dtp*dn1(ix,1,1)*(xfall(ix,1,ls)*1000./xdn0(lr) + &
      &            xfall(ix,1,lh)*1000./xdn0(lr) )
-           ENDIF
-         ENDIF
-         IF ( present( SNOWNCV ) ) SNOWNCV(ix,jy) = SNOWNCV(ix,jy) + dtp*dn1(ix,1,1)*xfall(ix,1,ls)*1000./xdn0(lr)
-         IF ( present( GRPLNCV ) ) THEN 
-           IF ( lhl > 1 .and. .not. present( HAILNC) ) THEN ! if no separate hail accum, then add to graupel
+           endif
+         endif
+         if ( present( SNOWNCV ) ) SNOWNCV(ix,jy) = SNOWNCV(ix,jy) + dtp*dn1(ix,1,1)*xfall(ix,1,ls)*1000./xdn0(lr)
+         if ( present( GRPLNCV ) ) then 
+           if ( lhl > 1 .and. .not. present( HAILNC) ) then ! if no separate hail accum, then add to graupel
              GRPLNCV(ix,jy) = GRPLNCV(ix,jy) + dtp*dn1(ix,1,1)*(xfall(ix,1,lh) + xfall(ix,1,lhl)) *1000./xdn0(lr)
-           ELSE
+           else
              GRPLNCV(ix,jy) = GRPLNCV(ix,jy) + dtp*dn1(ix,1,1)*xfall(ix,1,lh)*1000./xdn0(lr)
-           ENDIF
-         ENDIF
-         IF ( loopcnt == loopmax ) RAINNC(ix,jy)  = RAINNC(ix,jy) + RAINNCV(ix,jy)
+           endif
+         endif
+         if ( loopcnt == loopmax ) RAINNC(ix,jy)  = RAINNC(ix,jy) + RAINNCV(ix,jy)
 
-         IF ( loopcnt == loopmax ) THEN
+         if ( loopcnt == loopmax ) then
          do n = 1,nrain
            RAIN(ix,jy,n) = RAIN(ix,jy,n) + 0.1*RAINNCV(ix,jy)
          enddo
-         ENDIF
+         endif
 
-         IF ( present( prate ) ) prate(ix,jy) = rdt*RAINNCV(ix,jy)
+         if ( present( prate ) ) prate(ix,jy) = rdt*RAINNCV(ix,jy)
 
 !         bud1(jy) = bud1(jy) + RAINNCV(ix,jy)*ruh(ix)*rvh(jy)*dx*dy
 !  Moved train sum to end of jy loop
@@ -3022,32 +3022,32 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 !           bud2(jy) = bud2(jy) - rr(ix,jy,kz)*PRE(kz)*ruh(ix)*rvh(jy)*rmh(ix,jy,kz)*tem1
 !         enddo
 
-         IF ( present (SNOWNC) .and. present (SNOWNCV) .and. loopcnt == loopmax ) THEN
+         if ( present (SNOWNC) .and. present (SNOWNCV) .and. loopcnt == loopmax ) then
            SNOWNC(ix,jy)  = SNOWNC(ix,jy) + SNOWNCV(ix,jy)
-         ENDIF
-         IF ( lhl > 1 ) THEN
+         endif
+         if ( lhl > 1 ) then
 !#ifdef 1
 !           IF ( .true. ) THEN
 !#else
-           IF ( present( HAILNC ) ) THEN
+           if ( present( HAILNC ) ) then
 !#endif
              HAILNCV(ix,jy) = dtp*dn1(ix,1,1)*xfall(ix,1,lhl)*1000./xdn0(lr)
-             IF ( loopcnt == loopmax ) HAILNC(ix,jy)  = HAILNC(ix,jy) + HAILNCV(ix,jy)
+             if ( loopcnt == loopmax ) HAILNC(ix,jy)  = HAILNC(ix,jy) + HAILNCV(ix,jy)
 !           ELSEIF ( present( GRPLNCV ) ) THEN ! if no separate hail accum, then add to graupel
 !             GRPLNCV(ix,jy) = GRPLNCV(ix,jy) + dtp*dn1(ix,1,1)*xfall(ix,1,lhl)*1000./xdn0(lr)
-           ENDIF
-         ENDIF
-         IF ( present( GRPLNCV ) .and. loopcnt == loopmax ) THEN
+           endif
+         endif
+         if ( present( GRPLNCV ) .and. loopcnt == loopmax ) then
            GRPLNC(ix,jy)  = GRPLNC(ix,jy) + GRPLNCV(ix,jy)
-         ENDIF
-       ENDDO
+         endif
+       enddo
        
 !      ENDIF ! .false.
  
-      IF ( isedonly /= 1 ) THEN
+      if ( isedonly /= 1 ) then
    ! call nssl_2mom_gs: main gather-scatter routine to calculate microphysics
 
-     IF ( debugdriver ) write(0,*) 'N2M: gs, jy = ',jy
+     if ( debugdriver ) write(0,*) 'N2M: gs, jy = ',jy
 !      IF ( isedonly /= 2 ) THEN
 
 
@@ -3074,11 +3074,11 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
 
 
-   ENDIF ! isedonly /= 1
+   endif ! isedonly /= 1
    
  ! droplet nucleation/condensation/evaporation
-   IF ( .true. ) THEN
-   CALL NUCOND    &
+   if ( .true. ) then
+   call NUCOND    &
      &  (nx,ny,nz,na,jy & 
      &  ,nor,nor,dtp,nx  &
      &  ,dz2d & 
@@ -3091,68 +3091,68 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
 
 
-   ENDIF
+   endif
 
 
 
 
-     ENDDO ! loopcnt=1,loopmax
-     IF ( present( pcc2 ) .and. makediag ) THEN
-         DO kz = kts,kte
-          DO ix = its,ite
+     enddo ! loopcnt=1,loopmax
+     if ( present( pcc2 ) .and. makediag ) then
+         do kz = kts,kte
+          do ix = its,ite
 ! example of using the 'axtra2d' array to get rates out of the microphysics routine for output.
 ! Search for 'axtra' to find example code below
 !            pcc2(ix,jy,kz)    = axtra2d(ix,1,kz,1)
-          ENDDO
-         ENDDO
-     ENDIF
+          enddo
+         enddo
+     endif
 
 
 ! compute diagnostic S-band reflectivity if needed
-     IF ( present( dbz ) .and. makediag .and. lastlooptmp ) THEN
+     if ( present( dbz ) .and. makediag .and. lastlooptmp ) then
    ! calc dbz
       
-      IF ( .true. ) THEN
-      IF ( present(ke_diag) ) THEN
+      if ( .true. ) then
+      if ( present(ke_diag) ) then
         kediagloc = ke_diag
-      ELSE
+      else
         kediagloc = nz
-      ENDIF
+      endif
       call radardd02(nx,ny,nz,nor,na,an,t0,         &
      &    dbz2d,dn1,nz,cnoh,rho_qh,ipconc,kediagloc, 0)
-      ENDIF ! .false.
+      endif ! .false.
 
      
-       DO kz = kts,kediagloc ! kte
-        DO ix = its,ite
+       do kz = kts,kediagloc ! kte
+        do ix = its,ite
          dbz(ix,jy,kz) = dbz2d(ix,1,kz)
-         IF ( present( vzf ) ) THEN
+         if ( present( vzf ) ) then
            vzf(ix,jy,kz) = vzf2d(ix,1,kz)
-           IF ( dbz2d(ix,1,kz) <= 0.0 ) THEN
+           if ( dbz2d(ix,1,kz) <= 0.0 ) then
              vzf(ix,jy,kz) = 0.0
-           ELSEIF ( dbz2d(ix,1,kz) <= 15.0 ) THEN
+           elseif ( dbz2d(ix,1,kz) <= 15.0 ) then
              refl = 10**(0.1*dbz2d(ix,1,kz))
              vzf(ix,jy,kz) = Min( vzf2d(ix,1,kz), 2.6 * Max(0.0,refl)**0.107 * (1.2/dn1(ix,1,kz))**0.4 )
-           ENDIF
-         ENDIF
-          IF ( present( compdbz ) ) THEN
+           endif
+         endif
+          if ( present( compdbz ) ) then
             compdbz(ix,jy) = Max( compdbz(ix,jy), dbz2d(ix,1,kz) )
-          ENDIF
-        ENDDO
-       ENDDO
+          endif
+        enddo
+       enddo
 
-       ENDIF
+       endif
 
 
 
 ! Following Greg Thompson, calculation for effective radii. Used by RRTMG LW/SW schemes if enabled in module_physics_init.F
-      IF ( dorad ) THEN
-      IF ( present( has_reqc ).and. present( has_reqi ) .and. present( has_reqs ) .and.  &
+      if ( dorad ) then
+      if ( present( has_reqc ).and. present( has_reqi ) .and. present( has_reqs ) .and.  &
            present( re_cloud ).and. present( re_ice ) .and. present( re_snow )    .and.  &
-           lastlooptmp) THEN
-       IF ( has_reqc.ne.0 .or. has_reqi.ne.0 .or. has_reqs.ne.0) THEN
-         DO kz = kts,kte
-          DO ix = its,ite
+           lastlooptmp) then
+       if ( has_reqc.ne.0 .or. has_reqi.ne.0 .or. has_reqs.ne.0) then
+         do kz = kts,kte
+          do ix = its,ite
              re_cloud(ix,jy,kz)  = 2.51E-6
              re_ice(ix,jy,kz)    = 10.01E-6
              re_snow(ix,jy,kz)   = 25.E-6
@@ -3160,8 +3160,8 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
              t2(ix,1,kz) = 10.01E-6
              t3(ix,1,kz) = 25.E-6
              t4(ix,1,kz) = 50.e-6
-          ENDDO
-         ENDDO
+          enddo
+         enddo
 
 
           call calc_eff_radius   &
@@ -3170,186 +3170,186 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
      &          ,t1=t1,t2=t2,t3=t3,t4=t4,t5=t5,t6=t6,f_t5=has_reqg_local, f_t6=has_reqh_local  & 
      &          ,an=an,dn=dn1 )
 
-        DO kz = kts,kte
-          DO ix = its,ite
+        do kz = kts,kte
+          do ix = its,ite
              re_cloud(ix,jy,kz) = MAX(2.51E-6, MIN(t1(ix,1,kz), 50.E-6))
              re_ice(ix,jy,kz)   = MAX(10.01E-6, MIN(t2(ix,1,kz), 125.E-6))
              re_snow(ix,jy,kz)  = MAX(25.E-6, MIN(t3(ix,1,kz), 999.E-6))
              ! check for case where snow needs to be treated as cloud ice (for rrtmg radiation)
-             IF ( .not. present(qi) ) re_ice(ix,jy,kz)  = MAX(10.E-6, MIN(t3(ix,1,kz), 125.E-6))
-          ENDDO
-         ENDDO
+             if ( .not. present(qi) ) re_ice(ix,jy,kz)  = MAX(10.E-6, MIN(t3(ix,1,kz), 125.E-6))
+          enddo
+         enddo
 
-       IF ( present(has_reqr) .and. present( re_rain ) ) THEN
-         IF ( has_reqr /= 0 ) THEN
-         DO kz = kts,kte
-           DO ix = its,ite
+       if ( present(has_reqr) .and. present( re_rain ) ) then
+         if ( has_reqr /= 0 ) then
+         do kz = kts,kte
+           do ix = its,ite
             re_rain(ix,jy,kz)  = MAX(50.E-6, MIN(t4(ix,1,kz), 2999.E-6))
-           ENDDO
-         ENDDO
-         ENDIF
-       ENDIF
+           enddo
+         enddo
+         endif
+       endif
 
-       IF ( present(has_reqg) .and. present( re_graup ) ) THEN
-         IF ( has_reqg /= 0 ) THEN
-         DO kz = kts,kte
-           DO ix = its,ite
+       if ( present(has_reqg) .and. present( re_graup ) ) then
+         if ( has_reqg /= 0 ) then
+         do kz = kts,kte
+           do ix = its,ite
             re_graup(ix,jy,kz)  = MAX(50.E-6, MIN(t5(ix,1,kz), 10.E-3))
-           ENDDO
-         ENDDO
-         ENDIF
-       ENDIF
+           enddo
+         enddo
+         endif
+       endif
 
-       IF ( present(has_reqh) .and. present( re_hail ) ) THEN
-         IF ( has_reqh /= 0 ) THEN
-         DO kz = kts,kte
-           DO ix = its,ite
+       if ( present(has_reqh) .and. present( re_hail ) ) then
+         if ( has_reqh /= 0 ) then
+         do kz = kts,kte
+           do ix = its,ite
             re_hail(ix,jy,kz)  = MAX(50.E-6, MIN(t5(ix,1,kz), 40.E-3))
-           ENDDO
-         ENDDO
-         ENDIF
-       ENDIF
+           enddo
+         enddo
+         endif
+       endif
        
-         ENDIF
-        ENDIF
-      ENDIF ! dorad 
+         endif
+        endif
+      endif ! dorad 
 
 
-     IF ( present( hail_maxk1 ) .and. present( hail_max2d ) .and. nwp_diagflag ) THEN
-         DO ix = its,ite
+     if ( present( hail_maxk1 ) .and. present( hail_max2d ) .and. nwp_diagflag ) then
+         do ix = its,ite
             hailmax1d(ix,1) = hail_max2d(ix,jy)
             hailmaxk1(ix,1) = hail_maxk1(ix,jy)
-         ENDDO
+         enddo
 
          call hailmaxd(dtp,nx,ny,nz,an,na,nor,nor,alpha2d,dn1,   &
                           hailmax1d,hailmaxk1,1 )
 
-         DO ix = its,ite
+         do ix = its,ite
            hail_max2d(ix,jy) = hailmax1d(ix,1)
            hail_maxk1(ix,jy) = hailmaxk1(ix,1)
-         ENDDO
+         enddo
 !       ENDIF
-     ENDIF
+     endif
    
 ! transform concentrations back to mixing ratios
-     DO il = lnb,na
-      IF ( denscale(il) == 1 ) THEN
-       DO kz = kts,kte
-        DO ix = its,ite
+     do il = lnb,na
+      if ( denscale(il) == 1 ) then
+       do kz = kts,kte
+        do ix = its,ite
          an(ix,1,kz,il) = an(ix,1,kz,il)/dn1(ix,1,kz) ! dn(ix,jy,kz)
-        ENDDO
-       ENDDO
-      ENDIF
-     ENDDO ! il
+        enddo
+       enddo
+      endif
+     enddo ! il
    
    ! copy 2D slabs back to 3D
 
    
-       DO kz = kts,kte
-        DO ix = its,ite
+       do kz = kts,kte
+        do ix = its,ite
         
          th(ix,jy,kz)  = an(ix,1,kz,lt)
 
-         IF ( eqtset > 2 ) THEN
+         if ( eqtset > 2 ) then
           pii(ix,jy,kz) = t77(ix,1,kz)
-         ENDIF
+         endif
          qv(ix,jy,kz)  = an(ix,1,kz,lv)
          qc(ix,jy,kz)  = an(ix,1,kz,lc)
          qr(ix,jy,kz)  = an(ix,1,kz,lr)
-         IF ( flag_qi ) qi(ix,jy,kz)  = an(ix,1,kz,li)
+         if ( flag_qi ) qi(ix,jy,kz)  = an(ix,1,kz,li)
          qs(ix,jy,kz)  = an(ix,1,kz,ls)
          qh(ix,jy,kz)  = an(ix,1,kz,lh)
-         IF ( lhl > 1 ) qhl(ix,jy,kz) = an(ix,1,kz,lhl)
+         if ( lhl > 1 ) qhl(ix,jy,kz) = an(ix,1,kz,lhl)
          
-         IF ( lccn > 1 .and. is_aerosol_aware .and. flag_qnwfa ) THEN
+         if ( lccn > 1 .and. is_aerosol_aware .and. flag_qnwfa ) then
            ! not used here
-         ELSEIF ( flag_ccn .and. lccn > 1 .and. .not. flag_qndrop) THEN
-            IF ( lccna > 1 .and. .not. ( present( cna ) .and. f_cnatmp ) ) THEN
+         elseif ( flag_ccn .and. lccn > 1 .and. .not. flag_qndrop) then
+            if ( lccna > 1 .and. .not. ( present( cna ) .and. f_cnatmp ) ) then
               cn(ix,jy,kz) = Max(0.0, an(ix,1,kz,lccna) )
-            ELSE
+            else
               cn(ix,jy,kz) = an(ix,1,kz,lccn)
-            ENDIF
-         ENDIF
-         IF ( lccna > 1 ) THEN
-           IF ( present( cna ) .and. f_cnatmp ) THEN
+            endif
+         endif
+         if ( lccna > 1 ) then
+           if ( present( cna ) .and. f_cnatmp ) then
               cna(ix,jy,kz) = Max(0.0, an(ix,1,kz,lccna) )
-           ENDIF
-         ENDIF
+           endif
+         endif
 
-         IF ( lcina > 1 ) THEN
-           IF ( present( cni ) .and. f_cinatmp ) THEN
+         if ( lcina > 1 ) then
+           if ( present( cni ) .and. f_cinatmp ) then
               cni(ix,jy,kz) = Max(0.0, an(ix,1,kz,lcina) )
-           ENDIF
-         ENDIF
+           endif
+         endif
 
-         IF ( lccnuf > 0 .and. flag_cnuf ) THEN
-           IF ( i_uf_or_ccn > 0 ) THEN ! UF are ccn and lccnuf is zero, so put cnuf into lccnuf to do decay
+         if ( lccnuf > 0 .and. flag_cnuf ) then
+           if ( i_uf_or_ccn > 0 ) then ! UF are ccn and lccnuf is zero, so put cnuf into lccnuf to do decay
              an(ix,1,kz,lccnuf) = Max(0.0, cnuf(ix,jy,kz) )
-           ENDIF
-           IF ( decayufccn ) THEN
-             IF ( an(ix,1,kz,lccnuf) > ufbackground ) THEN
+           endif
+           if ( decayufccn ) then
+             if ( an(ix,1,kz,lccnuf) > ufbackground ) then
                an(ix,1,kz,lccnuf) = an(ix,1,kz,lccnuf) - (an(ix,1,kz,lccnuf) - &
                             ufbackground)*(1.0 - exp(-dtp/ufccntimeconst))
-             ENDIF
-           ENDIF
+             endif
+           endif
            cnuf(ix,jy,kz) = an(ix,1,kz,lccnuf)
-         ENDIF
+         endif
 
 
 
-         IF ( ipconc >= 5 ) THEN
+         if ( ipconc >= 5 ) then
 
           ccw(ix,jy,kz) = an(ix,1,kz,lnc)
           crw(ix,jy,kz) = an(ix,1,kz,lnr)
-          IF ( present( cci ) ) cci(ix,jy,kz) = an(ix,1,kz,lni)
+          if ( present( cci ) ) cci(ix,jy,kz) = an(ix,1,kz,lni)
           csw(ix,jy,kz) = an(ix,1,kz,lns)
           chw(ix,jy,kz) = an(ix,1,kz,lnh)
-          IF ( lhl > 1 ) chl(ix,jy,kz) = an(ix,1,kz,lnhl)
-         ENDIF
+          if ( lhl > 1 ) chl(ix,jy,kz) = an(ix,1,kz,lnhl)
+         endif
 
-         IF ( ipconc >= 6 ) THEN
-            IF ( lzr > 0 )  zrw(ix,jy,kz) = an(ix,1,kz,lzr) *zscaleinv
-            IF ( lzh > 0 )  zhw(ix,jy,kz) = an(ix,1,kz,lzh) *zscaleinv
-            IF ( lzhl > 0 ) zhl(ix,jy,kz) = an(ix,1,kz,lzhl)*zscaleinv
-         ENDIF
+         if ( ipconc >= 6 ) then
+            if ( lzr > 0 )  zrw(ix,jy,kz) = an(ix,1,kz,lzr) *zscaleinv
+            if ( lzh > 0 )  zhw(ix,jy,kz) = an(ix,1,kz,lzh) *zscaleinv
+            if ( lzhl > 0 ) zhl(ix,jy,kz) = an(ix,1,kz,lzhl)*zscaleinv
+         endif
 
 
 
-         IF ( lvh > 0 )  vhw(ix,jy,kz) = an(ix,1,kz,lvh)
-         IF ( lvhl > 0 .and. present( vhl ) ) vhl(ix,jy,kz) = an(ix,1,kz,lvhl)
+         if ( lvh > 0 )  vhw(ix,jy,kz) = an(ix,1,kz,lvh)
+         if ( lvhl > 0 .and. present( vhl ) ) vhl(ix,jy,kz) = an(ix,1,kz,lvhl)
 
 #if ( WRF_CHEM == 1 )
-         IF ( has_wetscav ) THEN
-           IF ( loopmax > 1 ) THEN
+         if ( has_wetscav ) then
+           if ( loopmax > 1 ) then
              ! wrferror not supported
-           ENDIF
-           IF ( PRESENT( rainprod ) ) rainprod(ix,jy,kz) = rainprod2d(ix,kz)
-           IF ( PRESENT( evapprod ) ) evapprod(ix,jy,kz) = evapprod2d(ix,kz)
-         ENDIF
+           endif
+           if ( PRESENT( rainprod ) ) rainprod(ix,jy,kz) = rainprod2d(ix,kz)
+           if ( PRESENT( evapprod ) ) evapprod(ix,jy,kz) = evapprod2d(ix,kz)
+         endif
 #endif
 
-        ENDDO
-       ENDDO
+        enddo
+       enddo
 
-      IF ( nproc > 1 ) THEN
+      if ( nproc > 1 ) then
 !$OMP CRITICAL      
 
-       DO k = kms,kme
-        DO n = 1,nproc
+       do k = kms,kme
+        do n = 1,nproc
           proctot(n) = proctot(n) + thproclocal(k,n)
-        ENDDO
-       ENDDO
+        enddo
+       enddo
 
 !$OMP END CRITICAL
-      ENDIF
+      endif
 
-     ENDDO ! jy
+     enddo ! jy
      
-       DO jy = jts,jte
-       DO ix = its,ite
+       do jy = jts,jte
+       do ix = its,ite
          train = train + RAINNCV(ix,jy)*ruh(ix)*rvh(jy)*dx*dy
-       ENDDO
-       ENDDO
+       enddo
+       enddo
      
 
      
@@ -3358,26 +3358,26 @@ SUBROUTINE nssl_2mom_driver(qv, qc, qr, qi, qs, qh, qhl, ccw, crw, cci, csw, chw
 
 
  11   format('processes: ',100(1x,1pe12.5))
-      IF ( nproc > 1 ) THEN
+      if ( nproc > 1 ) then
 #ifdef MPI
-      CALL MPI_Reduce(proctot, proctotmpi, nproc, MPI_DOUBLE_PRECISION, MPI_SUM, 0, MPI_COMM_WORLD, mpi_error_code)
-       IF ( myrankcm1 == 0 ) THEN
+      call MPI_Reduce(proctot, proctotmpi, nproc, MPI_DOUBLE_PRECISION, MPI_SUM, 0, MPI_COMM_WORLD, mpi_error_code)
+       if ( myrankcm1 == 0 ) then
         proctot(1:nproc) = proctotmpi(1:nproc)
-       ENDIF
+       endif
 #endif
-       IF ( myrankcm1 == 0 ) THEN
+       if ( myrankcm1 == 0 ) then
          write(6,11) (proctot(i), i=1,nproc)
-       ENDIF
+       endif
 
-      ENDIF
+      endif
 
-  RETURN
-END SUBROUTINE nssl_2mom_driver
+  return
+end subroutine nssl_2mom_driver
 
 ! #####################################################################
 ! #####################################################################
 
-      REAL FUNCTION GAMMA_SP(xx)
+      real function GAMMA_SP(xx)
 
       implicit none
       real xx
@@ -3386,8 +3386,8 @@ END SUBROUTINE nssl_2mom_driver
 ! Double precision ser,stp,tmp,x,y,cof(6)
 
       real*8 ser,stp,tmp,x,y,cof(6)
-      SAVE cof,stp
-      DATA cof,stp/76.18009172947146d+0,  &
+      save cof,stp
+      data cof,stp/76.18009172947146d+0,  &
      &            -86.50532032941677d0,   &
      &             24.01409824083091d0,   &
      &             -1.231739572450155d0,  &
@@ -3395,28 +3395,28 @@ END SUBROUTINE nssl_2mom_driver
      &             -0.5395239384953d-5,   &
      &              2.5066282746310005d0/
 
-      IF ( xx <= 0.0 ) THEN
+      if ( xx <= 0.0 ) then
         write(0,*) 'Argument to gamma must be > 0!! xx = ',xx
-        STOP
-      ENDIF
+        stop
+      endif
       
       x = xx
       y = x
       tmp = x + 5.5d0
       tmp = (x + 0.5d0)*Log(tmp) - tmp
       ser = 1.000000000190015d0
-      DO j=1,6
+      do j=1,6
         y = y + 1.0d0
         ser = ser + cof(j)/y
-      END DO
+      end do
       gamma_sp = Exp(tmp + log(stp*ser/x))
 
-      RETURN
-      END FUNCTION GAMMA_SP
+      return
+      end function GAMMA_SP
 
 ! #####################################################################
 
-      DOUBLE PRECISION FUNCTION GAMMA_DPR(x)
+      double precision function GAMMA_DPR(x)
       ! dp gamma with real input
         implicit none
         real :: x
@@ -3427,7 +3427,7 @@ END SUBROUTINE nssl_2mom_driver
         gamma_dpr = gamma_dp(xx)
         
         return
-        end FUNCTION GAMMA_DPR
+        end function GAMMA_DPR
         
 
 
@@ -3454,42 +3454,42 @@ END SUBROUTINE nssl_2mom_driver
         
         a = a1
         x = x1
-        IF ( x1 <= 0.0 ) THEN
+        if ( x1 <= 0.0 ) then
            gamxinf = GAMMA_SP(A1)
            return
-        ENDIF
+        endif
         XAM=-X+A*DLOG(X)
-        IF (XAM.GT.700.0.OR.A.GT.170.0) THEN
-           WRITE(*,*)'a and/or x too large'
-           STOP
-        ENDIF
-        IF (X.EQ.0.0) THEN
+        if (XAM.GT.700.0.OR.A.GT.170.0) then
+           write(*,*)'a and/or x too large'
+           stop
+        endif
+        if (X.EQ.0.0) then
            GIN=0.0
            GIM = GAMMA_SP(A1)
-        ELSE IF (X.LE.1.0+A) THEN
+        else if (X.LE.1.0+A) then
            S=1.0D0/A
            R=S
-           DO 10 K=1,60
+           do 10 K=1,60
               R=R*X/(A+K)
               S=S+R
-              IF (DABS(R/S).LT.1.0D-15) GO TO 15
-10         CONTINUE
+              if (DABS(R/S).LT.1.0D-15) go to 15
+10         continue
 15         GIN=DEXP(XAM)*S
            ga = GAMMA_SP(A1)
            GIM=GA-GIN
-        ELSE IF (X.GT.1.0+A) THEN
+        else if (X.GT.1.0+A) then
            T0=0.0D0
-           DO 20 K=60,1,-1
+           do 20 K=60,1,-1
               T0=(K-A)/(1.0D0+K/(X+T0))
-20         CONTINUE
+20         continue
            GIM=DEXP(XAM)/(X+T0)
 !           GA = GAMMA_SP(A1)
 !           GIN=GA-GIM
-        ENDIF
+        endif
         
         gamxinf = GIM
         return
-        END function GAMXINF
+        end function GAMXINF
 
 ! #####################################################################
 
@@ -3515,42 +3515,42 @@ END SUBROUTINE nssl_2mom_driver
         
         a = a1
         x = x1
-        IF ( x1 <= 0.0 ) THEN
+        if ( x1 <= 0.0 ) then
            gamxinfdp = GAMMA_DP(A)
            return
-        ENDIF
+        endif
         XAM=-X+A*DLOG(X)
-        IF (XAM.GT.700.0.OR.A.GT.170.0) THEN
-           WRITE(*,*)'a and/or x too large'
-           STOP
-        ENDIF
-        IF (X.EQ.0.0) THEN
+        if (XAM.GT.700.0.OR.A.GT.170.0) then
+           write(*,*)'a and/or x too large'
+           stop
+        endif
+        if (X.EQ.0.0) then
            GIN=0.0
            GIM = GAMMA_dp(A)
-        ELSE IF (X.LE.1.0+A) THEN
+        else if (X.LE.1.0+A) then
            S=1.0D0/A
            R=S
-           DO 10 K=1,60
+           do 10 K=1,60
               R=R*X/(A+K)
               S=S+R
-              IF (DABS(R/S).LT.1.0D-15) GO TO 15
-10         CONTINUE
+              if (DABS(R/S).LT.1.0D-15) go to 15
+10         continue
 15         GIN=DEXP(XAM)*S
            ga = GAMMA_DP(A)
            GIM=GA-GIN
-        ELSE IF (X.GT.1.0+A) THEN
+        else if (X.GT.1.0+A) then
            T0=0.0D0
-           DO 20 K=60,1,-1
+           do 20 K=60,1,-1
               T0=(K-A)/(1.0D0+K/(X+T0))
-20         CONTINUE
+20         continue
            GIM=DEXP(XAM)/(X+T0)
 !           GA = GAMMA_dp(A)
 !           GIN=GA-GIM
-        ENDIF
+        endif
         
         gamxinfdp = GIM
         return
-        END function GAMXINFDP
+        end function GAMXINFDP
 
 
 ! #####################################################################
@@ -3597,7 +3597,7 @@ END SUBROUTINE nssl_2mom_driver
 !             write(0,*) 'gaminterp: ',i,j,ilh,ratio,delx,dely,gamxinflu(i,j,luindex,ilh),tmp1,tmp2
 !           ENDIF
            
-        END FUNCTION gaminterp
+        end function gaminterp
 ! #####################################################################
 
 !**************************** GAML02 *********************** 
@@ -3605,84 +3605,84 @@ END SUBROUTINE nssl_2mom_driver
 !   It is used for qiacr with the gamma of volume to calculate what 
 !   fraction of drops exceed a certain size (this version is for 40 micron drops)
 ! **********************************************************
-      real FUNCTION GAML02(x) 
+      real function GAML02(x) 
       implicit none
       integer ig, i, ii, n, np
       real x
       integer ng
       parameter(ng=12)
       real gamxg(ng), xg(ng)
-      DATA xg/0.01,0.02,0.025,0.04,0.075,0.1,0.25,0.5,0.75,1.,2.,10./ 
-      DATA gamxg/  &
+      data xg/0.01,0.02,0.025,0.04,0.075,0.1,0.25,0.5,0.75,1.,2.,10./ 
+      data gamxg/  &
      &  7.391019203578037e-8,0.02212726874591478,0.06959352407989682, &
      &  0.2355654024970809,0.46135930387500346,0.545435791452399,     &
      &  0.7371571313308203,                                           &
      &  0.8265676632204345,0.8640182781845841,0.8855756211304151,     &
      &  0.9245079225301251,                                           &
      &  0.9712578342732681/
-      IF ( x .ge. xg(ng) ) THEN
+      if ( x .ge. xg(ng) ) then
         gaml02 = xg(ng)
-        RETURN
-      ENDIF
-      IF ( x .lt. xg(1) ) THEN
+        return
+      endif
+      if ( x .lt. xg(1) ) then
         gaml02 = 0.0
-        RETURN
-      ENDIF
-      DO ii = 1,ng-1
+        return
+      endif
+      do ii = 1,ng-1
         i = ng - ii
         n = i
         np = n + 1
-        IF ( x .ge. xg(i) ) THEN
+        if ( x .ge. xg(i) ) then
 !         GOTO 2 
           gaml02 = gamxg(N)+((X-XG(N))/(XG(NP)-XG(N)))* &
      &            ( gamxg(NP) - gamxg(N) ) 
-          RETURN
-        ENDIF
-      ENDDO
-      RETURN
-      END FUNCTION GAML02
+          return
+        endif
+      enddo
+      return
+      end function GAML02
 
 !**************************** GAML02d300 *********************** 
 !  This calculates Gamma(0.2,x)/Gamma[0.2], where is a ratio
 !   It is used for qiacr with the gamma of volume to calculate what 
 !   fraction of drops exceed a certain size (this version is for 300 micron drops) (see zieglerstuff.nb)
 ! **********************************************************
-     real FUNCTION GAML02d300(x)
+     real function GAML02d300(x)
       implicit none
       integer ig, i, ii, n, np
       real x
       integer ng
       parameter(ng=9)
       real gamxg(ng), xg(ng)
-      DATA xg/0.04,0.075,0.1,0.25,0.5,0.75,1.,2.,10./ 
-      DATA gamxg/                           &
+      data xg/0.04,0.075,0.1,0.25,0.5,0.75,1.,2.,10./ 
+      data gamxg/                           &
      &  0.0,                                  &
      &  7.391019203578011e-8,0.0002260640810600053,  &
      &  0.16567071824457152,                         &
      &  0.4231369044918005,0.5454357914523988,       &
      &  0.6170290936864555,                           &
      &  0.7471346054110058,0.9037156157718299 /
-      IF ( x .ge. xg(ng) ) THEN
+      if ( x .ge. xg(ng) ) then
         GAML02d300 = xg(ng)
-        RETURN
-      ENDIF
-      IF ( x .lt. xg(1) ) THEN
+        return
+      endif
+      if ( x .lt. xg(1) ) then
         GAML02d300 = 0.0
-        RETURN
-      ENDIF
-      DO ii = 1,ng-1
+        return
+      endif
+      do ii = 1,ng-1
         i = ng - ii
         n = i
         np = n + 1
-        IF ( x .ge. xg(i) ) THEN
+        if ( x .ge. xg(i) ) then
 !         GOTO 2 
           GAML02d300 = gamxg(N)+((X-XG(N))/(XG(NP)-XG(N)))*  &
      &            ( gamxg(NP) - gamxg(N) ) 
-          RETURN
-        ENDIF
-      ENDDO
-      RETURN
-      END FUNCTION GAML02d300
+          return
+        endif
+      enddo
+      return
+      end function GAML02d300
 !c
 
 ! #####################################################################
@@ -3693,41 +3693,41 @@ END SUBROUTINE nssl_2mom_driver
 !   It is used for qiacr with the gamma of volume to calculate what 
 !   fraction of drops exceed a certain size (this version is for 500 micron drops) (see zieglerstuff.nb)
 ! **********************************************************
-      real FUNCTION GAML02d500(x) 
+      real function GAML02d500(x) 
       implicit none
       integer ig, i, ii, n, np
       real x
       integer ng
       parameter(ng=9)
       real gamxg(ng), xg(ng)
-      DATA xg/0.04,0.075,0.1,0.25,0.5,0.75,1.,2.,10./ 
-      DATA gamxg/  &
+      data xg/0.04,0.075,0.1,0.25,0.5,0.75,1.,2.,10./ 
+      data gamxg/  &
      &  0.0,0.0,   &
      &  2.2346039e-13, 0.0221272687459,  &
      &  0.23556540,  0.38710348,         &
      &  0.48136183,0.6565833,            &
      &  0.86918315 /
-      IF ( x .ge. xg(ng) ) THEN
+      if ( x .ge. xg(ng) ) then
         GAML02d500 = xg(ng)
-        RETURN
-      ENDIF
-      IF ( x .lt. xg(1) ) THEN
+        return
+      endif
+      if ( x .lt. xg(1) ) then
         GAML02d500 = 0.0
-        RETURN
-      ENDIF
-      DO ii = 1,ng-1
+        return
+      endif
+      do ii = 1,ng-1
         i = ng - ii
         n = i
         np = n + 1
-        IF ( x .ge. xg(i) ) THEN
+        if ( x .ge. xg(i) ) then
 !         GOTO 2 
           GAML02d500 = gamxg(N)+((X-XG(N))/(XG(NP)-XG(N)))*  &
      &            ( gamxg(NP) - gamxg(N) ) 
-          RETURN
-        ENDIF
-      ENDDO
-      RETURN
-      END FUNCTION GAML02d500
+          return
+        endif
+      enddo
+      return
+      end function GAML02d500
 !c
 
 ! #####################################################################
@@ -3752,18 +3752,18 @@ END SUBROUTINE nssl_2mom_driver
         
         p1 = p
         q1 = q
-        CALL GAMMADP(P1,GP)
-        CALL GAMMADP(Q1,GQ)
+        call GAMMADP(P1,GP)
+        call GAMMADP(Q1,GQ)
         PPQ=P1+Q1
-        CALL GAMMADP(PPQ,GPQ)
+        call GAMMADP(PPQ,GPQ)
         beta=GP*GQ/GPQ
-        RETURN
-        END function BETA
+        return
+        end function BETA
 
 ! #####################################################################
 ! #####################################################################
 
-      DOUBLE PRECISION FUNCTION GAMMA_DP(xx)
+      double precision function GAMMA_DP(xx)
 
       implicit none
       double precision xx
@@ -3772,8 +3772,8 @@ END SUBROUTINE nssl_2mom_driver
 ! Double precision ser,stp,tmp,x,y,cof(6)
 
       real*8 ser,stp,tmp,x,y,cof(6)
-      SAVE cof,stp
-      DATA cof,stp/76.18009172947146d+0,  &
+      save cof,stp
+      data cof,stp/76.18009172947146d+0,  &
      &            -86.50532032941677d0,   &
      &             24.01409824083091d0,   &
      &             -1.231739572450155d0,  &
@@ -3786,17 +3786,17 @@ END SUBROUTINE nssl_2mom_driver
       tmp = x + 5.5d0
       tmp = (x + 0.5d0)*Log(tmp) - tmp
       ser = 1.000000000190015d0
-      DO j=1,6
+      do j=1,6
         y = y + 1.0d0
         ser = ser + cof(j)/y
-      END DO
+      end do
       gamma_dp = Exp(tmp + log(stp*ser/x))
 
-      RETURN
-      END function gamma_dp
+      return
+      end function gamma_dp
 ! #####################################################################
 
-        SUBROUTINE GAMMADP(X,GA)
+        subroutine GAMMADP(X,GA)
 !
 !       ==================================================
 !       Purpose: Compute gamma function Gamma(x)
@@ -3814,29 +3814,29 @@ END SUBROUTINE nssl_2mom_driver
         
         double precision :: G(26)
         
-        IF (X.EQ.INT(X)) THEN
-           IF (X.GT.0.0D0) THEN
+        if (X.EQ.INT(X)) then
+           if (X.GT.0.0D0) then
               GA=1.0D0
               M1=X-1
-              DO K=2,M1
+              do K=2,M1
                 GA=GA*K
-              ENDDO
-           ELSE
+              enddo
+           else
               GA=1.0D+300
-           ENDIF
-        ELSE
-           IF (DABS(X).GT.1.0D0) THEN
+           endif
+        else
+           if (DABS(X).GT.1.0D0) then
               Z=DABS(X)
               M=INT(Z)
               R=1.0D0
-              DO K=1,M
+              do K=1,M
                  R=R*(Z-K)
-              ENDDO
+              enddo
               Z=Z-M
-           ELSE
+           else
               Z=X
-           ENDIF
-           DATA G/1.0D0,0.5772156649015329D0,                  &
+           endif
+           data G/1.0D0,0.5772156649015329D0,                  &
      &          -0.6558780715202538D0, -0.420026350340952D-1,  &
      &          0.1665386113822915D0,-.421977345555443D-1,     &
      &          -.96219715278770D-2, .72189432466630D-2,       &
@@ -3849,17 +3849,17 @@ END SUBROUTINE nssl_2mom_driver
      &          -.36968D-11, .51D-12,                          &
      &          -.206D-13, -.54D-14, .14D-14, .1D-15/
            GR=G(26)
-           DO K=25,1,-1
+           do K=25,1,-1
              GR=GR*Z+G(K)
-           ENDDO
+           enddo
            GA=1.0D0/(GR*Z)
-           IF (DABS(X).GT.1.0D0) THEN
+           if (DABS(X).GT.1.0D0) then
               GA=GA*R
-              IF (X.LT.0.0D0) GA=-PI/(X*GA*DSIN(PI*X))
-           ENDIF
-        ENDIF
-        RETURN
-        END SUBROUTINE GAMMADP
+              if (X.LT.0.0D0) GA=-PI/(X*GA*DSIN(PI*X))
+           endif
+        endif
+        return
+        end subroutine GAMMADP
 
 
 ! #####################################################################
@@ -3867,7 +3867,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !
 ! #####################################################################
-      Function delbk(bb,nu,mu,k)
+      function delbk(bb,nu,mu,k)
 !   
 !  Purpose: Caluculates collection coefficients following Siefert (2006)
 !
@@ -3914,15 +3914,15 @@ END SUBROUTINE nssl_2mom_driver
      &  ((x1/x2)**(2.0*bb + k)* &
      &    x3)/x1
       
-      RETURN
-      END  Function delbk
+      return
+      end  function delbk
       
 ! #####################################################################
 !
 !
 ! #####################################################################
 ! Equation (91) in Seifert and Beheng (2006) ("a" collecting "b")
-      Function delabk(ba,bb,nua,nub,mua,mub,k)
+      function delabk(ba,bb,nua,nub,mua,mub,k)
       
       implicit none
       real delabk
@@ -3938,10 +3938,10 @@ END SUBROUTINE nssl_2mom_driver
         tmp = (1. + nua)/mua
         i = Int(dgami*(tmp))
         del = tmp - dgam*i
-        IF ( i+1 > ngm0 ) THEN
+        if ( i+1 > ngm0 ) then
           write(0,*) 'delabk: i+1 > ngm0!!!!',i,ngm0,nua,mua,tmp
-           STOP
-        ENDIF
+           stop
+        endif
         g1pnua = gmoi(i) + (gmoi(i+1) - gmoi(i))*del*dgami
 !        write(91,*) 'delabk: g1pnua,gamma = ',g1pnua,Gamma_sp((1. + nua)/mua)
 
@@ -3977,8 +3977,8 @@ END SUBROUTINE nssl_2mom_driver
      &    g1pbbpk)/                                                &
      &  (g1pnua*g1pnub)              
       
-      RETURN
-      END Function delabk
+      return
+      end function delabk
 
 
 ! #####################################################################
@@ -3986,7 +3986,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! #####################################################################
 
-     REAL FUNCTION cnudiag(ccw)
+     real function cnudiag(ccw)
    ! function to diagnose cloud drop DSD shape parameter (cnu) based on Chandrakar et al. 2016 (PNAS) data
      
      implicit none
@@ -3999,44 +3999,44 @@ END SUBROUTINE nssl_2mom_driver
      real :: vard_nu(9,2)  ! table of variance vs. shape parameter
      real :: vard_ccw(4,3) ! table of Chandrakar et al. 2016
 
-      DATA vard_nu(:,1) / 0.406873, 0.381485, 0.360077, 0.34174, 0.325827, 0.311862, 0.299489, 0.288433, 0.278483 /
-      DATA vard_nu(:,2) / -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5 /
+      data vard_nu(:,1) / 0.406873, 0.381485, 0.360077, 0.34174, 0.325827, 0.311862, 0.299489, 0.288433, 0.278483 /
+      data vard_nu(:,2) / -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5 /
      
-      DATA vard_ccw(:,1) / 0.40, 0.38, 0.35, 0.28 /
-      DATA vard_ccw(:,2) / 21.3e6, 76.9e6, 201.2e6, 564.6e6 /
-      DATA vard_ccw(:,3) / -0.274661, -0.193569, -0.0468808, 0.484082 /
+      data vard_ccw(:,1) / 0.40, 0.38, 0.35, 0.28 /
+      data vard_ccw(:,2) / 21.3e6, 76.9e6, 201.2e6, 564.6e6 /
+      data vard_ccw(:,3) / -0.274661, -0.193569, -0.0468808, 0.484082 /
       
 ! ----------------
 
-      IF ( ccw <= vard_ccw(1,2) ) THEN
+      if ( ccw <= vard_ccw(1,2) ) then
         vard = 0.4
         cnudiag = -0.274661
-      ELSEIF ( ccw >= vard_ccw(4,2) ) THEN
+      elseif ( ccw >= vard_ccw(4,2) ) then
         vard = 0.28
         cnudiag = 0.484082
-      ELSE
+      else
         ! interpolate
-        IF ( ccw <= vard_ccw(2,2) ) THEN
+        if ( ccw <= vard_ccw(2,2) ) then
          ! range of 21.3e6 to 76.9e6
           
           cnudiag = vard_ccw(1,3) + (vard_ccw(2,3)-vard_ccw(1,3))*(ccw - vard_ccw(1,2))/( vard_ccw(2,2) - vard_ccw(1,2) )
           
-        ELSEIF ( ccw <= vard_ccw(3,2) ) THEN
+        elseif ( ccw <= vard_ccw(3,2) ) then
          ! range of 76.9e6 to 201.2e6
 
           cnudiag = vard_ccw(2,3) + (vard_ccw(3,3)-vard_ccw(2,3))*(ccw - vard_ccw(2,2))/( vard_ccw(3,2) - vard_ccw(2,2) )
         
-        ELSE
+        else
          ! range of 201.2e6 to 564.6e6
 
           cnudiag = vard_ccw(3,3) + (vard_ccw(4,3)-vard_ccw(3,3))*(ccw - vard_ccw(3,2))/( vard_ccw(4,2) - vard_ccw(3,2) )
         
-        ENDIF
+        endif
       
       
-      ENDIF
-     RETURN
-     END FUNCTION cnudiag
+      endif
+     return
+     end function cnudiag
 
 ! #####################################################################
 !
@@ -4101,7 +4101,7 @@ END SUBROUTINE nssl_2mom_driver
       real :: alp, diam, diam1, hwdn
       
 !      real, parameter :: cmin = 0.001 ! threshold number per m^3 for maximum diamter (threshold from diag_nwp)
-      DOUBLE PRECISION, PARAMETER:: thresh_conc = 0.0005d0                 ! number conc. of graupel/hail per cubic meter
+      double precision, parameter:: thresh_conc = 0.0005d0                 ! number conc. of graupel/hail per cubic meter
       real :: cwchtmp,cwchltmp, maxdia
 
 !-----------------------------------------------------------------------------
@@ -4116,12 +4116,12 @@ END SUBROUTINE nssl_2mom_driver
 ! ###################################################################
 
 
-      IF ( lh > 1 ) THEN
+      if ( lh > 1 ) then
         cwchtmp  = ((3. + dnu(lh))*(2. + dnu(lh))*(1.0 + dnu(lh)))**(-1./3.)
-      ENDIF
-      IF ( lhl > 1 ) THEN
+      endif
+      if ( lhl > 1 ) then
         cwchltmp = ((3. + dnu(lhl))*(2. + dnu(lhl))*(1.0 + dnu(lhl)))**(-1./3.)
-      ENDIF
+      endif
 
 
       kzb = 1
@@ -4142,15 +4142,15 @@ END SUBROUTINE nssl_2mom_driver
 
 
 ! first graupel, even if hail is also predicted, since graupel can sometime be large on its own
-      IF ( lh > 1 .and. lnh > 1 ) THEN
-      DO kz = kzb,kze
-      DO ix = ixb,ixe
-        IF ( an(ix,jy,kz,lh) .gt. qxmin(lh) .and. an(ix,jy,kz,lnh) .gt. thresh_conc ) THEN
-          IF ( lvh .gt. 1 ) THEN
+      if ( lh > 1 .and. lnh > 1 ) then
+      do kz = kzb,kze
+      do ix = ixb,ixe
+        if ( an(ix,jy,kz,lh) .gt. qxmin(lh) .and. an(ix,jy,kz,lnh) .gt. thresh_conc ) then
+          if ( lvh .gt. 1 ) then
             hwdn = dn(ix,jy,kz)*an(ix,jy,kz,lh)/an(ix,jy,kz,lvh)
-          ELSE
+          else
             hwdn = rho_qh
-          ENDIF
+          endif
 
           tmp = 1. + alpha2d(ix,1,kz,2)
           i = Int(dgami*(tmp))
@@ -4159,9 +4159,9 @@ END SUBROUTINE nssl_2mom_driver
 
           tmp = dn(ix,jy,kz)*an(ix,jy,kz,lh)/(hwdn*an(ix,jy,kz,lnh))
           diam = (6.0*tmp/pi)**(1./3.)
-          IF ( lzh > 1 ) THEN ! 3moment
+          if ( lzh > 1 ) then ! 3moment
             cwchtmp = ((3. + alpha2d(ix,1,kz,2))*(2. + alpha2d(ix,1,kz,2))*(1.0 + alpha2d(ix,1,kz,2)))**(-1./3.)
-          ENDIF
+          endif
           diam1 = diam*cwchtmp ! characteristic diameter, i.e., 1/lambda
          ! want cxd1 = thresh_conc
          !  tmp = gaminterp(ratio,alpha(mgs,lh),1,1)
@@ -4176,21 +4176,21 @@ END SUBROUTINE nssl_2mom_driver
            maxdia = 0.0
            ! eventually could replace with bisection search, but final value of i is usually small
            ! compared to nqiacrratio
-           DO i = 0,nqiacrratio-1
-              IF ( gamxinflu(i,j,1,1) >= tmp .and. tmp >= gamxinflu(i+1,j,1,1) ) THEN
+           do i = 0,nqiacrratio-1
+              if ( gamxinflu(i,j,1,1) >= tmp .and. tmp >= gamxinflu(i+1,j,1,1) ) then
                !  interpolate here for FWIW
                 ratio = i*dqiacrratio
                 del = tmp - gamxinflu(i,j,1,1)
                 ratio = (float(i) + del/(gamxinflu(i+1,j,1,1) - gamxinflu(i,j,1,1)))*dqiacrratio
                 exit
-              ENDIF
-           ENDDO
+              endif
+           enddo
            
-           IF ( ratio > 0.0 ) THEN
+           if ( ratio > 0.0 ) then
               maxdia = ratio*diam1 ! units of m
-           ENDIF
+           endif
 
-           IF ( kz == kzb ) THEN
+           if ( kz == kzb ) then
              hailmaxk1(ix,jy) = Max( maxdia, hailmaxk1(ix,jy) )
 !             IF ( maxdia > 0.1 ) THEN
 !            IF ( an(ix,jy,kz,lh) > 1.e-4 ) THEN
@@ -4199,29 +4199,29 @@ END SUBROUTINE nssl_2mom_driver
 !              write(0,*) 'j,gamxinflu(0,2,4) = ',j,gamxinflu(0,j,1,1),gamxinflu(2,j,1,1), &
 !                gamxinflu(4,j,1,1)
 !            ENDIF
-           ENDIF
+           endif
            
            hailmax1d(ix,jy) = Max(maxdia, hailmax1d(ix,jy) )
 
         ! 
 
-        ENDIF
+        endif
 
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 
-      ENDIF ! lh
+      endif ! lh
 
 ! And diam for hail if present
-      IF ( lhl > 1 .and. lnhl > 1 ) THEN
-      DO kz = kzb,kze
-      DO ix = ixb,ixe
-        IF ( an(ix,jy,kz,lhl) .gt. qxmin(lhl) .and. an(ix,jy,kz,lnhl) .gt. thresh_conc ) THEN
-          IF ( lvhl .gt. 1 ) THEN
+      if ( lhl > 1 .and. lnhl > 1 ) then
+      do kz = kzb,kze
+      do ix = ixb,ixe
+        if ( an(ix,jy,kz,lhl) .gt. qxmin(lhl) .and. an(ix,jy,kz,lnhl) .gt. thresh_conc ) then
+          if ( lvhl .gt. 1 ) then
             hwdn = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/an(ix,jy,kz,lvhl)
-          ELSE
+          else
             hwdn = rho_qhl
-          ENDIF
+          endif
 
           tmp = 1. + alpha2d(ix,1,kz,3)
           i = Int(dgami*(tmp))
@@ -4230,9 +4230,9 @@ END SUBROUTINE nssl_2mom_driver
 
           tmp = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/(hwdn*an(ix,jy,kz,lnhl))
           diam = (6.0*tmp/pi)**(1./3.)
-          IF ( lzhl > 1 ) THEN ! 3moment
+          if ( lzhl > 1 ) then ! 3moment
             cwchltmp = ((3. + alpha2d(ix,1,kz,3))*(2. + alpha2d(ix,1,kz,3))*(1.0 + alpha2d(ix,1,kz,3)))**(-1./3.)
-          ENDIF
+          endif
           diam1 = diam*cwchltmp ! characteristic diameter, i.e., 1/lambda
          ! want cxd1 = thresh_conc
          !  tmp = gaminterp(ratio,alpha(mgs,lh),1,1)
@@ -4247,21 +4247,21 @@ END SUBROUTINE nssl_2mom_driver
            maxdia = 0.0
            ! eventually could replace with bisection search, but final value of i is usually small
            ! compared to nqiacrratio
-           DO i = 0,nqiacrratio-1
-              IF ( gamxinflu(i,j,1,1) >= tmp .and. tmp >= gamxinflu(i+1,j,1,1) ) THEN
+           do i = 0,nqiacrratio-1
+              if ( gamxinflu(i,j,1,1) >= tmp .and. tmp >= gamxinflu(i+1,j,1,1) ) then
                !  interpolate here for FWIW
                 ratio = i*dqiacrratio
                 del = tmp - gamxinflu(i,j,1,1)
                 ratio = (float(i) + del/(gamxinflu(i+1,j,1,1) - gamxinflu(i,j,1,1)))*dqiacrratio
                 exit
-              ENDIF
-           ENDDO
+              endif
+           enddo
            
-           IF ( ratio > 0.0 ) THEN
+           if ( ratio > 0.0 ) then
               maxdia = ratio*diam1 ! units of m
-           ENDIF
+           endif
 
-           IF ( kz == kzb ) THEN
+           if ( kz == kzb ) then
              hailmaxk1(ix,jy) = Max( maxdia, hailmaxk1(ix,jy) )
 !             IF ( maxdia > 0.1 ) THEN
 !            IF ( an(ix,jy,kz,lhl) > 1.e-4 ) THEN
@@ -4270,21 +4270,21 @@ END SUBROUTINE nssl_2mom_driver
 !              write(0,*) 'j,gamxinflu(0,2,4) = ',j,gamxinflu(0,j,1,1),gamxinflu(2,j,1,1), &
 !                gamxinflu(4,j,1,1)
 !            ENDIF
-           ENDIF
+           endif
            
            hailmax1d(ix,jy) = Max(maxdia, hailmax1d(ix,jy) )
 
         ! 
 
-        ENDIF
+        endif
 
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 
-      ENDIF
+      endif
 
 
-     END SUBROUTINE HAILMAXD
+     end subroutine HAILMAXD
 ! #######################################################################
 ! #######################################################################
      subroutine sediment1d(dtp,nx,ny,nz,an,na,nor,norz,xfall,dn,dz3d,dz3dinv, &
@@ -4421,36 +4421,36 @@ END SUBROUTINE nssl_2mom_driver
       if ( ndebug .gt. 0 ) write(0,*) 'dbg = 3a'
 
 
-      DO kz = kzb,kze
-      DO ix = ixb,ixe
+      do kz = kzb,kze
+      do ix = ixb,ixe
        db1(ix,kz) = dn(ix,jy,kz)
        db1inv(ix,kz) = 1./dn(ix,jy,kz)
        rhovtzx(kz,ix) = Sqrt(rho00*Min(1.0/0.05, db1inv(ix,kz))) ! prevent excessive rhovt
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 
-      DO kz = kzb,kze
-      DO ix = ixb,ixe
+      do kz = kzb,kze
+      do ix = ixb,ixe
        dtz1(kz,ix,0) = dz3dinv(ix,jy,kz)
        dtz1(kz,ix,1) = dz3dinv(ix,jy,kz)*db1inv(ix,kz) 
        dz2dinv(kz,ix) = dz3dinv(ix,jy,kz)
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 
-      IF ( lzh .gt. 1 ) THEN
-      DO kz = kzb,kze
-      DO ix = ixb,ixe
+      if ( lzh .gt. 1 ) then
+      do kz = kzb,kze
+      do ix = ixb,ixe
         an(ix,jy,kz,lzh) = Max( 0., an(ix,jy,kz,lzh) )
-      ENDDO
-      ENDDO
-      ENDIF
+      enddo
+      enddo
+      endif
 
       
-      DO il = lc+1,lhab
-       DO ix = ixb,ixe
+      do il = lc+1,lhab
+       do ix = ixb,ixe
 !        hasmass(ix,il) = Any( an(ix,jy,:,il) > qxmin(il) )
-       ENDDO
-      ENDDO
+       enddo
+      enddo
 
 
 
@@ -4458,7 +4458,7 @@ END SUBROUTINE nssl_2mom_driver
       if (ndebug .gt. 0 ) write(0,*) 'dbg = 3a2'
 
 ! loop over columns
-      DO ix = ixb,ixe
+      do ix = ixb,ixe
       
       dummy = 0.d0
 
@@ -4476,8 +4476,8 @@ END SUBROUTINE nssl_2mom_driver
 
 
 ! loop over each species and do sedimentation for all moments
-     DO il = lc,lhab
-       IF ( ido(il) == 0 ) CYCLE
+     do il = lc,lhab
+       if ( ido(il) == 0 ) cycle
 
 !       IF ( .not. hasmass(ix,il) ) CYCLE
 
@@ -4508,36 +4508,36 @@ END SUBROUTINE nssl_2mom_driver
 !           
 !      ENDIF
       
-      ENDDO
+      enddo
       
-      IF ( vtmax == 0.0 ) CYCLE
+      if ( vtmax == 0.0 ) cycle
 
 
       
-      IF ( dtp*vtmax .lt. 0.7 ) THEN ! check whether multiple steps are needed.
+      if ( dtp*vtmax .lt. 0.7 ) then ! check whether multiple steps are needed.
         ndfall = 1
-      ELSE
-       IF ( dtp > 20.0 ) THEN ! more stringent subdivision for large time steps
+      else
+       if ( dtp > 20.0 ) then ! more stringent subdivision for large time steps
          ndfall = Max(2, Int(dtp*vtmax/0.7) + 1)
-       ELSE ! more relaxed for small time steps, but might still be a problem for very thin vertical layers near the ground
+       else ! more relaxed for small time steps, but might still be a problem for very thin vertical layers near the ground
          ndfall = 1+Int(dtp*vtmax + 0.301)
-       ENDIF
-      ENDIF
+       endif
+      endif
       
-      IF ( ndfall .gt. 1 ) THEN
-        dtptmp = dtp/Real(ndfall)
+      if ( ndfall .gt. 1 ) then
+        dtptmp = dtp/real(ndfall)
 !        write(0,*) 'subdivide fallout on its,jts,ix,plo,phi = ',its,jts,ix,plo,phi
 !        write(0,*) 'for il,jsblab,c,ndfall = ',il,jslab,dtp*vtmax,ndfall
-      ELSE
+      else
         dtptmp = dtp
-      ENDIF
+      endif
       
       dtfrac = dtptmp/dtp
 
 
-      DO n = 1,ndfall
+      do n = 1,ndfall
 
-      IF ( do_accurate_sedimentation .and. n .ge. 2 .and. ( n == interval_sedi_vt*(n/interval_sedi_vt) ) ) THEN
+      if ( do_accurate_sedimentation .and. n .ge. 2 .and. ( n == interval_sedi_vt*(n/interval_sedi_vt) ) ) then
 !
 !  zero the precip flux arrays (2d)
 !
@@ -4557,26 +4557,26 @@ END SUBROUTINE nssl_2mom_driver
      &  infdo,il)
 
 
-      DO kz = kzb,kze
+      do kz = kzb,kze
       ! apply limit vtmaxsed (08/20/2015)
         xvt(kz,ix,1,il) = Min( vtmaxsed,  xvt(kz,ix,1,il) )
         xvt(kz,ix,2,il) = Min( vtmaxsed,  xvt(kz,ix,2,il) )
         xvt(kz,ix,3,il) = Min( vtmaxsed,  xvt(kz,ix,3,il) )
-      ENDDO
+      enddo
 
 
 
 
-      ENDIF ! (n .ge. 2)
+      endif ! (n .ge. 2)
 
 
-        IF ( il >= lr .and. ( infall .eq. 3 .or. infall .eq. 4 ) .and. ln(il) > 0 ) THEN
-           IF ( (il .eq. lr .and. irfall .eq. infall .and. lzr < 1) .or. & 
-                 (il .ge. lh .and. lz(il) .lt. 1 ) .or. (il == ls .and. isfall == infall ) ) THEN
+        if ( il >= lr .and. ( infall .eq. 3 .or. infall .eq. 4 ) .and. ln(il) > 0 ) then
+           if ( (il .eq. lr .and. irfall .eq. infall .and. lzr < 1) .or. & 
+                 (il .ge. lh .and. lz(il) .lt. 1 ) .or. (il == ls .and. isfall == infall ) ) then
             call calczgr1d(nx,ny,nz,nor,na,an,ixe,kze, & 
      &         z,db1,jgs,ipconc, dnu(il), il, ln(il), qxmin(il), xvmn(il), xvmx(il), lvol(il), xdn0(il), ix )
-           ENDIF
-        ENDIF
+           endif
+        endif
 
       if (ndebug .gt. 0 ) write(0,*) 'dbg = 1b'
 
@@ -4590,133 +4590,133 @@ END SUBROUTINE nssl_2mom_driver
 
 ! volume
 
-      IF ( ldovol .and. il >= li ) THEN
-        IF ( lvol(il) .gt. 1 ) THEN
+      if ( ldovol .and. il >= li ) then
+        if ( lvol(il) .gt. 1 ) then
          call fallout1d(nx,ny,nz,nor,na,dtptmp,dtfrac,jgs,xvt(1,1,1,il), & 
      &              an,db1,lvol(il),0,xfall,dtz1,ix)
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 ! reflectivity
 
-      IF ( ipconc .ge. 6 ) THEN
-        IF ( lz(il) .gt. 1 ) THEN
+      if ( ipconc .ge. 6 ) then
+        if ( lz(il) .gt. 1 ) then
          call fallout1d(nx,ny,nz,nor,na,dtptmp,dtfrac,jgs,xvt(1,1,3,il), & 
      &              an,db1,lz(il),0,xfall,dtz1,ix)
-        ENDIF
-      ENDIF
+        endif
+      endif
 
       if (ndebug .gt. 0 ) write(0,*) 'dbg = 3d'
 
       
-      IF ( ipconc .gt. 0 ) THEN !{
-        IF ( ipconc .ge. ipc(il) ) THEN
+      if ( ipconc .gt. 0 ) then !{
+        if ( ipconc .ge. ipc(il) ) then
 
-      IF ( ( infall .ge. 2 .or. (infall .eq. 0 .and. il .lt. lh) ) .and. lz(il) .lt. 1) THEN !{
+      if ( ( infall .ge. 2 .or. (infall .eq. 0 .and. il .lt. lh) ) .and. lz(il) .lt. 1) then !{
 !
 ! load number conc. into tmpn to do fallout by mass-weighted mean fall speed
 !  to put a lower bound on number conc.
 !
 
-        IF ( ( infall .eq. 3 .or. infall .eq. 4 ) .and. (  (il == ls .and. isfall .eq. infall ) &
+        if ( ( infall .eq. 3 .or. infall .eq. 4 ) .and. (  (il == ls .and. isfall .eq. infall ) &
      &        .or. il .eq. lh .or. il .eq. lhl .or.  il == lf .or. & 
-     &      ( il .eq. lr .and. irfall .eq. infall) ) ) THEN
+     &      ( il .eq. lr .and. irfall .eq. infall) ) ) then
 
           ! set up for method I+II
-          DO kz = kzb,kze
+          do kz = kzb,kze
 !            DO ix = ixb,ixe
               tmpn2(ix,jy,kz) = z(ix,kz,il)
 !            ENDDO
-          ENDDO
-          DO kz = kzb,kze
+          enddo
+          do kz = kzb,kze
 !            DO ix = ixb,ixe
               tmpn(ix,jy,kz) = an(ix,jy,kz,ln(il))
 !            ENDDO
-          ENDDO
+          enddo
         
-        ELSE
+        else
           ! set up for method II only
-          DO kz = kzb,kze
+          do kz = kzb,kze
 !            DO ix = ixb,ixe
               tmpn(ix,jy,kz) = an(ix,jy,kz,ln(il))
 !            ENDDO
-          ENDDO
+          enddo
 
-        ENDIF
+        endif
 
-      ENDIF !}
+      endif !}
 
 
       if (ndebug .gt. 0 ) write(0,*) 'dbg = 3f'
 
        in = 2
-       IF ( infall .eq. 1 ) in = 1
+       if ( infall .eq. 1 ) in = 1
 
          call fallout1d(nx,ny,nz,nor,na,dtptmp,dtfrac,jgs,xvt(1,1,in,il), & 
      &        an,db1,ln(il),0,xfall,dtz1,ix)
 
 
-         IF ( lz(il) .lt. 1 ) THEN ! if not 3-moment, run one of the correction schemes
-         IF ( (infall .ge. 2 .or. infall .eq. 3) .and. .not. (infall .eq. 0 .and. il .ge. lh) & 
-     &       .and. ( il .eq. lr .or. (il .ge. li .and. il .le. lhab) )) THEN
+         if ( lz(il) .lt. 1 ) then ! if not 3-moment, run one of the correction schemes
+         if ( (infall .ge. 2 .or. infall .eq. 3) .and. .not. (infall .eq. 0 .and. il .ge. lh) & 
+     &       .and. ( il .eq. lr .or. (il .ge. li .and. il .le. lhab) )) then
 !     :        .or. il .eq. lhl )) THEN
            
            xfall0(:,jgs) = 0.0
 
-           IF ( ( infall .eq. 3 .or. infall .eq. 4 ) .and.  & 
+           if ( ( infall .eq. 3 .or. infall .eq. 4 ) .and.  & 
      &        ( il .ge. lh .or. (il .eq. lr .and. irfall .eq. infall)    &
-                   .or. (il .eq. ls .and. isfall .eq. infall) ) ) THEN
+                   .or. (il .eq. ls .and. isfall .eq. infall) ) ) then
              call fallout1d(nx,ny,nz,nor,1,dtptmp,dtfrac,jgs,xvt(1,1,3,il), & 
      &         tmpn2,db1,1,0,xfall0,dtz1,ix)
              call fallout1d(nx,ny,nz,nor,1,dtptmp,dtfrac,jgs,xvt(1,1,1,il), & 
      &         tmpn,db1,1,0,xfall0,dtz1,ix)
-           ELSE
+           else
              call fallout1d(nx,ny,nz,nor,1,dtptmp,dtfrac,jgs,xvt(1,1,1,il), & 
      &         tmpn,db1,1,0,xfall0,dtz1,ix)
-           ENDIF
+           endif
 
-           IF ( ( infall .eq. 3 .or. infall .eq. 4 ) .and. ( (il .eq. lr .and. irfall .eq. infall) & 
-     &            .or. il .ge. lh .or. (il == ls .and. isfall .eq. infall ) ) ) THEN
+           if ( ( infall .eq. 3 .or. infall .eq. 4 ) .and. ( (il .eq. lr .and. irfall .eq. infall) & 
+     &            .or. il .ge. lh .or. (il == ls .and. isfall .eq. infall ) ) ) then
 ! "Method I" - dbz correction
 
              call calcnfromz1d(nx,ny,nz,nor,na,an,tmpn2,ixe,kze, & 
      &       z,db1,jgs,ipconc, dnu(il), il, ln(il), qxmin(il), xvmn(il), xvmx(il),tmpn,  & 
      &       lvol(il), xdn0(il), infall, ix)
 
-           ELSEIF ( infall .eq. 5 .and. il .ge. lh .or. ( il == lr .and. irfall == 5 ) ) THEN
+           elseif ( infall .eq. 5 .and. il .ge. lh .or. ( il == lr .and. irfall == 5 ) ) then
 
-             DO kz = kzb,kze
+             do kz = kzb,kze
 !              DO ix = ixb,ixe
                an(ix,jgs,kz,ln(il)) = Max( an(ix,jgs,kz,ln(il)), 0.5* ( an(ix,jgs,kz,ln(il)) + tmpn(ix,jy,kz) ))
               
 !              ENDDO
-             ENDDO           
+             enddo           
 
-           ELSEIF ( .not. (il .eq. lr .and. irfall .eq. 0) .and. .not. (il .eq. ls .and. isfall .eq. 0) ) THEN
+           elseif ( .not. (il .eq. lr .and. irfall .eq. 0) .and. .not. (il .eq. ls .and. isfall .eq. 0) ) then
 ! "Method II" M-wgt N-fallout correction
 
-             DO kz = kzb,kze
+             do kz = kzb,kze
 !              DO ix = ixb,ixe
 
                an(ix,jgs,kz,ln(il)) = Max( an(ix,jgs,kz,ln(il)), tmpn(ix,jy,kz) )
               
 !              ENDDO
-             ENDDO
-           ENDIF 
-           ENDIF ! lz(il) .lt. 1
+             enddo
+           endif 
+           endif ! lz(il) .lt. 1
            
 
-         ENDIF
-        ENDIF
+         endif
+        endif
 
 
-      ENDIF !}
+      endif !}
 
 
-      ENDDO ! n=1,ndfall
-      ENDDO ! il
+      enddo ! n=1,ndfall
+      enddo ! il
       
-      ENDDO ! ix
+      enddo ! ix
 
 
       deallocate( db1,dtz1,dz2dinv,db1inv,rhovtzx )
@@ -4742,8 +4742,8 @@ END SUBROUTINE nssl_2mom_driver
                 cnina,cimas, &
                 cnostmp )
 
-      RETURN
-      END SUBROUTINE SEDIMENT1D
+      return
+      end subroutine SEDIMENT1D
 
 
 ! #####################################################################
@@ -4821,24 +4821,24 @@ END SUBROUTINE nssl_2mom_driver
 
       qtmp1(nz+1) = 0.0
       
-      DO kz = kzb,kze
+      do kz = kzb,kze
 !        DO ix = ixb,ixe
 !         cmax = Max(cmax, vt(ix,kz)*dz3dinv(ix,jy,kz)) 
          
-         IF ( id == 1 ) THEN
+         if ( id == 1 ) then
          qtmp1(kz) = a(ix,jgs,kz,ia)*vt(kz,ix)*db1(ix,kz)
-         ELSE
+         else
          qtmp1(kz) = a(ix,jgs,kz,ia)*vt(kz,ix)
-         ENDIF
+         endif
          
-         IF ( a(ix,jgs,kz,ia) .ne. 0.0 ) THEN
+         if ( a(ix,jgs,kz,ia) .ne. 0.0 ) then
 !           imn = Min(ix,imn)
 !           imx = Max(ix,imx)
            kmn = Min(kz,kmn)
            kmx = Max(kz,kmx)
-         ENDIF
+         endif
 !        ENDDO
-      ENDDO
+      enddo
       
       kmn = Max(1,kmn-1)
       
@@ -4847,14 +4847,14 @@ END SUBROUTINE nssl_2mom_driver
 !        RETURN
 !      ENDIF
       
-      IF ( kmn == 1 ) THEN
+      if ( kmn == 1 ) then
       
       kz = 1
 !      do ix = imn,imx ! 1,nx-1
          xfall(ix,jy,ia) = xfall(ix,jy,ia) + a(ix,jgs,kz,ia)*vt(kz,ix)*dtfrac
 !      enddo
       
-      ENDIF
+      endif
 
       do kz = 1,nz
 !      do ix = 1,nx
@@ -4863,8 +4863,8 @@ END SUBROUTINE nssl_2mom_driver
       enddo
 
       
-      RETURN
-      END SUBROUTINE FALLOUT1D
+      return
+      end subroutine FALLOUT1D
 
 ! ##############################################################################
 ! ##############################################################################
@@ -4901,37 +4901,37 @@ END SUBROUTINE nssl_2mom_driver
       jy = jgs
       ix = ixcol
       
-      IF ( l .eq. lh .or. l .eq. lhl .or. ( l .eq. lr .and. imurain == 1 )  &
-           .or. ( l .eq. ls .and. imusnow == 1 ) ) THEN
+      if ( l .eq. lh .or. l .eq. lhl .or. ( l .eq. lr .and. imurain == 1 )  &
+           .or. ( l .eq. ls .and. imusnow == 1 ) ) then
       
       
-      DO kz = 1,kze
+      do kz = 1,kze
           
           
           
-          IF (  a(ix,jy,kz,l) .gt. qmin .and. a(ix,jy,kz,ln) .gt. 1.e-15 ) THEN
+          if (  a(ix,jy,kz,l) .gt. qmin .and. a(ix,jy,kz,ln) .gt. 1.e-15 ) then
             
-            IF ( lvol .gt. 1 ) THEN
-                IF ( a(ix,jy,kz,lvol) .gt. 0.0 ) THEN
+            if ( lvol .gt. 1 ) then
+                if ( a(ix,jy,kz,lvol) .gt. 0.0 ) then
                   xdn = db(ix,kz)*a(ix,jy,kz,l)/a(ix,jy,kz,lvol)
                   xdn = Min( 900., Max( hdnmn, xdn ) )
-                ELSE
+                else
                   xdn = rho_qx
-                ENDIF
-            ELSE
+                endif
+            else
                 xdn = rho_qx
-            ENDIF
+            endif
 
-            IF ( l == lr ) xdn = 1000.
+            if ( l == lr ) xdn = 1000.
 
             qr = a(ix,jy,kz,l)
             xv = db(ix,kz)*a(ix,jy,kz,l)/(xdn*a(ix,jy,kz,ln))
             chw = a(ix,jy,kz,ln)
 
-             IF ( xv .lt. xvmn .or. xv .gt. xvmx ) THEN
+             if ( xv .lt. xvmn .or. xv .gt. xvmx ) then
               xv = Min( xvmx, Max( xvmn,xv ) )
               chw = db(ix,kz)*a(ix,jy,kz,l)/(xv*xdn)
-             ENDIF
+             endif
 
              g1 = (6.0 + alpha)*(5.0 + alpha)*(4.0 + alpha)/  &
      &            ((3.0 + alpha)*(2.0 + alpha)*(1.0 + alpha))
@@ -4944,23 +4944,23 @@ END SUBROUTINE nssl_2mom_driver
 !             write(*,*) 'calczgr: z,dbz,xdn = ',ix,kz,z(ix,kz,l),10*log10(z(ix,kz,l)),xdn
 !          ENDIF
           
-          ELSE
+          else
            
             z(ix,kz,l) = 0.0
            
-          ENDIF
+          endif
           
-      ENDDO
+      enddo
       
-      ELSEIF ( (l == ls .and. imusnow == 3) .or. ( l .eq. lr .and. imurain == 3 ) ) THEN
+      elseif ( (l == ls .and. imusnow == 3) .or. ( l .eq. lr .and. imurain == 3 ) ) then
 
       xdn = rho_qx ! 1000.
-      IF ( l == ls ) ynu = snu
-      IF ( l == lr ) ynu = rnu
+      if ( l == ls ) ynu = snu
+      if ( l == lr ) ynu = rnu
       
-      DO kz = 1,kze
+      do kz = 1,kze
 
-          IF (  a(ix,jy,kz,l) .gt. qmin .and. a(ix,jy,kz,ln) .gt. 1.e-15 ) THEN
+          if (  a(ix,jy,kz,l) .gt. qmin .and. a(ix,jy,kz,ln) .gt. 1.e-15 ) then
 
             vr = db(ix,kz)*a(ix,jy,kz,l)/(xdn*a(ix,jy,kz,ln))
 !            z(ix,kz,l) = 3.6e18*(ynu+2.0)*a(ix,jy,kz,ln)*vr**2/(ynu+1.0)
@@ -4968,20 +4968,20 @@ END SUBROUTINE nssl_2mom_driver
 !            qr = a(ix,jy,kz,lr)
 !            nrx = a(ix,jy,kz,lnr)
           
-          ELSE
+          else
            
             z(ix,kz,l) = 0.0
            
-          ENDIF
+          endif
       
           
-      ENDDO
+      enddo
       
-      ENDIF
+      endif
       
-      RETURN
+      return
       
-      END subroutine calczgr1d
+      end subroutine calczgr1d
 
 ! ##############################################################################
 ! ##############################################################################
@@ -5035,143 +5035,143 @@ END SUBROUTINE nssl_2mom_driver
       jy = jgs
       ix = ixcol
       
-      IF ( l .eq. lh .or. l .eq. lhl .or. ( l == lr .and. imurain == 1 ) ) THEN
+      if ( l .eq. lh .or. l .eq. lhl .or. ( l == lr .and. imurain == 1 ) ) then
       
              g1 = (6.0 + alpha)*(5.0 + alpha)*(4.0 + alpha)/  &
      &            ((3.0 + alpha)*(2.0 + alpha)*(1.0 + alpha))
       
-      DO kz = 1,kze
+      do kz = 1,kze
 
          
-          IF (   t0(ix,jy,kz) .gt. 0. ) THEN ! {
+          if (   t0(ix,jy,kz) .gt. 0. ) then ! {
             
-            IF ( lvol .gt. 1 ) THEN
-               IF ( a(ix,jy,kz,lvol) .gt. 0.0 ) THEN
+            if ( lvol .gt. 1 ) then
+               if ( a(ix,jy,kz,lvol) .gt. 0.0 ) then
                  xdn = db(ix,kz)*a(ix,jy,kz,l)/a(ix,jy,kz,lvol)
                  xdn = Min( 900., Max( hdnmn, xdn ) )
-               ELSE 
+               else 
                  xdn = rho_qx
-               ENDIF
-            ELSE
+               endif
+            else
                xdn = rho_qx
-            ENDIF
+            endif
             
-            IF ( l == lr ) xdn = 1000.
+            if ( l == lr ) xdn = 1000.
           
             qr = a(ix,jy,kz,l)
             xv = db(ix,kz)*a(ix,jy,kz,l)/(xdn*a(ix,jy,kz,ln))
             chw = a(ix,jy,kz,ln)
 
-             IF ( xv .lt. xvmn .or. xv .gt. xvmx ) THEN
+             if ( xv .lt. xvmn .or. xv .gt. xvmx ) then
               xv = Min( xvmx, Max( xvmn,xv ) )
               chw = db(ix,kz)*a(ix,jy,kz,l)/(xv*xdn)
-             ENDIF
+             endif
 
              zx = g1*db(ix,kz)**2*( a(ix,jy,kz,l))*a(ix,jy,kz,l)/chw
              z  = zx*(6./(pi*1000.))**2
 
             
-           IF ( (z .gt. t0(ix,jy,kz) .and. z .gt. 0.0 .and.  &
-     &           t0(ix,jy,kz) .gt. z0(ix,kz,l) )) THEN !{
+           if ( (z .gt. t0(ix,jy,kz) .and. z .gt. 0.0 .and.  &
+     &           t0(ix,jy,kz) .gt. z0(ix,kz,l) )) then !{
            
             zx = t0(ix,jy,kz)/((6./(pi*1000.))**2)
             
             nrx =  g1*db(ix,kz)**2*( a(ix,jy,kz,l))*a(ix,jy,kz,l)/zx
-            IF ( infall .eq. 3 ) THEN
-              IF ( nrx .gt. a(ix,jy,kz,ln) ) THEN
+            if ( infall .eq. 3 ) then
+              if ( nrx .gt. a(ix,jy,kz,ln) ) then
                 ndbz = ndbz + 1
-                IF ( t1(ix,jy,kz) .lt. ndbz ) nwlessthanz = nwlessthanz + 1
-              ELSE
+                if ( t1(ix,jy,kz) .lt. ndbz ) nwlessthanz = nwlessthanz + 1
+              else
                 nnwgt = nnwgt + 1
-              ENDIF
+              endif
               a(ix,jy,kz,ln) = Max( real(nrx), a(ix,jy,kz,ln) )
-            ELSE
-             IF (  nrx .gt. a(ix,jy,kz,ln) .and. t1(ix,jy,kz) .gt. a(ix,jy,kz,ln) ) THEN
-              IF ( nrx .lt. t1(ix,jy,kz)  ) THEN
+            else
+             if (  nrx .gt. a(ix,jy,kz,ln) .and. t1(ix,jy,kz) .gt. a(ix,jy,kz,ln) ) then
+              if ( nrx .lt. t1(ix,jy,kz)  ) then
                 ndbz = ndbz + 1
-              ELSE
+              else
                 nmwgt = nmwgt + 1
-                IF ( t1(ix,jy,kz) .lt. ndbz ) nwlessthanz = nwlessthanz + 1
-              ENDIF
-             ELSE
+                if ( t1(ix,jy,kz) .lt. ndbz ) nwlessthanz = nwlessthanz + 1
+              endif
+             else
               nnwgt = nnwgt + 1
-             ENDIF
+             endif
               
               a(ix,jy,kz,ln) = Max(Min( real(nrx), t1(ix,jy,kz) ), a(ix,jy,kz,ln) )
-            ENDIF
+            endif
 
-           ELSE ! } {
-             IF ( t1(ix,jy,kz) .gt. 0 .and. a(ix,jy,kz,ln) .gt. 0 ) THEN
-              IF ( t1(ix,jy,kz) .gt. a(ix,jy,kz,ln) ) THEN
+           else ! } {
+             if ( t1(ix,jy,kz) .gt. 0 .and. a(ix,jy,kz,ln) .gt. 0 ) then
+              if ( t1(ix,jy,kz) .gt. a(ix,jy,kz,ln) ) then
                 nmwgt = nmwgt + 1
-              ELSE
+              else
                 nnwgt = nnwgt + 1
-              ENDIF
-            ENDIF
+              endif
+            endif
             a(ix,jy,kz,ln) = Max(t1(ix,jy,kz), a(ix,jy,kz,ln) )
             nrx = a(ix,jy,kz,ln)
 
 
 
-           ENDIF ! }
+           endif ! }
 
            ! }
-          ELSE ! {
-            IF ( t1(ix,jy,kz) .gt. 0 .and. a(ix,jy,kz,ln) .gt. 0 ) THEN
-              IF ( t1(ix,jy,kz) .gt. a(ix,jy,kz,ln) ) THEN
+          else ! {
+            if ( t1(ix,jy,kz) .gt. 0 .and. a(ix,jy,kz,ln) .gt. 0 ) then
+              if ( t1(ix,jy,kz) .gt. a(ix,jy,kz,ln) ) then
                 nmwgt = nmwgt + 1
-              ELSE
+              else
                 nnwgt = nnwgt + 1
-              ENDIF
-            ENDIF
-          ENDIF! }
+              endif
+            endif
+          endif! }
           
-      ENDDO
+      enddo
       
       
-      ELSEIF ( l .eq. lr .and. imurain == 3) THEN
+      elseif ( l .eq. lr .and. imurain == 3) then
 
       xdn = 1000.
       
-      DO kz = 1,kze
-          IF (  t0(ix,jy,kz) .gt. 0. ) THEN
+      do kz = 1,kze
+          if (  t0(ix,jy,kz) .gt. 0. ) then
 
             vr = db(ix,kz)*a(ix,jy,kz,l)/(xdn*a(ix,jy,kz,ln))
             z = 3.6*(rnu+2.0)*a(ix,jy,kz,ln)*vr**2/(rnu+1.0)
           
-             IF ( z .gt. t0(ix,jy,kz) .and. z .gt. 0.0 .and.  &
+             if ( z .gt. t0(ix,jy,kz) .and. z .gt. 0.0 .and.  &
      &          t0(ix,jy,kz) .gt. 0.0                         &
-     &          .and. t0(ix,jy,kz) .gt. z0(ix,kz,l) ) THEN
+     &          .and. t0(ix,jy,kz) .gt. z0(ix,kz,l) ) then
 
             vr = db(ix,kz)*a(ix,jy,kz,l)/(xdn)
              chw =  a(ix,jy,kz,ln)
             nrx =   3.6*(rnu+2.0)*vr**2/((rnu+1.0)*t0(ix,jy,kz))
-             IF ( infall .eq. 3 ) THEN
+             if ( infall .eq. 3 ) then
               a(ix,jy,kz,ln) = Max( real(nrx), a(ix,jy,kz,ln) )
-            ELSEIF ( infall .eq. 4 ) THEN
+            elseif ( infall .eq. 4 ) then
               a(ix,jy,kz,ln) = Max( Min( real(nrx), t1(ix,jy,kz)), a(ix,jy,kz,ln) )
-            ENDIF
+            endif
 
-           ELSE
-
-            a(ix,jy,kz,ln) = Max(t1(ix,jy,kz), a(ix,jy,kz,ln) )
-
-           ENDIF
-
-          ELSE
+           else
 
             a(ix,jy,kz,ln) = Max(t1(ix,jy,kz), a(ix,jy,kz,ln) )
 
-          ENDIF
+           endif
+
+          else
+
+            a(ix,jy,kz,ln) = Max(t1(ix,jy,kz), a(ix,jy,kz,ln) )
+
+          endif
 
 
-      ENDDO
+      enddo
 
-      ENDIF
+      endif
 
-      RETURN
+      return
 
-      END subroutine calcnfromz1d
+      end subroutine calcnfromz1d
 
 
 ! ##############################################################################
@@ -5235,17 +5235,17 @@ END SUBROUTINE nssl_2mom_driver
 
 ! ------------------------------------------------------------------
       
-      IF ( present( invertccn_flag ) ) THEN
+      if ( present( invertccn_flag ) ) then
         invertccn_local = invertccn_flag
-      ELSE
+      else
         invertccn_local = .false.
-      ENDIF
+      endif
       
-      IF ( present( cwmasin ) ) THEN
+      if ( present( cwmasin ) ) then
         cwmasinv = 1.0/cwmasin
-      ELSE
+      else
         cwmasinv = 1.0/cwmas09
-      ENDIF
+      endif
       
       jy = 1
       
@@ -5256,12 +5256,12 @@ END SUBROUTINE nssl_2mom_driver
          g1hl = (6.0 + alphahl)*(5.0 + alphahl)*(4.0 + alphahl)/  &
      &        ((3.0 + alphahl)*(2.0 + alphahl)*(1.0 + alphahl))
      
-         IF ( imurain == 3 ) THEN
+         if ( imurain == 3 ) then
          g1r = (rnu+2.0)/(rnu+1.0)
-         ELSE ! imurain == 1
+         else ! imurain == 1
          g1r = (6.0 + alphar)*(5.0 + alphar)*(4.0 + alphar)/  &
      &        ((3.0 + alphar)*(2.0 + alphar)*(1.0 + alphar))
-         ENDIF
+         endif
 
          g1s = (snu+2.0)/(snu+1.0)
       qsmax = 0
@@ -5269,91 +5269,91 @@ END SUBROUTINE nssl_2mom_driver
       qsmax3 = 0
       qsmax4 = 0
 !      IF ( .not. present( qcw ) ) THEN
-      DO kz = 1,nz
-       DO ix = 1,nx ! ixcol
+      do kz = 1,nz
+       do ix = 1,nx ! ixcol
 
 !         qv_mp = spechum/(1.0_kind_phys-spechum)
 !         IF ( convertdry ) THEN
 !         qc_mp = qc/(1.0_kind_phys-spechum)
         mixconv = 1
-        IF ( present( spechum ) ) THEN ! convert to "dry" mixing ratios
+        if ( present( spechum ) ) then ! convert to "dry" mixing ratios
           an(ix,jy,kz,lv)  = spechum(ix,kz)/(1.0d0 - spechum(ix,kz))
           mixconv = 1.0d0/(1.0d0 - spechum(ix,kz))
-        ELSE
+        else
           mixconv = 1.0d0
-        ENDIF
-        IF ( present( qv ) ) an(ix,jy,kz,lv) = qv(ix,kz) ! assume qv is "dry" mixing ratio if passed in
-        IF ( present( qcw ) ) an(ix,jy,kz,lc) = qcw(ix,kz)*mixconv
-        IF ( present( qrw ) ) an(ix,jy,kz,lr) = qrw(ix,kz)*mixconv
-        IF ( present( qci ) ) an(ix,jy,kz,li) = qci(ix,kz)*mixconv
-        IF ( present( qsw ) ) THEN
+        endif
+        if ( present( qv ) ) an(ix,jy,kz,lv) = qv(ix,kz) ! assume qv is "dry" mixing ratio if passed in
+        if ( present( qcw ) ) an(ix,jy,kz,lc) = qcw(ix,kz)*mixconv
+        if ( present( qrw ) ) an(ix,jy,kz,lr) = qrw(ix,kz)*mixconv
+        if ( present( qci ) ) an(ix,jy,kz,li) = qci(ix,kz)*mixconv
+        if ( present( qsw ) ) then
           an(ix,jy,kz,ls) = qsw(ix,kz)*mixconv
 !          qsmax = Max( qsmax, qsw(ix,kz) )
 !          qsmax2 = Max( qsmax2, an(ix,jy,kz,ls) )
-        ENDIF
-        IF ( present( qhw ) ) an(ix,jy,kz,lh) = qhw(ix,kz)*mixconv
-        IF ( lhl > 1 .and. present( qhl ) ) an(ix,jy,kz,lhl) = qhl(ix,kz)*mixconv
-        IF ( present( ccw ) ) an(ix,jy,kz,lnc) = ccw(ix,kz)*mixconv*dn(ix,kz)
-        IF ( present( crw ) ) an(ix,jy,kz,lnr) = crw(ix,kz)*mixconv*dn(ix,kz)
-        IF ( present( cci ) ) an(ix,jy,kz,lni) = cci(ix,kz)*mixconv*dn(ix,kz)
-        IF ( present( csw ) ) an(ix,jy,kz,lns) = csw(ix,kz)*mixconv*dn(ix,kz)
-        IF ( present( chw ) ) an(ix,jy,kz,lnh) = chw(ix,kz)*mixconv*dn(ix,kz)
-        IF ( lhl > 1 .and. present( chl ) ) an(ix,jy,kz,lnhl) = chl(ix,kz)*mixconv*dn(ix,kz)
-        IF ( lvh > 1 .and. present( vhw ) ) an(ix,jy,kz,lvh) = vhw(ix,kz)*mixconv
-        IF ( lvhl > 1 .and. present( vhl ) ) an(ix,jy,kz,lvhl) = vhl(ix,kz)*mixconv
-        IF ( lccn > 1 .and. present( cccn ) ) an(ix,jy,kz,lccn) = cccn(ix,kz)*mixconv*dn(ix,kz)
-        IF ( lccna > 1 .and. present( cccna ) ) an(ix,jy,kz,lccna) = cccna(ix,kz)*mixconv
+        endif
+        if ( present( qhw ) ) an(ix,jy,kz,lh) = qhw(ix,kz)*mixconv
+        if ( lhl > 1 .and. present( qhl ) ) an(ix,jy,kz,lhl) = qhl(ix,kz)*mixconv
+        if ( present( ccw ) ) an(ix,jy,kz,lnc) = ccw(ix,kz)*mixconv*dn(ix,kz)
+        if ( present( crw ) ) an(ix,jy,kz,lnr) = crw(ix,kz)*mixconv*dn(ix,kz)
+        if ( present( cci ) ) an(ix,jy,kz,lni) = cci(ix,kz)*mixconv*dn(ix,kz)
+        if ( present( csw ) ) an(ix,jy,kz,lns) = csw(ix,kz)*mixconv*dn(ix,kz)
+        if ( present( chw ) ) an(ix,jy,kz,lnh) = chw(ix,kz)*mixconv*dn(ix,kz)
+        if ( lhl > 1 .and. present( chl ) ) an(ix,jy,kz,lnhl) = chl(ix,kz)*mixconv*dn(ix,kz)
+        if ( lvh > 1 .and. present( vhw ) ) an(ix,jy,kz,lvh) = vhw(ix,kz)*mixconv
+        if ( lvhl > 1 .and. present( vhl ) ) an(ix,jy,kz,lvhl) = vhl(ix,kz)*mixconv
+        if ( lccn > 1 .and. present( cccn ) ) an(ix,jy,kz,lccn) = cccn(ix,kz)*mixconv*dn(ix,kz)
+        if ( lccna > 1 .and. present( cccna ) ) an(ix,jy,kz,lccna) = cccna(ix,kz)*mixconv
 
          dninv = 1./dn(ix,kz)
          
 !        IF ( .not. present( qcw ) ) THEN
    !  Cloud droplets
          
-         IF ( lnc > 1 ) THEN
-           IF ( an(ix,jy,kz,lnc) <= cxmin .and. an(ix,jy,kz,lc) > qxmin_init(lc) ) THEN
+         if ( lnc > 1 ) then
+           if ( an(ix,jy,kz,lnc) <= cxmin .and. an(ix,jy,kz,lc) > qxmin_init(lc) ) then
              
              an(ix,jy,kz,lnc) = Min(qccn, an(ix,jy,kz,lc)*cwmasinv )*dn(ix,kz)
              
-             IF ( invertccn_local ) THEN
+             if ( invertccn_local ) then
                an(ix,jy,kz,lccn) = an(ix,jy,kz,lccn) + an(ix,jy,kz,lnc)
-             ELSE
+             else
              
-             IF ( lccn > 1 .and. lccna < 1 ) THEN
+             if ( lccn > 1 .and. lccna < 1 ) then
                 an(ix,jy,kz,lccn) = an(ix,jy,kz,lccn) - an(ix,jy,kz,lnc)
-             ENDIF
-             IF ( lccna > 1 ) THEN
+             endif
+             if ( lccna > 1 ) then
                 an(ix,jy,kz,lccna) = an(ix,jy,kz,lccna) + an(ix,jy,kz,lnc)
-             ENDIF
-             ENDIF
+             endif
+             endif
 
-           ELSEIF ( an(ix,jy,kz,lc) <= qxmin(lc) .or.  &
-                    ( an(ix,jy,kz,lnc) <= cxmin .and. an(ix,jy,kz,lc) <= qxmin_init(lc)) ) THEN
+           elseif ( an(ix,jy,kz,lc) <= qxmin(lc) .or.  &
+                    ( an(ix,jy,kz,lnc) <= cxmin .and. an(ix,jy,kz,lc) <= qxmin_init(lc)) ) then
              
              an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,lc)
              an(ix,jy,kz,lnc) = 0.0
              an(ix,jy,kz,lc) = 0.0
            
-           ENDIF
-         ENDIF
+           endif
+         endif
 
    !  Cloud ice
          
-         IF ( lni > 1 ) THEN
-           IF ( an(ix,jy,kz,lni) <= cxmin .and. an(ix,jy,kz,li) > qxmin_init(li) ) THEN
+         if ( lni > 1 ) then
+           if ( an(ix,jy,kz,lni) <= cxmin .and. an(ix,jy,kz,li) > qxmin_init(li) ) then
              an(ix,jy,kz,lni) = dn(ix,kz)*an(ix,jy,kz,li)/xims
            
-           ELSEIF ( an(ix,jy,kz,li) <= qxmin(li) .or. &
-                    ( an(ix,jy,kz,lni) <= cxmin .and. an(ix,jy,kz,li) <= qxmin_init(li)) ) THEN
+           elseif ( an(ix,jy,kz,li) <= qxmin(li) .or. &
+                    ( an(ix,jy,kz,lni) <= cxmin .and. an(ix,jy,kz,li) <= qxmin_init(li)) ) then
              an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,li)
              an(ix,jy,kz,lni) = 0.0
              an(ix,jy,kz,li) = 0.0
-           ENDIF
-         ENDIF
+           endif
+         endif
 
    !  rain
          
-         IF ( lnr > 1 ) THEN
-           IF ( an(ix,jy,kz,lnr) <= 0.1*cxmin .and. an(ix,jy,kz,lr) > qxmin_init(lr) ) THEN
+         if ( lnr > 1 ) then
+           if ( an(ix,jy,kz,lnr) <= 0.1*cxmin .and. an(ix,jy,kz,lr) > qxmin_init(lr) ) then
 
              q = an(ix,jy,kz,lr)
              
@@ -5365,26 +5365,26 @@ END SUBROUTINE nssl_2mom_driver
 
              an(ix,jy,kz,lnr) = nrx ! *dninv ! convert to number mixing ratio
              
-           ELSEIF ( an(ix,jy,kz,lr) <= qxmin(lr) .or. &
-                    ( an(ix,jy,kz,lnr) <= cxmin .and. an(ix,jy,kz,lr) <= qxmin_init(lr)) ) THEN
+           elseif ( an(ix,jy,kz,lr) <= qxmin(lr) .or. &
+                    ( an(ix,jy,kz,lnr) <= cxmin .and. an(ix,jy,kz,lr) <= qxmin_init(lr)) ) then
              an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,lr)
              an(ix,jy,kz,lnr) = 0.0
              an(ix,jy,kz,lr) = 0.0
-           ENDIF
-         ENDIF
+           endif
+         endif
 
-             IF ( lzr > 1 ) THEN ! set reflectivity moment
-               IF ( an(ix,jy,kz,lr) > qxmin_init(lr) .and. an(ix,jy,kz,lzr) < zxmin .and. &
-                    an(ix,jy,kz,lnr) > cxmin ) THEN
+             if ( lzr > 1 ) then ! set reflectivity moment
+               if ( an(ix,jy,kz,lr) > qxmin_init(lr) .and. an(ix,jy,kz,lzr) < zxmin .and. &
+                    an(ix,jy,kz,lnr) > cxmin ) then
                   q = an(ix,jy,kz,lr)
                   nrx = an(ix,jy,kz,lnr)
                   an(ix,jy,kz,lzr) = 36.*g1r*dn(ix,kz)**2*q**2/(pi**2*xdnr**2*nrx) ! *dninv
-               ENDIF
-             ENDIF
+               endif
+             endif
 
   ! snow
-         IF ( lns > 1 ) THEN
-           IF ( an(ix,jy,kz,lns) <= 0.1*cxmin .and. an(ix,jy,kz,ls) > qxmin_init(ls) ) THEN
+         if ( lns > 1 ) then
+           if ( an(ix,jy,kz,lns) <= 0.1*cxmin .and. an(ix,jy,kz,ls) > qxmin_init(ls) ) then
 
              q = an(ix,jy,kz,ls)
              
@@ -5396,24 +5396,24 @@ END SUBROUTINE nssl_2mom_driver
 
              an(ix,jy,kz,lns) = nrx ! *dninv ! convert to number mixing ratio
 
-           ELSEIF ( an(ix,jy,kz,ls) <= qxmin(ls) .or. &
-                    ( an(ix,jy,kz,lns) <= cxmin .and. an(ix,jy,kz,ls) <= qxmin_init(ls)) ) THEN
+           elseif ( an(ix,jy,kz,ls) <= qxmin(ls) .or. &
+                    ( an(ix,jy,kz,lns) <= cxmin .and. an(ix,jy,kz,ls) <= qxmin_init(ls)) ) then
              an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,ls)
              an(ix,jy,kz,lns) = 0.0
              an(ix,jy,kz,ls) = 0.0
              
-           ENDIF
-         ENDIF
+           endif
+         endif
          
     ! graupel
 
-         IF ( lnh > 1 ) THEN
-           IF ( an(ix,jy,kz,lnh) <= 0.1*cxmin .and. an(ix,jy,kz,lh) > qxmin_init(lh) ) THEN
-             IF ( lvh > 1 ) THEN
-               IF ( an(ix,jy,kz,lvh) <= 0.0 ) THEN
+         if ( lnh > 1 ) then
+           if ( an(ix,jy,kz,lnh) <= 0.1*cxmin .and. an(ix,jy,kz,lh) > qxmin_init(lh) ) then
+             if ( lvh > 1 ) then
+               if ( an(ix,jy,kz,lvh) <= 0.0 ) then
                  an(ix,jy,kz,lvh) = an(ix,jy,kz,lh)/xdnh
-               ENDIF
-             ENDIF
+               endif
+             endif
 
              q = an(ix,jy,kz,lh)
              
@@ -5427,41 +5427,41 @@ END SUBROUTINE nssl_2mom_driver
              
              nrx = Min( nrx, nrx2 )
 
-             IF ( nrx > cxmin ) THEN
+             if ( nrx > cxmin ) then
                an(ix,jy,kz,lnh) = nrx ! *dninv ! convert to number mixing ratio
-             ELSE
+             else
                an(ix,jy,kz,lh) = 0.0
                an(ix,jy,kz,lnh) = 0.0
                an(ix,jy,kz,lvh) = 0.0
-             ENDIF
+             endif
 
-           ELSEIF ( an(ix,jy,kz,lh) <= qxmin(lh) .or. &
-                    ( an(ix,jy,kz,lnh) <= cxmin .and. an(ix,jy,kz,lh) <= qxmin_init(lh)) ) THEN
+           elseif ( an(ix,jy,kz,lh) <= qxmin(lh) .or. &
+                    ( an(ix,jy,kz,lnh) <= cxmin .and. an(ix,jy,kz,lh) <= qxmin_init(lh)) ) then
            
               an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,lh)
               an(ix,jy,kz,lh) = 0.0
            
-           ENDIF
-         ENDIF
+           endif
+         endif
 
-             IF ( lzh > 1 ) THEN ! set reflectivity moment
-               IF ( an(ix,jy,kz,lh) > qxmin_init(lh) .and. an(ix,jy,kz,lzh) < zxmin .and. &
-                    an(ix,jy,kz,lnh) > cxmin ) THEN
+             if ( lzh > 1 ) then ! set reflectivity moment
+               if ( an(ix,jy,kz,lh) > qxmin_init(lh) .and. an(ix,jy,kz,lzh) < zxmin .and. &
+                    an(ix,jy,kz,lnh) > cxmin ) then
                   q = an(ix,jy,kz,lh)
                   nrx = an(ix,jy,kz,lnh)
                   an(ix,jy,kz,lzh) = 36.*g1h*dn(ix,kz)**2*q**2/(pi**2*xdnh**2*nrx) ! *dninv
-               ENDIF
-             ENDIF
+               endif
+             endif
 
     ! hail
 
-         IF ( lnhl > 1 .and. lhl > 1 ) THEN
-           IF ( an(ix,jy,kz,lnhl) <= 0.1*cxmin .and. an(ix,jy,kz,lhl) > qxmin_init(lhl) ) THEN
-             IF ( lvhl > 1 ) THEN
-               IF ( an(ix,jy,kz,lvhl) <= 0.0 ) THEN
+         if ( lnhl > 1 .and. lhl > 1 ) then
+           if ( an(ix,jy,kz,lnhl) <= 0.1*cxmin .and. an(ix,jy,kz,lhl) > qxmin_init(lhl) ) then
+             if ( lvhl > 1 ) then
+               if ( an(ix,jy,kz,lvhl) <= 0.0 ) then
                  an(ix,jy,kz,lvhl) = an(ix,jy,kz,lhl)/xdnhl
-               ENDIF
-             ENDIF
+               endif
+             endif
 
              q = an(ix,jy,kz,lhl)
              
@@ -5473,23 +5473,23 @@ END SUBROUTINE nssl_2mom_driver
 
              an(ix,jy,kz,lnhl) = nrx ! *dninv ! convert to number mixing ratio
 
-           ELSEIF ( an(ix,jy,kz,lhl) <= qxmin(lhl) .or.  &
-                   ( an(ix,jy,kz,lnhl) <= cxmin .and. an(ix,jy,kz,lhl) <= qxmin_init(lhl)) ) THEN
+           elseif ( an(ix,jy,kz,lhl) <= qxmin(lhl) .or.  &
+                   ( an(ix,jy,kz,lnhl) <= cxmin .and. an(ix,jy,kz,lhl) <= qxmin_init(lhl)) ) then
            
               an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,lhl)
               an(ix,jy,kz,lhl) = 0.0
            
-           ENDIF
-         ENDIF
+           endif
+         endif
 
-             IF ( lzhl > 1 ) THEN ! set reflectivity moment
-               IF ( an(ix,jy,kz,lhl) > qxmin_init(lhl) .and. an(ix,jy,kz,lzhl) < zxmin .and. &
-                    an(ix,jy,kz,lnhl) > cxmin ) THEN
+             if ( lzhl > 1 ) then ! set reflectivity moment
+               if ( an(ix,jy,kz,lhl) > qxmin_init(lhl) .and. an(ix,jy,kz,lzhl) < zxmin .and. &
+                    an(ix,jy,kz,lnhl) > cxmin ) then
                   q = an(ix,jy,kz,lhl)
                   nrx = an(ix,jy,kz,lnhl)
                   an(ix,jy,kz,lzhl) = 36.*g1hl*dn(ix,kz)**2*q**2/(pi**2*xdnhl**2*nrx) ! *dninv
-               ENDIF
-             ENDIF
+               endif
+             endif
          
          
 !         ENDIF
@@ -5498,39 +5498,39 @@ END SUBROUTINE nssl_2mom_driver
 !         IF ( convertdry ) THEN
 !         qc      = qc_mp/(1.0_kind_phys+qv_mp)
         mixconvqv = 1
-        IF ( present( spechum ) ) THEN ! convert back to "dry+vapor" mixing ratios
+        if ( present( spechum ) ) then ! convert back to "dry+vapor" mixing ratios
           !an(ix,jy,kz,lv)  = spechum(ix,kz)/(1.0d0 - spechum(ix,kz))
           mixconvqv = 1.0d0/(1.0d0 + an(ix,jy,kz,lv))
           spechum(ix,kz) = an(ix,jy,kz,lv)*mixconvqv
-        ELSE
+        else
           mixconvqv = 1.0d0
-        ENDIF
+        endif
 
-        IF ( present( qv ) )  qv(ix,kz)  = an(ix,jy,kz,lv)
-        IF ( present( qcw ) ) qcw(ix,kz) = an(ix,jy,kz,lc)*mixconvqv
-        IF ( present( qrw ) ) qrw(ix,kz) = an(ix,jy,kz,lr)*mixconvqv
-        IF ( present( qci ) ) qci(ix,kz) = an(ix,jy,kz,li)*mixconvqv
-        IF ( present( qsw ) ) THEN
+        if ( present( qv ) )  qv(ix,kz)  = an(ix,jy,kz,lv)
+        if ( present( qcw ) ) qcw(ix,kz) = an(ix,jy,kz,lc)*mixconvqv
+        if ( present( qrw ) ) qrw(ix,kz) = an(ix,jy,kz,lr)*mixconvqv
+        if ( present( qci ) ) qci(ix,kz) = an(ix,jy,kz,li)*mixconvqv
+        if ( present( qsw ) ) then
           qsw(ix,kz) = an(ix,jy,kz,ls)*mixconvqv
 !          qsmax3 = Max( qsmax3, qsw(ix,kz) )
 !          qsmax4 = Max( qsmax4, an(ix,jy,kz,ls) )
-        ENDIF
-        IF ( present( qhw ) ) qhw(ix,kz) = an(ix,jy,kz,lh)*mixconvqv
-        IF ( lhl > 1 .and. present( qhl ) ) qhl(ix,kz) = an(ix,jy,kz,lhl)*mixconvqv
-        IF ( present( ccw ) ) ccw(ix,kz) = an(ix,jy,kz,lnc)*mixconvqv*dninv
-        IF ( present( crw ) ) crw(ix,kz) = an(ix,jy,kz,lnr)*mixconvqv*dninv
-        IF ( present( cci ) ) cci(ix,kz) = an(ix,jy,kz,lni)*mixconvqv*dninv
-        IF ( present( csw ) ) csw(ix,kz) = an(ix,jy,kz,lns)*mixconvqv*dninv
-        IF ( present( chw ) ) chw(ix,kz) = an(ix,jy,kz,lnh)*mixconvqv*dninv
-        IF ( lhl > 1 .and. present( chl ) ) chl(ix,kz) = an(ix,jy,kz,lnhl)*mixconvqv*dninv
-        IF ( lvh > 1 .and. present( vhw ) ) vhw(ix,kz) = an(ix,jy,kz,lvh)*mixconvqv
-        IF ( lvhl > 1 .and. present( vhl ) ) vhl(ix,kz) = an(ix,jy,kz,lvhl)*mixconvqv
-        IF ( lccn > 1 .and. present( cccn ) ) cccn(ix,kz) = an(ix,jy,kz,lccn)*mixconvqv*dninv
-        IF ( lccna > 1 .and. present( cccna ) ) cccna(ix,kz) = an(ix,jy,kz,lccna)*mixconvqv
+        endif
+        if ( present( qhw ) ) qhw(ix,kz) = an(ix,jy,kz,lh)*mixconvqv
+        if ( lhl > 1 .and. present( qhl ) ) qhl(ix,kz) = an(ix,jy,kz,lhl)*mixconvqv
+        if ( present( ccw ) ) ccw(ix,kz) = an(ix,jy,kz,lnc)*mixconvqv*dninv
+        if ( present( crw ) ) crw(ix,kz) = an(ix,jy,kz,lnr)*mixconvqv*dninv
+        if ( present( cci ) ) cci(ix,kz) = an(ix,jy,kz,lni)*mixconvqv*dninv
+        if ( present( csw ) ) csw(ix,kz) = an(ix,jy,kz,lns)*mixconvqv*dninv
+        if ( present( chw ) ) chw(ix,kz) = an(ix,jy,kz,lnh)*mixconvqv*dninv
+        if ( lhl > 1 .and. present( chl ) ) chl(ix,kz) = an(ix,jy,kz,lnhl)*mixconvqv*dninv
+        if ( lvh > 1 .and. present( vhw ) ) vhw(ix,kz) = an(ix,jy,kz,lvh)*mixconvqv
+        if ( lvhl > 1 .and. present( vhl ) ) vhl(ix,kz) = an(ix,jy,kz,lvhl)*mixconvqv
+        if ( lccn > 1 .and. present( cccn ) ) cccn(ix,kz) = an(ix,jy,kz,lccn)*mixconvqv*dninv
+        if ( lccna > 1 .and. present( cccna ) ) cccna(ix,kz) = an(ix,jy,kz,lccna)*mixconvqv
 
 
-      ENDDO ! ix
-      ENDDO ! kz
+      enddo ! ix
+      enddo ! kz
 !      ELSE
 !        write(0,*) 'calcnfromq: lv = ',lv,lc,lr,li,ls,lh,lvh,lhl,lccn,lccna
 !        write(0,*) 'calcnfromq: nx,ny,nz,na = ',nx,ny,nz,na
@@ -5541,9 +5541,9 @@ END SUBROUTINE nssl_2mom_driver
 !      write(0,*) 'calcnfromq: qsmax = ',qsmax,qsmax2,qsmax3,qsmax4
 !      ENDIF
       
-      RETURN
+      return
       
-      END subroutine calcnfromq
+      end subroutine calcnfromq
 
 ! ##############################################################################
 ! ##############################################################################
@@ -5604,43 +5604,43 @@ END SUBROUTINE nssl_2mom_driver
          g1hl = (6.0 + alphahl)*(5.0 + alphahl)*(4.0 + alphahl)/  &
      &        ((3.0 + alphahl)*(2.0 + alphahl)*(1.0 + alphahl))
      
-         IF ( imurain == 3 ) THEN
+         if ( imurain == 3 ) then
          g1r = (rnu+2.0)/(rnu+1.0)
-         ELSE ! imurain == 1
+         else ! imurain == 1
          g1r = (6.0 + alphar)*(5.0 + alphar)*(4.0 + alphar)/  &
      &        ((3.0 + alphar)*(2.0 + alphar)*(1.0 + alphar))
-         ENDIF
+         endif
 
          g1s = (snu+2.0)/(snu+1.0)
       
-      DO kz = 1,nz
-       DO ix = 1,nx ! ixcol
+      do kz = 1,nz
+       do ix = 1,nx ! ixcol
 
          dninv = 1./dn(ix,kz)
          
    !  Cloud droplets
          
-         IF ( lnc > 1 ) THEN
+         if ( lnc > 1 ) then
 !           IF ( an(ix,jy,kz,lnc) <= 0.1*cxmin .and. an(ix,jy,kz,lc) > qxmin(lc) ) THEN
-           IF ( an(ix,jy,kz,lnc) > qxmin(lc) ) THEN
+           if ( an(ix,jy,kz,lnc) > qxmin(lc) ) then
              anold(ix,jy,kz,lnc) = anold(ix,jy,kz,lnc) + an(ix,jy,kz,lc)/xcms
-           ENDIF
-         ENDIF
+           endif
+         endif
 
    !  Cloud ice
          
-         IF ( lni > 1 ) THEN
-           IF ( an(ix,jy,kz,lni) > qxmin(li) ) THEN
+         if ( lni > 1 ) then
+           if ( an(ix,jy,kz,lni) > qxmin(li) ) then
              anold(ix,jy,kz,lni) = anold(ix,jy,kz,lni) + an(ix,jy,kz,li)/xims
-           ENDIF
-         ENDIF
+           endif
+         endif
 
    !  rain
          
-         IF ( lnr > 1 ) THEN
-           IF ( an(ix,jy,kz,lr) > qxmin(lr) ) THEN ! adding rain mass from CU scheme
+         if ( lnr > 1 ) then
+           if ( an(ix,jy,kz,lr) > qxmin(lr) ) then ! adding rain mass from CU scheme
 
-            IF ( .true. .or. (anold(ix,jy,kz,lr) - an(ix,jy,kz,lr)) < qxmin(lr) .or. anold(ix,jy,kz,lnr) < cxmin ) THEN 
+            if ( .true. .or. (anold(ix,jy,kz,lr) - an(ix,jy,kz,lr)) < qxmin(lr) .or. anold(ix,jy,kz,lnr) < cxmin ) then 
 
              q = an(ix,jy,kz,lr)
              
@@ -5652,23 +5652,23 @@ END SUBROUTINE nssl_2mom_driver
 
              anold(ix,jy,kz,lnr) = anold(ix,jy,kz,lnr) + nrx ! *dninv ! convert to number mixing ratio
 
-            ELSE
+            else
              ! assume mean particle mass of pre-existing snow
                 xmass = anold(ix,jy,kz,lr)/anold(ix,jy,kz,lnr)
                 anold(ix,jy,kz,lnr) = anold(ix,jy,kz,lnr) + an(ix,jy,kz,lr)/xmass
-            ENDIF
+            endif
              
-             IF ( lzr > 1 ) THEN ! set reflectivity moment
+             if ( lzr > 1 ) then ! set reflectivity moment
                an(ix,jy,kz,lzr) = 36.*g1r*dn(ix,kz)**2*q**2/(pi**2*xdnr**2*nrx) ! *dninv
-             ENDIF
-           ENDIF
-         ENDIF
+             endif
+           endif
+         endif
 
   ! snow
-         IF ( lns > 1 ) THEN
-           IF ( an(ix,jy,kz,ls) > qxmin(ls) ) THEN ! adding snow mass from CU scheme
+         if ( lns > 1 ) then
+           if ( an(ix,jy,kz,ls) > qxmin(ls) ) then ! adding snow mass from CU scheme
 
-             IF ( .true. .or. (anold(ix,jy,kz,ls) - an(ix,jy,kz,ls)) < qxmin(ls) .or. anold(ix,jy,kz,lns) < cxmin ) THEN 
+             if ( .true. .or. (anold(ix,jy,kz,ls) - an(ix,jy,kz,ls)) < qxmin(ls) .or. anold(ix,jy,kz,lns) < cxmin ) then 
              
              ! assume that there was no snow before this
              
@@ -5682,14 +5682,14 @@ END SUBROUTINE nssl_2mom_driver
 
              anold(ix,jy,kz,lns) = anold(ix,jy,kz,lns) + nrx ! *dninv ! convert to number mixing ratio
              
-             ELSE
+             else
              ! assume mean particle mass of pre-existing snow
                 xmass = anold(ix,jy,kz,ls)/anold(ix,jy,kz,lns)
                 anold(ix,jy,kz,lns) = anold(ix,jy,kz,lns) + an(ix,jy,kz,ls)/xmass
-             ENDIF
+             endif
              
-           ENDIF
-         ENDIF
+           endif
+         endif
          
     ! graupel
 
@@ -5743,17 +5743,17 @@ END SUBROUTINE nssl_2mom_driver
 !           ENDIF
 !         ENDIF
  
-      ENDDO ! ix
-      ENDDO ! kz
+      enddo ! ix
+      enddo ! kz
       
-      RETURN
+      return
       
-      END subroutine calcnfromcuten
+      end subroutine calcnfromcuten
 
 ! #####################################################################
 ! #####################################################################
 
-   SUBROUTINE calc_eff_radius    &
+   subroutine calc_eff_radius    &
      &  (nx,ny,nz,na,jyslab & 
      &  ,nor,norz & 
      &  ,t1,t2,t3,t4,t5,t6, f_t5,f_t6  & 
@@ -5856,13 +5856,13 @@ END SUBROUTINE nssl_2mom_driver
      factor_i = (1. + cinu)*Gamma_sp(1. + cinu)/Gamma_sp(5./3. + cinu)
      factor_s = (1. + snu)*Gamma_sp(1. + snu)/Gamma_sp(5./3. + snu)
 
-     IF ( present(t4) ) THEN
-     IF ( imurain == 3 ) THEN
+     if ( present(t4) ) then
+     if ( imurain == 3 ) then
        factor_r = (1. + rnu)*Gamma_sp(1. + rnu)/Gamma_sp(5./3. + rnu)
-     ELSE
+     else
        factor_r = ((Pi*(alphar+3.)*(alphar+1.)*(alphar+1.))/6.)**(1./3.)
-     ENDIF
-     ENDIF
+     endif
+     endif
 
 !
 !     jy = 1 ! working on a 2d slab
@@ -5871,73 +5871,73 @@ END SUBROUTINE nssl_2mom_driver
       jgs = jy
 
       mgs = 1
-      DO kz = 1,nz
-       DO ix = 1,nx ! ixcol
+      do kz = 1,nz
+       do ix = 1,nx ! ixcol
 
          rho0(mgs) = dn(ix,jy,kz)
-         IF ( present( an ) ) THEN
-         DO il = lc,ls
+         if ( present( an ) ) then
+         do il = lc,ls
           qx(mgs,il) = max(an(ix,jy,kz,il), 0.0) 
           cx(mgs,il) = max(an(ix,jy,kz,ln(il)), 0.0) 
-         ENDDO
-         ELSE
+         enddo
+         else
           qx(mgs,:) = 0.0
           cx(mgs,:) = 0.0
-          IF ( present(qcw) ) qx(mgs,lc) = qcw(ix,kz)
-          IF ( present(qci) ) qx(mgs,li) = qci(ix,kz)
-          IF ( present(qsw) ) qx(mgs,ls) = qsw(ix,kz)
-          IF ( present(qrw) ) qx(mgs,lr) = qrw(ix,kz)
-          IF ( present(ccw) ) cx(mgs,lc) = ccw(ix,kz)*rho0(mgs)
-          IF ( present(cci) ) cx(mgs,li) = cci(ix,kz)*rho0(mgs)
-          IF ( present(csw) ) cx(mgs,ls) = csw(ix,kz)*rho0(mgs)
-          IF ( present(crw) ) cx(mgs,lr) = crw(ix,kz)*rho0(mgs)
+          if ( present(qcw) ) qx(mgs,lc) = qcw(ix,kz)
+          if ( present(qci) ) qx(mgs,li) = qci(ix,kz)
+          if ( present(qsw) ) qx(mgs,ls) = qsw(ix,kz)
+          if ( present(qrw) ) qx(mgs,lr) = qrw(ix,kz)
+          if ( present(ccw) ) cx(mgs,lc) = ccw(ix,kz)*rho0(mgs)
+          if ( present(cci) ) cx(mgs,li) = cci(ix,kz)*rho0(mgs)
+          if ( present(csw) ) cx(mgs,ls) = csw(ix,kz)*rho0(mgs)
+          if ( present(crw) ) cx(mgs,lr) = crw(ix,kz)*rho0(mgs)
          
-         ENDIF
+         endif
          
-         IF ( present( t1 ) .and. qx(mgs,lc) > qxmin(lc) .and. cx(mgs,lc) > cxmin ) THEN
+         if ( present( t1 ) .and. qx(mgs,lc) > qxmin(lc) .and. cx(mgs,lc) > cxmin ) then
 ! Lambda for cloud droplets 
          lam_c = ((cx(mgs,lc)*(Pi/6.)*xdn0(lc)*Gamc1)/(qx(mgs,lc)*rho0(mgs)*Gamc2))**(1./3.)
           t1(ix,jy,kz) = 0.5*factor_c/lam_c
-         ENDIF
+         endif
 
-         IF ( present( t2 ) .and. qx(mgs,li) > qxmin(li) .and. cx(mgs,li) > cxmin ) THEN
+         if ( present( t2 ) .and. qx(mgs,li) > qxmin(li) .and. cx(mgs,li) > cxmin ) then
 ! Lambda for cloud ice 
          lam_i = ((cx(mgs,li)*(Pi/6.)*xdn0(li)*Gami1)/(qx(mgs,li)*rho0(mgs)*Gami2))**(1./3.)
           t2(ix,jy,kz) = 0.5*factor_i/lam_i
-         ENDIF
+         endif
 
-         IF ( present( t3 ) .and. qx(mgs,ls) > qxmin(ls) .and. cx(mgs,ls) > cxmin  ) THEN
+         if ( present( t3 ) .and. qx(mgs,ls) > qxmin(ls) .and. cx(mgs,ls) > cxmin  ) then
 ! Lambda for snow
          lam_s = ((cx(mgs,ls)*(Pi/6.)*xdn0(ls)*Gams1)/(qx(mgs,ls)*rho0(mgs)*Gams2))**(1./3.)
           t3(ix,jy,kz) = 0.5*factor_s/lam_s
-         ENDIF
+         endif
 
-         IF ( present( t4 ) .and. present(qrw) .and. present(crw) ) THEN
-         IF ( qx(mgs,lr) > Max(1.e-8,qxmin(lr))  .and. cx(mgs,lr) > cxmin ) THEN
-           IF ( imurain == 1 ) THEN ! gamma-diameter
+         if ( present( t4 ) .and. present(qrw) .and. present(crw) ) then
+         if ( qx(mgs,lr) > Max(1.e-8,qxmin(lr))  .and. cx(mgs,lr) > cxmin ) then
+           if ( imurain == 1 ) then ! gamma-diameter
 ! Lambda for rain
              lam_r = factor_r *((xdn0(lr)*cx(mgs,lr))/(qx(mgs,lr)*rho0(mgs)))**(1./3.)
              t4(ix,jy,kz) = 0.5*(alphar+3.)/lam_r
-           ELSE ! gamma-volume
+           else ! gamma-volume
 ! Lambda for rain
              lam_r = ((cx(mgs,lr)*(Pi/6.)*xdn0(lr)*Gamr1)/(qx(mgs,lr)*rho0(mgs)*Gamr2))**(1./3.)
              t4(ix,jy,kz) = 0.5*factor_r/lam_r
-           ENDIF
-         ENDIF
-         ENDIF
+           endif
+         endif
+         endif
 
       
-       ENDDO ! ix
-      ENDDO ! kz
+       enddo ! ix
+      enddo ! kz
 
-   RETURN
-   END SUBROUTINE calc_eff_radius
+   return
+   end subroutine calc_eff_radius
 
 
 ! #####################################################################
 ! #####################################################################
 
-      SUBROUTINE QVEXCESS(ngs,mgs,qwvp0,qv0,qcw1,pres,thetap0,theta0, &
+      subroutine QVEXCESS(ngs,mgs,qwvp0,qv0,qcw1,pres,thetap0,theta0, &
      &    qvex,pi0,tabqvs,nqsat,fqsat,cbw,fcqv1,felvcp,ss1,pk,ngscnt)
       
 !#####################################################################
@@ -6048,7 +6048,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! condensation/deposition
 !
-      IF ( dqwv(mgs) .ge. 0. ) THEN
+      if ( dqwv(mgs) .ge. 0. ) then
 !
       dqvcnd(mgs) = dqwv(mgs)/(1. + fcqv1(mgs)*qss(mgs)/  &
      &  ((temg(mgs)-cbw)**2))
@@ -6062,7 +6062,7 @@ END SUBROUTINE nssl_2mom_driver
       qwvp(mgs) = qwvp(mgs) - ( dqvcnd(mgs) )
       qcw(mgs) = qcw(mgs) + dqcw(mgs)
 !
-      END IF !  dqwv(mgs) .ge. 0.
+      end if !  dqwv(mgs) .ge. 0.
 
       theta(mgs) = thetap(mgs) + theta0(mgs)
       temg(mgs) = theta(mgs)*pk(mgs) ! ( pres(mgs) / poo ) ** cap
@@ -6083,8 +6083,8 @@ END SUBROUTINE nssl_2mom_driver
 !
       qvex = Max(0.0, qcw(mgs) - qcw1(mgs) )
 
-      RETURN
-      END SUBROUTINE QVEXCESS
+      return
+      end subroutine QVEXCESS
 
 ! #####################################################################
 ! #####################################################################
@@ -6096,7 +6096,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! ##############################################################################
 !
-      SUBROUTINE setvtz(ngscnt,qx,qxmin,qxw,cx,rho0,rhovt,xdia,cno,cnostmp, &
+      subroutine setvtz(ngscnt,qx,qxmin,qxw,cx,rho0,rhovt,xdia,cno,cnostmp, &
      &                 xmas,vtxbar,xdn,xvmn0,xvmx0,xv,cdx,cdxgs,            &
      &                 ipconc1,ndebug1,ngs,nz,kgs,fadvisc,   &
      &                 cwmasn,cwmasx,cwradn,cnina,cimna,cimxa,      &
@@ -6214,13 +6214,13 @@ END SUBROUTINE nssl_2mom_driver
       cs = 12.42
       ds = 0.42
 
-      IF ( ildo == 0 ) THEN
+      if ( ildo == 0 ) then
         l1 = lc
         l2 = lhab
-      ELSE
+      else
         l1 = ildo
         l2 = ildo
-      ENDIF
+      endif
 
 !      IF ( ifirst .eq. 0 ) THEN
 !        ifirst = 1
@@ -6232,55 +6232,55 @@ END SUBROUTINE nssl_2mom_driver
 !        gfcinu1p47 = gamma(cinu + 1.47167)
 !        gfcinu2p47 = gamma(cinu + 2.47167)
         
-        IF ( lh  .gt. 1 ) THEN
-          IF ( dmuh == 1.0 ) THEN
+        if ( lh  .gt. 1 ) then
+          if ( dmuh == 1.0 ) then
             cwchtmp = ((3. + dnu(lh))*(2. + dnu(lh))*(1.0 + dnu(lh)))**(-1./3.)
-          ELSE
+          else
             cwchtmp = 6.0*pii*gamma_sp( (xnu(lh) + 1.)/xmu(lh) )/gamma_sp( (xnu(lh) + 2.)/xmu(lh) )
-          ENDIF
-        ENDIF
-        IF ( lhl .gt. 1 ) THEN
-          IF ( dmuhl == 1.0 ) THEN
+          endif
+        endif
+        if ( lhl .gt. 1 ) then
+          if ( dmuhl == 1.0 ) then
             cwchltmp = ((3. + dnu(lhl))*(2. + dnu(lhl))*(1.0 + dnu(lhl)))**(-1./3.)
-          ELSE
+          else
             cwchltmp = 6.0*pii*gamma_sp( (xnu(lhl) + 1)/xmu(lhl) )/gamma_sp( (xnu(lhl) + 2)/xmu(lhl) )
-          ENDIF
-        ENDIF
+          endif
+        endif
 
-        IF ( ipconc .le. 5 ) THEN
-          IF ( lh  .gt. 1 ) cwch(:) =  cwchtmp 
-          IF ( lhl .gt. 1 ) cwchl(:) = cwchltmp
-        ELSE
-          DO mgs = 1,ngscnt
+        if ( ipconc .le. 5 ) then
+          if ( lh  .gt. 1 ) cwch(:) =  cwchtmp 
+          if ( lhl .gt. 1 ) cwchl(:) = cwchltmp
+        else
+          do mgs = 1,ngscnt
           
-          IF ( lh  .gt. 1 .and. ( ildo == 0 .or. ildo == lh ) ) THEN
-           IF ( qx(mgs,lh) .gt. qxmin(lh) ) THEN
-            IF ( dmuh == 1.0 ) THEN
+          if ( lh  .gt. 1 .and. ( ildo == 0 .or. ildo == lh ) ) then
+           if ( qx(mgs,lh) .gt. qxmin(lh) ) then
+            if ( dmuh == 1.0 ) then
               cwch(mgs) = ((3. + alpha(mgs,lh))*(2. + alpha(mgs,lh))*(1.0 + alpha(mgs,lh)))**(-1./3.)
-             ELSE
+             else
              xnutmp = (alpha(mgs,lh) - 2.0)/3.0
              cwch(mgs) =  6.0*pii*gamma_sp( (xnutmp + 1.)/xmu(lh) )/gamma_sp( (xnutmp + 2.)/xmu(lh) )
-            ENDIF
-           ELSE
+            endif
+           else
              cwch(mgs) = cwchtmp
-           ENDIF
-          ENDIF
-          IF ( lhl .gt. 1 .and. ( ildo == 0 .or. ildo == lhl ) ) THEN
-           IF ( qx(mgs,lhl) .gt. qxmin(lhl) ) THEN
-            IF ( dmuhl == 1.0 ) THEN
+           endif
+          endif
+          if ( lhl .gt. 1 .and. ( ildo == 0 .or. ildo == lhl ) ) then
+           if ( qx(mgs,lhl) .gt. qxmin(lhl) ) then
+            if ( dmuhl == 1.0 ) then
               cwchl(mgs) = ((3. + alpha(mgs,lhl))*(2. + alpha(mgs,lhl))*(1.0 + alpha(mgs,lhl)))**(-1./3.)
-             ELSE
+             else
              xnutmp = (alpha(mgs,lhl) - 2.0)/3.0
              cwchl(mgs) = 6.0*pii*gamma_sp( (xnutmp + 1)/xmu(lhl) )/gamma_sp( (xnutmp + 2)/xmu(lhl) )
-            ENDIF
-           ELSE
+            endif
+           else
              cwchl(mgs) = cwchltmp
-           ENDIF
-          ENDIF
+           endif
+          endif
           
-          ENDDO
+          enddo
         
-        ENDIF
+        endif
        
 
       cimasn = Min( cimas0, 6.88e-13)
@@ -6305,29 +6305,29 @@ END SUBROUTINE nssl_2mom_driver
 !
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set cloud water variables'
       
-      IF ( ildo == 0 .or. ildo == lc ) THEN
+      if ( ildo == 0 .or. ildo == lc ) then
       
       do mgs = 1,ngscnt
       xv(mgs,lc) = 0.0
       
-      IF ( qx(mgs,lc) .gt. qxmin(lc) ) THEN !{
+      if ( qx(mgs,lc) .gt. qxmin(lc) ) then !{
       
-      IF ( ipconc .ge. 2 ) THEN
-        IF ( cx(mgs,lc) .gt. cxmin) THEN !{
+      if ( ipconc .ge. 2 ) then
+        if ( cx(mgs,lc) .gt. cxmin) then !{
         xmas(mgs,lc) =  &
      &    min( max(qx(mgs,lc)*rho0(mgs)/cx(mgs,lc),cwmasn),cwmasx )
         xv(mgs,lc) = xmas(mgs,lc)/xdn(mgs,lc)
-        ELSE
+        else
          cx(mgs,lc) = Max( cxmin, rho0(mgs)*qx(mgs,lc)/cwmasx )
          xmas(mgs,lc) = Min( max(qx(mgs,lc)*rho0(mgs)/cx(mgs,lc),cwmasn),cwmasx )
          xv(mgs,lc) = xmas(mgs,lc)/xdn(mgs,lc)
         
-        ENDIF
-      ELSE
-       IF ( ipconc .lt. 2 ) THEN
+        endif
+      else
+       if ( ipconc .lt. 2 ) then
          cx(mgs,lc) = rho0(mgs)*ccn/rho00 ! scales to local density, relative to standard air density
-       ENDIF
-       IF ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. 0.01 ) THEN !{
+       endif
+       if ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. 0.01 ) then !{
         xmas(mgs,lc) =  &
      &     min( max(qx(mgs,lc)*rho0(mgs)/cx(mgs,lc),xdn(mgs,lc)*xvmn(lc)), &
      &      xdn(mgs,lc)*xvmx(lc) )
@@ -6335,23 +6335,23 @@ END SUBROUTINE nssl_2mom_driver
         xv(mgs,lc) = xmas(mgs,lc)/xdn(mgs,lc)
         cx(mgs,lc) = qx(mgs,lc)*rho0(mgs)/xmas(mgs,lc)
         
-       ELSEIF ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .le. 1.0e-9 ) THEN
+       elseif ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .le. 1.0e-9 ) then
         cx(mgs,lc) = Max( cxmin, rho0(mgs)*qx(mgs,lc)/cwmasx )
         xmas(mgs,lc) =  &
      &    min( max(qx(mgs,lc)*rho0(mgs)/cx(mgs,lc),cwmasn),cwmasx )
         xv(mgs,lc) = xmas(mgs,lc)/xdn(mgs,lc)
 
-       ELSEIF ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .le. 0.01 ) THEN
+       elseif ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .le. 0.01 ) then
         xmas(mgs,lc) = xdn(mgs,lc)*4.*pi/3.*(5.0e-6)**3
         cx(mgs,lc) = rho0(mgs)*qx(mgs,lc)/xmas(mgs,lc)
         xv(mgs,lc) = xmas(mgs,lc)/xdn(mgs,lc)
         
-       ELSE
+       else
         xmas(mgs,lc) = cwmasn
         xv(mgs,lc) = xmas(mgs,lc)/1000.
 ! do not define ccw here! it can feed back to ccn!!!    cx(mgs,lc) = 0.0 ! cwnc(mgs)
-       ENDIF !}
-      ENDIF !}
+       endif !}
+      endif !}
 !      IF ( ipconc .lt. 2 ) THEN
 !        xmas(mgs,lc) = &
 !     &    min( max(qx(mgs,lc)*rho0(mgs)/cwnc(mgs),cwmasn),cwmasx )
@@ -6364,30 +6364,30 @@ END SUBROUTINE nssl_2mom_driver
       xdia(mgs,lc,2) = xdia(mgs,lc,1)**2
       xdia(mgs,lc,3) = xdia(mgs,lc,1)
       cwrad = 0.5*xdia(mgs,lc,1)
-      IF ( fadvisc(mgs) > 0.0 ) THEN
+      if ( fadvisc(mgs) > 0.0 ) then
       vtxbar(mgs,lc,1) =  &
      &   (2.0*gr*xdn(mgs,lc) *(cwrad**2)) &
      &  /(9.0*fadvisc(mgs))
-      ELSE
+      else
        vtxbar(mgs,lc,1) = 0.0
-      ENDIF
+      endif
 
       
-      ELSE
+      else
        xmas(mgs,lc) = cwmasn
        xv(mgs,lc) = xmas(mgs,lc)/xdn(mgs,lc)
-       IF ( qx(mgs,lc) <= 0.0 ) cx(mgs,lc) = 0.0
-       IF ( ipconc .le. 1 ) cx(mgs,lc) = 0.01
+       if ( qx(mgs,lc) <= 0.0 ) cx(mgs,lc) = 0.0
+       if ( ipconc .le. 1 ) cx(mgs,lc) = 0.01
        xdia(mgs,lc,1) = 2.*cwradn
        xdia(mgs,lc,2) = 4.*cwradn**2
        xdia(mgs,lc,3) = xdia(mgs,lc,1)
        vtxbar(mgs,lc,1) = 0.0
        
-      ENDIF !} qcw .gt. qxmin(lc)
+      endif !} qcw .gt. qxmin(lc)
       
       end do
       
-      ENDIF
+      endif
 
 
 
@@ -6401,37 +6401,37 @@ END SUBROUTINE nssl_2mom_driver
 !
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set cip'
       
-      IF ( li .gt. 1 .and. ( ildo == 0 .or. ildo == li ) ) THEN
+      if ( li .gt. 1 .and. ( ildo == 0 .or. ildo == li ) ) then
       do mgs = 1,ngscnt
        xdn(mgs,li)  = 900.0
-      IF ( ipconc .eq. 0 ) THEN
+      if ( ipconc .eq. 0 ) then
 !       cx(mgs,li) = min(cnit*exp(-temcg(mgs)*bta1),1.e+09)
         cx(mgs,li) = cnina(mgs)
-       IF ( cimna .gt. 1.0 ) THEN
+       if ( cimna .gt. 1.0 ) then
          cx(mgs,li) = Max(cimna,cx(mgs,li))
-       ENDIF
-       IF ( cimxa .gt. 1.0 ) THEN
+       endif
+       if ( cimxa .gt. 1.0 ) then
          cx(mgs,li) = Min(cimxa,cx(mgs,li))
-       ENDIF
+       endif
 ! erm 3/28/2002
-       IF ( itype1a .ge. 1 .or. itype2a .ge. 1 ) THEN
+       if ( itype1a .ge. 1 .or. itype2a .ge. 1 ) then
         cx(mgs,li) = Max(cx(mgs,li),qx(mgs,li)*rho0(mgs)/cimasx)
         cx(mgs,li) = Min(cx(mgs,li),qx(mgs,li)*rho0(mgs)/cimasn)
-       ENDIF
+       endif
 !
        cx(mgs,li) = max(1.0e-20,cx(mgs,li))
 !       cx(mgs,li) = Min(ccimx, cx(mgs,li))
 
       
-      ELSEIF ( ipconc .ge. 1 ) THEN
-        IF ( qx(mgs,li) .gt. qxmin(li) ) THEN
+      elseif ( ipconc .ge. 1 ) then
+        if ( qx(mgs,li) .gt. qxmin(li) ) then
          cx(mgs,li) = Max(cx(mgs,li),qx(mgs,li)*rho0(mgs)/cimasx)
          cx(mgs,li) = Min(cx(mgs,li),qx(mgs,li)*rho0(mgs)/cimasn)
 !         cx(mgs,li) = Max(1.0,cx(mgs,li))
-        ENDIF
-      ENDIF
+        endif
+      endif
       
-      IF ( qx(mgs,li) .gt. qxmin(li) ) THEN
+      if ( qx(mgs,li) .gt. qxmin(li) ) then
       xmas(mgs,li) = &
      &     max( qx(mgs,li)*rho0(mgs)/cx(mgs,li), cimasn )
 !     &  min( max(qx(mgs,li)*rho0(mgs)/cx(mgs,li),cimasn),cimasx )
@@ -6439,49 +6439,49 @@ END SUBROUTINE nssl_2mom_driver
 !      if ( temcg(mgs) .gt. 0.0 ) then
 !      xdia(mgs,li,1) = 0.0
 !      else
-      if ( xmas(mgs,li) .gt. 0.0 ) THEN ! cimasn ) then
+      if ( xmas(mgs,li) .gt. 0.0 ) then ! cimasn ) then
 !c      xdia(mgs,li,1) = 0.4892*(xmas(mgs,li)**(0.4554))
 !       xdia(mgs,li,1) = 0.1871*(xmas(mgs,li)**(0.3429))
 
 !       xdia(mgs,li,1) = (132.694*5.40662/xmas(mgs,li))**(-1./2.9163)  ! for inverse exponential distribution
-       IF ( ixtaltype == 1 ) THEN ! column
+       if ( ixtaltype == 1 ) then ! column
        xdia(mgs,li,1) = 0.1871*(xmas(mgs,li)**(0.3429))
        xdia(mgs,li,3) = 0.1871*(xmas(mgs,li)**(0.3429))
-       ELSEIF  ( ixtaltype == 2 ) THEN ! disk
+       elseif  ( ixtaltype == 2 ) then ! disk
         xdia(mgs,li,1) = 0.277823*xmas(mgs,li)**0.359971
         xdia(mgs,li,3) = 0.277823*xmas(mgs,li)**0.359971
-       ENDIF
+       endif
       end if
 !      end if
 !      xdia(mgs,li,1) = max(xdia(mgs,li,1), 5.e-6)
 !      xdia(mgs,li,1) = min(xdia(mgs,li,1), 1000.e-6)
 
-       IF ( ipconc .ge. 0 ) THEN
+       if ( ipconc .ge. 0 ) then
 !      vtxbar(mgs,li,1) = rhovt(mgs)*49420.*40.0005/5.40662*xdia(mgs,li,1)**(1.415) ! mass-weighted
 !      vtxbar(mgs,li,1) = (4.942e4)*(xdia(mgs,li,1)**(1.4150))
         xv(mgs,li) = xmas(mgs,li)/xdn(mgs,li)
-        IF ( icefallopt == 1 ) THEN ! default ice fall
-          IF ( ixtaltype == 1 ) THEN ! column
+        if ( icefallopt == 1 ) then ! default ice fall
+          if ( ixtaltype == 1 ) then ! column
           tmp = (67056.6300748612*rhovt(mgs))/  &
      &     (((1.0 + cinu)/xv(mgs,li))**0.4716666666666667*gfcinu1)
           vtxbar(mgs,li,2) = tmp*gfcinu1p47
           vtxbar(mgs,li,1) = tmp*gfcinu2p47/(1. + cinu)
           vtxbar(mgs,li,3) = vtxbar(mgs,li,1) 
-        ELSEIF  ( ixtaltype == 2 ) THEN ! disk -- but just use Ferrier (1994) snow fall speeds for now
+        elseif  ( ixtaltype == 2 ) then ! disk -- but just use Ferrier (1994) snow fall speeds for now
             vtxbar(mgs,li,1) = 11.9495*rhovt(mgs)*(xv(mgs,li))**(0.14)
             vtxbar(mgs,li,2) = 7.02909*rhovt(mgs)*(xv(mgs,li))**(0.14)
            vtxbar(mgs,li,3) = vtxbar(mgs,li,1) 
         
-          ENDIF
+          endif
           
-       ELSEIF ( icefallopt == 2 ) THEN !   ! Ferrier ice fall speed
+       elseif ( icefallopt == 2 ) then !   ! Ferrier ice fall speed
           tmp = (82.3166*rhovt(mgs))/  &
      &     (((1.0 + cinu)/xv(mgs,li))**0.22117*gfcinu1)
           vtxbar(mgs,li,2) = tmp*gfcinu1p22
           vtxbar(mgs,li,1) = tmp*gfcinu2p22/(1. + cinu)
           vtxbar(mgs,li,3) = vtxbar(mgs,li,1) 
 
-       ELSEIF ( icefallopt == 3 ) THEN !   ! Adjusted Ferrier (smaller exponent of 0.55 instead of 0.6635)
+       elseif ( icefallopt == 3 ) then !   ! Adjusted Ferrier (smaller exponent of 0.55 instead of 0.6635)
        
           tmp = (47.6273*rhovt(mgs))/  &
      &     (((1.0 + cinu)/xv(mgs,li))**0.18333*gfcinu1)
@@ -6489,13 +6489,13 @@ END SUBROUTINE nssl_2mom_driver
           vtxbar(mgs,li,1) = tmp*gfcinu2p18/(1. + cinu)
           vtxbar(mgs,li,3) = vtxbar(mgs,li,1) 
        
-       ENDIF
+       endif
 !      vtxbar(mgs,li,1) = vtxbar(mgs,li,2)*(1.+cinu)/(1. + cinu)
 !      xdn(mgs,li)   = min(max(769.8*xdia(mgs,li,1)**(-0.0140),300.0),900.0)
 !      xdn(mgs,li) = 900.0
         xdia(mgs,li,2) = xdia(mgs,li,1)**2
 !      vtxbar(mgs,li,1) = vtxbar(mgs,li,1)*rhovt(mgs)
-       ELSE
+       else
          xdia(mgs,li,1) = max(xdia(mgs,li,1), 10.e-6)
          xdia(mgs,li,1) = min(xdia(mgs,li,1), 1000.e-6)
          vtxbar(mgs,li,1) = (4.942e4)*(xdia(mgs,li,1)**(1.4150))
@@ -6504,10 +6504,10 @@ END SUBROUTINE nssl_2mom_driver
          xdia(mgs,li,2) = xdia(mgs,li,1)**2
          vtxbar(mgs,li,1) = vtxbar(mgs,li,1)*rhovt(mgs)
          xv(mgs,li) = xmas(mgs,li)/xdn(mgs,li)
-       ENDIF ! ipconc gt 3
-      ELSE
+       endif ! ipconc gt 3
+      else
        xmas(mgs,li) = 1.e-13
-       IF ( qx(mgs,li) <= 0.0 ) cx(mgs,li) = 0.0
+       if ( qx(mgs,li) <= 0.0 ) cx(mgs,li) = 0.0
        xdn(mgs,li)  = 900.0
        xdia(mgs,li,1) = 1.e-7
        xdia(mgs,li,2) = (1.e-14)
@@ -6515,19 +6515,19 @@ END SUBROUTINE nssl_2mom_driver
        vtxbar(mgs,li,1) = 0.0
 !       cicap(mgs) = 0.0
 !       ciat(mgs) = 0.0
-      ENDIF
+      endif
       
-      IF ( icefallfac /= 1.0 ) THEN
+      if ( icefallfac /= 1.0 ) then
         vtxbar(mgs,li,1) = icefallfac*vtxbar(mgs,li,1)
         vtxbar(mgs,li,2) = icefallfac*vtxbar(mgs,li,2)
         vtxbar(mgs,li,3) = icefallfac*vtxbar(mgs,li,3)
-      ENDIF
+      endif
 
       
       
       end do
       
-      ENDIF ! li .gt. 1
+      endif ! li .gt. 1
 
 
 ! ################################################################
@@ -6536,7 +6536,7 @@ END SUBROUTINE nssl_2mom_driver
 !
       
 !
-      IF ( ildo == 0 .or. ildo == lr ) THEN
+      if ( ildo == 0 .or. ildo == lr ) then
       do mgs = 1,ngscnt
       if ( qx(mgs,lr) .gt. qxmin(lr) ) then
       
@@ -6546,46 +6546,46 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 3 ) then
         xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*Max(1.0e-11,cx(mgs,lr)))
         xvbarmax = xvmx(lr)
-        IF ( imaxdiaopt == 1 ) THEN
+        if ( imaxdiaopt == 1 ) then
           xvbarmax = xvmx(lr)
-        ELSEIF ( imaxdiaopt == 2 ) THEN ! test against maximum mass diameter
-         IF ( imurain == 1 ) THEN
+        elseif ( imaxdiaopt == 2 ) then ! test against maximum mass diameter
+         if ( imurain == 1 ) then
            xvbarmax = xvmx(lr)/((3. + alpha(mgs,lr))**3/((3. + alpha(mgs,lr))*(2. + alpha(mgs,lr))*(1. + alpha(mgs,lr))))
-         ELSEIF ( imurain == 3 ) THEN
+         elseif ( imurain == 3 ) then
            
-         ENDIF
-        ELSEIF ( imaxdiaopt == 3 ) THEN ! test against mass-weighted diameter
-         IF ( imurain == 1 ) THEN
+         endif
+        elseif ( imaxdiaopt == 3 ) then ! test against mass-weighted diameter
+         if ( imurain == 1 ) then
            xvbarmax = xvmx(lr)/((4. + alpha(mgs,lr))**3/((3. + alpha(mgs,lr))*(2. + alpha(mgs,lr))*(1. + alpha(mgs,lr))))
-         ELSEIF ( imurain == 3 ) THEN
+         elseif ( imurain == 3 ) then
            
-         ENDIF
-        ENDIF
+         endif
+        endif
        
-        IF ( xv(mgs,lr) .gt. xvbarmax ) THEN
+        if ( xv(mgs,lr) .gt. xvbarmax ) then
           xv(mgs,lr) = xvbarmax
           cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvbarmax*xdn(mgs,lr))
-        ELSEIF ( xv(mgs,lr) .lt. xvmn(lr) ) THEN
+        elseif ( xv(mgs,lr) .lt. xvmn(lr) ) then
           xv(mgs,lr) = xvmn(lr)
           cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmn(lr)*xdn(mgs,lr))
-        ENDIF
+        endif
 
 
         xmas(mgs,lr) = xv(mgs,lr)*xdn(mgs,lr)
         xdia(mgs,lr,3) = (xmas(mgs,lr)*cwc1)**(1./3.) ! xdia(mgs,lr,1)
-        IF ( imurain == 3 ) THEN
+        if ( imurain == 3 ) then
 !          xdia(mgs,lr,1) = (6.*pii*xv(mgs,lr)/(alpha(mgs,lr)+1.))**(1./3.)
           xdia(mgs,lr,1) = xdia(mgs,lr,3) ! formulae for Ziegler (1985) use mean volume diameter, not lambda**(-1)
-        ELSE ! imurain == 1, Characteristic diameter (1/lambda)
+        else ! imurain == 1, Characteristic diameter (1/lambda)
           xdia(mgs,lr,1) = (6.*pii*xv(mgs,lr)/((alpha(mgs,lr)+3.)*(alpha(mgs,lr)+2.)*(alpha(mgs,lr)+1.)))**(1./3.)
-        ENDIF
+        endif
 !        rwrad(mgs) = 0.5*xdia(mgs,lr,1)
 
 ! Inverse exponential version:
 !        xdia(mgs,lr,1) =
 !     &  (qx(mgs,lr)*rho0(mgs)
 !     & /(pi*xdn(mgs,lr)*cx(mgs,lr)))**(0.333333)
-      ELSE
+      else
         xdia(mgs,lr,1) = &
      &  (qx(mgs,lr)*rho0(mgs)/(pi*xdn(mgs,lr)*cno(lr)))**(0.25) 
         xmas(mgs,lr) = xdn(mgs,lr)*(pi/6.)*xdia(mgs,lr,1)**3
@@ -6603,13 +6603,13 @@ END SUBROUTINE nssl_2mom_driver
 !      xmas(mgs,lr) = xdn(mgs,lr)*(pi/6.)*xdia(mgs,lr,1)**3
       end do
       
-      ENDIF
+      endif
 ! ################################################################
 !
 !  SNOW
 !
 
-      IF ( ls .gt. 1 .and. ( ildo == 0 .or. ildo == ls ) ) THEN
+      if ( ls .gt. 1 .and. ( ildo == 0 .or. ildo == ls ) ) then
       
       do mgs = 1,ngscnt 
       if ( qx(mgs,ls) .gt. qxmin(ls) ) then
@@ -6622,45 +6622,45 @@ END SUBROUTINE nssl_2mom_driver
 !          cx(mgs,ls) = rho0(mgs)*qx(mgs,ls)/(xmas(mgs,ls))
 !        ENDIF
 
-        IF ( isnowdens == 2 ) THEN ! Set values according to Cox relationship
+        if ( isnowdens == 2 ) then ! Set values according to Cox relationship
         
           xdn(mgs,ls) = 0.0346159*Sqrt(cx(mgs,ls)/(qx(mgs,ls)*rho0(mgs)) )
           xdn(mgs,ls) = Max( 100.0, xdn(mgs,ls) )  ! limit snow to 100. to keep other equations in line
           
-          IF ( xdn(mgs,ls) <= 900. ) THEN
+          if ( xdn(mgs,ls) <= 900. ) then
              dtmp = Sqrt( xmas(mgs,ls)/0.069 ) ! diameter (meters) of mean mass particle using Cox 1998 relation (m = p d^2)
              xv(mgs,ls) = 28.8887*xmas(mgs,ls)**(3./2.)
-          ELSE ! at small sizes, assume ice spheres
+          else ! at small sizes, assume ice spheres
              xdn(mgs,ls) = 900.
              xv(mgs,ls) = rho0(mgs)*qx(mgs,ls)/(xdn(mgs,ls)*Max(1.0e-9,cx(mgs,ls)))
              dtmp = (xv(mgs,ls)*cwc0*6.0)**(1./3.)
-          ENDIF
+          endif
           
-        ELSE ! leave xdn(ls) at default value
+        else ! leave xdn(ls) at default value
              xv(mgs,ls) = rho0(mgs)*qx(mgs,ls)/(xdn(mgs,ls)*Max(1.0e-9,cx(mgs,ls)))
              dtmp = (xv(mgs,ls)*cwc0*6.0)**(1./3.)
-        ENDIF
+        endif
 
         xdia(mgs,ls,1) = dtmp ! (xv(mgs,ls)*cwc0*6.0)**(1./3.)
 
-        IF ( xv(mgs,ls) .lt. xvmn(ls) .and. isnowdens == 1) THEN
+        if ( xv(mgs,ls) .lt. xvmn(ls) .and. isnowdens == 1) then
           xv(mgs,ls) = Max( xvmn(ls),xv(mgs,ls) )
           xmas(mgs,ls) = xv(mgs,ls)*xdn(mgs,ls)
           cx(mgs,ls) = rho0(mgs)*qx(mgs,ls)/(xmas(mgs,ls))
           xdia(mgs,ls,1) = (xv(mgs,ls)*cwc0*6.0)**(1./3.)
-        ENDIF
+        endif
 
-        IF ( xv(mgs,ls) .gt. xvmx(ls)*Max(1.,100./Min(100.,xdn(mgs,ls))) ) THEN
+        if ( xv(mgs,ls) .gt. xvmx(ls)*Max(1.,100./Min(100.,xdn(mgs,ls))) ) then
           xv(mgs,ls) = Min( xvmx(ls), Max( xvmn(ls),xv(mgs,ls) ) )
           xmas(mgs,ls) = 0.106214*xv(mgs,ls)**(2./3.)
           cx(mgs,ls) = rho0(mgs)*qx(mgs,ls)/(xmas(mgs,ls))
           xdn(mgs,ls) = 0.0346159*Sqrt(cx(mgs,ls)/(qx(mgs,ls)*rho0(mgs)) )
           xdia(mgs,ls,1) = Sqrt( xmas(mgs,ls)/0.069 ) 
-        ENDIF
+        endif
 
         xdia(mgs,ls,3) = xdia(mgs,ls,1)
 
-      ELSE
+      else
         xdia(mgs,ls,1) =  &
      &    (qx(mgs,ls)*rho0(mgs)/(pi*xdn(mgs,ls)*cnostmp(mgs)))**(0.25) 
         cx(mgs,ls) = cnostmp(mgs)*xdia(mgs,ls,1)
@@ -6672,9 +6672,9 @@ END SUBROUTINE nssl_2mom_driver
       xdia(mgs,ls,3) = 1.e-9
       cx(mgs,ls) = 0.0
       
-       IF ( isnowdens == 2 ) THEN ! Set values according to Cox relationship
+       if ( isnowdens == 2 ) then ! Set values according to Cox relationship
          xdn(mgs,ls) = 90.
-       ENDIF
+       endif
 
       end if
       xdia(mgs,ls,2) = xdia(mgs,ls,1)**2
@@ -6682,7 +6682,7 @@ END SUBROUTINE nssl_2mom_driver
 !      xmas(mgs,ls) = xdn(mgs,ls)*(pi/6.)*swdia3(mgs)
       end do
       
-      ENDIF ! ls .gt 1
+      endif ! ls .gt 1
 !
 !
 ! ################################################################
@@ -6690,7 +6690,7 @@ END SUBROUTINE nssl_2mom_driver
 !  GRAUPEL
 !
 
-      IF ( lh .gt. 1 .and. ( ildo == 0 .or. ildo == lh ) ) THEN
+      if ( lh .gt. 1 .and. ( ildo == 0 .or. ildo == lh ) ) then
       
       do mgs = 1,ngscnt 
       if ( qx(mgs,lh) .gt. qxmin(lh) ) then
@@ -6699,20 +6699,20 @@ END SUBROUTINE nssl_2mom_driver
         xv(mgs,lh) = rho0(mgs)*qx(mgs,lh)/(xdn(mgs,lh)*Max(1.0e-9,cx(mgs,lh)))
         xmas(mgs,lh) = xv(mgs,lh)*xdn(mgs,lh)
 
-        IF ( xv(mgs,lh) .lt. xvmn(lh) .or. xv(mgs,lh) .gt. xvmx(lh) ) THEN
+        if ( xv(mgs,lh) .lt. xvmn(lh) .or. xv(mgs,lh) .gt. xvmx(lh) ) then
           xv(mgs,lh) = Min( xvmx(lh), Max( xvmn(lh),xv(mgs,lh) ) )
           xmas(mgs,lh) = xv(mgs,lh)*xdn(mgs,lh)
           cx(mgs,lh) = rho0(mgs)*qx(mgs,lh)/(xmas(mgs,lh))
-        ENDIF
+        endif
 
          xdia(mgs,lh,3) = (xv(mgs,lh)*6.*pii)**(1./3.) ! mwfac*xdia(mgs,lh,1) ! (xv(mgs,lh)*cwc0*6.0)**(1./3.)
-         IF ( dmuh == 1.0 ) THEN
+         if ( dmuh == 1.0 ) then
            xdia(mgs,lh,1) = cwch(mgs)*xdia(mgs,lh,3)
-         ELSE
+         else
            xdia(mgs,lh,1) = (xv(mgs,lh)*cwch(mgs))**(1./3.)
-         ENDIF
+         endif
 
-      ELSE
+      else
       xdia(mgs,lh,1) =  &
      &  (qx(mgs,lh)*rho0(mgs)/(pi*xdn(mgs,lh)*cno(lh)))**(0.25) 
       cx(mgs,lh) = cno(lh)*xdia(mgs,lh,1)
@@ -6728,7 +6728,7 @@ END SUBROUTINE nssl_2mom_driver
 !      xmas(mgs,lh) = xdn(mgs,lh)*(pi/6.)*hwdia3(mgs)
       end do
       
-      ENDIF
+      endif
 
 !
 ! ################################################################
@@ -6736,7 +6736,7 @@ END SUBROUTINE nssl_2mom_driver
 !  HAIL
 !
 
-      IF ( lhl .gt. 1 .and. ( ildo == 0 .or. ildo == lhl ) ) THEN
+      if ( lhl .gt. 1 .and. ( ildo == 0 .or. ildo == lhl ) ) then
       
       do mgs = 1,ngscnt 
       if ( qx(mgs,lhl) .gt. qxmin(lhl) ) then
@@ -6746,21 +6746,21 @@ END SUBROUTINE nssl_2mom_driver
         xmas(mgs,lhl) = xv(mgs,lhl)*xdn(mgs,lhl)
 !        write(0,*) 'setvt: xv = ',xv(mgs,lhl),xdn(mgs,lhl),cx(mgs,lhl),xmas(mgs,lhl),qx(mgs,lhl)
 
-        IF ( xv(mgs,lhl) .lt. xvmn(lhl) .or. xv(mgs,lhl) .gt. xvmx(lhl) ) THEN
+        if ( xv(mgs,lhl) .lt. xvmn(lhl) .or. xv(mgs,lhl) .gt. xvmx(lhl) ) then
           xv(mgs,lhl) = Min( xvmx(lhl), Max( xvmn(lhl),xv(mgs,lhl) ) )
           xmas(mgs,lhl) = xv(mgs,lhl)*xdn(mgs,lhl)
           cx(mgs,lhl) = rho0(mgs)*qx(mgs,lhl)/(xmas(mgs,lhl))
-        ENDIF
+        endif
 
         xdia(mgs,lhl,3) = (xv(mgs,lhl)*6./pi)**(1./3.) ! mwfac*xdia(mgs,lh,1) ! (xv(mgs,lh)*cwc0*6.0)**(1./3.)
-         IF ( dmuhl == 1.0 ) THEN
+         if ( dmuhl == 1.0 ) then
            xdia(mgs,lhl,1) = cwchl(mgs)*xdia(mgs,lhl,3)
-         ELSE
+         else
            xdia(mgs,lhl,1) = (xv(mgs,lhl)*cwchl(mgs))**(1./3.)
-         ENDIF
+         endif
         
 !        write(0,*) 'setvt: xv = ',xv(mgs,lhl),xdn(mgs,lhl),cx(mgs,lhl),xdia(mgs,lhl,3)
-      ELSE
+      else
       xdia(mgs,lhl,1) = &
      &  (qx(mgs,lhl)*rho0(mgs)/(pi*xdn(mgs,lhl)*cno(lhl)))**(0.25) 
       cx(mgs,lhl) = cno(lhl)*xdia(mgs,lhl,1)
@@ -6776,7 +6776,7 @@ END SUBROUTINE nssl_2mom_driver
 !      xmas(mgs,lh) = xdn(mgs,lh)*(pi/6.)*hwdia3(mgs)
       end do
       
-      ENDIF
+      endif
 !      
 !
 !
@@ -6799,15 +6799,15 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  RAIN
 !
-      IF ( ildo == 0 .or. ildo == lr ) THEN
+      if ( ildo == 0 .or. ildo == lr ) then
       do mgs = 1,ngscnt
       if ( qx(mgs,lr) .gt. qxmin(lr) ) then
-      IF ( ipconc .lt. 3 ) THEN
+      if ( ipconc .lt. 3 ) then
         vtxbar(mgs,lr,1) = rainfallfac*(ar*gf4br/6.0)*(xdia(mgs,lr,1)**br)*rhovt(mgs)
 !        write(91,*) 'vtxbar: ',vtxbar(mgs,lr,1),mgs,gf4br,xdia(mgs,lr,1),rhovt(mgs)
-      ELSE
+      else
         
-        IF ( imurain == 1 ) THEN ! DSD of Diameter
+        if ( imurain == 1 ) then ! DSD of Diameter
         
         ! using functional form of  arx*(1 - Exp(-frx*diameter) ), with arx =       arx = 10.
         !  and frx = 516.575 ! raind fit parameters for arx*(1 - Exp(-fx*d)), where d is rain diameter in meters.
@@ -6818,52 +6818,52 @@ END SUBROUTINE nssl_2mom_driver
           
           vtxbar(mgs,lr,1) = rhovt(mgs)*arx*(1.0 - (1.0 + frx*xdia(mgs,lr,1))**(-alp - 4.0) ) ! mass weighted
           
-          IF ( infdo .ge. 1 .and. rssflg == 1 ) THEN
+          if ( infdo .ge. 1 .and. rssflg == 1 ) then
             vtxbar(mgs,lr,2) = rhovt(mgs)*arx*(1.0 - (1.0 + frx*xdia(mgs,lr,1))**(-alp - 1.0) ) ! number weighted
-          ELSE
+          else
             vtxbar(mgs,lr,2) = vtxbar(mgs,lr,1)
-          ENDIF
+          endif
           
-          IF ( infdo .ge. 2 .and. rssflg == 1 ) THEN
+          if ( infdo .ge. 2 .and. rssflg == 1 ) then
             vtxbar(mgs,lr,3) = rhovt(mgs)*arx*(1.0 - (1.0 + frx*xdia(mgs,lr,1))**(-alp - 7.0) ) ! z-weighted
-          ELSE
+          else
             vtxbar(mgs,lr,3) = vtxbar(mgs,lr,1)
-          ENDIF
+          endif
           
 !          write(91,*) 'setvt: alp,vn,vm,vz = ',alp,vtxbar(mgs,lr,2), vtxbar(mgs,lr,1), vtxbar(mgs,lr,3),alpha(mgs,lr)
 
-        ELSEIF ( imurain == 3 ) THEN ! DSD of Volume
+        elseif ( imurain == 3 ) then ! DSD of Volume
         
-        IF ( lzr < 1 ) THEN ! not 3-moment rain
+        if ( lzr < 1 ) then ! not 3-moment rain
         rwdia = Min( xdia(mgs,lr,1), 8.0e-3 )
         
          vtxbar(mgs,lr,1) = rhovt(mgs)*6.0*pii*( 0.04771 + 3788.0*rwdia -  &
      &        1.105e6*rwdia**2 + 1.412e8*rwdia**3 - 6.527e9*rwdia**4)
         
-        IF ( infdo .ge. 1 ) THEN
-          IF (  rssflg >= 1 ) THEN
+        if ( infdo .ge. 1 ) then
+          if (  rssflg >= 1 ) then
          vtxbar(mgs,lr,2) = (0.09112 + 2714.0*rwdia - 4.872e5*rwdia**2 +  &
      &            4.495e7*rwdia**3 - 1.626e9*rwdia**4)*rhovt(mgs)
-          ELSE
+          else
             vtxbar(mgs,lr,2) = vtxbar(mgs,lr,1)
-          ENDIF
-        ENDIF
+          endif
+        endif
         
-        IF ( infdo .ge. 2 ) THEN ! Z-weighted fall speed
+        if ( infdo .ge. 2 ) then ! Z-weighted fall speed
         vtxbar(mgs,lr,3)  = rhovt(mgs)*(  &
      &       0.0911229 +                  &
      &  9246.494*(rwdia) -               &
      &  3.2839926e6*(rwdia**2) +          &
      &  4.944093e8*(rwdia**3) -          &
      &  2.631718e10*(rwdia**4) )
-        ENDIF
+        endif
         
-        ELSE ! 3-moment rain, gamma-volume
+        else ! 3-moment rain, gamma-volume
 
         vr = xv(mgs,lr)
         rnux = alpha(mgs,lr)
         
-        IF ( infdo .ge. 1 .and. rssflg == 1) THEN ! number-weighted; DTD: added size-sorting flag
+        if ( infdo .ge. 1 .and. rssflg == 1) then ! number-weighted; DTD: added size-sorting flag
         vtxbar(mgs,lr,2) = rhovt(mgs)*                             &
      &     (((1. + rnux)/vr)**(-1.333333)*                         &
      &    (0.0911229*((1. + rnux)/vr)**1.333333*Gamma_sp(1. + rnux) + &
@@ -6874,7 +6874,7 @@ END SUBROUTINE nssl_2mom_driver
      &       Gamma_sp(2. + rnux) -                                    &
      &      2.3303765697228556e9*Gamma_sp(7./3. + rnux)))/            &
      &  Gamma_sp(1. + rnux)
-        ENDIF
+        endif
 
 !  mass-weighted
        vtxbar(mgs,lr,1)  = rhovt(mgs)*                                                 &
@@ -6888,11 +6888,11 @@ END SUBROUTINE nssl_2mom_driver
      &     Gamma_sp(3.333333333333333 + rnux))/                                           &
      &  ((1 + rnux)**2.333333333333333*Gamma_sp(1 + rnux)) 
      
-        IF(infdo .ge. 1 .and. rssflg == 0) THEN ! No size-sorting, set N-weighted fall speed to mass-weighted
+        if(infdo .ge. 1 .and. rssflg == 0) then ! No size-sorting, set N-weighted fall speed to mass-weighted
           vtxbar(mgs,lr,2) = vtxbar(mgs,lr,1)
-        ENDIF     
+        endif     
       
-        IF ( infdo .ge. 2 .and. rssflg == 1) THEN ! Z-weighted fall speed
+        if ( infdo .ge. 2 .and. rssflg == 1) then ! Z-weighted fall speed
         vtxbar(mgs,lr,3)  =   rhovt(mgs)*                                          &
      &  ((1. + rnux)*(0.0911229*(1 + rnux)**1.3333333333333333*Gamma_sp(3. + rnux) +  &
      &      5430.313059683277*(1 + rnux)*vr**0.3333333333333333*                   &
@@ -6907,13 +6907,13 @@ END SUBROUTINE nssl_2mom_driver
 !         write(0,*) 'setvt: mgs,lzr,infdo = ',mgs,lzr,infdo
 !         write(0,*) 'vt1,2,3 = ',vtxbar(mgs,lr,1),vtxbar(mgs,lr,2),vtxbar(mgs,lr,3)
         
-        ELSEIF (infdo .ge. 2) THEN ! No size-sorting, set Z-weighted fall speed to mass-weighted
+        elseif (infdo .ge. 2) then ! No size-sorting, set Z-weighted fall speed to mass-weighted
           vtxbar(mgs,lr,3) = vtxbar(mgs,lr,1)
-        ENDIF
+        endif
         
         
-        ENDIF
-       ENDIF ! imurain
+        endif
+       endif ! imurain
 
 !        IF ( rwrad*mwfac .gt. 6.0e-4  ) THEN
 !          vtxbar(mgs,lr,1) = 20.1*Sqrt(100.*rwrad*mwfac)*rhovt(mgs)
@@ -6925,7 +6925,7 @@ END SUBROUTINE nssl_2mom_driver
 !        ELSE
 !          vtxbar(mgs,lr,2) = 80.0e2*rwrad*rhovt(mgs)
 !        ENDIF
-      ENDIF ! ipconc
+      endif ! ipconc
       else  ! qr < qrmin
       vtxbar(mgs,lr,1) = 0.0
       vtxbar(mgs,lr,2) = 0.0
@@ -6933,145 +6933,145 @@ END SUBROUTINE nssl_2mom_driver
       end do
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set rain vt'
       
-      ENDIF
+      endif
 !
 ! ################################################################
 !
 !  SNOW !Zrnic et al. (1993)
 !
-      IF ( ls .gt. 1 .and. ( ildo == 0 .or. ildo == ls ) ) THEN
+      if ( ls .gt. 1 .and. ( ildo == 0 .or. ildo == ls ) ) then
       do mgs = 1,ngscnt
       if ( qx(mgs,ls) .gt. qxmin(ls) ) then
-        IF ( ipconc .ge. 4 ) THEN
+        if ( ipconc .ge. 4 ) then
          if ( mixedphase .and. qsvtmod ) then
          else
-          IF ( isnowfall == 1 ) THEN
+          if ( isnowfall == 1 ) then
            ! original (Zrnic et al. 1993)
            vtxbar(mgs,ls,1) = 5.72462*rhovt(mgs)*(xv(mgs,ls))**(1./12.)
-          ELSEIF ( isnowfall == 2 ) THEN
+          elseif ( isnowfall == 2 ) then
           ! Ferrier:
-            IF ( isnowdens == 1 ) THEN
+            if ( isnowdens == 1 ) then
               vtxbar(mgs,ls,1) = 11.9495*rhovt(mgs)*(xv(mgs,ls))**(0.14)
-            ELSE
+            else
               vtxbar(mgs,ls,1) = 11.9495*rhovt(mgs)*(xv(mgs,ls)*xdn(mgs,ls)/100.)**(0.14) 
-            ENDIF
-          ELSEIF ( isnowfall == 3 ) THEN
+            endif
+          elseif ( isnowfall == 3 ) then
           ! Cox, mass distrib:
             vtxbar(mgs,ls,1) = 50.092*rhovt(mgs)*(xmas(mgs,ls))**(0.2635)
-          ENDIF
+          endif
           
-          IF(Abs(sssflg) >= 1) THEN
-            IF ( isnowfall == 1 ) THEN
+          if(Abs(sssflg) >= 1) then
+            if ( isnowfall == 1 ) then
               vtxbar(mgs,ls,2) = 4.04091*rhovt(mgs)*(xv(mgs,ls))**(1./12.)
-            ELSEIF ( isnowfall == 2 ) THEN
+            elseif ( isnowfall == 2 ) then
             ! Ferrier:
-              IF ( isnowdens == 1 ) THEN
+              if ( isnowdens == 1 ) then
                 vtxbar(mgs,ls,2) = 7.02909*rhovt(mgs)*(xv(mgs,ls))**(0.14)  ! bug fix 11/15/2015: was rewriting to mass fall speed vtxbar(mgs,ls,1)
-              ELSE
+              else
                 vtxbar(mgs,ls,2) = 7.02909*rhovt(mgs)*(xv(mgs,ls)*xdn(mgs,ls)/100.)**(0.14)  ! bug fix 11/15/2015: was rewriting to mass fall speed vtxbar(mgs,ls,1)
-              ENDIF
-            ELSEIF ( isnowfall == 3 ) THEN
+              endif
+            elseif ( isnowfall == 3 ) then
             ! Cox, mass distrib:
               vtxbar(mgs,ls,2) = 21.6147*rhovt(mgs)*(xmas(mgs,ls))**(0.2635)
-            ENDIF
-          ELSE
+            endif
+          else
             vtxbar(mgs,ls,2) = vtxbar(mgs,ls,1)
-          ENDIF
-           IF ( infdo  >= 2 ) THEN
-            IF ( isnowfall == 1 ) THEN
+          endif
+           if ( infdo  >= 2 ) then
+            if ( isnowfall == 1 ) then
              vtxbar(mgs,ls,3) = 6.12217*rhovt(mgs)*(xv(mgs,ls))**(1./12.) ! Zrnic et al 93
-            ELSEIF ( isnowfall == 2 ) THEN
+            elseif ( isnowfall == 2 ) then
              vtxbar(mgs,ls,3) = 13.3436*rhovt(mgs)*(xv(mgs,ls))**(0.14)   ! Ferrier 94
-            ELSEIF ( isnowfall == 3 ) THEN
+            elseif ( isnowfall == 3 ) then
             ! Cox, mass distrib:
               vtxbar(mgs,ls,3) = 61.0914*rhovt(mgs)*(xmas(mgs,ls))**(0.2635)
-            ENDIF
-           ENDIF
+            endif
+           endif
          
-         IF ( sssflg < 0 .and. temcg(mgs) > Abs(sssflg) ) THEN ! above a given temperature, effectively turn off size sorting
+         if ( sssflg < 0 .and. temcg(mgs) > Abs(sssflg) ) then ! above a given temperature, effectively turn off size sorting
             vtxbar(mgs,ls,2) = vtxbar(mgs,ls,1)
             vtxbar(mgs,ls,3) = vtxbar(mgs,ls,1)
-         ENDIF
+         endif
          
          endif
-        ELSE ! single-moment:
+        else ! single-moment:
          vtxbar(mgs,ls,1) = (cs*gf4ds/6.0)*(xdia(mgs,ls,1)**ds)*rhovt(mgs)
          vtxbar(mgs,ls,2) = vtxbar(mgs,ls,1)
-        ENDIF
+        endif
       else
       vtxbar(mgs,ls,1) = 0.0
       end if
 
-      IF ( snowfallfac /= 1.0 ) THEN
+      if ( snowfallfac /= 1.0 ) then
         vtxbar(mgs,ls,1) = snowfallfac*vtxbar(mgs,ls,1)
         vtxbar(mgs,ls,2) = snowfallfac*vtxbar(mgs,ls,2)
         vtxbar(mgs,ls,3) = snowfallfac*vtxbar(mgs,ls,3)
-      ENDIF
+      endif
 
 
       end do
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set snow vt'
       
-      ENDIF ! ls .gt. 1
+      endif ! ls .gt. 1
 !
 !
 ! ################################################################
 !
 !  GRAUPEL !Wisner et al. (1972)
 !
-      IF ( lh .gt. 1 .and. ( ildo == 0 .or. ildo == lh ) ) THEN
+      if ( lh .gt. 1 .and. ( ildo == 0 .or. ildo == lh ) ) then
       
       do mgs = 1,ngscnt
       vtxbar(mgs,lh,1) = 0.0
       if ( qx(mgs,lh) .gt. qxmin(lh) ) then
          cd = cdx(lh)
-        IF ( icdx .eq. 1 ) THEN
+        if ( icdx .eq. 1 ) then
          cd = cdx(lh)
-       ELSEIF ( icdx .eq. 2 ) THEN
+       elseif ( icdx .eq. 2 ) then
 !         cd = Max(0.6, Min(1.0, 0.6 + 0.4*(xdnmx(lh) - xdn(mgs,lh))/(xdnmx(lh)-xdnmn(lh)) ) )
 !         cd = Max(0.6, Min(1.0, 0.6 + 0.4*(900.0 - xdn(mgs,lh))/(900. - 300.) ) )
          cd = Max(0.45, Min(1.0, 0.45 + 0.35*(800.0 - Max( 500., Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 500.) ) )
 !         cd = Max(0.55, Min(1.0, 0.55 + 0.25*(800.0 - Max( 500., Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 500.) ) )
-       ELSEIF ( icdx .eq. 3 ) THEN
+       elseif ( icdx .eq. 3 ) then
 !         cd = Max(0.45, Min(1.0, 0.45 + 0.55*(800.0 - Max( 300., Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 300.) ) )
          cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hdnmn, Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 170.0) ) )
-       ELSEIF ( icdx .eq. 4 ) THEN
+       elseif ( icdx .eq. 4 ) then
          cd = Max(cdhmin, Min(cdhmax, cdhmin + (cdhmax-cdhmin)* &
      &        (cdhdnmax - Max( cdhdnmin, Min( cdhdnmax, xdn(mgs,lh) ) ) )/(cdhdnmax - cdhdnmin) ) )
-       ELSEIF ( icdx .eq. 5 ) THEN
+       elseif ( icdx .eq. 5 ) then
          cd = cdx(lh)*(xdn(mgs,lh)/rho_qh)**(2./3.)
-       ELSEIF ( icdx .eq. 6 ) THEN ! Milbrandt and Morrison (2013)
+       elseif ( icdx .eq. 6 ) then ! Milbrandt and Morrison (2013)
          indxr = Int( (xdn(mgs,lh)-50.)/100. ) + 1
          indxr = Min( ngdnmm, Max(1,indxr) )
          
          
          delrho = Max( 0.0, 0.01*(xdn(mgs,lh) - mmgraupvt(indxr,1)) )
-         IF ( indxr < ngdnmm ) THEN
+         if ( indxr < ngdnmm ) then
           
           axx(mgs,lh) = mmgraupvt(indxr,2) + delrho*(mmgraupvt(indxr+1,2) - mmgraupvt(indxr,2) )
           bxx(mgs,lh) = mmgraupvt(indxr,3) + delrho*(mmgraupvt(indxr+1,3) - mmgraupvt(indxr,3) )
 
           
-         ELSE
+         else
           axx(mgs,lh) = mmgraupvt(indxr,2)
           bxx(mgs,lh) = mmgraupvt(indxr,3)
-         ENDIF
+         endif
          
          aax = axx(mgs,lh)
          bbx = bxx(mgs,lh)
 
          cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hdnmn, Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 170.0) ) )
          
-       ELSEIF ( icdx <= 0 ) THEN ! 
+       elseif ( icdx <= 0 ) then ! 
          aax = ax(lh)
          bbx = bx(lh)
           cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hdnmn, Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 170.0) ) )
-       ELSE
+       else
          cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hdnmn, Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 170.0) ) )
-       ENDIF
+       endif
        
        cdxgs(mgs,lh) = cd
-      IF ( alpha(mgs,lh) .eq. 0.0 .and. icdx > 0 .and. icdx /= 6 ) THEN
+      if ( alpha(mgs,lh) .eq. 0.0 .and. icdx > 0 .and. icdx /= 6 ) then
 !      axx(mgs,lh) =  (gf4p5/6.0)*  &
 !     &  Sqrt( (xdn(mgs,lh)*4.0*gr) /  &
 !     &    (3.0*cd*rho0(mgs)) )
@@ -7081,8 +7081,8 @@ END SUBROUTINE nssl_2mom_driver
 !      vtxbar(mgs,lh,1) = (gf4p5/6.0)*  &
 !     &  Sqrt( (xdn(mgs,lh)*xdia(mgs,lh,1)*4.0*gr) /  &
 !     &    (3.0*cd*rho0(mgs)) )
-      ELSE
-        IF ( icdx /= 6 ) bbx = bx(lh)
+      else
+        if ( icdx /= 6 ) bbx = bx(lh)
         tmp = 4. + alpha(mgs,lh) + bbx
         i = Int(dgami*(tmp))
         del = tmp - dgam*i
@@ -7096,94 +7096,94 @@ END SUBROUTINE nssl_2mom_driver
 !        aax = Max( 1.0, Min(2.0, (xdn(mgs,lh)/400.) ) )
 !        vtxbar(mgs,lh,1) =  rhovt(mgs)*aax*ax(lh)*(xdia(mgs,lh,1)**bx(lh)*x)/y
         
-        IF ( icdx > 0 .and. icdx /= 6) THEN
+        if ( icdx > 0 .and. icdx /= 6) then
           aax = Sqrt(4.0*xdn(mgs,lh)*gr/(3.0*cd*rho00))
           vtxbar(mgs,lh,1) =  rhovt(mgs)*aax* Sqrt(xdia(mgs,lh,1)) * x/y
           axx(mgs,lh) = aax
           bxx(mgs,lh) = bbx
-        ELSEIF (icdx == 6 ) THEN
+        elseif (icdx == 6 ) then
           vtxbar(mgs,lh,1) =  rhovt(mgs)*aax* xdia(mgs,lh,1)**bbx * x/y
-        ELSE ! icdx < 0
+        else ! icdx < 0
           axx(mgs,lh) = ax(lh)
           bxx(mgs,lh) = bx(lh)
           vtxbar(mgs,lh,1) =  rhovt(mgs)*ax(lh)*(xdia(mgs,lh,1)**bx(lh)*x)/y          
-        ENDIF
+        endif
 
 !     &    Gamma_sp(4.0 + dnu(lh) + 0.6))/Gamma_sp(4. + dnu(lh))
-      ENDIF
+      endif
 
-      IF ( lwsm6 .and. ipconc == 0 ) THEN
+      if ( lwsm6 .and. ipconc == 0 ) then
 !         vtxbar(mgs,lh,1) = (330.*gf4ds/6.0)*(xdia(mgs,ls,1)**ds)*rhovt(mgs)
          vtxbar(mgs,lh,1) = (330.*gf4br/6.0)*(xdia(mgs,lh,1)**br)*rhovt(mgs)
-      ENDIF
+      endif
       
       end if
       end do
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set hail vt'
       
-      ENDIF ! lh .gt. 1
+      endif ! lh .gt. 1
 !
 !
 ! ################################################################
 !
 !  HAIL
 !
-      IF ( lhl .gt. 1 .and. ( ildo == 0 .or. ildo == lhl ) ) THEN
+      if ( lhl .gt. 1 .and. ( ildo == 0 .or. ildo == lhl ) ) then
       
       do mgs = 1,ngscnt
       vtxbar(mgs,lhl,1) = 0.0
       if ( qx(mgs,lhl) .gt. qxmin(lhl) ) then
 
-       IF ( icdxhl .eq. 1 ) THEN
+       if ( icdxhl .eq. 1 ) then
          cd = cdx(lhl)
-       ELSEIF ( icdxhl .eq. 3 ) THEN
+       elseif ( icdxhl .eq. 3 ) then
 !         cd = Max(0.45, Min(1.0, 0.45 + 0.55*(800.0 - Max( 300., Min( 800.0, xdn(mgs,lhl) ) ) )/(800. - 300.) ) )
          cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hldnmn, Min( 800.0, xdn(mgs,lhl) ) ) )/(800. - 170.0) ) )
-       ELSEIF ( icdxhl .eq. 4 ) THEN
+       elseif ( icdxhl .eq. 4 ) then
          cd = Max(cdhlmin, Min(cdhlmax, cdhlmin + (cdhlmax-cdhlmin)*  &
      &       (cdhldnmax - Max( cdhldnmin, Min( cdhldnmax, xdn(mgs,lhl) ) ) )/(cdhldnmax - cdhldnmin) ) )
-       ELSEIF ( icdxhl .eq. 5 ) THEN
+       elseif ( icdxhl .eq. 5 ) then
          cd = cdx(lh)*(xdn(mgs,lhl)/rho_qh)**(2./3.)
-       ELSEIF ( icdxhl .eq. 6 ) THEN ! Milbrandt and Morrison (2013)
+       elseif ( icdxhl .eq. 6 ) then ! Milbrandt and Morrison (2013)
          indxr = Int( (xdn(mgs,lhl)-50.)/100. ) + 1
          indxr = Min( ngdnmm, Max(1,indxr) )
          
          
          delrho = Max( 0.0, 0.01*(xdn(mgs,lhl) - mmgraupvt(indxr,1)) )
-         IF ( indxr < ngdnmm ) THEN
+         if ( indxr < ngdnmm ) then
           
           axx(mgs,lhl) = mmgraupvt(indxr,2) + delrho*(mmgraupvt(indxr+1,2) - mmgraupvt(indxr,2) )
           bxx(mgs,lhl) = mmgraupvt(indxr,3) + delrho*(mmgraupvt(indxr+1,3) - mmgraupvt(indxr,3) )
 
           
-         ELSE
+         else
           axx(mgs,lhl) = mmgraupvt(indxr,2)
           bxx(mgs,lhl) = mmgraupvt(indxr,3)
-         ENDIF
+         endif
          
          aax = axx(mgs,lhl)
          bbx = bxx(mgs,lhl)
 
          cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hldnmn, Min( 800.0, xdn(mgs,lhl) ) ) )/(800. - 170.0) ) )
          
-       ELSE
+       else
 !         cd = Max(0.6, Min(1.0, 0.6 + 0.4*(900.0 - xdn(mgs,lhl))/(900. - 300.) ) )
 !        cd = Max(0.5, Min(0.8, 0.5 + 0.3*(xdnmx(lhl) - xdn(mgs,lhl))/(xdnmx(lhl)-xdnmn(lhl)) ) )
 !         cd = Max(0.45, Min(0.6, 0.45 + 0.15*(800.0 - Max( 500., Min( 800.0, xdn(mgs,lhl) ) ) )/(800. - 500.) ) )
          cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hldnmn, Min( 800.0, xdn(mgs,lhl) ) ) )/(800. - 170.0) ) )
-       ENDIF
+       endif
 
        cdxgs(mgs,lhl) = cd
 
-      IF ( alpha(mgs,lhl) .eq. 0.0 .and. icdxhl > 0 .and. icdxhl /= 6) THEN
+      if ( alpha(mgs,lhl) .eq. 0.0 .and. icdxhl > 0 .and. icdxhl /= 6) then
 !      axx(mgs,lhl) =  (gf4p5/6.0)*  &
 !     &  Sqrt( (xdn(mgs,lhl)*4.0*gr) /  &
 !     &    (3.0*cd*rho0(mgs)) )
       axx(mgs,lhl) = Sqrt(4.0*xdn(mgs,lhl)*gr/(3.0*cd*rho00))
       bxx(mgs,lhl) = 0.5
       vtxbar(mgs,lhl,1) = (gf4p5/6.0)* rhovt(mgs)*axx(mgs,lhl) * Sqrt(xdia(mgs,lhl,1)) 
-      ELSE
-        IF ( icdxhl /= 6 ) bbx = bx(lhl)
+      else
+        if ( icdxhl /= 6 ) bbx = bx(lhl)
         tmp = 4. + alpha(mgs,lhl) + bbx
         i = Int(dgami*(tmp))
         del = tmp - dgam*i
@@ -7194,39 +7194,39 @@ END SUBROUTINE nssl_2mom_driver
         del = tmp - dgam*i
         y = gmoi(i) + (gmoi(i+1) - gmoi(i))*del*dgami
 
-        IF ( icdxhl > 0 .and. icdxhl /= 6) THEN
+        if ( icdxhl > 0 .and. icdxhl /= 6) then
           aax = Sqrt(4.0*xdn(mgs,lhl)*gr/(3.0*cd*rho00))
           vtxbar(mgs,lhl,1) =  rhovt(mgs)*aax* Sqrt(xdia(mgs,lhl,1)) * x/y
           axx(mgs,lhl) = aax
           bxx(mgs,lhl) = bbx
-        ELSEIF ( icdxhl == 6 ) THEN
+        elseif ( icdxhl == 6 ) then
           vtxbar(mgs,lhl,1) =  rhovt(mgs)*aax* (xdia(mgs,lhl,1))**bbx * x/y
-        ELSE
+        else
           axx(mgs,lhl) = ax(lhl)
           bxx(mgs,lhl) = bx(lhl)
          vtxbar(mgs,lhl,1) =  rhovt(mgs)*(ax(lhl)*xdia(mgs,lhl,1)**bx(lhl)*x)/y
-        ENDIF
+        endif
         
 !     &    Gamma_sp(4.0 + dnu(lh) + 0.6))/Gamma_sp(4. + dnu(lh))
-      ENDIF
+      endif
 
 
       end if
       end do
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set hail vt'
       
-      ENDIF ! lhl .gt. 1
+      endif ! lhl .gt. 1
 
 
-      IF ( infdo .ge. 1 ) THEN
+      if ( infdo .ge. 1 ) then
 
 !      DO il = lc,lhab
 !      IF ( il .ne. lr ) THEN
-        DO mgs = 1,ngscnt
-          IF ( ildo == 0 .or. ildo == lc ) THEN
+        do mgs = 1,ngscnt
+          if ( ildo == 0 .or. ildo == lc ) then
             vtxbar(mgs,lc,2) = vtxbar(mgs,lc,1)
-          ENDIF
-        IF ( li .gt. 1 ) THEN
+          endif
+        if ( li .gt. 1 ) then
 !          vtxbar(mgs,li,2) = rhovt(mgs)*49420.*1.25447*xdia(mgs,li,1)**(1.415) ! n-wgt (Ferrier 94)
 !          vtxbar(mgs,li,2) = vtxbar(mgs,li,1)
 
@@ -7237,80 +7237,80 @@ END SUBROUTINE nssl_2mom_driver
 !            y = rhovt(mgs)*49420.*1.25447*tmp**(1.415)
 !            write(6,*) 'Ice fall: ',vtxbar(mgs,li,1),x,y,tmp,xdia(mgs,li,1)
 !          ENDIF
-        ENDIF
+        endif
 !          vtxbar(mgs,ls,2) = vtxbar(mgs,ls,1)
-        ENDDO
+        enddo
 
-        IF ( lg .gt. lr ) THEN
+        if ( lg .gt. lr ) then
 
-        DO il = lg,lhab
-         IF ( ildo == 0 .or. ildo == il ) THEN
+        do il = lg,lhab
+         if ( ildo == 0 .or. ildo == il ) then
 
-            DO mgs = 1,ngscnt
-             IF ( qx(mgs,il) .gt. qxmin(il) ) THEN
-              IF ( (il .eq. lh .and. hssflg == 1) .or. ( lhl .gt. 1 .and. il .eq. lhl .and. hlssflg == 1) ) THEN ! DTD: added flag for size-sorting
+            do mgs = 1,ngscnt
+             if ( qx(mgs,il) .gt. qxmin(il) ) then
+              if ( (il .eq. lh .and. hssflg == 1) .or. ( lhl .gt. 1 .and. il .eq. lhl .and. hlssflg == 1) ) then ! DTD: added flag for size-sorting
               
               ! DTD: allow for setting of number-weighted and z-weighted fall speeds to the mass-weighted value,
               ! effectively turning off size-sorting
 
-              IF ( il .eq. lh ) THEN ! {
+              if ( il .eq. lh ) then ! {
              
-               IF ( icdx .eq. 1 ) THEN
+               if ( icdx .eq. 1 ) then
                  cd = cdx(lh)
-               ELSEIF ( icdx .eq. 2 ) THEN
+               elseif ( icdx .eq. 2 ) then
 !                 cd = Max(0.6, Min(1.0, 0.6 + 0.4*(xdnmx(lh) - xdn(mgs,lh))/(xdnmx(lh)-xdnmn(lh)) ) )
 !                 cd = Max(0.6, Min(1.0, 0.6 + 0.4*(900.0 - xdn(mgs,lh))/(900. - 300.) ) )
                  cd = Max(0.45, Min(1.0, 0.45 + 0.35*(800.0 - Max( 500., Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 500.) ) )
 !                 cd = Max(0.55, Min(1.0, 0.55 + 0.25*(800.0 - Max( 500., Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 500.) ) )
-               ELSEIF ( icdx .eq. 3 ) THEN
+               elseif ( icdx .eq. 3 ) then
 !                 cd = Max(0.45, Min(1.0, 0.45 + 0.55*(800.0 - Max( 170.0, Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 170.0) ) )
                  cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hdnmn, Min( 800.0, xdn(mgs,lh) ) ) )/(800. - 170.0) ) )
-               ELSEIF ( icdx .eq. 4 ) THEN
+               elseif ( icdx .eq. 4 ) then
                  cd = Max(cdhmin, Min(cdhmax, cdhmin + (cdhmax-cdhmin)* &
      &            (cdhdnmax - Max( cdhdnmin, Min( cdhdnmax, xdn(mgs,lh) ) ) )/(cdhdnmax - cdhdnmin) ) )
-               ELSEIF ( icdx .eq. 5 ) THEN
+               elseif ( icdx .eq. 5 ) then
                  cd = cdx(lh)*(xdn(mgs,lh)/rho_qh)**(2./3.)
-               ELSEIF ( icdx .eq. 6 ) THEN ! Milbrandt and Morrison (2013)
+               elseif ( icdx .eq. 6 ) then ! Milbrandt and Morrison (2013)
                   aax = axx(mgs,lh)
                   bbx = bxx(mgs,lh)
-               ELSEIF ( icdx <= 0 ) THEN ! 
+               elseif ( icdx <= 0 ) then ! 
                   aax = ax(lh)
                   bbx = bx(lh)
-               ENDIF
+               endif
                
-              ELSEIF ( lhl .gt. 1 .and. il .eq. lhl ) THEN
+              elseif ( lhl .gt. 1 .and. il .eq. lhl ) then
              
-               IF ( icdxhl .eq. 1 ) THEN
+               if ( icdxhl .eq. 1 ) then
                  cd = cdx(lhl)
-               ELSEIF ( icdxhl .eq. 3 ) THEN
+               elseif ( icdxhl .eq. 3 ) then
 !               cd = Max(0.45, Min(1.0, 0.45 + 0.55*(800.0 - Max( 300., Min( 800.0, xdn(mgs,lhl) ) ) )/(800. - 300.) ) )
                 cd = Max(0.45, Min(1.2, 0.45 + 0.55*(800.0 - Max( hldnmn, Min( 800.0, xdn(mgs,lhl) ) ) )/(800. - 170.0) ) )
-               ELSEIF ( icdxhl .eq. 4 ) THEN
+               elseif ( icdxhl .eq. 4 ) then
                 cd = Max(cdhlmin, Min(cdhlmax, cdhlmin + (cdhlmax-cdhlmin)*  &
      &               (cdhldnmax - Max( cdhldnmin, Min( cdhldnmax, xdn(mgs,lhl) ) ) )/(cdhldnmax - cdhldnmin) ) )
-               ELSEIF ( icdxhl == 5 ) THEN
+               elseif ( icdxhl == 5 ) then
 !                cd = Max(0.6, Min(1.0, 0.6 + 0.4*(900.0 - xdn(mgs,lhl))/(900. - 300.) ) )
 !                cd = Max(0.5, Min(0.8, 0.5 + 0.3*(xdnmx(lhl) - xdn(mgs,lhl))/(xdnmx(lhl)-xdnmn(lhl)) ) )
                  cd = Max(0.45, Min(0.6, 0.45 + 0.15*(800.0 - Max( 500., Min( 800.0, xdn(mgs,lhl) ) ) )/(800. - 500.) ) )
-               ELSEIF ( icdxhl .eq. 6 ) THEN ! Milbrandt and Morrison (2013)
+               elseif ( icdxhl .eq. 6 ) then ! Milbrandt and Morrison (2013)
                   aax = axx(mgs,lhl)
                   bbx = bxx(mgs,lhl)
-               ELSEIF ( icdxhl <= 0 ) THEN ! 
+               elseif ( icdxhl <= 0 ) then ! 
                   aax = ax(lhl)
                   bbx = bx(lhl)
-               ENDIF
+               endif
                
-              ENDIF ! }
+              endif ! }
 
-               IF ( alpha(mgs,il) .eq. 0. .and. infdo .lt. 2 .and.   &
-               ( ( il==lh .and. icdx > 0 .and. icdx /= 6) .or. ( il==lhl .and. icdxhl > 0 .and. icdxhl /= 6 ) ) ) THEN ! {
+               if ( alpha(mgs,il) .eq. 0. .and. infdo .lt. 2 .and.   &
+               ( ( il==lh .and. icdx > 0 .and. icdx /= 6) .or. ( il==lhl .and. icdxhl > 0 .and. icdxhl /= 6 ) ) ) then ! {
                  vtxbar(mgs,il,2) =   &
      &              Sqrt( (xdn(mgs,il)*xdia(mgs,il,1)*pi*gr) / &
      &                (3.0*cd*Max(0.05,rho0(mgs))) )
 
-               ELSE
-               IF ( il == lh  .and. icdx   /= 6 ) bbx = bx(il)
-               IF ( il == lhl .and. icdxhl /= 6 ) bbx = bx(il)
+               else
+               if ( il == lh  .and. icdx   /= 6 ) bbx = bx(il)
+               if ( il == lhl .and. icdxhl /= 6 ) bbx = bx(il)
                tmp = 1. + alpha(mgs,il) + bbx
                i = Int(dgami*(tmp))
                del = tmp - dgam*i
@@ -7321,33 +7321,33 @@ END SUBROUTINE nssl_2mom_driver
                del = tmp - dgam*i
                y = gmoi(i) + (gmoi(i+1) - gmoi(i))*del*dgami
 
-                 IF ( il .eq. lh  .or. il .eq. lhl) THEN ! {
-                   IF ( ( il==lh .and. icdx > 0 ) ) THEN
-                     IF ( icdx /= 6 ) THEN
+                 if ( il .eq. lh  .or. il .eq. lhl) then ! {
+                   if ( ( il==lh .and. icdx > 0 ) ) then
+                     if ( icdx /= 6 ) then
                       aax = Sqrt(4.0*xdn(mgs,il)*gr/(3.0*cd*rho00))
                       vtxbar(mgs,il,2) =  rhovt(mgs)*aax* xdia(mgs,il,1)**bx(il) * x/y
-                     ELSE !  (icdx == 6 ) THEN
+                     else !  (icdx == 6 ) then
                        vtxbar(mgs,il,2) =  rhovt(mgs)*aax* xdia(mgs,il,1)**bbx * x/y
-                     ENDIF
+                     endif
 
-                   ELSEIF ( ( il==lhl .and. icdxhl > 0 ) ) THEN
-                     IF ( icdxhl /= 6 ) THEN
+                   elseif ( ( il==lhl .and. icdxhl > 0 ) ) then
+                     if ( icdxhl /= 6 ) then
                        aax = Sqrt(4.0*xdn(mgs,il)*gr/(3.0*cd*rho00))
                        vtxbar(mgs,il,2) =  rhovt(mgs)*aax* xdia(mgs,il,1)**bx(il) * x/y
-                     ELSE ! ( icdxhl == 6 )
+                     else ! ( icdxhl == 6 )
                        vtxbar(mgs,il,2) =  rhovt(mgs)*aax* xdia(mgs,il,1)**bbx * x/y
-                     ENDIF
-                   ELSE ! get here if il==lh and icdx < 0 -- or -- il==lhl and icdxhl < 0
+                     endif
+                   else ! get here if il==lh and icdx < 0 -- or -- il==lhl and icdxhl < 0
                      aax = ax(il)
                      vtxbar(mgs,il,2) =  rhovt(mgs)*ax(il)*(xdia(mgs,il,1)**bx(il)*x)/y
-                   ENDIF
+                   endif
 !                  vtxbar(mgs,il,2) =  &
 !     &               rhovt(mgs)*(xdn(mgs,il)/400.)*(75.715*xdia(mgs,il,1)**0.6* &
 !     &               x)/y
 !                  vtxbar(mgs,il,2) =  &
 !     &               rhovt(mgs)*(xdn(mgs,il)/400.)*(ax(il)*xdia(mgs,il,1)**bx(il)* &
 !     &               x)/y
-                  IF ( infdo .ge. 2 ) THEN ! Z-weighted
+                  if ( infdo .ge. 2 ) then ! Z-weighted
 
                tmp = 7. + alpha(mgs,il) + bbx
                i = Int(dgami*(tmp))
@@ -7363,36 +7363,36 @@ END SUBROUTINE nssl_2mom_driver
      &                (aax*(xdia(mgs,il,1) )**bbx *  &
      &                 x)/y
 !     &                 Gamma(7.0 + alpha(mgs,il) + bbx)/Gamma(7. + alpha(mgs,il))
-          IF ( .not. (vtxbar(mgs,il,1) > -1. .and. vtxbar(mgs,il,1) < 200. ) .or. &
-               .not. (vtxbar(mgs,il,3) > -1. .and. vtxbar(mgs,il,3) < 200. ) ) THEN
+          if ( .not. (vtxbar(mgs,il,1) > -1. .and. vtxbar(mgs,il,1) < 200. ) .or. &
+               .not. (vtxbar(mgs,il,3) > -1. .and. vtxbar(mgs,il,3) < 200. ) ) then
            write(0,*) 'Setvtz: problem with vtxbar1/3: ',il,vtxbar(mgs,il,1),vtxbar(mgs,il,3),aax,bbx,x,y
            write(0,*) 'q, number, diam1,3(mm) = ', qx(mgs,il),cx(mgs,il),1000.*xdia(mgs,il,1),1000.*xdia(mgs,il,3)
            ! call commasmpi_abort()
-          ENDIF
+          endif
 !     &                (aax*(1.0/xdia(mgs,il,1) )**(- bx(il))*  &
 !     &                 Gamma_sp(7.0 + alpha(mgs,il) + bx(il)))/Gamma_sp(7. + alpha(mgs,il))
-                  ENDIF
+                  endif
 
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set hail vt3'
 
-                 ELSE ! hail
+                 else ! hail
                   vtxbar(mgs,il,2) =  &
      &               rhovt(mgs)*(ax(il)*xdia(mgs,il,1)**bx(il)* &
      &               x)/y
 
-                 IF ( infdo .ge. 2 ) THEN ! Z-weighted
+                 if ( infdo .ge. 2 ) then ! Z-weighted
                   vtxbar(mgs,il,3) = rhovt(mgs)*                 &
      &              (aax*(1.0/xdia(mgs,il,1) )**(- bbx)*  &
      &               Gamma_sp(7.0 + alpha(mgs,il) + bbx))/Gamma_sp(7. + alpha(mgs,il))
 !     &              (ax(il)*(1.0/xdia(mgs,il,1) )**(- bx(il))*  &
 !     &               Gamma_sp(7.0 + alpha(mgs,il) + bx(il)))/Gamma_sp(7. + alpha(mgs,il))
-                  ENDIF
+                  endif
 
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set hail vt4'
 
-                 ENDIF ! }
+                 endif ! }
 !     &             Gamma_sp(1.0 + dnu(il) + 0.6)/Gamma_sp(1. + dnu(il))
-               ENDIF ! }
+               endif ! }
 
 !              IF ( infdo .ge. 2 ) THEN ! Z-weighted
 !               vtxbar(mgs,il,3) = rhovt(mgs)*                 &
@@ -7403,10 +7403,10 @@ END SUBROUTINE nssl_2mom_driver
 !               IF ( lhl .gt. 1 .and. il .eq. lhl ) THEN
 !                write(0,*) 'setvt: ',qx(mgs,il),xdia(mgs,il,1),xdia(mgs,il,3),dnu(il),ax(il),bx(il)
 !               ENDIF
-             ELSEIF ( (il .eq. lh .and. hssflg == 0) .or. ( lhl .gt. 1 .and. il .eq. lhl .and. hlssflg == 0) ) THEN ! no size-sorting for graupel or hail
+             elseif ( (il .eq. lh .and. hssflg == 0) .or. ( lhl .gt. 1 .and. il .eq. lhl .and. hlssflg == 0) ) then ! no size-sorting for graupel or hail
               vtxbar(mgs,il,2) = vtxbar(mgs,il,1)
               vtxbar(mgs,il,3) = vtxbar(mgs,il,1)
-             ELSE ! not lh or lhl
+             else ! not lh or lhl
               vtxbar(mgs,il,2) = &
      &            Sqrt( (xdn(mgs,il)*xdia(mgs,il,1)*pi*gr) /  &
      &              (3.0*cdx(il)*Max(0.05,rho0(mgs))) )
@@ -7415,23 +7415,23 @@ END SUBROUTINE nssl_2mom_driver
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set graupel vt5'
 
 
-              ENDIF
-             ELSE ! qx < qxmin
+              endif
+             else ! qx < qxmin
               vtxbar(mgs,il,2) = 0.0
 
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set graupel vt6'
 
-             ENDIF
-           ENDDO ! mgs
+             endif
+           enddo ! mgs
 
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set graupel vt7'
 
-        ENDIF
-        ENDDO ! il
+        endif
+        enddo ! il
 
       if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: Set graupel vt8'
 
-        ENDIF ! lg .gt. 1 
+        endif ! lg .gt. 1 
         
 !      ENDIF
 !      ENDDO
@@ -7445,32 +7445,32 @@ END SUBROUTINE nssl_2mom_driver
 !        ENDIF
 !       ENDDO
 
-      ENDIF ! infdo .ge. 1 
+      endif ! infdo .ge. 1 
 
-        IF (  lh > 0 .and. graupelfallfac /= 1.0 ) THEN
-          DO mgs = 1,ngscnt
+        if (  lh > 0 .and. graupelfallfac /= 1.0 ) then
+          do mgs = 1,ngscnt
             vtxbar(mgs,lh,1) = graupelfallfac*vtxbar(mgs,lh,1)
             vtxbar(mgs,lh,2) = graupelfallfac*vtxbar(mgs,lh,2)
             vtxbar(mgs,lh,3) = graupelfallfac*vtxbar(mgs,lh,3)
             axx(mgs,lh) = graupelfallfac*axx(mgs,lh)
-          ENDDO
-        ENDIF
+          enddo
+        endif
 
-        IF ( lhl > 0 .and. hailfallfac /= 1.0 ) THEN
-          DO mgs = 1,ngscnt
+        if ( lhl > 0 .and. hailfallfac /= 1.0 ) then
+          do mgs = 1,ngscnt
             vtxbar(mgs,lhl,1) = hailfallfac*vtxbar(mgs,lhl,1)
             vtxbar(mgs,lhl,2) = hailfallfac*vtxbar(mgs,lhl,2)
             vtxbar(mgs,lhl,3) = hailfallfac*vtxbar(mgs,lhl,3)
             axx(mgs,lhl) = hailfallfac*axx(mgs,lhl)
-          ENDDO
-        ENDIF
+          enddo
+        endif
       
-      if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: END OF ROUTINE'
+      if ( ndebug1 .gt. 0 ) write(0,*) 'SETVTZ: end OF ROUTINE'
 
 !############ SETVTZ ############################
 
-      RETURN
-      END SUBROUTINE setvtz
+      return
+      end subroutine setvtz
 !--------------------------------------------------------------------------
 
 !
@@ -7623,7 +7623,7 @@ END SUBROUTINE nssl_2mom_driver
       logical :: debug_mpi = .false.
 
 
-      if (ndebugzf .gt. 0 ) write(0,*) "ZIEGFALL: ENTERED SUBROUTINE"
+      if (ndebugzf .gt. 0 ) write(0,*) "ZIEGFALL: ENTERED subroutine"
 
 ! #####################################################################
 ! BEGIN EXECUTABLE
@@ -7634,11 +7634,11 @@ END SUBROUTINE nssl_2mom_driver
 !
 
       ldoliq = .false.
-      IF ( ls .gt. 1 ) THEN
-      DO il = ls,lhab
+      if ( ls .gt. 1 ) then
+      do il = ls,lhab
         ldoliq = ldoliq .or. ( lliq(il) .gt. 1 )
-      ENDDO
-      ENDIF
+      enddo
+      endif
       
 !      poo = 1.0e+05
 !      cp608 = 0.608
@@ -7679,13 +7679,13 @@ END SUBROUTINE nssl_2mom_driver
 !      ngs = nz
       numgs = 1
 
-      IF ( ildo == 0 ) THEN
+      if ( ildo == 0 ) then
         l1 = lc
         l2 = lhab
-      ELSE
+      else
         l1 = ildo
         l2 = ildo
-      ENDIF
+      endif
 
 
       do inumgs = 1,numgs
@@ -7697,9 +7697,9 @@ END SUBROUTINE nssl_2mom_driver
         flag = .false.
 
         
-        DO il = l1,l2
+        do il = l1,l2
           flag =  flag .or. ( an(ix,jy,kz,il)  .gt. qxmin(il) ) 
-        ENDDO
+        enddo
 
         if ( flag ) then
 ! load temp quantities
@@ -7738,42 +7738,42 @@ END SUBROUTINE nssl_2mom_driver
       end do
 !
 ! only need fadvisc for 
-      IF ( lc .gt. 1 .and. (ildo == 0 .or. ildo == lc ) ) then
+      if ( lc .gt. 1 .and. (ildo == 0 .or. ildo == lc ) ) then
         do mgs = 1,ngscnt
          fadvisc(mgs) = advisc0*(416.16/(temg(mgs)+120.0))* &
      &   (temg(mgs)/296.0)**(1.5)
         end do
-      ENDIF
+      endif
 
-      IF ( ipconc .eq. 0 ) THEN
+      if ( ipconc .eq. 0 ) then
       do mgs = 1,ngscnt
       cnina(mgs) = t7(igs(mgs),jgs,kgs(mgs))
       end do
-      ENDIF
+      endif
 
 
-      IF ( ildo > 0 ) THEN
+      if ( ildo > 0 ) then
         vtxbar(:,ildo,:) = 0.0
-      ELSE
+      else
         vtxbar(:,:,:) = 0.0
-      ENDIF
+      endif
       
 !      do mgs = 1,ngscnt
 !        qx(mgs,lv) = max(an(igs(mgs),jy,kgs(mgs),lv), 0.0) 
 !      ENDDO
-      DO il = l1,l2
+      do il = l1,l2
       do mgs = 1,ngscnt
         qx(mgs,il) = max(an(igs(mgs),jy,kgs(mgs),il), 0.0) 
-      ENDDO
+      enddo
       end do
       
       cnostmp(:) = cno(ls)
-      IF ( ipconc < 1 .and. lwsm6 .and. (ildo == 0 .or. ildo == ls )) THEN
-        DO mgs = 1,ngscnt
+      if ( ipconc < 1 .and. lwsm6 .and. (ildo == 0 .or. ildo == ls )) then
+        do mgs = 1,ngscnt
           tmp = Min( 0.0, temcg(mgs) )
           cnostmp(mgs) = Min( 2.e8, 2.e6*exp(0.12*tmp) )
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
 
 !
@@ -7821,7 +7821,7 @@ END SUBROUTINE nssl_2mom_driver
 !        ENDIF
 
        end do
-      ENDIF
+      endif
 
       if ( ipconc .ge. 5  .and. lhl .gt. 1 .and. (ildo == 0 .or. ildo == lhl ) ) then
        do mgs = 1,ngscnt
@@ -7843,100 +7843,100 @@ END SUBROUTINE nssl_2mom_driver
         xdn(mgs,lr) = xdn0(lr)
 !        IF ( ls .gt. 1 .and. lvs .eq. 0 ) xdn(mgs,ls) = xdn0(ls)
 !        IF ( lh .gt. 1 .and. lvh .eq. 0 ) xdn(mgs,lh) = xdn0(lh)
-        IF ( li .gt. 1 )  xdn(mgs,li) = xdn0(li)
-        IF ( ls .gt. 1 )  xdn(mgs,ls) = xdn0(ls)
-        IF ( lh .gt. 1 )  xdn(mgs,lh) = xdn0(lh)
-        IF ( lhl .gt. 1 ) xdn(mgs,lhl) = xdn0(lhl)
+        if ( li .gt. 1 )  xdn(mgs,li) = xdn0(li)
+        if ( ls .gt. 1 )  xdn(mgs,ls) = xdn0(ls)
+        if ( lh .gt. 1 )  xdn(mgs,lh) = xdn0(lh)
+        if ( lhl .gt. 1 ) xdn(mgs,lhl) = xdn0(lhl)
       end do
 
 !
 ! Set mean particle volume
 !
-      IF ( ldovol .and. (ildo == 0 .or. ildo >= li ) ) THEN
+      if ( ldovol .and. (ildo == 0 .or. ildo >= li ) ) then
       
       vx(:,:) = 0.0
       
-       DO il = l1,l2
+       do il = l1,l2
         
-        IF ( lvol(il) .ge. 1 ) THEN
+        if ( lvol(il) .ge. 1 ) then
         
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
             vx(mgs,il) = Max(an(igs(mgs),jy,kgs(mgs),lvol(il)), 0.0)
-            IF ( vx(mgs,il) .gt. rho0(mgs)*qxmin(il)*1.e-3 .and. qx(mgs,il) .gt. qxmin(il) ) THEN
+            if ( vx(mgs,il) .gt. rho0(mgs)*qxmin(il)*1.e-3 .and. qx(mgs,il) .gt. qxmin(il) ) then
               xdn(mgs,il) = Min( xdnmx(il), Max( xdnmn(il), rho0(mgs)*qx(mgs,il)/vx(mgs,il) ) )
-            ENDIF
-          ENDDO
+            endif
+          enddo
           
-        ENDIF
+        endif
       
-       ENDDO
+       enddo
       
-      ENDIF
+      endif
 
-      DO il = lg,lhab
-      DO mgs = 1,ngscnt
+      do il = lg,lhab
+      do mgs = 1,ngscnt
         alpha(mgs,il) = dnu(il)
-      ENDDO
-      ENDDO
+      enddo
+      enddo
       
-      IF ( imurain == 1 ) THEN
+      if ( imurain == 1 ) then
         alpha(:,lr) = alphar
-      ELSEIF ( imurain == 3 ) THEN
+      elseif ( imurain == 3 ) then
         alpha(:,lr) = xnu(lr)
-      ENDIF
+      endif
 
 
-      IF ( ipconc == 5 .and. imydiagalpha > 0 ) THEN
-        DO mgs = 1,ngscnt
-          IF ( qx(mgs,lr) .gt. qxmin(lr) .and. cx(mgs,lr) > cxmin ) THEN
+      if ( ipconc == 5 .and. imydiagalpha > 0 ) then
+        do mgs = 1,ngscnt
+          if ( qx(mgs,lr) .gt. qxmin(lr) .and. cx(mgs,lr) > cxmin ) then
              xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*cx(mgs,lr))            ! 
              xdia(mgs,lr,3) = (xv(mgs,lr)*6.0*cwc1)**(1./3.) 
              alpha(mgs,lr) = Min(alphamax, c1r*tanh(c2r*(xdia(mgs,lr,3)*1000. - c3r)) + c4r)
-          ENDIF
-          IF ( qx(mgs,lh) .gt. qxmin(lh) .and. cx(mgs,lh) > cxmin ) THEN
+          endif
+          if ( qx(mgs,lh) .gt. qxmin(lh) .and. cx(mgs,lh) > cxmin ) then
              xv(mgs,lh) = rho0(mgs)*qx(mgs,lh)/(xdn(mgs,lh)*cx(mgs,lh))            ! 
              xdia(mgs,lh,3) = (xv(mgs,lh)*6.*piinv)**(1./3.) ! mwfac*xdia(mgs,lh,1) ! (xv(mgs,lh)*cwc0*6.0)**(1./3.)
              alpha(mgs,lh) = Min(alphamax, c1h*tanh(c2h*(xdia(mgs,lh,3)*1000. - c3h)) + c4h)
-          ENDIF
+          endif
 !        alpha(:,lr) = 0. ! 10.
 !        alpha(:,lh) = 0. ! 10.
-          IF ( lhl > 0 ) THEN
-          IF ( qx(mgs,lhl) .gt. qxmin(lhl) .and. cx(mgs,lhl) > cxmin ) THEN
+          if ( lhl > 0 ) then
+          if ( qx(mgs,lhl) .gt. qxmin(lhl) .and. cx(mgs,lhl) > cxmin ) then
              xv(mgs,lhl) = rho0(mgs)*qx(mgs,lhl)/(xdn(mgs,lhl)*cx(mgs,lhl))            ! 
              xdia(mgs,lhl,3) = (xv(mgs,lhl)*6.*piinv)**(1./3.)
-             IF ( xdia(mgs,lhl,3) < 0.008 ) THEN
+             if ( xdia(mgs,lhl,3) < 0.008 ) then
                alpha(mgs,lhl) = Min(alphamax, c1hl*tanh(c2hl*(xdia(mgs,lhl,3)*1000. - c3hl)) + c4hl)
-             ELSE
+             else
                alpha(mgs,lhl) = Min(alphamax, c5hl*xdia(mgs,lhl,3)*1000. + c6hl)
-             ENDIF
-          ENDIF
-          ENDIF
-        ENDDO
-      ENDIF
+             endif
+          endif
+          endif
+        enddo
+      endif
 
 
 !
 ! Set 6th moments
 !
-      IF ( ipconc .ge. 6 .or. lzr > 1) THEN
+      if ( ipconc .ge. 6 .or. lzr > 1) then
       
       zx(:,:) = 0.0
       
 !      DO il = lr,lhab
-       DO il = l1,l2
+       do il = l1,l2
         
-        IF ( lz(il) .ge. 1 ) THEN
+        if ( lz(il) .ge. 1 ) then
         
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
             zx(mgs,il) = Max(an(igs(mgs),jy,kgs(mgs),lz(il)), 0.0)
-          ENDDO
+          enddo
           
         
-        ENDIF
+        endif
       
-       ENDDO
+       enddo
       
-      ENDIF
+      endif
        
 
 
@@ -7945,13 +7945,13 @@ END SUBROUTINE nssl_2mom_driver
 !  Find shape parameter rain
 
 
-     IF ( lz(lr) > 1 .and. (ildo == 0 .or. ildo == lr ) .and. imurain == 3  ) THEN ! { RAIN SHAPE PARAM
+     if ( lz(lr) > 1 .and. (ildo == 0 .or. ildo == lr ) .and. imurain == 3  ) then ! { RAIN SHAPE PARAM
           il = lr
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
          
-         IF ( iresetmoments == 1 .or. iresetmoments == il  ) THEN
+         if ( iresetmoments == 1 .or. iresetmoments == il  ) then
 !         IF (  .false. .and. zx(mgs,lr) <= zxmin ) THEN
-         IF ( zx(mgs,lr) <= zxmin ) THEN
+         if ( zx(mgs,lr) <= zxmin ) then
            qx(mgs,lr) = 0.0
            cx(mgs,lr) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),lr)
@@ -7959,21 +7959,21 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),ln(lr)) = cx(mgs,lr)
 !         ELSEIF ( zx(mgs,lr) <= 0.0 .and. cx(mgs,lr) > 0.0 .and. qx(mgs,il) .gt. qxmin(il)) THEN
 !           write(91,*) 'ZF: overdepletion of Zr: z,c,q = ',zx(mgs,il),cx(mgs,il),qx(mgs,il)
-         ELSEIF ( cx(mgs,lr) <= cxmin ) THEN
+         elseif ( cx(mgs,lr) <= cxmin ) then
            zx(mgs,lr) = 0.0
            qx(mgs,lr) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),lr)
            an(igs(mgs),jgs,kgs(mgs),lr) = qx(mgs,lr)
            an(igs(mgs),jgs,kgs(mgs),lz(lr)) = zx(mgs,lr)
-         ENDIF
-         ENDIF
+         endif
+         endif
          
           
          
-         IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
+         if ( qx(mgs,lr) .gt. qxmin(lr) ) then
 
         xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*Max(1.0e-11,cx(mgs,lr)))
-        IF ( xv(mgs,lr) .gt. xvmx(lr) ) THEN
+        if ( xv(mgs,lr) .gt. xvmx(lr) ) then
 !          tmp = cx(mgs,lr)
 !          xv(mgs,lr) = xvmx(lr)
 !          cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmx(lr)*xdn(mgs,lr))
@@ -7983,13 +7983,13 @@ END SUBROUTINE nssl_2mom_driver
 !!             zx(mgs,lr) = zx(mgs,lr) + g1*(rho0(mgs)/(1000.))**2*( (qx(mgs,il)/tmp)**2 * (tmp-cx(mgs,il)) )
 !!             an(igs(mgs),jgs,kgs(mgs),lz(lr)) = zx(mgs,lr)
 !          ENDIF
-        ELSEIF ( xv(mgs,lr) .lt. xvmn(lr) ) THEN
+        elseif ( xv(mgs,lr) .lt. xvmn(lr) ) then
           xv(mgs,lr) = xvmn(lr)
           cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmn(lr)*xdn(mgs,lr))
           an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-        ENDIF
+        endif
 
-          IF ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) THEN
+          if ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) then
 !  have mass and reflectivity but no concentration, so set concentration, using default alpha
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             z   = zx(mgs,il)
@@ -7998,7 +7998,7 @@ END SUBROUTINE nssl_2mom_driver
             cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z*1000.*1000)
             an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > cxmin ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > cxmin ) then
 !  have mass and concentration but no reflectivity, so set reflectivity, using default alpha
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             chw = cx(mgs,il)
@@ -8014,15 +8014,15 @@ END SUBROUTINE nssl_2mom_driver
             zx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(xdn(mgs,lr)**2*chw)
             an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) then
 !   How did this happen?
          ! set values according to dBZ of -10, or Z = 0.1
 !              write(91,*) 'alpha = ',alpha(mgs,il)
-             IF ( qx(mgs,il) < 1.e-8 ) THEN
+             if ( qx(mgs,il) < 1.e-8 ) then
              qx(mgs,il) = 0.0
              an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
              an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
-             ELSE
+             else
 !              0.1 = 1.e18*0.224*an(ix,jy,kz,lzh)*(hwdn/rwdn)**2
                zx(mgs,il) = 1.e-19/0.224*(xdn0(lr)/xdn0(il))**2
                an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
@@ -8032,10 +8032,10 @@ END SUBROUTINE nssl_2mom_driver
                qr  = qx(mgs,il)
                cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z*1000.*1000)
                an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-             ENDIF
-          ENDIF
+             endif
+          endif
           
-          IF ( zx(mgs,lr) > 0.0 ) THEN
+          if ( zx(mgs,lr) > 0.0 ) then
             xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(1000.*Max(1.0e-9,cx(mgs,lr)))
             vr = xv(mgs,lr)
 !            z = 36.*(alpha(kz)+2.0)*a(ix,jy,kz,lnr)*vr**2/((alpha(kz)+1.0)*pi**2)
@@ -8047,27 +8047,27 @@ END SUBROUTINE nssl_2mom_driver
 !           rd = z*(pi/6.*1000.)**2/xv
 
 ! determine shape parameter alpha by iteration
-           IF ( z .gt. 0.0 ) THEN
+           if ( z .gt. 0.0 ) then
 !           alpha(mgs,lr) = 3.
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
-           DO i = 1,20
+           do i = 1,20
 !            IF ( 100.*Abs(alp - alpha(mgs,lr))/Abs(alpha(mgs,lr)) .lt. 1. ) EXIT
-            IF ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) EXIT
+            if ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) exit
              alpha(mgs,lr) = Max( rnumin, Min( rnumax, alp ) )
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
 !           write(0,*) 'i,alp = ',i,alp
              alp = Max( rnumin, Min( rnumax, alp ) )
-           ENDDO
+           enddo
 !           write(0,*) 'kz, alp, alpha(kz) = ',kz,alp,alpha(mgs,lr),qr*1000,z*1.e18,vr,nrx
 
 
 ! check for artificial breakup (rain larger than allowed max size)
-        IF (  xv(mgs,il) .gt. xvmx(il) ) THEN
+        if (  xv(mgs,il) .gt. xvmx(il) ) then
           tmp = cx(mgs,il)
           xv(mgs,il) = Min( xvmx(il), Max( xvmn(il),xv(mgs,il) ) )
           xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
           cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
-          IF ( tmp < cx(mgs,il) ) THEN ! breakup
+          if ( tmp < cx(mgs,il) ) then ! breakup
 
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             zx(mgs,il) = zx(mgs,il) + g1*(rho0(mgs)/xdn(mgs,il))**2*( (qx(mgs,il)/tmp)**2 * (tmp-cx(mgs,il)) )
@@ -8081,72 +8081,72 @@ END SUBROUTINE nssl_2mom_driver
 
 ! determine shape parameter alpha by iteration
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
-           DO i = 1,20
-            IF ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) EXIT
+           do i = 1,20
+            if ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) exit
              alpha(mgs,lr) = Max( rnumin, Min( rnumax, alp ) )
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
              alp = Max( rnumin, Min( rnumax, alp ) )
-           ENDDO
+           enddo
 
             
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !
 ! Check whether the shape parameter is at or less than the minimum, and if it is, reset the 
 ! concentration or reflectivity to match (prevents reflectivity from being out of balance with Q and N)
 !
 !           IF ( alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax ) THEN
-           IF ( .true. .and. (alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax) ) THEN
+           if ( .true. .and. (alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax) ) then
 
-            IF ( rescale_high_alpha .and. alp >= rnumax - 0.01  ) THEN  ! reset c at high alpha to prevent growth in Z
+            if ( rescale_high_alpha .and. alp >= rnumax - 0.01  ) then  ! reset c at high alpha to prevent growth in Z
               g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
               cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z*(1./(xdn(mgs,il)))**2
               an(igs(mgs),jy,kgs(mgs),ln(il)) = cx(mgs,il)
             
-            ELSEIF ( rescale_low_alphar .and. alp <= rnumin ) THEN
+            elseif ( rescale_low_alphar .and. alp <= rnumin ) then
 
              z  = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/((alpha(mgs,lr)+1.0)*pi**2)
              zx(mgs,il) = z
              an(igs(mgs),jy,kgs(mgs),lz(il)) = z
              
-             ENDIF
-           ENDIF
+             endif
+           endif
 
-           ENDIF
-          ENDIF
+           endif
+          endif
            
-          ELSE
+          else
           
            zx(mgs,lr) = 0.0
            cx(mgs,lr) = 0.0
            an(igs(mgs),jgs,kgs(mgs),ln(lr)) = cx(mgs,lr)
            an(igs(mgs),jgs,kgs(mgs),lz(lr)) = zx(mgs,lr)
           
-          ENDIF
+          endif
           
-          ENDDO
-        ENDIF ! }
+          enddo
+        endif ! }
         
 
-      IF ( ipconc .ge. 6 ) THEN
+      if ( ipconc .ge. 6 ) then
 
 !  Find shape parameters for graupel,hail
 
-        DO il = lr,lhab
+        do il = lr,lhab
         
-        IF ( lz(il) .gt. 1 .and. (ildo == 0 .or. ildo == il ) .and. ( .not. ( il == lr .and. imurain == 3 )) ) THEN
+        if ( lz(il) .gt. 1 .and. (ildo == 0 .or. ildo == il ) .and. ( .not. ( il == lr .and. imurain == 3 )) ) then
         
-        DO mgs = 1,ngscnt
+        do mgs = 1,ngscnt
 
-         IF ( iresetmoments == 1 .or. iresetmoments == il  .or. iresetmoments == -1 ) THEN
-         IF ( zx(mgs,il) <= zxmin ) THEN !  .and. qx(mgs,il) > 0.05e-3 ) THEN
+         if ( iresetmoments == 1 .or. iresetmoments == il  .or. iresetmoments == -1 ) then
+         if ( zx(mgs,il) <= zxmin ) then !  .and. qx(mgs,il) > 0.05e-3 ) then
            qx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-         ELSEIF ( iresetmoments == -1 .and. qx(mgs,il) < qxmin(il) ) THEN
+         elseif ( iresetmoments == -1 .and. qx(mgs,il) < qxmin(il) ) then
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
@@ -8156,17 +8156,17 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
          
-         ELSEIF ( cx(mgs,il) <= cxmin .and. iresetmoments /= -1 ) THEN !  .and. qx(mgs,il) > 0.05e-3  ) THEN
+         elseif ( cx(mgs,il) <= cxmin .and. iresetmoments /= -1 ) then !  .and. qx(mgs,il) > 0.05e-3  ) then
 !!            write(91,*) 'cx=0; qx,zx = ',1000.*qx(mgs,il),1.e18*zx(mgs,il)
            zx(mgs,il) = 0.0
            qx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-         ENDIF
-         ENDIF
+         endif
+         endif
 
-         IF (  zx(mgs,il) <= zxmin .and. cx(mgs,il) <= cxmin ) THEN
+         if (  zx(mgs,il) <= zxmin .and. cx(mgs,il) <= cxmin ) then
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
@@ -8174,14 +8174,14 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-         ENDIF
+         endif
 
-         IF ( qx(mgs,il) .gt. qxmin(il) ) THEN
+         if ( qx(mgs,il) .gt. qxmin(il) ) then
 
         xv(mgs,il) = rho0(mgs)*qx(mgs,il)/(xdn(mgs,il)*Max(1.0e-9,cx(mgs,il)))
         xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
 
-        IF ( xv(mgs,il) .lt. xvmn(il)  ) THEN
+        if ( xv(mgs,il) .lt. xvmn(il)  ) then
 !          tmp = cx(mgs,il)
           xv(mgs,il) = Min( xvmx(il), Max( xvmn(il),xv(mgs,il) ) )
           xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
@@ -8193,9 +8193,9 @@ END SUBROUTINE nssl_2mom_driver
 !             an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
 !            
 !          ENDIF
-        ENDIF
+        endif
 
-          IF ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) THEN
+          if ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) then
 !  have mass and reflectivity but no concentration, so set concentration, using default alpha
             g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
@@ -8204,7 +8204,7 @@ END SUBROUTINE nssl_2mom_driver
             cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(6*qr)**2/(z*(pi*xdn(mgs,il))**2)
             an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > cxmin ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > cxmin ) then
 !  have mass and concentration but no reflectivity, so set reflectivity, using default alpha
             g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
@@ -8213,17 +8213,17 @@ END SUBROUTINE nssl_2mom_driver
 !            zx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/chw
             zx(mgs,il) = Min(zxmin*1.1, g1*dn(igs(mgs),jy,kgs(mgs))**2*(6*qr)**2/(chw*(pi*xdn(mgs,il))**2) )
             an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) then
 !   How did this happen?
 !              write(91,*) 'ziegfall: something screwy with moments: il = ',il
 !              write(91,*) 'q,n,z = ', 1.e3*qx(mgs,il),cx(mgs,il),zx(mgs,il)
 !              write(91,*) 'alpha = ',alpha(mgs,il)
 
-             IF ( qx(mgs,il) < 1.e-8 ) THEN
+             if ( qx(mgs,il) < 1.e-8 ) then
              qx(mgs,il) = 0.0
              an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
              an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
-             ELSE
+             else
 !              write(0,*) 'alpha = ',alpha(mgs,il)
          ! set values according to dBZ of -10
 !              0.1 = 1.e18*0.224*an(ix,jy,kz,lzh)*(hwdn/rwdn)**2
@@ -8236,49 +8236,49 @@ END SUBROUTINE nssl_2mom_driver
                qr  = qx(mgs,il)
                cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(6*qr)**2/(z*(pi*xdn(mgs,il))**2)
                an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-            ENDIF
-          ENDIF
-         ENDIF
+            endif
+          endif
+         endif
 
-        IF ( qx(mgs,il) .gt. qxmin(il) .and. cx(mgs,il) .gt. cxmin ) THEN
+        if ( qx(mgs,il) .gt. qxmin(il) .and. cx(mgs,il) .gt. cxmin ) then
           chw = cx(mgs,il)
           qr  = qx(mgs,il)
           z   = zx(mgs,il)
 
-          IF ( zx(mgs,il) .gt. 0. ) THEN
+          if ( zx(mgs,il) .gt. 0. ) then
            
 !            rd = z*(pi/6.*1000.)**2*chw/(0.224*(dn(igs(mgs),jy,kgs(mgs))*qr)**2)
             rd = z*(pi/6.*xdn(mgs,il))**2*chw/((dn(igs(mgs),jy,kgs(mgs))*qr)**2)
 
            alp = (6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/ &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rd) - 1.0
-           DO i = 1,10
-            IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+           do i = 1,10
+            if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
              alp = (6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/ &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rd) - 1.0
 !           write(0,*) 'i,alp = ',i,alp
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
+           enddo
 
 
 
 ! check for artificial breakup (graupel/hail larger than allowed max size)
         
-        IF ( imaxdiaopt == 1 ) THEN
+        if ( imaxdiaopt == 1 ) then
           xvbarmax = xvmx(il) 
-        ELSEIF ( imaxdiaopt == 2 ) THEN ! test against maximum mass diameter
+        elseif ( imaxdiaopt == 2 ) then ! test against maximum mass diameter
           xvbarmax = xvmx(il) /((3. + alpha(mgs,il))**3/((3. + alpha(mgs,il))*(2. + alpha(mgs,il))*(1. + alpha(mgs,il))))
-        ELSEIF ( imaxdiaopt == 3 ) THEN ! test against mass-weighted diameter
+        elseif ( imaxdiaopt == 3 ) then ! test against mass-weighted diameter
           xvbarmax = xvmx(il) /((4. + alpha(mgs,il))**3/((3. + alpha(mgs,il))*(2. + alpha(mgs,il))*(1. + alpha(mgs,il))))
-        ENDIF
+        endif
         
-        IF (  xv(mgs,il) .gt. xvbarmax ) THEN
+        if (  xv(mgs,il) .gt. xvbarmax ) then
           tmp = cx(mgs,il)
           xv(mgs,il) = Min( xvbarmax, Max( xvmn(il),xv(mgs,il) ) )
           xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
           cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
-          IF ( tmp < cx(mgs,il) ) THEN ! breakup
+          if ( tmp < cx(mgs,il) ) then ! breakup
             g1 = 36.*(6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il))*pi**2)
              zx(mgs,il) = zx(mgs,il) + g1*(rho0(mgs)/xdn(mgs,il))**2*( (qx(mgs,il)/tmp)**2 * (tmp-cx(mgs,il)) )
@@ -8291,59 +8291,59 @@ END SUBROUTINE nssl_2mom_driver
             rd = z*(pi/6.*xdn(mgs,il))**2*chw/((rho0(mgs)*qr)**2)
             alp = (6.0+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/   &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rd) - 1.0
-           DO i = 1,10
-             IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+           do i = 1,10
+             if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
              alp = (6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/   &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rd) - 1.0
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
+           enddo
 
             
-          ENDIF
-        ENDIF
+          endif
+        endif
            
 !
 ! Check whether the shape parameter is at or less than the minimum, and if it is, reset the 
 ! concentration or reflectivity to match (prevents reflectivity from being out of balance with Q and N)
 !
-           IF ( (rescale_low_alpha .or. rescale_high_alpha ) .and.  &
-     &        ( alpha(mgs,il) <= alphamin .or. alp == alphamin .or. alp == alphamax ) ) THEN
+           if ( (rescale_low_alpha .or. rescale_high_alpha ) .and.  &
+     &        ( alpha(mgs,il) <= alphamin .or. alp == alphamin .or. alp == alphamax ) ) then
 
              g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
 
-            IF ( rescale_high_alpha .and. alp >= alphamax - 0.01  ) THEN  ! reset c at high alpha to prevent growth in Z
+            if ( rescale_high_alpha .and. alp >= alphamax - 0.01  ) then  ! reset c at high alpha to prevent growth in Z
               cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z*(6./(pi*xdn(mgs,il)))**2
               an(igs(mgs),jy,kgs(mgs),ln(il)) = cx(mgs,il)
             
-            ELSEIF ( rescale_low_alpha .and. alp <= alphamin .and. .not. (il == lh .and. icvhl2h > 0 ) ) THEN
+            elseif ( rescale_low_alpha .and. alp <= alphamin .and. .not. (il == lh .and. icvhl2h > 0 ) ) then
 
 !!             z1 = g1*dn(igs(mgs),jy,kgs(mgs))**2*( 0.224*qr)*qr/chw
              z1 = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/chw
              z  = z1*(6./(pi*xdn(mgs,il)))**2
              zx(mgs,il) = z
              an(igs(mgs),jy,kgs(mgs),lz(il)) = z
-            ENDIF
-           ENDIF
-          ELSE
-          ENDIF
-        ENDIF
-        ENDDO ! mgs
+            endif
+           endif
+          else
+          endif
+        endif
+        enddo ! mgs
         
-        ENDIF ! lz(il) .gt. 1
+        endif ! lz(il) .gt. 1
         
-        ENDDO ! il
+        enddo ! il
 
 !      CALL cld_cpu('Z-MOMENT-ZFAll')  
           
-      ENDIF
+      endif
 
-      IF ( lzhl > 1 ) THEN
-        IF ( lhl .gt. 1 ) THEN
+      if ( lzhl > 1 ) then
+        if ( lhl .gt. 1 ) then
         
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 
 
@@ -8365,14 +8365,14 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! put fall speeds into the x-z arrays
 !
-      DO il = l1,l2
+      do il = l1,l2
       do mgs = 1,ngscnt
        
        vtmax = 150.0
 
        
-       IF ( vtxbar(mgs,il,2) .gt. vtxbar(mgs,il,1)  .or. &
-     &      ( vtxbar(mgs,il,1) .gt. vtxbar(mgs,il,3) .and. vtxbar(mgs,il,3) > 0.0) ) THEN
+       if ( vtxbar(mgs,il,2) .gt. vtxbar(mgs,il,1)  .or. &
+     &      ( vtxbar(mgs,il,1) .gt. vtxbar(mgs,il,3) .and. vtxbar(mgs,il,3) > 0.0) ) then
           
           
 !          IF ( qx(mgs,il) > 1.e-4 .and.  &
@@ -8392,11 +8392,11 @@ END SUBROUTINE nssl_2mom_driver
           vtxbar(mgs,il,1) = Max( vtxbar(mgs,il,1), vtxbar(mgs,il,2) )
           vtxbar(mgs,il,3) = Max( vtxbar(mgs,il,3), vtxbar(mgs,il,1) )
           
-       ENDIF
+       endif
 
        
-       IF ( vtxbar(mgs,il,1) .gt. vtmax .or. vtxbar(mgs,il,2) .gt. vtmax .or. &
-     &      vtxbar(mgs,il,3) .gt. vtmax ) THEN
+       if ( vtxbar(mgs,il,1) .gt. vtmax .or. vtxbar(mgs,il,2) .gt. vtmax .or. &
+     &      vtxbar(mgs,il,3) .gt. vtmax ) then
        
 !        IF ( ndebugzf >= 0 .and.  1.e3*qx(mgs,il) > 0.1 ) THEN
 !          write(0,*) 'infdo = ',infdo
@@ -8415,21 +8415,21 @@ END SUBROUTINE nssl_2mom_driver
         vtxbar(mgs,il,3) = Min(vtmax,vtxbar(mgs,il,3) )
         
 !        call commasmpi_abort()
-       ENDIF
+       endif
 
 
        xvt(kgs(mgs),igs(mgs),1,il) = vtxbar(mgs,il,1)
        xvt(kgs(mgs),igs(mgs),2,il) = vtxbar(mgs,il,2)
-       IF ( infdo .ge. 2 ) THEN
+       if ( infdo .ge. 2 ) then
        xvt(kgs(mgs),igs(mgs),3,il) = vtxbar(mgs,il,3)
-       ELSE
+       else
        xvt(kgs(mgs),igs(mgs),3,il) = 0.0
-       ENDIF
+       endif
 
 !       xvt(kgs(mgs),igs(mgs),2,il) = xvt(kgs(mgs),igs(mgs),1,il)
 
       enddo
-      ENDDO
+      enddo
 
 
       if (ndebugzf .gt. 0 ) write(0,*)  'ZIEGFALL: COPIED FALL SPEEDS'
@@ -8459,11 +8459,11 @@ END SUBROUTINE nssl_2mom_driver
 !      ENDDO ! kz
 
 
-      if (ndebugzf .gt. 0 ) write(0,*) "ZIEGFALL: EXITING SUBROUTINE"
+      if (ndebugzf .gt. 0 ) write(0,*) "ZIEGFALL: EXITING subroutine"
 
 
-      RETURN
-      END subroutine ziegfall1d
+      return
+      end subroutine ziegfall1d
 
 ! #####################################################################
 ! #####################################################################
@@ -8666,7 +8666,7 @@ END SUBROUTINE nssl_2mom_driver
       i = 1
 
 
-       IF ( microp(1:4) .eq. 'ZIEG' ) THEN !  na .ge. 14 .and. ipconc .ge. 3 ) THEN 
+       if ( microp(1:4) .eq. 'ZIEG' ) then !  na .ge. 14 .and. ipconc .ge. 3 ) then 
 
 !        write(0,*)  'Set reflectivity for ZIEG'
          izieg = 1
@@ -8680,12 +8680,12 @@ END SUBROUTINE nssl_2mom_driver
          qrmin = qxmin(lr)
          qsmin = qxmin(ls)
          qhmin = qxmin(lh)
-         IF ( lhl .gt. 1 ) THEN
+         if ( lhl .gt. 1 ) then
             cnohl  = cno(lhl)
             qhlmin = qxmin(lhl)
-         ENDIF
+         endif
 
-       ELSEIF ( microp(1:3) .eq. 'ZVD' ) THEN !  na .ge. 14 .and. ipconc .ge. 3 ) THEN 
+       elseif ( microp(1:3) .eq. 'ZVD' ) then !  na .ge. 14 .and. ipconc .ge. 3 ) then 
 
          izieg = 1
          
@@ -8698,14 +8698,14 @@ END SUBROUTINE nssl_2mom_driver
          qrmin = qxmin(lr)
          qsmin = qxmin(ls)
          qhmin = qxmin(lh)
-         IF ( lhl .gt. 1 ) THEN
+         if ( lhl .gt. 1 ) then
             cnohl  = cno(lhl)
             qhlmin = qxmin(lhl)
-         ENDIF
+         endif
 !         write(*,*) 'radardbz: ',db(1,1,1),temk(1,1,1),an(1,1,1,lr),an(1,1,1,ls),an(1,1,1,lh)
 
 
-        ENDIF
+        endif
 
 
 !      cdx(lr) = 0.60
@@ -8892,11 +8892,11 @@ END SUBROUTINE nssl_2mom_driver
 
 !      DO kz = 1,Min(nzdbz,nz-1)
 
-      DO jy=1,1
+      do jy=1,1
 
-        DO kz = 1,ke_diag ! nz
+        do kz = 1,ke_diag ! nz
          
-          DO ix=1,nx
+          do ix=1,nx
             dbz(ix,jy,kz) = 0.0
                       
           vzsnow = 0.0
@@ -8915,25 +8915,25 @@ END SUBROUTINE nssl_2mom_driver
            
            dtmp(ix,kz) = 0.0
            gtmp(ix,kz) = 0.0
-           IF ( an(ix,jy,kz,lr) .ge. qrmin ) THEN
-             IF ( ipconc .le. 2 ) THEN
+           if ( an(ix,jy,kz,lr) .ge. qrmin ) then
+             if ( ipconc .le. 2 ) then
                gtmp(ix,kz) = dadr*an(ix,jy,kz,lr)**(0.25)
                dtmp(ix,kz) = zrc*gtmp(ix,kz)**7
-             ELSEIF ( lzr .gt. 1 ) THEN
+             elseif ( lzr .gt. 1 ) then
                dtmp(ix,kz) = 1e18*an(ix,jy,kz,lzr)
-             ELSEIF ( an(ix,jy,kz,lnr) .gt. 1.e-3 ) THEN
-               IF ( imurain == 3 ) THEN
+             elseif ( an(ix,jy,kz,lnr) .gt. 1.e-3 ) then
+               if ( imurain == 3 ) then
                  vr = db(ix,jy,kz)*an(ix,jy,kz,lr)/(1000.*an(ix,jy,kz,lnr))
                  dtmp(ix,kz) = 3.6e18*(rnu+2.)*an(ix,jy,kz,lnr)*vr**2/(rnu+1.)
-               ELSE ! imurain == 1
+               else ! imurain == 1
                 g1 = (6.0 + alphar)*(5.0 + alphar)*(4.0 + alphar)/((3.0 + alphar)*(2.0 + alphar)*(1.0 + alphar))
                 zx = g1*(db(ix,jy,kz)*an(ix,jy,kz,lr))**2/an(ix,jy,kz,lnr)
                 ze =1.e18*zx*(6./(pi*1000.))**2 ! note: using 1000. here for water density
                 dtmp(ix,kz) = ze
-               ENDIF
-             ENDIF
+               endif
+             endif
              dtmpr = dtmp(ix,kz)
-           ENDIF
+           endif
            
 !-----------------------------------------------------------------------
 ! Compute snow and graupel reflectivity
@@ -8941,7 +8941,7 @@ END SUBROUTINE nssl_2mom_driver
 ! Lou modified to look at parcel temperature rather than base state
 !-----------------------------------------------------------------------
 
-          IF( lhab .gt. lr ) THEN
+          if( lhab .gt. lr ) then
 
 !    qs2d   = reform(data[*,*,k,10],[nx*ny])
 !    qh2d   = reform(data[*,*,k,11],[nx*ny])
@@ -8987,32 +8987,32 @@ END SUBROUTINE nssl_2mom_driver
 !        xcnos = an(ix,jy,kz,lns)/swdia
 !        ENDIF
 
-        IF ( ls .gt. 1 ) THEN ! {
+        if ( ls .gt. 1 ) then ! {
         
-        IF ( lvs .gt. 1 ) THEN
-          IF ( an(ix,jy,kz,lvs) .gt. 0.0 ) THEN
+        if ( lvs .gt. 1 ) then
+          if ( an(ix,jy,kz,lvs) .gt. 0.0 ) then
             swdn = db(ix,jy,kz)*an(ix,jy,kz,ls)/an(ix,jy,kz,lvs)
             swdn = Min( 300., Max( 100., swdn ) )
-          ELSE 
+          else 
             swdn = swdn0
-          ENDIF
+          endif
         
-        ENDIF 
+        endif 
         
-        IF ( ipconc .ge. 5 ) THEN ! {
+        if ( ipconc .ge. 5 ) then ! {
 
         xvs = db(ix,jy,kz)*an(ix,jy,kz,ls)/  &
      &      (swdn*Max(1.0e-3,an(ix,jy,kz,lns)))
-        IF ( xvs .lt. xvsmn .or. xvs .gt. xvsmx ) THEN
+        if ( xvs .lt. xvsmn .or. xvs .gt. xvsmx ) then
           xvs = Min( xvsmx, Max( xvsmn,xvs ) )
           csw = db(ix,jy,kz)*an(ix,jy,kz,ls)/(xvs*swdn)
-        ENDIF
+        endif
 
          swdia = (xvs*cwc0)**(1./3.)
          xcnos = an(ix,jy,kz,ls)*db(ix,jy,kz)/(xvs*swdn*swdia)
          
-         ENDIF ! }
-         ENDIF  ! }
+         endif ! }
+         endif  ! }
 
 !        IF ( an(ix,jy,kz,lnh) .lt. 0.1 ) THEN
 !         hwdia = (xvrmn*cwc0)**(1./3.)
@@ -9026,222 +9026,222 @@ END SUBROUTINE nssl_2mom_driver
 !         xcnoh = an(ix,jy,kz,lnh)/hwdia
 !        ENDIF
 
-        IF ( lh .gt. 1 ) THEN ! {
+        if ( lh .gt. 1 ) then ! {
 
-        IF ( lvh .gt. 1 ) THEN
-          IF ( an(ix,jy,kz,lvh) .gt. 0.0 ) THEN
+        if ( lvh .gt. 1 ) then
+          if ( an(ix,jy,kz,lvh) .gt. 0.0 ) then
             hwdn = db(ix,jy,kz)*an(ix,jy,kz,lh)/an(ix,jy,kz,lvh)
             hwdn = Min( 900., Max( hdnmn, hwdn ) )
-          ELSE 
+          else 
             hwdn = 500. ! hwdn1t
-          ENDIF
-        ELSE
+          endif
+        else
           hwdn = hwdn1t
-        ENDIF 
+        endif 
         
-        IF ( ipconc .ge. 5 ) THEN ! {
+        if ( ipconc .ge. 5 ) then ! {
 
         xvh = db(ix,jy,kz)*an(ix,jy,kz,lh)/       &
      &      (hwdn*Max(1.0e-3,an(ix,jy,kz,lnh)))
-        IF ( xvh .lt. xvhmn .or. xvh .gt. xvhmx ) THEN
+        if ( xvh .lt. xvhmn .or. xvh .gt. xvhmx ) then
           xvh = Min( xvhmx, Max( xvhmn,xvh ) )
           chw = db(ix,jy,kz)*an(ix,jy,kz,lh)/(xvh*hwdn)
-        ENDIF
+        endif
 
          hwdia = (xvh*cwc0)**(1./3.)
          xcnoh = an(ix,jy,kz,lh)*db(ix,jy,kz)/(xvh*hwdn*hwdia)
          
-        ENDIF ! } ipconc .ge. 5
+        endif ! } ipconc .ge. 5
  
-        ENDIF ! }
+        endif ! }
 
         dadh = 0.0
         dadhl = 0.0
         dads = 0.0
-        IF ( xcnoh .gt. 0.0 ) THEN 
+        if ( xcnoh .gt. 0.0 ) then 
           dadh = ( db(ix,jy,kz) /(pi*hwdn*xcnoh) )**(.25)
           zhdryc = 0.224*cr2*(db(ix,jy,kz)/rwdn)**2/xcnoh ! dielf_h*cr1*xcnoh          ! SV - equiv formula as before but
                                         ! ratio of densities included in
                                         ! dielf_h rather than here following
                                         ! Battan.
-        ELSE
+        else
           dadh = 0.0
           zhdryc = 0.0
-        ENDIF
+        endif
         
-        IF ( xcnos .gt. 0.0 ) THEN
+        if ( xcnos .gt. 0.0 ) then
           dads = ( db(ix,jy,kz) /(pi*swdn*xcnos) )**(.25)
           zsdryc = 0.224*cr2*(db(ix,jy,kz)/rwdn)**2/xcnos ! dielf_sn*cr1*xcnos         ! SV - similar change as above
-        ELSE
+        else
           dads = 0.0
           zsdryc = 0.0
-        ENDIF
+        endif
         zhwetc = zhdryc ! cr1*xcnoh      !Hail/graupel version with .95 power bug removed
         zswetc = zsdryc ! cr1*xcnos
 !           
 ! snow contribution
 !
-          IF ( ls .gt. 1 ) THEN
+          if ( ls .gt. 1 ) then
           
           gtmp(ix,kz) = 0.0 
           qxw = 0.0 
           qxw1 = 0.0
           dtmps = 0.0
-           IF ( an(ix,jy,kz,ls) .ge. qsmin ) THEN !{
-            IF ( ipconc .ge. 4 ) THEN  ! (Ferrier 94) !{
+           if ( an(ix,jy,kz,ls) .ge. qsmin ) then !{
+            if ( ipconc .ge. 4 ) then  ! (Ferrier 94) !{
 
-             if (lsw .gt. 1) THEN 
+             if (lsw .gt. 1) then 
                qxw = an(ix,jy,kz,lsw)
                qxw1 = 0.0
-             ELSEIF ( ( iusewetsnow == 1 .or. iusewetsnow == 3) .and. temk(ix,jy,kz) .gt. tfr+1. & 
-     &                  .and. an(ix,jy,kz,ls) > an(ix,jy,kz,lr) .and. an(ix,jy,kz,lr) > qsmin) THEN
+             elseif ( ( iusewetsnow == 1 .or. iusewetsnow == 3) .and. temk(ix,jy,kz) .gt. tfr+1. & 
+     &                  .and. an(ix,jy,kz,ls) > an(ix,jy,kz,lr) .and. an(ix,jy,kz,lr) > qsmin) then
                qxw = Min(0.5*an(ix,jy,kz,ls), an(ix,jy,kz,lr))
                qxw1 = qxw
-             ENDIF
+             endif
 
              vr = xvs ! db(ix,jy,kz)*an(ix,jy,kz,lr)/(1000.*an(ix,jy,kz,lnr))
 !             gtmp(ix,kz) = 3.6e18*(0.243*rhos**2/0.93)*(snu+2.)*an(ix,jy,kz,lns)*vr**2/(snu+1.)
              
              ksq = 0.189 ! Smith (1984, JAMC) for equiv. ice sphere
-             IF ( an(ix,jy,kz,lns) .gt. 1.e-7 ) THEN
+             if ( an(ix,jy,kz,lns) .gt. 1.e-7 ) then
      !          IF ( .true. ) THEN
-               IF ( qxw > qsmin .or. iusewetsnow >= 2 ) THEN ! old version
+               if ( qxw > qsmin .or. iusewetsnow >= 2 ) then ! old version
 !                gtmp(ix,kz) = 3.6e18*(snu+2.)*( 0.224*an(ix,jy,kz,ls) + 0.776*qxw)*an(ix,jy,kz,ls)/ &
 !     &              (an(ix,jy,kz,lns)*(snu+1.)*rwdn**2)*db(ix,jy,kz)**2
                 gtmp(ix,kz) = 3.6e18*(snu+2.)*( 0.224*(an(ix,jy,kz,ls)+qxw1) + 0.776*qxw)*(an(ix,jy,kz,ls)+qxw1)/ &
      &              (an(ix,jy,kz,lns)*(snu+1.)*rwdn**2)*db(ix,jy,kz)**2
 
-               ELSE ! new form using a mass relationship m = p d^2 (instead of d^3 -- Cox 1988 QJRMS) so that density depends on size
+               else ! new form using a mass relationship m = p d^2 (instead of d^3 -- Cox 1988 QJRMS) so that density depends on size
                     ! p = 0.106214 for m = p v^(2/3)
                  dnsnow = 0.0346159*sqrt(an(ix,jy,kz,lns)/(an(ix,jy,kz,ls)*db(ix,jy,kz)) )
-                 IF ( .true. .or. dnsnow < 900. ) THEN
+                 if ( .true. .or. dnsnow < 900. ) then
                   gtmp(ix,kz) = 1.e18*323.3226* 0.106214**2*(ksq*an(ix,jy,kz,ls) + &
      &             (1.-ksq)*qxw)*an(ix,jy,kz,ls)*db(ix,jy,kz)**2*gsnow73/         &
      &                   (an(ix,jy,kz,lns)*(917.)**2* gsnow1*(1.0+snu)**(4./3.))
-                 ELSE ! otherwise small enough to assume ice spheres?
+                 else ! otherwise small enough to assume ice spheres?
                   gtmp(ix,kz) = (36./pi**2) * 1.e18*(snu+2.)*( 0.224*(an(ix,jy,kz,ls)+qxw1) + 0.776*qxw)*(an(ix,jy,kz,ls)+qxw1)/ &
      &              (an(ix,jy,kz,lns)*(snu+1.)*rwdn**2)*db(ix,jy,kz)**2
-                 ENDIF
+                 endif
 
-               ENDIF
+               endif
              
-             ENDIF
+             endif
              
 !             tmp = Min(1.0,1.e3*(an(ix,jy,kz,ls))*db(ix,jy,kz))
 !             gtmp(ix,kz) = Max( 1.0*gtmp(ix,kz), 750.0*(tmp)**1.98)
              dtmps = gtmp(ix,kz)
              dtmp(ix,kz) = dtmp(ix,kz) + gtmp(ix,kz)
-            ELSE ! }{ single-moment snow:
+            else ! }{ single-moment snow:
              gtmp(ix,kz) = dads*an(ix,jy,kz,ls)**(0.25)
              
-             IF ( gtmp(ix,kz) .gt. 0.0 ) THEN !{
+             if ( gtmp(ix,kz) .gt. 0.0 ) then !{
              dtmps = zsdryc*an(ix,jy,kz,ls)**2/gtmp(ix,kz)
-             IF ( temk(ix,jy,kz) .lt. tfr ) THEN
+             if ( temk(ix,jy,kz) .lt. tfr ) then
                dtmp(ix,kz) = dtmp(ix,kz) +          &
      &                   zsdryc*an(ix,jy,kz,ls)**2/gtmp(ix,kz)
-             ELSE
+             else
                dtmp(ix,kz) = dtmp(ix,kz) +          &
      &                  zswetc*an(ix,jy,kz,ls)**2/gtmp(ix,kz)
-             ENDIF
-             ENDIF !}
-            ENDIF !}
+             endif
+             endif !}
+            endif !}
            
-           ENDIF !}
+           endif !}
            
-           ENDIF
+           endif
 
 
 !
 ! ice crystal contribution (Heymsfield, 1977, JAS)
 !
-         IF ( li .gt. 1 .and. idbzci .ne. 0 ) THEN
+         if ( li .gt. 1 .and. idbzci .ne. 0 ) then
           
-           IF ( idbzci == 1 .and. lni > 0 ) THEN
+           if ( idbzci == 1 .and. lni > 0 ) then
           ! assume spherical ice with density of 900 for dbz calc
-            IF ( an(ix,jy,kz,li) > qxmin(li) .and. an(ix,jy,kz,lni) > 1.0 ) THEN
+            if ( an(ix,jy,kz,li) > qxmin(li) .and. an(ix,jy,kz,lni) > 1.0 ) then
                  vr = db(ix,jy,kz)*an(ix,jy,kz,li)/(900.*an(ix,jy,kz,lni))
                  dtmp(ix,kz) = dtmp(ix,kz) +  &
      &                 0.224*3.6e18*(cinu+2.)*an(ix,jy,kz,lni)*vr**2/(cinu+1.)*(900./1000.)**2
-            ENDIF
+            endif
 
-          ELSEIF ( idbzci == 2 ) THEN
+          elseif ( idbzci == 2 ) then
 !
 ! ice crystal contribution (Heymsfield, 1977, JAS)
 !
          gtmp(ix,kz) = 0.0 
-           IF ( an(ix,jy,kz,li) .ge. 0.1e-3 ) THEN
+           if ( an(ix,jy,kz,li) .ge. 0.1e-3 ) then
              gtmp(ix,kz) = Min(1.0,1.e3*(an(ix,jy,kz,li))*db(ix,jy,kz))
              dtmp(ix,kz) = dtmp(ix,kz) + 750.0*(gtmp(ix,kz))**1.98
-           ENDIF
+           endif
            
-          ENDIF
+          endif
         
-        ENDIF
+        endif
           
 !           
 ! graupel/hail contribution
 !
-         IF ( lh .gt. 1 ) THEN ! {
+         if ( lh .gt. 1 ) then ! {
            gtmp(ix,kz) = 0.0 
            dtmph = 0.0
            qxw = 0.0
 
-          IF ( izieg .ge. 1 .and. ipconc .ge. 5 ) THEN
+          if ( izieg .ge. 1 .and. ipconc .ge. 5 ) then
 
            ltest = .false.
-           IF ( lzh > 1 ) THEN
-             IF ( an(ix,jy,kz,lzh) > 0.0 .and. an(ix,jy,kz,lh) > qhmin .and. &
+           if ( lzh > 1 ) then
+             if ( an(ix,jy,kz,lzh) > 0.0 .and. an(ix,jy,kz,lh) > qhmin .and. &
                   an(ix,jy,kz,lnh) >= cxmin ) ltest = .true.
-           ENDIF
+           endif
            
-           IF ( ltest .or. (an(ix,jy,kz,lh) .ge. qhmin .and. an(ix,jy,kz,lnh) .ge. cxmin )) THEN
+           if ( ltest .or. (an(ix,jy,kz,lh) .ge. qhmin .and. an(ix,jy,kz,lnh) .ge. cxmin )) then
             
-            IF ( lvh .gt. 1 ) THEN
+            if ( lvh .gt. 1 ) then
              
-             IF ( an(ix,jy,kz,lvh) .gt. 0.0 ) THEN
+             if ( an(ix,jy,kz,lvh) .gt. 0.0 ) then
                hwdn = db(ix,jy,kz)*an(ix,jy,kz,lh)/an(ix,jy,kz,lvh)
                hwdn = Min( 900., Max( 100., hwdn ) )
-              ELSE 
+              else 
                hwdn = 500. ! hwdn1t
-              ENDIF
+              endif
 
-             ENDIF
+             endif
 
              chw = an(ix,jy,kz,lnh)
-            IF ( chw .gt. 0.0 ) THEN                                         ! (Ferrier 94)
+            if ( chw .gt. 0.0 ) then                                         ! (Ferrier 94)
              xvh = db(ix,jy,kz)*an(ix,jy,kz,lh)/(hwdn*Max(1.0e-3,chw))
-             IF ( xvh .lt. xvhmn .or. xvh .gt. xvhmx ) THEN
+             if ( xvh .lt. xvhmn .or. xvh .gt. xvhmx ) then
               xvh = Min( xvhmx, Max( xvhmn,xvh ) )
               chw = db(ix,jy,kz)*an(ix,jy,kz,lh)/(xvh*hwdn)
-             ENDIF
+             endif
              
              qh = an(ix,jy,kz,lh)
              
-             IF ( lhw .gt. 1 ) THEN
-               IF ( iusewetgraupel .eq. 1 ) THEN
+             if ( lhw .gt. 1 ) then
+               if ( iusewetgraupel .eq. 1 ) then
                   qxw = an(ix,jy,kz,lhw)
-               ELSEIF ( iusewetgraupel .eq. 2 ) THEN
-                  IF ( hwdn .lt. 300. ) THEN
+               elseif ( iusewetgraupel .eq. 2 ) then
+                  if ( hwdn .lt. 300. ) then
                     qxw = an(ix,jy,kz,lhw)
-                  ENDIF
-               ENDIF
-             ELSEIF ( iusewetgraupel .eq. 3 ) THEN
-                  IF ( hwdn .lt. 300. .and. temk(ix,jy,kz) > tfr .and. an(ix,jy,kz,lr) > qhmin ) THEN
+                  endif
+               endif
+             elseif ( iusewetgraupel .eq. 3 ) then
+                  if ( hwdn .lt. 300. .and. temk(ix,jy,kz) > tfr .and. an(ix,jy,kz,lr) > qhmin ) then
                     qxw = Min( an(ix,jy,kz,lh), an(ix,jy,kz,lr))
                     qh = qh + qxw
-                  ENDIF
-             ELSEIF ( iusewetgraupel == 4 .and. temk(ix,jy,kz) .gt. tfr+0.25 .and. an(ix,jy,kz,lh) > an(ix,jy,kz,lr) &
-     &              .and. an(ix,jy,kz,lr) > qhmin) THEN
+                  endif
+             elseif ( iusewetgraupel == 4 .and. temk(ix,jy,kz) .gt. tfr+0.25 .and. an(ix,jy,kz,lh) > an(ix,jy,kz,lr) &
+     &              .and. an(ix,jy,kz,lr) > qhmin) then
                qxw = Min(0.5*an(ix,jy,kz,lh), an(ix,jy,kz,lr))
                qh = qh + qxw
 
-             ENDIF
+             endif
              
-             IF ( lzh .gt. 1 ) THEN
+             if ( lzh .gt. 1 ) then
               x = (0.224*qh +  0.776*qxw)/an(ix,jy,kz,lh)  ! weighted average of dielectric const
               dtmph = 1.e18*x*an(ix,jy,kz,lzh)*(hwdn/rwdn)**2
               dtmp(ix,kz) = dtmp(ix,kz) + dtmph
-             ELSE
+             else
              g1 = (6.0 + alphah)*(5.0 + alphah)*(4.0 + alphah)/((3.0 + alphah)*(2.0 + alphah)*(1.0 + alphah))
 !             zx = g1*(db(ix,jy,kz)*an(ix,jy,kz,lh))**2/chw
 !             ze = 0.224*1.e18*zx*(6./(pi*1000.))**2
@@ -9249,25 +9249,25 @@ END SUBROUTINE nssl_2mom_driver
              ze =1.e18*zx*(6./(pi*1000.))**2
              dtmp(ix,kz) = dtmp(ix,kz) + ze
              dtmph = ze
-             ENDIF
+             endif
              
-            ENDIF
+            endif
              
         !     IF ( an(ix,jy,kz,lh) .gt. 1.0e-3 ) write(0,*)  'Graupel Z : ',dtmph,ze
-           ENDIF
+           endif
           
-          ELSE
+          else
           
           dtmph = 0.0
           
-           IF ( an(ix,jy,kz,lh) .ge. qhmin ) THEN
+           if ( an(ix,jy,kz,lh) .ge. qhmin ) then
              gtmp(ix,kz) = dadh*an(ix,jy,kz,lh)**(0.25)
-             IF ( gtmp(ix,kz) .gt. 0.0 ) THEN
+             if ( gtmp(ix,kz) .gt. 0.0 ) then
              dtmph =  zhdryc*an(ix,jy,kz,lh)**2/gtmp(ix,kz)
-             IF ( temk(ix,jy,kz) .lt. tfr ) THEN
+             if ( temk(ix,jy,kz) .lt. tfr ) then
                dtmp(ix,kz) = dtmp(ix,kz) +                   &
      &                  zhdryc*an(ix,jy,kz,lh)**2/gtmp(ix,kz)
-             ELSE
+             else
 !               IF ( hwdn .gt. 700.0 ) THEN
                  dtmp(ix,kz) = dtmp(ix,kz) +                   &
      &                  zhdryc*an(ix,jy,kz,lh)**2/gtmp(ix,kz)
@@ -9276,21 +9276,21 @@ END SUBROUTINE nssl_2mom_driver
 !               ELSE
 !                 dtmp(ix,kz) = dtmp(ix,kz) + zhwetc*gtmp(ix,kz)**7
 !               ENDIF
-             ENDIF
-             ENDIF
-           ENDIF
+             endif
+             endif
+           endif
           
          
           
-          ENDIF
+          endif
  
 
-          ENDIF ! }
+          endif ! }
           
-          ENDIF ! na .gt. 5
+          endif ! na .gt. 5
 
         
-        IF ( izieg .ge. 1 .and. lhl .gt. 1 ) THEN
+        if ( izieg .ge. 1 .and. lhl .gt. 1 ) then
 
         hldn = 900.0
         gtmp(ix,kz) = 0.0
@@ -9298,52 +9298,52 @@ END SUBROUTINE nssl_2mom_driver
         qxw = 0.0
         
 
-        IF ( lvhl .gt. 1 ) THEN
-          IF ( an(ix,jy,kz,lvhl) .gt. 0.0 ) THEN
+        if ( lvhl .gt. 1 ) then
+          if ( an(ix,jy,kz,lvhl) .gt. 0.0 ) then
             hldn = db(ix,jy,kz)*an(ix,jy,kz,lhl)/an(ix,jy,kz,lvhl)
             hldn = Min( 900., Max( 300., hldn ) )
-          ELSE 
+          else 
             hldn = 900. 
-          ENDIF
-        ELSE
+          endif
+        else
           hldn = rho_qhl
-        ENDIF 
+        endif 
 
 
-        IF ( ipconc .ge. 5 ) THEN
+        if ( ipconc .ge. 5 ) then
 
            ltest = .false.
-           IF ( lzhl > 1 ) THEN
-             IF ( an(ix,jy,kz,lzhl) > 0.0 .and. an(ix,jy,kz,lhl) > qhlmin .and. &
+           if ( lzhl > 1 ) then
+             if ( an(ix,jy,kz,lzhl) > 0.0 .and. an(ix,jy,kz,lhl) > qhlmin .and. &
                   an(ix,jy,kz,lnhl) > 0.0 ) ltest = .true.
-           ENDIF
+           endif
 
-          IF ( ltest .or. ( an(ix,jy,kz,lhl) .ge. qhlmin .and. an(ix,jy,kz,lnhl) .gt. 0.) ) THEN !{
+          if ( ltest .or. ( an(ix,jy,kz,lhl) .ge. qhlmin .and. an(ix,jy,kz,lnhl) .gt. 0.) ) then !{
             chl = an(ix,jy,kz,lnhl)
-            IF ( chl .gt. 0.0 ) THEN !{
+            if ( chl .gt. 0.0 ) then !{
              xvhl = db(ix,jy,kz)*an(ix,jy,kz,lhl)/         &
      &        (hldn*Max(1.0e-9,an(ix,jy,kz,lnhl)))
-            IF ( xvhl .lt. xvhlmn .or. xvhl .gt. xvhlmx ) THEN ! {
+            if ( xvhl .lt. xvhlmn .or. xvhl .gt. xvhlmx ) then ! {
               xvhl = Min( xvhlmx, Max( xvhlmn,xvhl ) )
               chl = db(ix,jy,kz)*an(ix,jy,kz,lhl)/(xvhl*hldn)
               ! do not update state in dbz calc. ! an(ix,jy,kz,lnhl) = chl
-            ENDIF ! }
+            endif ! }
 
-             IF ( lhlw .gt. 1 ) THEN
-               IF ( iusewethail .eq. 1 ) THEN
+             if ( lhlw .gt. 1 ) then
+               if ( iusewethail .eq. 1 ) then
                   qxw = an(ix,jy,kz,lhlw)
-               ELSEIF ( iusewethail .eq. 2 ) THEN
-                  IF ( hldn .lt. 300. ) THEN
+               elseif ( iusewethail .eq. 2 ) then
+                  if ( hldn .lt. 300. ) then
                     qxw = an(ix,jy,kz,lhlw)
-                  ENDIF
-               ENDIF
-             ENDIF
+                  endif
+               endif
+             endif
             
-             IF ( lzhl .gt. 1 ) THEN !{
+             if ( lzhl .gt. 1 ) then !{
               x = (0.224*an(ix,jy,kz,lhl) +  0.776*qxw)/an(ix,jy,kz,lhl)  ! weighted average of dielectric const
               dtmphl = 1.e18*x*an(ix,jy,kz,lzhl)*(hldn/rwdn)**2
               dtmp(ix,kz) = dtmp(ix,kz) + dtmphl
-             ELSE !}
+             else !}
 
              g1 = (6.0 + alphahl)*(5.0 + alphahl)*(4.0 + alphahl)/((3.0 + alphahl)*(2.0 + alphahl)*(1.0 + alphahl))
              zx = g1*db(ix,jy,kz)**2*( 0.224*an(ix,jy,kz,lhl) + 0.776*qxw)*an(ix,jy,kz,lhl)/chl
@@ -9352,28 +9352,28 @@ END SUBROUTINE nssl_2mom_driver
              dtmp(ix,kz) = dtmp(ix,kz) + ze
              dtmphl = ze
              
-             ENDIF !}
-            ENDIF!}
+             endif !}
+            endif!}
         !     IF ( an(ix,jy,kz,lh) .gt. 1.0e-3 ) write(0,*)  'Graupel Z : ',dtmph,ze
-           ENDIF
+           endif
 
           
-          ELSE
+          else
           
           
-           IF ( an(ix,jy,kz,lhl) .ge. qhlmin ) THEN ! {
+           if ( an(ix,jy,kz,lhl) .ge. qhlmin ) then ! {
             dadhl = ( db(ix,jy,kz) /(pi*hldn*cnohl) )**(.25)
              gtmp(ix,kz) = dadhl*an(ix,jy,kz,lhl)**(0.25)
-             IF ( gtmp(ix,kz) .gt. 0.0 ) THEN ! {
+             if ( gtmp(ix,kz) .gt. 0.0 ) then ! {
 
               zhldryc = 0.224*cr2*( db(ix,jy,kz)/rwdn)**2/cnohl 
 
              dtmphl =  zhldryc*an(ix,jy,kz,lhl)**2/gtmp(ix,kz)
 
-             IF ( temk(ix,jy,kz) .lt. tfr ) THEN
+             if ( temk(ix,jy,kz) .lt. tfr ) then
                dtmp(ix,kz) = dtmp(ix,kz) +                   &
      &                  zhldryc*an(ix,jy,kz,lhl)**2/gtmp(ix,kz)
-             ELSE
+             else
 !               IF ( hwdn .gt. 700.0 ) THEN
                  dtmp(ix,kz) = dtmp(ix,kz) +                   &
      &                  zhldryc*an(ix,jy,kz,lhl)**2/gtmp(ix,kz)
@@ -9382,38 +9382,38 @@ END SUBROUTINE nssl_2mom_driver
 !               ELSE
 !                 dtmp(ix,kz) = dtmp(ix,kz) + zhwetc*gtmp(ix,kz)**7
 !               ENDIF
-             ENDIF
-             ENDIF ! }
+             endif
+             endif ! }
            
-           ENDIF ! }
+           endif ! }
           
-         ENDIF ! ipconc .ge. 5
+         endif ! ipconc .ge. 5
 
 
-        ENDIF ! izieg .ge. 1 .and. lhl .gt. 1 
+        endif ! izieg .ge. 1 .and. lhl .gt. 1 
 
           
            
-          IF ( dtmp(ix,kz) .gt. 0.0 ) THEN
+          if ( dtmp(ix,kz) .gt. 0.0 ) then
             dbz(ix,jy,kz) = Max(dbzmin, 10.0*Log10(dtmp(ix,kz)) )
             
-            IF ( dbz(ix,jy,kz) .gt. dbzmax ) THEN
+            if ( dbz(ix,jy,kz) .gt. dbzmax ) then
               dbzmax = Max(dbzmax,dbz(ix,jy,kz))
               imx = ix
               jmx = jy
               kmx = kz
-            ENDIF
-          ELSE 
+            endif
+          else 
              dbz(ix,jy,kz) = dbzmin
-             IF ( lh > 1 .and. lhl > 1) THEN
-               IF ( an(ix,jy,kz,lh) > 1.0e-3 ) THEN
+             if ( lh > 1 .and. lhl > 1) then
+               if ( an(ix,jy,kz,lh) > 1.0e-3 ) then
                  write(0,*) 'radardbz: qr,qh,qhl = ',an(ix,jy,kz,lr), an(ix,jy,kz,lh),an(ix,jy,kz,lhl)
                  write(0,*) 'radardbz: dtmps,dtmph,dadh,dadhl,dtmphl = ',dtmps,dtmph,dadh,dadhl,dtmphl
                  
-                 IF ( lzh>1 .and. lzhl>1 ) write(0,*) 'radardbz: zh, zhl = ',an(ix,jy,kz,lzh),an(ix,jy,kz,lzhl)
-               ENDIF
-             ENDIF
-          ENDIF
+                 if ( lzh>1 .and. lzhl>1 ) write(0,*) 'radardbz: zh, zhl = ',an(ix,jy,kz,lzh),an(ix,jy,kz,lzhl)
+               endif
+             endif
+          endif
 
 !         IF ( an(ix,jy,kz,lh) .gt. 1.e-4 .and. 
 !     &        dbz(ix,jy,kz) .le. 0.0 ) THEN
@@ -9423,7 +9423,7 @@ END SUBROUTINE nssl_2mom_driver
 !          write(0,*) 'Hail,snow c: ',an(ix,jy,kz,lnh),an(ix,jy,kz,lns)
 !          write(0,*) 'dtmps,dtmph = ',dtmps,dtmph
 !         ENDIF
-        IF ( .not. dtmp(ix,kz) .lt. 1.e30 .or. dbz(ix,jy,kz) > 190.0 ) THEN
+        if ( .not. dtmp(ix,kz) .lt. 1.e30 .or. dbz(ix,jy,kz) > 190.0 ) then
 !        IF ( ix == 31 .and. kz == 20 .and. jy == 23 ) THEN
 !          write(0,*) 'my_rank = ',my_rank
           write(0,*) 'ix,jy,kz = ',ix,jy,kz
@@ -9434,55 +9434,55 @@ END SUBROUTINE nssl_2mom_driver
           write(0,*) 'graupel density hwdn = ',hwdn
           write(0,*) 'rain q: ',an(ix,jy,kz,lr)
           write(0,*) 'ice q: ',an(ix,jy,kz,li)
-          IF ( lhl .gt. 1 ) write(0,*) 'Hail (lhl): ',an(ix,jy,kz,lhl)
-          IF (ipconc .ge. 3 ) write(0,*) 'rain c: ',an(ix,jy,kz,lnr)
-          IF ( lzr > 1 ) write(0,*) 'rain Z: ',an(ix,jy,kz,lzr)
-          IF ( ipconc .ge. 5 ) THEN
+          if ( lhl .gt. 1 ) write(0,*) 'Hail (lhl): ',an(ix,jy,kz,lhl)
+          if (ipconc .ge. 3 ) write(0,*) 'rain c: ',an(ix,jy,kz,lnr)
+          if ( lzr > 1 ) write(0,*) 'rain Z: ',an(ix,jy,kz,lzr)
+          if ( ipconc .ge. 5 ) then
           write(0,*) 'Hail,snow c: ',an(ix,jy,kz,lnh),an(ix,jy,kz,lns)
-          IF ( lhl .gt. 1 ) write(0,*) 'Hail (lnhl): ',an(ix,jy,kz,lnhl)
-          IF ( lzhl .gt. 1 ) THEN 
+          if ( lhl .gt. 1 ) write(0,*) 'Hail (lnhl): ',an(ix,jy,kz,lnhl)
+          if ( lzhl .gt. 1 ) then 
             write(0,*) 'Hail (lzhl): ',an(ix,jy,kz,lzhl)
             write(0,*) 'chl,xvhl,dhl = ',chl,xvhl,(xvhl*6./3.14159)**(1./3.)
             write(0,*) 'xvhlmn,xvhlmx = ',xvhlmn,xvhlmx
-          ENDIF
-          ENDIF
+          endif
+          endif
           write(0,*) 'chw,xvh = ', chw,xvh
           write(0,*) 'dtmps,dtmph,dadh,dadhl,dtmphl = ',dtmps,dtmph,dadh,dadhl,dtmphl
           write(0,*) 'dtmpr = ',dtmpr
           write(0,*) 'gtmp = ',gtmp(ix,kz),dtmp(ix,kz)
-          IF ( .not. (dbz(ix,jy,kz) .gt. -100 .and. dbz(ix,jy,kz) .lt. 200 ) ) THEN
+          if ( .not. (dbz(ix,jy,kz) .gt. -100 .and. dbz(ix,jy,kz) .lt. 200 ) ) then
             write(0,*) 'dbz out of bounds!'
 !           STOP
-          ENDIF
-         ENDIF
+          endif
+         endif
 
            
-          ENDDO ! ix
-         ENDDO ! kz
-      ENDDO ! jy
+          enddo ! ix
+         enddo ! kz
+      enddo ! jy
             
       
       
       
 !      write(0,*)  'na,lr = ',na,lr
-      IF ( printyn .eq. 1 ) THEN
+      if ( printyn .eq. 1 ) then
 !      IF ( dbzmax .gt. dbzmin ) THEN
         write(iunit,*) 'maxdbz,ijk = ',dbzmax,imx,jmx,kmx
         write(iunit,*) 'qrw = ',an(imx,jmx,kmx,lr)
         
-        IF ( lh .gt. 1 ) THEN
+        if ( lh .gt. 1 ) then
           write(iunit,*) 'qi  = ',an(imx,jmx,kmx,li)
           write(iunit,*) 'qsw = ',an(imx,jmx,kmx,ls)
           write(iunit,*) 'qhw = ',an(imx,jmx,kmx,lh)
-          IF ( lhl .gt. 1 ) write(iunit,*) 'qhl = ',an(imx,jmx,kmx,lhl)
-        ENDIF
+          if ( lhl .gt. 1 ) write(iunit,*) 'qhl = ',an(imx,jmx,kmx,lhl)
+        endif
 
       
-      ENDIF
+      endif
       
       
-      RETURN
-      END subroutine radardd02
+      return
+      end subroutine radardd02
       
 
 ! ##############################################################################
@@ -9496,7 +9496,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! 11/30/2022: Fixed droplet evaporation heating term for 1 eqtset=2 (was only doing eqtset=1)
 !
-   SUBROUTINE NUCOND    &
+   subroutine NUCOND    &
      &  (nx,ny,nz,na,jyslab & 
      &  ,nor,norz,dtp,nxi & 
      &  ,dz3d & 
@@ -9739,7 +9739,7 @@ END SUBROUTINE nssl_2mom_driver
       kzbeg = 1
       nzbeg = 1
 
-      IF ( ac_opt > 0 )  ccnefactwo =  (1.63e-3/(cck * beta(3./2., cck/2.)))**(1.0/(cck + 2.0))
+      if ( ac_opt > 0 )  ccnefactwo =  (1.63e-3/(cck * beta(3./2., cck/2.)))**(1.0/(cck + 2.0))
       f5 = 237.3 * 17.27 * 2.5e6 / cp ! combined constants for rain condensation (Soong and Ogura 73)
 
        jy = 1
@@ -9747,7 +9747,7 @@ END SUBROUTINE nssl_2mom_driver
        pb(:) = 0.0
        pinit(:) = 0.0
       
-      IF ( ipconc <= 1 .or. isedonly == 2 ) GOTO 2200
+      if ( ipconc <= 1 .or. isedonly == 2 ) GOTO 2200
 
 !
 !  Ziegler nucleation 
@@ -9767,12 +9767,12 @@ END SUBROUTINE nssl_2mom_driver
 
           c1 = t00(ix,jy,kz)*tabqvs(ltemq)
 
-          IF ( c1 > 0. ) THEN
+          if ( c1 > 0. ) then
             ssfilt(ix,jy,kz) = 100.*(an(ix,jy,kz,lv)/c1 - 1.0)  ! from "new" values
-          ENDIF
+          endif
 
-        ENDDO
-      ENDDO
+        enddo
+      enddo
 
 
 !
@@ -9855,20 +9855,20 @@ END SUBROUTINE nssl_2mom_driver
       xv(:,:) = 0.0
       xmas(:,:) = 0.0
 
-      IF ( imurain == 1 ) THEN
+      if ( imurain == 1 ) then
         alpha(:,lr) = alphar
-      ELSEIF ( imurain == 3 ) THEN
+      elseif ( imurain == 3 ) then
         alpha(:,lr) = xnu(lr)
-      ENDIF
+      endif
 
 !
 !  define temporaries for state variables to be used in calculations
 !
-      DO mgs = 1,ngscnt
+      do mgs = 1,ngscnt
       qx(mgs,lv) = an(igs(mgs),jy,kgs(mgs),lv)
-       DO il = lc,lhab
+       do il = lc,lhab
         qx(mgs,il) = max(an(igs(mgs),jy,kgs(mgs),il), 0.0)
-       ENDDO
+       enddo
 
        qcwtmp(mgs) = qx(mgs,lc)
 
@@ -9905,28 +9905,28 @@ END SUBROUTINE nssl_2mom_driver
         temgx(mgs) = max(temgx(mgs),233.15)
         felv(mgs) = 2500837.367 * (273.15/temgx(mgs))**((0.167)+(3.67e-4)*temgx(mgs))
 !
-        IF ( eqtset <= 1 ) THEN
+        if ( eqtset <= 1 ) then
           felvcp(mgs) = felv(mgs)*cpi
-        ELSE ! equation set 2 in cm1
+        else ! equation set 2 in cm1
           tmp = qx(mgs,li)+qx(mgs,ls)+qx(mgs,lh)
-          IF ( lhl > 1 ) tmp = tmp + qx(mgs,lhl)
-          IF ( lf > 1 ) tmp = tmp + qx(mgs,lf)
+          if ( lhl > 1 ) tmp = tmp + qx(mgs,lhl)
+          if ( lf > 1 ) tmp = tmp + qx(mgs,lf)
           cvm = cv+cvv*qx(mgs,lv)+cpl*(qx(mgs,lc)+qx(mgs,lr))   &
                                   +cpigb*(tmp)
           cpm = cp+cpv*qx(mgs,lv)+cpl*(qx(mgs,lc)+qx(mgs,lr))   &
                                   +cpigb*(tmp)
           rmm=rd+rw*qx(mgs,lv)
           
-          IF ( eqtset == 2 ) THEN
+          if ( eqtset == 2 ) then
 
            felvcp(mgs) = (felv(mgs)-rw*temg(mgs))/cvm
 
-          ELSE
+          else
             felvcp(mgs) = (felv(mgs)*cv/(cp) - rw*temg(mgs)*(1.0-rovcp*cpm/rmm))/cvm
             felvpi(mgs) = pi0(mgs)*rovcp*(felv(mgs)/(temg(mgs)) - rw*cpm/rmm)/cvm
-          ENDIF
+          endif
 
-        ENDIF
+        endif
 
         temcgx(mgs) = min(temg(mgs),273.15)
         temcgx(mgs) = max(temcgx(mgs),223.15)
@@ -9943,7 +9943,7 @@ END SUBROUTINE nssl_2mom_driver
       tka(mgs) = tka0*advisc(mgs)/advisc1                 ! thermal conductivity
 
 
-      ENDDO
+      enddo
 
 
 
@@ -9960,35 +9960,35 @@ END SUBROUTINE nssl_2mom_driver
         cx(mgs,lc) = Max(an(igs(mgs),jy,kgs(mgs),lnc), 0.0)
         cwnccn(mgs) = cwccn*rho0(mgs)/rho00 ! background ccn count
         cn(mgs) = 0.0
-        IF ( lss > 1 ) THEN 
+        if ( lss > 1 ) then 
           ssmax(mgs) = an(igs(mgs),jy,kgs(mgs),lss)
-        ELSE
+        else
           ssmax(mgs) = 0.0
-        ENDIF
-        IF ( lccn .gt. 1 .and. ac_opt == 0 ) THEN
-          IF ( lccnuf .gt. 1 .and. i_uf_or_ccn > 0 ) THEN
+        endif
+        if ( lccn .gt. 1 .and. ac_opt == 0 ) then
+          if ( lccnuf .gt. 1 .and. i_uf_or_ccn > 0 ) then
              ccnc(mgs) = an(igs(mgs),jy,kgs(mgs),lccn) + an(igs(mgs),jy,kgs(mgs),lccnuf)
-          ELSE
+          else
              ccnc(mgs) = an(igs(mgs),jy,kgs(mgs),lccn)
-          ENDIF
-        ELSE
+          endif
+        else
           ccnc(mgs) = cwnccn(mgs)
-        ENDIF
-        IF ( lccnuf .gt. 1 .and. i_uf_or_ccn == 0 ) THEN
+        endif
+        if ( lccnuf .gt. 1 .and. i_uf_or_ccn == 0 ) then
           ccncuf(mgs) = an(igs(mgs),jy,kgs(mgs),lccnuf)
-        ELSE
+        else
           ccncuf(mgs) = 0.0
-        ENDIF
+        endif
         cnuf(mgs) = 0.0
-        IF ( lccna > 1 ) THEN
+        if ( lccna > 1 ) then
           ccna(mgs) = an(igs(mgs),jy,kgs(mgs),lccna) ! predicted count of activated ccn
-        ELSE
-          IF ( lccn > 1 ) THEN
+        else
+          if ( lccn > 1 ) then
             ccna(mgs) = cwnccn(mgs) - ccnc(mgs) ! diagnose activated ccn as background value - remaining unactivated ccn
-          ELSE
+          else
             ccna(mgs) = cx(mgs,lc) ! approximation of number of activated ccn
-          ENDIF
-        ENDIF
+          endif
+        endif
        end do
       end if
       if ( ipconc .ge. 3 ) then
@@ -9998,23 +9998,23 @@ END SUBROUTINE nssl_2mom_driver
       end if
 
 !        cnuc(1:ngscnt) = cwccn*rho0(mgs)/rho00*(1. - renucfrac) + ccnc(1:ngscnt)*renucfrac
-       DO mgs = 1,ngscnt
+       do mgs = 1,ngscnt
        ! default value of renucfrac is 0.0
-        IF ( irenuc /= 6 ) THEN
+        if ( irenuc /= 6 ) then
         cnuc(mgs) = Max(ccnc(mgs),cwnccn(mgs))*(1. - renucfrac) + ccnc(mgs)*renucfrac
-        ELSE
+        else
         cnuc(mgs) = Max(ccnc(mgs),cwnccn(mgs))*(1. - renucfrac) + Max(0.0,ccnc(mgs) - ccna(mgs))*renucfrac
-        ENDIF
-        IF ( renucfrac >= 0.999 ) THEN
-          IF ( temg(mgs) < 265. ) THEN
-            IF ( qx(mgs,lc) > 10.*qxmin(lc) .and. w(igs(mgs),jgs,kgs(mgs)) > 2.0 ) THEN
+        endif
+        if ( renucfrac >= 0.999 ) then
+          if ( temg(mgs) < 265. ) then
+            if ( qx(mgs,lc) > 10.*qxmin(lc) .and. w(igs(mgs),jgs,kgs(mgs)) > 2.0 ) then
              cnuc(mgs) = 0.0 !  Min(cnuc(mgs), 0.5*cx(mgs,lc) ) ! Hack to reduce nucleation at low temp in updraft when ccn are not predicted
-            ELSE
+            else
              cnuc(mgs) = 0.1*cnuc(mgs)
-            ENDIF
-          ENDIF
-        ENDIF
-       ENDDO
+            endif
+          endif
+        endif
+       enddo
 
 !  Set density
 !
@@ -10031,88 +10031,88 @@ END SUBROUTINE nssl_2mom_driver
 
 !  Find shape parameter rain
 
-      IF ( lzr > 1 .and. rcond == 2 ) THEN ! { RAIN SHAPE PARAM
-      DO mgs = 1,ngscnt
+      if ( lzr > 1 .and. rcond == 2 ) then ! { RAIN SHAPE PARAM
+      do mgs = 1,ngscnt
          zx(mgs,lr) = Max(an(igs(mgs),jy,kgs(mgs),lzr), 0.0)
-      ENDDO
+      enddo
 
 !      CALL cld_cpu('Z-MOMENT-1r2')
           il = lr
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
 
-         IF ( zx(mgs,il) <= zxmin ) THEN
+         if ( zx(mgs,il) <= zxmin ) then
            qx(mgs,lv) = qx(mgs,lv) + qx(mgs,il)
            qx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-         ELSEIF ( cx(mgs,il) <= 0.0 ) THEN
+         elseif ( cx(mgs,il) <= 0.0 ) then
            qx(mgs,lv) = qx(mgs,lv) + qx(mgs,il)
            zx(mgs,il) = 0.0
            qx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-         ENDIF
+         endif
 
-         IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
+         if ( qx(mgs,lr) .gt. qxmin(lr) ) then
 
           xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*Max(1.0e-11,cx(mgs,lr)))
-          IF ( xv(mgs,lr) .gt. xvmx(lr) ) THEN
+          if ( xv(mgs,lr) .gt. xvmx(lr) ) then
             xv(mgs,lr) = xvmx(lr)
             cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmx(lr)*xdn(mgs,lr))
-          ELSEIF ( xv(mgs,lr) .lt. xvmn(lr) ) THEN
+          elseif ( xv(mgs,lr) .lt. xvmn(lr) ) then
             xv(mgs,lr) = xvmn(lr)
             cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmn(lr)*xdn(mgs,lr))
-          ENDIF
+          endif
 
-          IF ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) THEN
+          if ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) then
 !  have mass and reflectivity but no concentration, so set concentration, using default alpha
-            IF ( imurain == 3 ) THEN
+            if ( imurain == 3 ) then
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             z1   = zx(mgs,il)
             qr  = qx(mgs,il)
             cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z1*1000.*1000)
-            ELSE
+            else
             g1 = 36.*(6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il))*pi**2)
             z1   = zx(mgs,il)
             qr  = qx(mgs,il)
             cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z1*1000.*1000)
             
-            ENDIF
+            endif
 !            an(igs(mgs),jgs,kgs(mgs),ln(il)) = zx(mgs,il)
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > 0.0 ) then
 !  have mass and concentration but no reflectivity, so set reflectivity, using default alpha
-            IF ( imurain == 3 ) THEN
+            if ( imurain == 3 ) then
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             chw = cx(mgs,il)
             qr  = qx(mgs,il)
             zx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(chw*1000.*1000)
-            ELSE
+            else
             g1 = 36.*(6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il))*pi**2)
             chw = cx(mgs,il)
             qr  = qx(mgs,il)
             zx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(chw*1000.*1000)
             
-            ENDIF
+            endif
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) then
 !   How did this happen?
          ! set values according to dBZ of -10, or Z = 0.1
 !              0.1 = 1.e18*0.224*an(ix,jy,kz,lzh)*(hwdn/rwdn)**2
                zx(mgs,il) = 1.e-19/0.224*(xdn0(lr)/xdn0(il))**2
                an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
                
-              IF ( imurain == 3 ) THEN
+              if ( imurain == 3 ) then
                g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
                z1   = zx(mgs,il)
                qr  = qx(mgs,il)
                cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z1*1000.*1000)
                an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-              ELSEIF ( imurain == 1 ) THEN
+              elseif ( imurain == 1 ) then
                g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
                z1   = zx(mgs,il)
@@ -10120,10 +10120,10 @@ END SUBROUTINE nssl_2mom_driver
                cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(6*qr)**2/(z1*(pi*xdn(mgs,il))**2)
                an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
               
-              ENDIF
-          ENDIF
+              endif
+          endif
         
-          IF ( zx(mgs,lr) > 0.0 ) THEN
+          if ( zx(mgs,lr) > 0.0 ) then
             vr = rho0(mgs)*qx(mgs,lr)/(1000.*cx(mgs,lr))
 !            z1 = 36.*(alpha(kz)+2.0)*a(ix,jy,kz,lnr)*vr**2/((alpha(kz)+1.0)*pi**2)
            qr = qx(mgs,lr)
@@ -10135,20 +10135,20 @@ END SUBROUTINE nssl_2mom_driver
 
 
 ! determine shape parameter alpha by iteration
-        IF ( z1 .gt. 0.0 ) THEN
+        if ( z1 .gt. 0.0 ) then
 
-          IF ( imurain == 3 ) THEN
+          if ( imurain == 3 ) then
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z1*pi**2) - 1.
 !           write(0,*) 'kz, alp, alpha(kz) = ',kz,alp,alpha(kz),rd,z1,xv
-           DO i = 1,20
-            IF ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) EXIT
+           do i = 1,20
+            if ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) exit
              alpha(mgs,lr) = Max( rnumin, Min( rnumax, alp ) )
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z1*pi**2) - 1.
 !           write(0,*) 'i,alp = ',i,alp
              alp = Max( rnumin, Min( rnumax, alp ) )
-           ENDDO
+           enddo
 
-         ELSE ! imurain == 1
+         else ! imurain == 1
             g1 = 36.*(6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il))*pi**2)
 
@@ -10157,62 +10157,62 @@ END SUBROUTINE nssl_2mom_driver
            alp = (6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/ &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rd1) - 1.0
 
-           DO i = 1,10
-            IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+           do i = 1,10
+            if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
 
              alp = (6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/ &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rd1) - 1.0
 
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
+           enddo
 
          
-         ENDIF
+         endif
 !         ENDIF
 
 !
 ! Check whether the shape parameter is at or less than the minimum, and if it is, reset the 
 ! concentration or reflectivity to match (prevents reflectivity from being out of balance with Q and N)
 !
-          IF ( imurain == 3 ) THEN
-           IF ( .true. .and. (alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax) ) THEN
+          if ( imurain == 3 ) then
+           if ( .true. .and. (alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax) ) then
 
-             IF ( rescale_high_alpha .and. alp >= rnumax - 0.01  ) THEN  ! reset c at high alpha to prevent growth in Z
+             if ( rescale_high_alpha .and. alp >= rnumax - 0.01  ) then  ! reset c at high alpha to prevent growth in Z
                g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
                cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z1*(1./(xdn(mgs,il)))**2
                an(igs(mgs),jy,kgs(mgs),ln(il)) = cx(mgs,il)
             
-             ELSEIF ( rescale_low_alphar .and. alp <= rnumin ) THEN
+             elseif ( rescale_low_alphar .and. alp <= rnumin ) then
 
               z1  = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/((alpha(mgs,lr)+1.0)*pi**2)
               zx(mgs,il) = z1
-             ENDIF
-           ENDIF
+             endif
+           endif
            
-          ELSEIF ( imurain == 1 ) THEN
+          elseif ( imurain == 1 ) then
           
              g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
 
-           IF ( (rescale_low_alpha .or. rescale_high_alpha ) .and.  &
-     &          ( alpha(mgs,il) <= alphamin .or. alp == alphamin .or. alp == alphamax ) ) THEN
+           if ( (rescale_low_alpha .or. rescale_high_alpha ) .and.  &
+     &          ( alpha(mgs,il) <= alphamin .or. alp == alphamin .or. alp == alphamax ) ) then
 
 
 
-            IF ( rescale_high_alpha .and. alp >= alphamax - 0.01  ) THEN  ! reset c at high alpha to prevent growth in Z
+            if ( rescale_high_alpha .and. alp >= alphamax - 0.01  ) then  ! reset c at high alpha to prevent growth in Z
               cx(mgs,il) = g1*rho0(mgs)**2*(qr)*qr/zx(mgs,lr)*(6./(pi*xdn(mgs,il)))**2
               an(igs(mgs),jy,kgs(mgs),ln(il)) = cx(mgs,il)
             
-            ELSEIF ( rescale_low_alpha .and. alp <= alphamin ) THEN ! alpha = alphamin, so reset Z to prevent growth in C
+            elseif ( rescale_low_alpha .and. alp <= alphamin ) then ! alpha = alphamin, so reset Z to prevent growth in C
              z1 = g1*rho0(mgs)**2*(qr)*qr/nrx
              z2  = z1*(6./(pi*xdn(mgs,il)))**2
              zx(mgs,il) = z2
              an(igs(mgs),jy,kgs(mgs),lz(il)) = z2
-            ENDIF
-          ENDIF ! imurain
+            endif
+          endif ! imurain
 
-          ENDIF ! z > 0
+          endif ! z > 0
 
            tmp = alpha(mgs,lr) + 4./3.
            i = Int(dgami*(tmp))
@@ -10227,7 +10227,7 @@ END SUBROUTINE nssl_2mom_driver
 !           ventrx(mgs) = Gamma(alpha(mgs,lr) + 4./3.)/(alpha(mgs,lr) + 1.)**(1./3.)/Gamma(alpha(mgs,lr) + 1.)
            ventrx(mgs) = x/(y*(alpha(mgs,lr) + 1.)**(1./3.))
 
-           IF ( imurain == 3 .and. izwisventr == 2 ) THEN
+           if ( imurain == 3 .and. izwisventr == 2 ) then
 
            tmp = alpha(mgs,lr) + 1.5 + br/6.
            i = Int(dgami*(tmp))
@@ -10237,7 +10237,7 @@ END SUBROUTINE nssl_2mom_driver
 !           ventrx(mgs) = Gamma(alpha(mgs,lr) + 1.5 + br/6.)/Gamma(alpha(mgs,lr) + 1.)
            ventrxn(mgs) = x/(y*(alpha(mgs,lr) + 1.)**((1.+br)/6. + 1./3.))
            
-           ELSEIF ( imurain == 1 .and.  iferwisventr == 2 ) THEN
+           elseif ( imurain == 1 .and.  iferwisventr == 2 ) then
 
            tmp = alpha(mgs,lr) + 2.5 + br/2.
            i = Int(dgami*(tmp))
@@ -10248,22 +10248,22 @@ END SUBROUTINE nssl_2mom_driver
            ventrxn(mgs) = x/y
            
            
-           ENDIF
+           endif
 
            
-           ENDIF
-          ENDIF
+           endif
+          endif
           
-          ENDIF
+          endif
           
-          ENDDO
+          enddo
 !        CALL cld_cpu('Z-MOMENT-1r2')  
-        ENDIF ! }
+        endif ! }
 
 
 !       write(0,*) 'NUCOND: Set ssf variables, ssmxinit =',ssmxinit
       ssmx = 0.0
-      DO mgs = 1,ngscnt
+      do mgs = 1,ngscnt
       
       kp1 = Min(nz, kgs(mgs)+1 )
       wvel(mgs) = (0.5)*(w(igs(mgs),jgs,kp1) & 
@@ -10282,7 +10282,7 @@ END SUBROUTINE nssl_2mom_driver
 !        IF ( wvel(mgs) /= 0.0 ) write(0,*) 'mgs,wvel1,ssf = ',mgs,wvel(mgs),ssf(mgs)
 
 
-      ENDDO
+      enddo
 
 
 
@@ -10294,19 +10294,19 @@ END SUBROUTINE nssl_2mom_driver
 
       do mgs = 1,ngscnt
       xv(mgs,lc) = 0.0
-      IF ( ipconc .ge. 2 .and. cx(mgs,lc) .gt. 1.0e6 ) THEN
+      if ( ipconc .ge. 2 .and. cx(mgs,lc) .gt. 1.0e6 ) then
         xmas(mgs,lc) = &
      &    min( max(qx(mgs,lc)*rho0(mgs)/cx(mgs,lc),cwmasn),cwmasx )
         xv(mgs,lc) = xmas(mgs,lc)/xdn(mgs,lc)
-      ELSE
-       IF ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. cxmin ) THEN
+      else
+       if ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. cxmin ) then
         xmas(mgs,lc) = &
      &     min( max(qx(mgs,lc)*rho0(mgs)/cx(mgs,lc),xdn(mgs,lc)*xvmn(lc)), &
      &      xdn(mgs,lc)*xvmx(lc) )
 
         cx(mgs,lc) = qx(mgs,lc)*rho0(mgs)/xmas(mgs,lc)
 
-       ELSEIF ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .le. cxmin ) THEN
+       elseif ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .le. cxmin ) then
 !        xmas(mgs,lc) = xdn(mgs,lc)*4.*pi/3.*(5.0e-6)**3
 !        cx(mgs,lc) = rho0(mgs)*qx(mgs,lc)/xmas(mgs,lc)
         cx(mgs,lc) = Max( cxmin, rho0(mgs)*qx(mgs,lc)/cwmasx )
@@ -10314,10 +10314,10 @@ END SUBROUTINE nssl_2mom_driver
      &    min( max(qx(mgs,lc)*rho0(mgs)/cx(mgs,lc),cwmasn),cwmasx )
         xv(mgs,lc) = xmas(mgs,lc)/xdn(mgs,lc)
 
-       ELSE
+       else
         xmas(mgs,lc) = cwmasn
-       ENDIF
-      ENDIF
+       endif
+      endif
       xdia(mgs,lc,1) = (xmas(mgs,lc)*cwc1)**c1f3
 
 
@@ -10331,29 +10331,29 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 3 ) then
         xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*Max(1.0e-9,cx(mgs,lr)))
 !      parameter( xvmn(lr)=2.8866e-13, xvmx(lr)=4.1887e-9 )  ! mks
-        IF ( xv(mgs,lr) .gt. xvmx(lr) ) THEN
+        if ( xv(mgs,lr) .gt. xvmx(lr) ) then
           xv(mgs,lr) = xvmx(lr)
           cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmx(lr)*xdn(mgs,lr))
-        ELSEIF ( xv(mgs,lr) .lt. xvmn(lr) ) THEN
+        elseif ( xv(mgs,lr) .lt. xvmn(lr) ) then
           xv(mgs,lr) = xvmn(lr)
           cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmn(lr)*xdn(mgs,lr))
-        ENDIF
+        endif
 
         xmas(mgs,lr) = xv(mgs,lr)*xdn(mgs,lr)
         xdia(mgs,lr,3) = (xmas(mgs,lr)*cwc1)**(1./3.) ! xdia(mgs,lr,1)
-        IF ( imurain == 3 ) THEN
+        if ( imurain == 3 ) then
 !          xdia(mgs,lr,1) = (6.*pii*xv(mgs,lr)/(alpha(mgs,lr)+1.))**(1./3.)
           xdia(mgs,lr,1) = xdia(mgs,lr,3) ! formulae for Ziegler (1985) use mean volume diameter, not lambda**(-1)
-        ELSE ! imurain == 1, Characteristic diameter (1/lambda)
+        else ! imurain == 1, Characteristic diameter (1/lambda)
           xdia(mgs,lr,1) = (6.*piinv*xv(mgs,lr)/((alpha(mgs,lr)+3.)*(alpha(mgs,lr)+2.)*(alpha(mgs,lr)+1.)))**(1./3.)
-        ENDIF
+        endif
 !        rwrad(mgs) = 0.5*xdia(mgs,lr,1)
 
 ! Inverse exponential version:
 !        xdia(mgs,lr,1) =
 !     >  (qx(mgs,lr)*rho0(mgs)
 !     > /(pi*xdn(mgs,lr)*cx(mgs,lr)))**(0.333333)
-      ELSE
+      else
         xdia(mgs,lr,1) = &
      &  (qx(mgs,lr)*rho0(mgs)/(pi*xdn(mgs,lr)*cno(lr)))**(0.25)
       end if
@@ -10392,21 +10392,21 @@ END SUBROUTINE nssl_2mom_driver
 ! cloud evaporation, condensation, and nucleation
 !  sqsat -> qss(mgs)
 
-      DO mgs=1,ngscnt
+      do mgs=1,ngscnt
         dcloud = 0.0
         ! Skip points at low temperature if SS stays less than 1.08, 
         ! otherwise allow nucleation at low temp (will freeze at next time step)
-        IF ( temg(mgs) .le. tfrh .and. qx(mgs,lv)/qvs(mgs) < maxlowtempss ) THEN 
-         CYCLE
-        ENDIF
+        if ( temg(mgs) .le. tfrh .and. qx(mgs,lv)/qvs(mgs) < maxlowtempss ) then 
+         cycle
+        endif
 
-      IF( ssat0(mgs) .GT. 0. .OR. ssf(mgs) .GT. 0. ) GO TO 620
+      if( ssat0(mgs) .GT. 0. .OR. ssf(mgs) .GT. 0. ) go to 620
 !6/4      IF( qvap(mgs) .EQ. qss(mgs) ) GO TO 631
 !
 !.... EVAPORATION. QV IS LESS THAN qss(mgs).
 !.... EVAPORATE CLOUD FIRST
 !
-      IF ( qx(mgs,lc) .LE. 0. ) GO TO 631
+      if ( qx(mgs,lc) .LE. 0. ) go to 631
 !.... CLOUD EVAPORATION.
 ! convert input 'cp' to cgs
       R1=1./(1. + caw*(273.15 - cbw)*qss(mgs)*felv(mgs)/ &
@@ -10414,76 +10414,76 @@ END SUBROUTINE nssl_2mom_driver
       QEVAP= Min( qx(mgs,lc), R1*(qss(mgs)-qvap(mgs)) )
 
 
-      IF ( qx(mgs,lc) <= QEVAP ) THEN ! GO TO 63
+      if ( qx(mgs,lc) <= QEVAP ) then ! go to 63
         qwvp(mgs) = qwvp(mgs) + qx(mgs,lc)
         thetap(mgs) = thetap(mgs) - felvcp(mgs)*qx(mgs,lc)/(pi0(mgs))
-        IF ( io_flag .and. nxtra > 1 ) THEN
+        if ( io_flag .and. nxtra > 1 ) then
            axtra(igs(mgs),jy,kgs(mgs),1) = -qx(mgs,lc)/dtp
-        ENDIF
+        endif
         qx(mgs,lc) = 0.
-        IF ( restoreccn ) THEN
-           IF ( lccna > 1 ) THEN
+        if ( restoreccn ) then
+           if ( lccna > 1 ) then
               ccna(mgs) = ccna(mgs) - restoreccnfrac*cx(mgs,lc)
-           ELSEIF ( irenuc <= 2 ) THEN
-              IF ( .not. invertccn ) THEN
+           elseif ( irenuc <= 2 ) then
+              if ( .not. invertccn ) then
                ccnc(mgs) = Max( ccnc(mgs), Min( qccn*rho0(mgs), ccnc(mgs) + restoreccnfrac*cx(mgs,lc) ) )
-              ELSE
+              else
                ccnc(mgs) = ccnc(mgs) + restoreccnfrac*cx(mgs,lc)
-              ENDIF
-          ENDIF
-        ENDIF
+              endif
+          endif
+        endif
         cx(mgs,lc) = 0.
-      ELSE
+      else
         qctmp = qx(mgs,lc)
         qwvp(mgs) = qwvp(mgs) + QEVAP
         qx(mgs,lc) = qx(mgs,lc) - QEVAP
-        IF ( qx(mgs,lc) .le. 0. ) THEN
-          IF ( restoreccn ) THEN
-            IF ( lccna > 1 ) THEN
+        if ( qx(mgs,lc) .le. 0. ) then
+          if ( restoreccn ) then
+            if ( lccna > 1 ) then
               ccna(mgs) = ccna(mgs) - restoreccnfrac*cx(mgs,lc)
-            ELSEIF ( irenuc <= 2 ) THEN
+            elseif ( irenuc <= 2 ) then
 !              ccnc(mgs) = Max( ccnc(mgs), Min( qccn*rho0(mgs), ccnc(mgs) + cx(mgs,lc) ) )
 !              ccnc(mgs) = ccnc(mgs) + cx(mgs,lc)
-              IF ( .not. invertccn ) THEN
+              if ( .not. invertccn ) then
                ccnc(mgs) = Max( ccnc(mgs), Min( qccn*rho0(mgs), ccnc(mgs) + restoreccnfrac*cx(mgs,lc) ) )
-              ELSE
+              else
                ccnc(mgs) = ccnc(mgs) + restoreccnfrac*cx(mgs,lc)
-              ENDIF
-            ENDIF
-          ENDIF
+              endif
+            endif
+          endif
           cx(mgs,lc) = 0.
-        ELSE
+        else
           tmp = 0.9*QEVAP*cx(mgs,lc)/qctmp ! let droplets get smaller but also remove some. A factor of 1.0 would maintain same size
-          IF ( restoreccn ) THEN
-            IF ( lccna > 1 ) THEN
+          if ( restoreccn ) then
+            if ( lccna > 1 ) then
               ccna(mgs) = ccna(mgs) - restoreccnfrac*tmp
-            ELSEIF ( irenuc <= 2 ) THEN
+            elseif ( irenuc <= 2 ) then
  !             ccnc(mgs) = Max( ccnc(mgs), Min( qccn*rho0(mgs), ccnc(mgs) + tmp ) )
 !              ccnc(mgs) = ccnc(mgs) + tmp
-              IF ( .not. invertccn ) THEN
+              if ( .not. invertccn ) then
                ccnc(mgs) = Max( ccnc(mgs), Min( qccn*rho0(mgs), ccnc(mgs) + restoreccnfrac*tmp ) )
-              ELSE
+              else
                ccnc(mgs) = ccnc(mgs) + restoreccnfrac*tmp
-              ENDIF
-            ENDIF
-          ENDIF
+              endif
+            endif
+          endif
           cx(mgs,lc) = cx(mgs,lc) - tmp
-        ENDIF
+        endif
         thetap(mgs) = thetap(mgs) - felvcp(mgs)*QEVAP/(pi0(mgs))
-        IF ( io_flag .and. nxtra > 1 ) THEN
+        if ( io_flag .and. nxtra > 1 ) then
            axtra(igs(mgs),jy,kgs(mgs),1) = -QEVAP/dtp
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 
-      GO TO 631
+      go to 631
 
 
-  620 CONTINUE
+  620 continue
 
 !.... CLOUD CONDENSATION
 
-        IF ( qx(mgs,lc) .GT. qxmin(lc) .and. cx(mgs,lc) .ge. 1. ) THEN
+        if ( qx(mgs,lc) .GT. qxmin(lc) .and. cx(mgs,lc) .ge. 1. ) then
 
 
 
@@ -10505,42 +10505,42 @@ END SUBROUTINE nssl_2mom_driver
 !     :        (4*pi*0.89298*BS*0.5*xdia(mgs,lc,1)*cx(mgs,lc)*xdn(mgs,lc)))
 
 !
-      IF ( ssf(mgs) .gt. 0.0 .or. ssat0(mgs) .gt. 0.0 ) THEN
-       IF ( ny .le. 2 ) THEN
+      if ( ssf(mgs) .gt. 0.0 .or. ssat0(mgs) .gt. 0.0 ) then
+       if ( ny .le. 2 ) then
 !        write(0,*)  'undershoot: ',ssf(mgs),
 !     :   ( (qx(mgs,lv) - dcloud)/c1 - 1.0)*100.
-       ENDIF
+       endif
 
 
 
-       IF ( qx(mgs,lc) .gt. qxmin(lc) ) THEN
+       if ( qx(mgs,lc) .gt. qxmin(lc) ) then
 
-         IF ( xdia(mgs,lc,1) .le. 0.0 ) THEN
+         if ( xdia(mgs,lc,1) .le. 0.0 ) then
           xmas(mgs,lc) = cwmasn
           xdia(mgs,lc,1) = (xmas(mgs,lc)*cwc1)**c1f3
-         ENDIF
+         endif
         d1 = (1./(ac1 + bc))*4.0*pi*ventc &
      &        *0.5*xdia(mgs,lc,1)*cx(mgs,lc)*rhoinv(mgs)
 
-       ELSE
+       else
          d1 = 0.0
-       ENDIF
+       endif
 
-       IF ( rcond .eq. 2 .and. qx(mgs,lr) .gt. qxmin(lr) .and. cx(mgs,lr) > 1.e-9 ) THEN
-          IF ( imurain == 3 ) THEN
-           IF ( izwisventr == 1 ) THEN
+       if ( rcond .eq. 2 .and. qx(mgs,lr) .gt. qxmin(lr) .and. cx(mgs,lr) > 1.e-9 ) then
+          if ( imurain == 3 ) then
+           if ( izwisventr == 1 ) then
             rwvent(mgs) = ventrx(mgs)*(1.6 + 124.9*(1.e-3*rho0(mgs)*qx(mgs,lr))**.2046)
-           ELSE ! izwisventr = 2
+           else ! izwisventr = 2
 !  Following Wisner et al. (1972) but using gamma of volume. Note that Ferrier rain fall speed does not integrate with gamma of volume, so using Vr = ar*d^br
           rwvent(mgs) =   &
      &  (0.78*ventrx(mgs) + 0.308*ventrxn(mgs)*fvent(mgs)   &
      &   *Sqrt((ar*rhovt(mgs)))   &
      &    *(xdia(mgs,lr,1)**((1.0+br)/2.0)) )
-           ENDIF
+           endif
 
-          ELSE ! imurain == 1
+          else ! imurain == 1
 
-           IF ( iferwisventr == 1 ) THEN
+           if ( iferwisventr == 1 ) then
              alpr = Min(alpharmax,alpha(mgs,lr) )
 !             alpr = alpha(mgs,lr)
              x =  1. + alpr
@@ -10566,7 +10566,7 @@ END SUBROUTINE nssl_2mom_driver
      &    0.308*fvent(mgs)*y*   &
      &            Sqrt(ax(lr)*rhovt(mgs))*(vent1/vent2)
 
-           ELSEIF ( iferwisventr == 2 ) THEN
+           elseif ( iferwisventr == 2 ) then
           
 !  Following Wisner et al. (1972) but using gamma of volume. Note that Ferrier rain fall speed does not integrate with gamma of volume, so using Vr = ar*d^br
             x =  1. + alpha(mgs,lr)
@@ -10577,15 +10577,15 @@ END SUBROUTINE nssl_2mom_driver
      &         *(xdia(mgs,lr,1)**((1.0+br)/2.0)) )
 
           
-          ENDIF ! iferwisventr
+          endif ! iferwisventr
           
-       ENDIF ! imurain
+       endif ! imurain
 
        d1r = (1./(ac1 + bc))*4.0*pi*rwvent(mgs) & 
      &        *0.5*xdia(mgs,lr,1)*cx(mgs,lr)*rhoinv(mgs)
-       ELSE
+       else
        d1r = 0.0
-       ENDIF
+       endif
        
        
        e1  = felvcp(mgs)/(pi0(mgs))
@@ -10620,11 +10620,11 @@ END SUBROUTINE nssl_2mom_driver
 ! and fast changes, then can switch to a larger step (dtcon2) for the
 ! rest of the big time step.
 ! base the initial time step (dtcon1) on the slope (delta)
-       IF ( Abs(ss1 - 1.0) .gt. 1.e-5 ) THEN
+       if ( Abs(ss1 - 1.0) .gt. 1.e-5 ) then
          delta = 0.5*(qv1-qvs1)/(d1*(ss1 - 1.0))
-       ELSE
+       else
          delta = 0.1*dtp
-       ENDIF
+       endif
 ! delta is the extrapolated time to get halfway from qv1 to qvs1
 ! want at least 5 time steps to the halfway point, so multiply by 0.2
 ! for the initial time step
@@ -10642,13 +10642,13 @@ END SUBROUTINE nssl_2mom_driver
        dqvii = 0.0
        dqvis = 0.0
 
-       RK2c: DO WHILE ( dt1 .lt. dtp )
+       RK2c: do WHILE ( dt1 .lt. dtp )
           nc = 0
-          IF ( n .le. 4 ) THEN
+          if ( n .le. 4 ) then
             dtcon = dtcon1
-          ELSE
+          else
             dtcon = dtcon2
-          ENDIF
+          endif
  609       dqv  = -(ss1 - 1.)*d1*dtcon
            dqvr = -(ss1 - 1.)*d1r*dtcon
             dtemp = -0.5*e1*f1*(dqv + dqvr)
@@ -10660,8 +10660,8 @@ END SUBROUTINE nssl_2mom_driver
            ltemq1m = (temp1+dtemp-163.15)*fqsati+1.5
            ltemq1m = Min( nqsat, Max(1,ltemq1m) )
 
-           IF ( ltemq1m .lt. 1 .or. ltemq1m .gt. nqsat ) THEN
-             write(0,*) 'STOP in nucond line 1192 '
+           if ( ltemq1m .lt. 1 .or. ltemq1m .gt. nqsat ) then
+             write(0,*) 'stop in nucond line 1192 '
              write(0,*) ' ltemq1m,icond = ',ltemq1m,icond
              write(0,*) ' dtemp,e1,f1,dqv,dqvr = ', dtemp,e1,f1,dqv,dqvr
              write(0,*) ' d1,d1r,dtcon,ss1 = ',d1,d1r,dtcon,ss1
@@ -10673,7 +10673,7 @@ END SUBROUTINE nssl_2mom_driver
              write(0,*) ' rwvent,xdia,crw,ccw = ', rwvent(mgs),xdia(mgs,lr,1),cx(mgs,lr),cx(mgs,lc)
              write(0,*) ' fvent,alphar = ',fvent(mgs),alpha(mgs,lr)
              write(0,*) ' xvr,xmasr,xdnr,cwc1 = ',xv(mgs,lr),xmas(mgs,lr),xdn(mgs,lr),cwc1
-           ENDIF
+           endif
             dqvs = dtemp*p380*dtabqvs(ltemq1m)
             qv1m = qv1 + dqv + dqvr
 !          qv1mr = qv1r + dqvr
@@ -10682,14 +10682,14 @@ END SUBROUTINE nssl_2mom_driver
             ss1m = qv1m/qvs1m
 
     ! check for undersaturation when no ice is present, if so, then reduce time step
-          IF ( ss1m .lt. 1.  .and. (dqvii + dqvis) .eq. 0.0 ) THEN
+          if ( ss1m .lt. 1.  .and. (dqvii + dqvis) .eq. 0.0 ) then
             dtcon = (0.5*dtcon)
-            IF ( dtcon .ge. dtcon1 ) THEN
+            if ( dtcon .ge. dtcon1 ) then
              GOTO 609
-            ELSE
-             EXIT
-            ENDIF
-          ENDIF
+            else
+             exit
+            endif
+          endif
 ! calculate full step:
           dqv  = -(ss1m - 1.)*d1*dtcon
           dqvr = -(ss1m - 1.)*d1r*dtcon
@@ -10704,11 +10704,11 @@ END SUBROUTINE nssl_2mom_driver
            ltemq1 = (temp1+dtemp-163.15)*fqsati+1.5
            ltemq1 = Min( nqsat, Max(1,ltemq1) )
 
-           IF ( ltemq1 .lt. 1 .or. ltemq1 .gt. nqsat ) THEN
-             write(0,*) 'STOP in nucond line 1230 '
+           if ( ltemq1 .lt. 1 .or. ltemq1 .gt. nqsat ) then
+             write(0,*) 'stop in nucond line 1230 '
              write(0,*) ' ltemq1m,icond = ',ltemq1m,icond
              write(0,*) ' dtemp,e1,dqv,dqvr = ', dtemp,e1,dqv,dqvr
-           ENDIF
+           endif
           dqvs = dtemp*p380*dtabqvs(ltemq1)
 
           qv1 = qv1 + dqv + dqvr
@@ -10719,31 +10719,31 @@ END SUBROUTINE nssl_2mom_driver
           qvs1 = qvs1 + dqvs
           ss1 = qv1/qvs1
           temp1 = temp1 + dtemp
-          IF ( temp2 .eq. temp1 .or. ss2 .eq. ss1 .or.  &
+          if ( temp2 .eq. temp1 .or. ss2 .eq. ss1 .or.  &
      &           ss1 .eq. 1.00 .or.  &
-     &      ( n .gt. 10 .and. ss1 .lt. 1.0005 ) ) THEN
+     &      ( n .gt. 10 .and. ss1 .lt. 1.0005 ) ) then
 !           write(0,*) 'RK2c break'
-           EXIT
-          ELSE
+           exit
+          else
            ss2 = ss1
            temp2 = temp1
            dt1 = dt1 + dtcon
            n = n + 1
-          ENDIF
-       ENDDO RK2c
+          endif
+       enddo RK2c
 
 
         dcloud = dqc ! qx(mgs,lv) - qv1
         thetap(mgs) = thetap(mgs) + e1*(DCLOUD + dqr)
 
 
-        IF ( eqtset > 2 ) THEN
+        if ( eqtset > 2 ) then
            pipert(mgs) = pipert(mgs) + felvpi(mgs)*(DCLOUD + dqr)
-        ENDIF
-        IF ( io_flag .and. nxtra > 1 ) THEN
+        endif
+        if ( io_flag .and. nxtra > 1 ) then
            axtra(igs(mgs),jy,kgs(mgs),1) = DCLOUD/dtp
            axtra(igs(mgs),jy,kgs(mgs),2) = axtra(igs(mgs),jy,kgs(mgs),2) + dqr/dtp
-        ENDIF
+        endif
         qwvp(mgs) = qwvp(mgs) - (DCLOUD + dqr)
         qx(mgs,lc) = qx(mgs,lc) + DCLOUD
         qx(mgs,lr) = qx(mgs,lr) + dqr
@@ -10751,18 +10751,18 @@ END SUBROUTINE nssl_2mom_driver
 !!     &                 dx*dy*dz3d(igs(mgs),jy,kgs(mgs))
 
 
-        IF ( lzr > 1 .and. rcond == 2 .and. qx(mgs,lr) .gt. qxmin(lr)   &
-     &       .and. cx(mgs,lr) .gt. 1.e-9 ) THEN
+        if ( lzr > 1 .and. rcond == 2 .and. qx(mgs,lr) .gt. qxmin(lr)   &
+     &       .and. cx(mgs,lr) .gt. 1.e-9 ) then
           tmp = qx(mgs,lr)/cx(mgs,lr)
-          IF ( imurain == 3 ) THEN
+          if ( imurain == 3 ) then
           g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
-          ELSE
+          else
             g1 = 36.*(6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il))*pi**2)
           
-          ENDIF
+          endif
           zx(mgs,lr) = zx(mgs,lr) + g1*(rho0(mgs)/(xdn(mgs,lr)))**2*( 2.*( tmp ) * dqr )
-        ENDIF
+        endif
 
         theta(mgs) = thetap(mgs) + theta0(mgs)
         temg(mgs) = theta(mgs)*f1
@@ -10773,27 +10773,27 @@ END SUBROUTINE nssl_2mom_driver
 
 !
 
-      ENDIF  ! dcloud .gt. 0.
+      endif  ! dcloud .gt. 0.
 
 
-      ELSE  ! qc .le. qxmin(lc)
+      else  ! qc .le. qxmin(lc)
 
 !        IF ( ssf(mgs) .gt. 0.0 .and. .not. flag_qndrop ) THEN ! flag_qndrop turns off primary nucleation when using wrf-chem with progn=1
-        IF ( ssf(mgs) .gt. 0.0 ) THEN ! .and.  ssmax(mgs) .lt. sscb ) THEN ! except that wrf-chem does not seem to initialize qc for activated aerosols, so keep this, after all
+        if ( ssf(mgs) .gt. 0.0 ) then ! .and.  ssmax(mgs) .lt. sscb ) then ! except that wrf-chem does not seem to initialize qc for activated aerosols, so keep this, after all
 
-          IF ( iqcinit == 1 ) THEN
+          if ( iqcinit == 1 ) then
 
          qvs0   = 380.*exp(17.27*(temg(mgs)-273.)/(temg(mgs)- 36.))/pk(mgs)
 
          dcloud = Max(0.0, (qx(mgs,lv)-qvs0) / (1.+qvs0*f5/(temg(mgs)-36.)**2) )
 
-          ELSEIF ( iqcinit == 3 ) THEN
+          elseif ( iqcinit == 3 ) then
               R1=1./(1. + caw*(273.15 - cbw)*qss(mgs)*felvcp(mgs)/ & 
      &             ((temg(mgs) - cbw)**2))
             DCLOUD=R1*(qvap(mgs) - qvs(mgs))  ! KW model adjustment; 
                               ! this will put mass into qc if qv > sqsat exists
           
-          ELSEIF ( iqcinit == 2 ) THEN
+          elseif ( iqcinit == 2 ) then
 !              R1=1./(1. + caw*(273.15 - cbw)*qss(mgs)*felv(mgs)/
 !     :             (cp*(temg(mgs) - cbw)**2))
 !            DCLOUD=R1*(qvap(mgs) - qvs(mgs))  ! KW model adjustment; 
@@ -10805,25 +10805,25 @@ END SUBROUTINE nssl_2mom_driver
 !          IF ( ssf(mgs) > ssmx  .and. ssf(mgs) < 5.0 .and. ccnc(mgs) > 0.1*cwnccn(mgs) ) THEN ! this one works
 !          IF ( ssf(mgs) > ssmx  .and. ssf(mgs) < 20.0 ) THEN ! test -- fails
 !          IF ( ssf(mgs) > ssmx  .and. ssf(mgs) < 20.0 .and. ccnc(mgs) > 0.1*cwnccn(mgs)) THEN ! test -- is OK
-          IF ( ssf(mgs) > ssmx  .and. ssf(mgs) < 20.0 .and.  &
-             ( ccnc(mgs) > 0.05*cwnccn(mgs) .or. ( ac_opt > 0 .and. ccnc_ac(mgs) - cx(mgs,lc) > 0.0 ) ) ) THEN ! test
+          if ( ssf(mgs) > ssmx  .and. ssf(mgs) < 20.0 .and.  &
+             ( ccnc(mgs) > 0.05*cwnccn(mgs) .or. ( ac_opt > 0 .and. ccnc_ac(mgs) - cx(mgs,lc) > 0.0 ) ) ) then ! test
 !          IF ( ssf(mgs) > ssmx ) THEN ! original condition
-           CALL QVEXCESS(ngs,mgs,qwvp,qv0,qx(1,lc),pres,thetap,theta0,dcloud, & 
+           call QVEXCESS(ngs,mgs,qwvp,qv0,qx(1,lc),pres,thetap,theta0,dcloud, & 
      &      pi0,tabqvs,nqsat,fqsat,cbw,fcqv1,felvcp,ssmx,pk,ngscnt)
-          ELSE
+          else
             dcloud = 0.0
-          ENDIF
-         ENDIF
-        ELSE
+          endif
+         endif
+        else
             dcloud = 0.0
-        ENDIF
+        endif
         
         thetap(mgs) = thetap(mgs) + felvcp(mgs)*DCLOUD/(pi0(mgs))
         qwvp(mgs) = qwvp(mgs) - DCLOUD
         qx(mgs,lc) = qx(mgs,lc) + DCLOUD
-        IF ( io_flag .and. nxtra > 1 ) THEN
+        if ( io_flag .and. nxtra > 1 ) then
            axtra(igs(mgs),jy,kgs(mgs),1) = DCLOUD/dtp
-        ENDIF
+        endif
         theta(mgs) = thetap(mgs) + theta0(mgs)
         temg(mgs) = theta(mgs)*pk(mgs) !( pres(mgs) / poo ) ** cap
 !        temg(mgs) = theta2temp( theta(mgs), pres(mgs) )
@@ -10836,70 +10836,70 @@ END SUBROUTINE nssl_2mom_driver
 ! Note: get here if there is no previous cloud water and w > 0.
       cn(mgs) = 0.0
       
-      IF ( ncdebug .ge. 1 ) THEN
+      if ( ncdebug .ge. 1 ) then
         write(iunit,*) 'at 613: ',qx(mgs,lc),cx(mgs,lc),wvel(mgs),ssmax(mgs),kgs(mgs)
-      ENDIF
+      endif
       
-      IF (  .not. flag_qndrop ) THEN ! { do not calculate number of droplets if using wrf-chem
+      if (  .not. flag_qndrop ) then ! { do not calculate number of droplets if using wrf-chem
 
-      IF ( ac_opt == 0 ) THEN
+      if ( ac_opt == 0 ) then
         cnuctmp = cnuc(mgs)
-      ELSE
+      else
         cnuctmp = ccnc_ac(mgs)
-      ENDIF
+      endif
       
 !      IF ( ssmax(mgs) .lt. sscb .and. qx(mgs,lc) .gt. qxmin(lc)) THEN
-      IF ( dcloud .gt. qxmin(lc) .and. wvel(mgs) > 0.0) THEN
+      if ( dcloud .gt. qxmin(lc) .and. wvel(mgs) > 0.0) then
 !       CN(mgs) =   CCNE*wvel(mgs)**cnexp ! *Min(1.0,1./dtp) ! 0.3465
        CN(mgs) =   CCNE0*cnuctmp**(2./(2.+cck))*wvel(mgs)**cnexp ! *Min(1.0,1./dtp) ! 0.3465
-        IF ( ny .le. 2 .and. cn(mgs) .gt. 0.0    &
-     &                    .and. ncdebug .ge. 1 ) THEN 
+        if ( ny .le. 2 .and. cn(mgs) .gt. 0.0    &
+     &                    .and. ncdebug .ge. 1 ) then 
           write(iunit,*) 'CN: ',cn(mgs)*1.e-6, cx(mgs,lc)*1.e-6, qx(mgs,lc)*1.e3,   &
      &       wvel(mgs), dcloud*1.e3
-          IF ( cn(mgs) .gt. 1.0 ) write(iunit,*) 'cwrad = ',   &
+          if ( cn(mgs) .gt. 1.0 ) write(iunit,*) 'cwrad = ',   &
      &       1.e6*(rho0(mgs)*qx(mgs,lc)/cn(mgs)*cwc1)**c1f3,   &
      &   igs(mgs),kgs(mgs),temcg(mgs),    &
      &   1.e3*an(igs(mgs),jgs,kgs(mgs)-1,lc)
-        ENDIF
-        IF ( iccwflg .eq. 1 ) THEN
+        endif
+        if ( iccwflg .eq. 1 ) then
           cn(mgs) = Min(cwccn*rho0(mgs)/rho00, Max(cn(mgs),   &
      &       rho0(mgs)*qx(mgs,lc)/(xdn(mgs,lc)*(4.*pi/3.)*(4.e-6)**3)))
-        ENDIF
-      ELSE
+        endif
+      else
        cn(mgs) = 0.0
        dcloud = 0.0
 !          cn(mgs) = Min(cwccn,    &
 !     &       rho0(mgs)*dcloud/(xdn(mgs,lc)*(4.*pi/3.)*(4.e-6)**3) )
-      ENDIF
+      endif
 
-      IF ( cn(mgs) .gt. 0.0 ) THEN
-       IF ( ac_opt == 0 ) THEN
-         IF ( cn(mgs) .gt. ccnc(mgs) ) THEN
+      if ( cn(mgs) .gt. 0.0 ) then
+       if ( ac_opt == 0 ) then
+         if ( cn(mgs) .gt. ccnc(mgs) ) then
            cn(mgs) = ccnc(mgs)
 !          ccnc(mgs) = 0.0
-         ENDIF
-       ELSE 
+         endif
+       else 
          cn(mgs) = Min( cn(mgs), ccnc_ac(mgs) )
-       ENDIF
+       endif
 !      cx(mgs,lc) = cx(mgs,lc) + cn(mgs)
-      IF ( irenuc <= 2 .and. lccna < 1  ) ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
+      if ( irenuc <= 2 .and. lccna < 1  ) ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
       ccna(mgs) = ccna(mgs) + cn(mgs)
-      ENDIF
+      endif
 
 !       write(91,*) 'nuc1: cn, ix, kz = ',cn(mgs),igs(mgs),kgs(mgs),wvel(mgs),cnexp,ccnc(mgs)
 
-      IF( CN(mgs) .GT. cx(mgs,lc) ) cx(mgs,lc) = CN(mgs)
-      IF( cx(mgs,lc) .GT. 0. .AND. qx(mgs,lc) .le. qxmin(lc) ) THEN
+      if( CN(mgs) .GT. cx(mgs,lc) ) cx(mgs,lc) = CN(mgs)
+      if( cx(mgs,lc) .GT. 0. .AND. qx(mgs,lc) .le. qxmin(lc) ) then
         cx(mgs,lc) = 0.
-      ELSE
+      else
         cx(mgs,lc) = Min(cx(mgs,lc),rho0(mgs)*Max(0.0,qx(mgs,lc))/cwmasn)
-      ENDIF
+      endif
       
-      ENDIF ! }.not. flag_qndrop
+      endif ! }.not. flag_qndrop
 
         GOTO 613
         
-        END IF ! qc .gt. 0.
+        end if ! qc .gt. 0.
 
 !        ES=EES(PIB(K)*PT)
 !        SQSAT=EPSI*ES/(PB(K)*1000.-ES)
@@ -10908,17 +10908,17 @@ END SUBROUTINE nssl_2mom_driver
 !      T=PIB(K)*PT
 !      ES=1.E3*PB(K)*QV/EPSI
 
-      IF ( wvel(mgs) .le. 0. ) GO TO 616
-      IF ( cx(mgs,lc) .le. 0. )  GO TO 613                             !TWOMEY (1959) Nucleation
-      IF ( kzbeg-1+kgs(mgs) .GT. 1 .and. qx(mgs,lc) .le. qxmin(lc)) GO TO 613  !TWOMEY (1959) Nucleation
-      IF ( kzbeg-1+kgs(mgs) .eq. 1 .and. wvel(mgs) .gt. 0. ) GO TO 613         !TWOMEY (1959) Nucleation
+      if ( wvel(mgs) .le. 0. ) go to 616
+      if ( cx(mgs,lc) .le. 0. )  go to 613                             !TWOMEY (1959) Nucleation
+      if ( kzbeg-1+kgs(mgs) .GT. 1 .and. qx(mgs,lc) .le. qxmin(lc)) go to 613  !TWOMEY (1959) Nucleation
+      if ( kzbeg-1+kgs(mgs) .eq. 1 .and. wvel(mgs) .gt. 0. ) go to 613         !TWOMEY (1959) Nucleation
 !.... ATTEMPT ZIEGLER CLOUD NUCLEATION IN CLOUD INTERIOR UNLESS...
-  616 IF ( ssf(mgs) .LE. SUPCB .AND. wvel(mgs) .GT. 0. ) GO TO 631 !... weakly saturated updraft
-      IF ( kzbeg-1+kgs(mgs) .GT. 1 .AND. kzbeg-1+kgs(mgs) .LT. nzend-1 .AND.  &
+  616 if ( ssf(mgs) .LE. SUPCB .AND. wvel(mgs) .GT. 0. ) go to 631 !... weakly saturated updraft
+      if ( kzbeg-1+kgs(mgs) .GT. 1 .AND. kzbeg-1+kgs(mgs) .LT. nzend-1 .AND.  &
      &    (ssfkp1(mgs) .GE. SUPMX .OR. &
      &     ssf(mgs)    .GE. SUPMX .OR. &
-     &     ssfkm1(mgs) .GE. SUPMX)) GO TO 631                      !... too much vapour
-      IF (ssf(mgs) .LT. 1.E-10 .OR. ssf(mgs) .GE. SUPMX) GO TO 631 !... at the extremes for ss
+     &     ssfkm1(mgs) .GE. SUPMX)) go to 631                      !... too much vapour
+      if (ssf(mgs) .LT. 1.E-10 .OR. ssf(mgs) .GE. SUPMX) go to 631 !... at the extremes for ss
 
 !
 ! get here if ( qc > 0 and ss > supcb) or (w < 0)
@@ -10929,74 +10929,74 @@ END SUBROUTINE nssl_2mom_driver
       DSSDZ=0.
       r2dzm=0.50/dz3d(igs(mgs),jy,kgs(mgs))
 
-      IF ( irenuc >= 0 .and. ac_opt == 0 .and. .not. flag_qndrop ) THEN ! turn off nucleation when flag_qndrop (using WRF-CHEM for activation)
+      if ( irenuc >= 0 .and. ac_opt == 0 .and. .not. flag_qndrop ) then ! turn off nucleation when flag_qndrop (using WRF-CHEM for activation)
 
-      IF ( irenuc < 2 ) THEN !{
+      if ( irenuc < 2 ) then !{
 
-        IF ( kzend == nzend ) THEN
+        if ( kzend == nzend ) then
           t0p3 = t0(igs(mgs),jgs,Min(kze,kgs(mgs)+3))
           t0p1 = t0(igs(mgs),jgs,Min(kze,kgs(mgs)+1))
-        ELSE
+        else
           t0p3 = t0(igs(mgs),jgs,kgs(mgs)+3)
           t0p1 = t0(igs(mgs),jgs,kgs(mgs)+1)
-        ENDIF
+        endif
 
-      IF ( ( ssf(mgs) .gt. ssmax(mgs) .or.  irenuc .eq. 1 ) &
+      if ( ( ssf(mgs) .gt. ssmax(mgs) .or.  irenuc .eq. 1 ) &
      &   .and.  ( ( lccn .lt. 1 .and.  &
      &            cx(mgs,lc) .lt. cwccn*(Min(1.0,rho0(mgs)))) .or. &
      &    ( lccn .gt. 1 .and. ccnc(mgs) .gt. 0. )   ) &
-     &    ) THEN
-      IF( kzbeg-1+kgs(mgs) .GT. 1 .AND. kzbeg-1+kgs(mgs) .LT. nzend-1 &
+     &    ) then
+      if( kzbeg-1+kgs(mgs) .GT. 1 .AND. kzbeg-1+kgs(mgs) .LT. nzend-1 &
      &  .and. ssf(mgs) .gt. 0.0 &
      &  .and. ssfkp1(mgs) .LT. SUPMX .and. ssfkp1(mgs) .ge. 0.0  &
      &  .AND. ssfkm1(mgs) .LT. SUPMX .AND. ssfkm1(mgs) .ge. 0.0  &
      &  .AND. ssfkp1(mgs) .gt. ssfkm1(mgs)  &
-     &  .and. t0p3 .gt. 233.2) THEN
+     &  .and. t0p3 .gt. 233.2) then
           DSSDZ = (ssfkp1(mgs) - ssfkm1(mgs))*R2DZM
 !
 ! otherwise check for cloud base condition with updraft:
 !
-        ELSEIF( kzbeg-1+kgs(mgs) .GT. 1 .AND. kzbeg-1+kgs(mgs) .LT. nzend-1 &
+        elseif( kzbeg-1+kgs(mgs) .GT. 1 .AND. kzbeg-1+kgs(mgs) .LT. nzend-1 &
 !        IF( kgs(mgs) .GT. 1 .AND. kgs(mgs) .LT. NZ-1 & !)
      &  .and. ssf(mgs) .gt. 0.0  .and. wvel(mgs) .gt. 0.0 &
      &  .and. ssfkp1(mgs) .gt. 0.0   &
      &  .AND. ssfkm1(mgs) .le. 0.0 .and. wvelkm1(mgs) .gt. 0.0 &
      &  .AND. ssf(mgs) .gt. ssfkm1(mgs)  &
-     &  .and. t0p1 .gt. 233.2) THEN
+     &  .and. t0p1 .gt. 233.2) then
          DSSDZ = 2.*(ssf(mgs) - ssfkm1(mgs))*R2DZM  ! 1-sided difference
-        ENDIF
+        endif
 
-       ENDIF
+       endif
 !
 !CLZ  IF(wijk.LE.0.) CN=CCN*ssfilt(ix,jy,kz)**CCK
 ! note: CCN -> cwccn, DELT -> dtp
       c1 = Max(0.0, rho0(mgs)*(qx(mgs,lv) - qss(mgs))/ &
      &        (xdn(mgs,lc)*(4.*pi/3.)*(4.e-6)**3))
-      IF ( lccn .lt. 1 ) THEN
+      if ( lccn .lt. 1 ) then
        CN(mgs) = cwccn*rho0(mgs)/rho00*CCK*ssf(mgs)**CCKM*dtp*   &
      & Max(0.0,    &
      &         (wvel(mgs)*DSSDZ) )      ! probably the vertical gradient dominates
-      ELSE
+      else
       CN(mgs) =  &
      &    Min(ccnc(mgs), cnuc(mgs)*CCK*ssf(mgs)**CCKM*dtp*   &
      & Max(0.0,    &
      &         ( wvel(mgs)*DSSDZ) )  )
 !      IF ( cn(mgs) .gt. 0 ) ccnc(mgs) = ccnc(mgs) - cn(mgs)
-      ENDIF
+      endif
 
-      IF ( cn(mgs) .gt. 0.0 ) THEN
-       IF ( ccnc(mgs) .lt. 5.e7 .and. cn(mgs) .ge. 5.e7 ) THEN
+      if ( cn(mgs) .gt. 0.0 ) then
+       if ( ccnc(mgs) .lt. 5.e7 .and. cn(mgs) .ge. 5.e7 ) then
           cn(mgs) = 5.e7
           ccnc(mgs) = 0.0
-       ELSEIF ( cn(mgs) .gt. ccnc(mgs) ) THEN
+       elseif ( cn(mgs) .gt. ccnc(mgs) ) then
          cn(mgs) = ccnc(mgs)
          ccnc(mgs) = 0.0
-       ENDIF
+       endif
       cx(mgs,lc) = cx(mgs,lc) + cn(mgs)
       ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
-      ENDIF
+      endif
 
-      ELSEIF ( irenuc == 2 ) THEN !} { 
+      elseif ( irenuc == 2 ) then !} { 
       ! simple Twomey scheme
 !      if (ndebug .gt. 0) write(0,*) 'ICEZVD_DR:  Cloud reNucleation, wvel = ',wvel(mgs)
        CN(mgs) =   CCNE0*cnuc(mgs)**(2./(2.+cck))*Max(0.0,wvel(mgs))**cnexp ! *Min(1.0,1./dtp) ! 0.3465
@@ -11008,21 +11008,21 @@ END SUBROUTINE nssl_2mom_driver
        cn(mgs) = Min(cn(mgs), 0.5*dqc/cwmasn) ! limit the nucleation mass to half of the condensation mass
        CN(mgs) = Min( CN(mgs), Max(0.0, (cnuc(mgs) - ccna(mgs) )) )
        
-        IF ( .false. .and. ny <= 2 ) THEN
+        if ( .false. .and. ny <= 2 ) then
           write(0,*) 'i,k, cwmasn = ',igs(mgs),kgs(mgs),cwmasn
           write(0,*) 'wvel, cnuc, cn = ',wvel(mgs),cnuc(mgs),cn(mgs)
           write(0,*) 'ccne0,cnexp,cck = ',ccne0,cnexp,cck
           write(0,*) 'part1, part2 = ',CCNE0*cnuc(mgs)**(2./(2.+cck)), Max(0.0,wvel(mgs))**cnexp
           write(0,*) 'ccnc, dqc, dqc/cwmasn = ',ccnc(mgs), dqc, 0.5*dqc/cwmasn
-        ENDIF
+        endif
        
-       IF ( icnuclimit > 0 ) THEN 
+       if ( icnuclimit > 0 ) then 
          tmp = ccnc(mgs) + cx(mgs,lc)
-         IF ( tmp < 330.34e6 ) THEN
+         if ( tmp < 330.34e6 ) then
            ccwmax = 1.1173e6 * (1.e-6*tmp)**0.9504
-         ELSE
+         else
            ccwmax = 21.57e6 * (1.e-6*tmp)**0.44
-         ENDIF
+         endif
          
 !         IF ( cn(mgs) > 0. ) THEN
 !          write(0,*) 'cn,tmp,ccwmax,cx,c-cx = ',cn(mgs),tmp,ccwmax,cx(mgs,lc),ccwmax - cx(mgs,lc) 
@@ -11030,13 +11030,13 @@ END SUBROUTINE nssl_2mom_driver
          
         cn(mgs) = Max( 0.0, Min( cn(mgs), ccwmax - cx(mgs,lc) ) )
        
-       ENDIF
+       endif
        
        cx(mgs,lc) = cx(mgs,lc) + cn(mgs)
        
-       IF ( lccna < 1 ) ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
+       if ( lccna < 1 ) ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
 
-      ELSEIF ( irenuc == 3 ) THEN !} { 
+      elseif ( irenuc == 3 ) then !} { 
       ! Phillips Donner Garner 2007
 !      if (ndebug .gt. 0) write(0,*) 'ICEZVD_DR:  Cloud reNucleation, wvel = ',wvel(mgs)
 !       CN(mgs) =   cwccn*Min(ssf(mgs),ssfcut)**cck 
@@ -11049,9 +11049,9 @@ END SUBROUTINE nssl_2mom_driver
           c1= pqs(mgs)*tabqvs(ltemq)
 
           ssf(mgs) = 0.0
-          IF ( c1 > 0. ) THEN
+          if ( c1 > 0. ) then
             ssf(mgs) = 100.*(qx(mgs,lv)/c1 - 1.0)  ! from "new" values
-          ENDIF
+          endif
        CN(mgs) =   cnuc(mgs)*Min(1.0, (ssf(mgs))**cck ) ! 
 
        CN(mgs) = Max( 0.0, CN(mgs) - ccna(mgs) ) ! this was from
@@ -11066,7 +11066,7 @@ END SUBROUTINE nssl_2mom_driver
        ! This would allow an initially non-homogeneous (vertically, e.g.) initial value of CCN/rho_air
         ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs)) 
        
-      ELSEIF ( irenuc == 4 ) THEN !} { 
+      elseif ( irenuc == 4 ) then !} { 
       ! modification of Phillips Donner Garner 2007
 !      if (ndebug .gt. 0) write(0,*) 'ICEZVD_DR:  Cloud reNucleation, wvel = ',wvel(mgs)
 !       CN(mgs) =   CCNE0*cnuc(mgs)**(2./(2.+cck))*Max(0.0,wvel(mgs))**cnexp
@@ -11077,11 +11077,11 @@ END SUBROUTINE nssl_2mom_driver
          ltemq = Min( nqsat, Max(1,ltemq) )
 
           c1= pqs(mgs)*tabqvs(ltemq)
-          IF ( c1 > 0. ) THEN
+          if ( c1 > 0. ) then
             ssf(mgs) = Max(0.0, 100.*((qv0(mgs) + qwvp(mgs))/c1 - 1.0) )  ! from "new" values
-          ELSE
+          else
             ssf(mgs) = 0.0
-          ENDIF
+          endif
        CN(mgs) =   cnuc(mgs)*Min(ssf2kmax, ssf(mgs)**cck) ! this allows cn(mgs) > cnuc(mgs)
 
        CN(mgs) = Max( 0.0, CN(mgs) - ccna(mgs) ) ! this was from
@@ -11090,7 +11090,7 @@ END SUBROUTINE nssl_2mom_driver
 !       CN(mgs) = Min(cn(mgs), ccnc(mgs))
        cn(mgs) = Min(cn(mgs), 0.5*dqc/cwmasn) ! limit the nucleation mass to half of the condensation mass
        
-       IF ( cn(mgs) > 0.0 ) THEN
+       if ( cn(mgs) > 0.0 ) then
        cx(mgs,lc) = cx(mgs,lc) + cn(mgs)
        ! ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs)) 
        
@@ -11100,27 +11100,27 @@ END SUBROUTINE nssl_2mom_driver
         qx(mgs,lc) = qx(mgs,lc) + DCLOUD
         thetap(mgs) = thetap(mgs) + felvcp(mgs)*DCLOUD/(pi0(mgs))
         qwvp(mgs) = qwvp(mgs) - DCLOUD
-        ENDIF
+        endif
        ! 6/13/2016: Phillips et al. appears not to decrement CCN, but only increments CCNa.
        ! This would allow an initially non-homogeneous (vertically, e.g.) initial value of CCN/rho_air
 !        ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
        
 
 
-      ELSEIF ( irenuc == 6 ) THEN !} { 
+      elseif ( irenuc == 6 ) then !} { 
 
       ! simple Twomey scheme but limit activation to try to do most activation near cloud base, but keep some CCN available for renuclation
 !      if (ndebug .gt. 0) write(0,*) 'ICEZVD_DR:  Cloud reNucleation, wvel = ',wvel(mgs)
        cn(mgs) = 0.0
 !       IF ( ccna(mgs) < 0.7*cnuc(mgs) .and. ccnc(mgs) > 0.69*cnuc(mgs) - ccna(mgs)) THEN ! here, assume we are near cloud base and use Twomey formulation
-       IF ( ccna(mgs) < 0.7*cnuc(mgs) ) THEN ! here, assume we are near cloud base and use Twomey formulation
+       if ( ccna(mgs) < 0.7*cnuc(mgs) ) then ! here, assume we are near cloud base and use Twomey formulation
          CN(mgs) =  Min( 0.9*cnuc(mgs), CCNE0*cnuc(mgs)**(2./(2.+cck))*Max(0.0,wvel(mgs))**cnexp )! *Min(1.0,1./dtp) ! 0.3465
 !         IF ( cn(mgs) + ccna(mgs) > 0.71*cnuc ) THEN
          ! prevent this branch from activating more than 70% of CCN
            CN(mgs) = Min( CN(mgs), Max(0.0, (0.7*cnuc(mgs) - ccna(mgs) )) )
 !           CN(mgs) = Min( CN(mgs), Max(0.0, 0.71*ccnc(mgs) - ccna(mgs) ) )
            
-       ELSE
+       else
         ! if a large fraction of CCN have been activated, then assume we are in the cloud interior and use local SSw as in Phillips et al. 2007.
 
          temp1 = (theta0(mgs)+thetap(mgs))*pk(mgs) ! t77(ix,jy,kz)
@@ -11130,11 +11130,11 @@ END SUBROUTINE nssl_2mom_driver
 
 !          c1 = t00(igs(mgs),jy,kgs(mgs))*tabqvs(ltemq)
           c1= pqs(mgs)*tabqvs(ltemq)
-          IF ( c1 > 0. ) THEN
+          if ( c1 > 0. ) then
             ssf(mgs) = Max(0.0, 100.*((qv0(mgs) + qwvp(mgs))/c1 - 1.0) )  ! from "new" values
-          ELSE
+          else
             ssf(mgs) = 0.0
-          ENDIF
+          endif
 
 !        CN(mgs) = cnuc(mgs)*Min(0.99, Min(ssf(mgs),ssfcut)**cck ) ! 
          CN(mgs) =   cnuc(mgs)*Min(2.0, Max(0.0,ssf(mgs))**cck ) ! 
@@ -11143,7 +11143,7 @@ END SUBROUTINE nssl_2mom_driver
 
         CN(mgs) = Min(0.01*cnuc(mgs), Max( 0.0, CN(mgs) - ccna(mgs) ) ) ! this was from
 !        cn(mgs) = 0.0
-       ENDIF
+       endif
 !      ccne = ccnefac*1.e6*(1.e-6*Abs(cwccn))**(2./(2.+cck))
 !!!       CN(mgs) = Max( 0.0, CN(mgs) - ccna(mgs) ) ! this was from
                ! Philips, Donner et al. 2007, but results in too much limitation of
@@ -11151,7 +11151,7 @@ END SUBROUTINE nssl_2mom_driver
 !       CN(mgs) = Min(cn(mgs), ccnc(mgs))
 !       cn(mgs) = Min(cn(mgs), 0.5*dqc/cwmasn) ! limit the nucleation mass to half of the condensation mass
        
-       IF ( cn(mgs) > 0.0 ) THEN
+       if ( cn(mgs) > 0.0 ) then
        cx(mgs,lc) = cx(mgs,lc) + cn(mgs)
        
        ! create some small droplets at minimum size (CP 2000), although it adds very little liquid
@@ -11163,8 +11163,8 @@ END SUBROUTINE nssl_2mom_driver
         thetap(mgs) = thetap(mgs) + felvcp(mgs)*DCLOUD/(pi0(mgs))
         qwvp(mgs) = qwvp(mgs) - DCLOUD
   !      ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
-        ENDIF
-      ELSEIF ( irenuc == 5 ) THEN !} { 
+        endif
+      elseif ( irenuc == 5 ) then !} { 
 
       ! modification of Phillips Donner Garner 2007
 !      if (ndebug .gt. 0) write(0,*) 'ICEZVD_DR:  Cloud reNucleation, wvel = ',wvel(mgs)
@@ -11172,17 +11172,17 @@ END SUBROUTINE nssl_2mom_driver
        CN(mgs) =  Min( cnuc(mgs),  CCNE0*cnuc(mgs)**(2./(2.+cck))*Max(0.0,wvel(mgs))**cnexp )
 
          
-        IF ( ccna(mgs) >= cnuc(mgs) ) THEN ! apply limit after all "base" CCN have been depleted
+        if ( ccna(mgs) >= cnuc(mgs) ) then ! apply limit after all "base" CCN have been depleted
         temp1 = (theta0(mgs)+thetap(mgs))*pk(mgs) ! t77(ix,jy,kz)
           ltemq = Int( (temp1-163.15)/fqsat+1.5 )
          ltemq = Min( nqsat, Max(1,ltemq) )
 
           c1= pqs(mgs)*tabqvs(ltemq)
-          IF ( c1 > 0. ) THEN
+          if ( c1 > 0. ) then
             ssf(mgs) = Max(0.0, 100.*((qv0(mgs) + qwvp(mgs))/c1 - 1.0) )  ! from "new" values
-          ELSE
+          else
             ssf(mgs) = 0.0
-          ENDIF
+          endif
           
 
        CN(mgs) =   Max( cn(mgs), cnuc(mgs)*Min(ssf2kmax, ssf(mgs)**cck) ) ! this allows cn(mgs) > cnuc(mgs)
@@ -11192,9 +11192,9 @@ END SUBROUTINE nssl_2mom_driver
 !       IF ( ccna(mgs) >= cnuc(mgs) ) THEN ! apply limit after all "base" CCN have been depleted
        CN(mgs) = Max( 0.0, CN(mgs) - ccna(mgs) ) ! this was from
        
-       ELSE
+       else
          CN(mgs) =  Min( cn(mgs), cnuc(mgs) - ccna(mgs) ) ! no more than remaining "base" CCN
-       ENDIF
+       endif
                ! Philips, Donner et al. 2007, but results in too much limitation of
                ! nucleation
 !       CN(mgs) = Min(cn(mgs), ccnc(mgs))
@@ -11208,7 +11208,7 @@ END SUBROUTINE nssl_2mom_driver
          cn(mgs) = Min(tmp, cn(mgs) )
 
       
-       IF ( cn(mgs) > 0.0 ) THEN
+       if ( cn(mgs) > 0.0 ) then
        cx(mgs,lc) = cx(mgs,lc) + cn(mgs)
        
        dcrit = 2.5e-7
@@ -11217,22 +11217,22 @@ END SUBROUTINE nssl_2mom_driver
         qx(mgs,lc) = qx(mgs,lc) + DCLOUD
         thetap(mgs) = thetap(mgs) + felvcp(mgs)*DCLOUD/(pi0(mgs))
         qwvp(mgs) = qwvp(mgs) - DCLOUD
-        ENDIF
+        endif
        ! 6/13/2016: Phillips et al. appears not to decrement CCN, but only increments CCNa.
        ! This would allow an initially non-homogeneous (vertically, e.g.) initial value of CCN/rho_air
        ! ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
-      ELSEIF ( irenuc == 7 .or. irenuc == 17 ) THEN !} { 
+      elseif ( irenuc == 7 .or. irenuc == 17 ) then !} { 
 
       ! simple Twomey scheme but limit activation to try to do most activation near cloud base, but keep some CCN available for renuclation
 !      if (ndebug .gt. 0) write(0,*) 'ICEZVD_DR:  Cloud reNucleation, wvel = ',wvel(mgs)
        cn(mgs) = 0.0
-       IF ( irenuc == 7 ) THEN
+       if ( irenuc == 7 ) then
          frac = 0.9
-       ELSE
+       else
          frac = 0.98
-       ENDIF
+       endif
 !       IF ( ccna(mgs) < 0.7*cnuc(mgs) .and. ccnc(mgs) > 0.69*cnuc(mgs) - ccna(mgs)) THEN ! here, assume we are near cloud base and use Twomey formulation
-       IF ( ccna(mgs) < frac*cnuc(mgs) ) THEN ! { here, assume we are near cloud base and use Twomey formulation
+       if ( ccna(mgs) < frac*cnuc(mgs) ) then ! { here, assume we are near cloud base and use Twomey formulation
          CN(mgs) =  Min( (frac+0.01)*cnuc(mgs), CCNE0*cnuc(mgs)**(2./(2.+cck))*Max(0.0,wvel(mgs))**cnexp )! *Min(1.0,1./dtp) ! 0.3465
 !         IF ( cn(mgs) + ccna(mgs) > 0.71*cnuc ) THEN
          ! prevent this branch from activating more than 70% of CCN
@@ -11246,7 +11246,7 @@ END SUBROUTINE nssl_2mom_driver
 !           ENDIF
 
            
-       ELSE ! }{
+       else ! }{
         ! if a large fraction of CCN have been activated, then assume we are in the cloud interior and use local SSw as in Phillips et al. 2007.
 
          temp1 = (theta0(mgs)+thetap(mgs))*pk(mgs) ! t77(ix,jy,kz)
@@ -11258,26 +11258,26 @@ END SUBROUTINE nssl_2mom_driver
           c1= pqs(mgs)*tabqvs(ltemq)
 
           ssf(mgs) = 0.0
-          IF ( c1 > 0. ) THEN
+          if ( c1 > 0. ) then
             ssf(mgs) = 100.*(qx(mgs,lv)/c1 - 1.0)  ! from "new" values
-          ENDIF
+          endif
 
 !          IF ( ssf(mgs) <= 1.0 .or. cnuc(mgs) > ccna(mgs) ) THEN
-          IF ( ssf(mgs) <= 1.0 ) THEN
+          if ( ssf(mgs) <= 1.0 ) then
           CN(mgs) =   cnuc(mgs)*Min(1.0, Max(0.0,ssf(mgs))**cck ) ! 
-          ELSE
+          else
           CN(mgs) =   cnuc(mgs)*Min(2.0, Max(0.0,0.03*(ssf(mgs)-1.0)+1.)**cck ) !           
 !          write(0,*) 'iren7: ssf,ssmx = ',ssf(mgs),ssmax(mgs),cn(mgs),ccna(mgs),cnuc(mgs)
 !          write(0,*) 'c1,qv = ',c1,qx(mgs,lv),temp1,ltemq
-          ENDIF
+          endif
 
          !  write(0,*) 'k,cn = ',kgs(mgs),cn(mgs),ssf(mgs)
          !  write(0,*) 'ccn-ccna = ',cnuc(mgs) - ccna(mgs),ccnc(mgs) - ccna(mgs)
 !           IF ( ccncuf(mgs) > 0.0 .and. cn(mgs) < 1.e-3 .and. ssmax(mgs) > 1.0 ) THEN
-           IF ( ccncuf(mgs) > 0.0 .and. ssf(mgs) > ssmxuf .and. ( ssmax(mgs) > ssmxuf .or. lss < 1 ) ) THEN
+           if ( ccncuf(mgs) > 0.0 .and. ssf(mgs) > ssmxuf .and. ( ssmax(mgs) > ssmxuf .or. lss < 1 ) ) then
             CNuf(mgs) =  Min( ccncuf(mgs), CCNE0*ccncuf(mgs)**(2./(2.+cck))*Max(0.0,wvel(mgs))**cnexp )! *Min(1.0,1./dtp) ! 0.3465
           !  IF ( cnuf(mgs) >= 0.0 ) write(0,*) 'cnuf, k = ',cnuf(mgs),ccncuf(mgs),kgs(mgs)
-           ENDIF
+           endif
           
 
 !        CN(mgs) = Min( Min(0.1,ssf(mgs)-1.)*cnuc(mgs), Max( 0.0, CN(mgs) - ccna(mgs) ) ) ! this was from
@@ -11285,7 +11285,7 @@ END SUBROUTINE nssl_2mom_driver
         
         CN(mgs) = Min(0.01*cnuc(mgs), Max( 0.0, CN(mgs) - ccna(mgs) ) ) ! this was from
 
-       ENDIF ! }
+       endif ! }
 !      ccne = ccnefac*1.e6*(1.e-6*Abs(cwccn))**(2./(2.+cck))
 !!!       CN(mgs) = Max( 0.0, CN(mgs) - ccna(mgs) ) ! this was from
                ! Philips, Donner et al. 2007, but results in too much limitation of
@@ -11294,20 +11294,20 @@ END SUBROUTINE nssl_2mom_driver
 !       cn(mgs) = Min(cn(mgs), 0.5*dqc/cwmasn) ! limit the nucleation mass to half of the condensation mass
        
 
-        IF ( icnuclimit > 0 ) THEN
+        if ( icnuclimit > 0 ) then
 ! max droplet conc. based on Chandrakar et al. (2016) and Konwar et al. (2012)
            tmp = ccnc(mgs) - ccna(mgs) + cx(mgs,lc)
-           IF ( tmp < 330.34e6 ) THEN
+           if ( tmp < 330.34e6 ) then
              ccwmax = 1.1173e6 * (1.e-6*tmp)**0.9504
-           ELSE
+           else
              ccwmax = 21.57e6 * (1.e-6*tmp)**0.44
-           ENDIF
+           endif
           
            cn(mgs) = Max( 0.0, Min( cn(mgs), ccwmax - cx(mgs,lc) ) )
            
-        ENDIF
+        endif
 
-       IF ( cn(mgs) + cnuf(mgs) > 0.0 ) THEN
+       if ( cn(mgs) + cnuf(mgs) > 0.0 ) then
 
        dcrit = 2.0*2.0e-6
        dcloud = 1000.*dcrit**3*Pi/6.
@@ -11330,15 +11330,15 @@ END SUBROUTINE nssl_2mom_driver
         qwvp(mgs) = qwvp(mgs) - DCLOUD
   !      ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
          ccncuf(mgs) = Max(0.0, ccncuf(mgs) - cnuf(mgs))
-        ENDIF
+        endif
 
-      ELSEIF ( irenuc == 8 ) THEN !} { 
+      elseif ( irenuc == 8 ) then !} { 
       ! simple Twomey scheme
 !      if (ndebug .gt. 0) write(0,*) 'ICEZVD_DR:  Cloud reNucleation, wvel = ',wvel(mgs)
        
        cn(mgs) = 0.0
        
-       IF ( ccnc(mgs) > 0. ) THEN
+       if ( ccnc(mgs) > 0. ) then
        CN(mgs) =   CCNE0*ccnc(mgs)**(2./(2.+cck))*Max(0.0,wvel(mgs))**cnexp ! *Min(1.0,1./dtp) ! 0.3465
 !      ccne = ccnefac*1.e6*(1.e-6*Abs(cwccn))**(2./(2.+cck))
 !!!       CN(mgs) = Max( 0.0, CN(mgs) - ccna(mgs) ) ! this was from
@@ -11346,7 +11346,7 @@ END SUBROUTINE nssl_2mom_driver
                ! nucleation
        CN(mgs) = Min(cn(mgs), ccnc(mgs))
        
-       ELSEIF ( cx(mgs,lc) < 0.01e9 ) THEN
+       elseif ( cx(mgs,lc) < 0.01e9 ) then
 
         ! if a large fraction of CCN have been activated, then assume we are in the cloud interior and use local SSw as in Phillips et al. 2007.
 
@@ -11359,21 +11359,21 @@ END SUBROUTINE nssl_2mom_driver
           c1= pqs(mgs)*tabqvs(ltemq)
 
           ssf(mgs) = 0.0
-          IF ( c1 > 0. ) THEN
+          if ( c1 > 0. ) then
             ssf(mgs) = 100.*(qx(mgs,lv)/c1 - 1.0)  ! from "new" values
-          ENDIF
+          endif
 
 !          IF ( ssf(mgs) <= 1.0 .or. cnuc(mgs) > ccna(mgs) ) THEN
-          IF ( ssf(mgs) <= 1.0 ) THEN
+          if ( ssf(mgs) <= 1.0 ) then
           CN(mgs) = 0.0
-          ELSE
+          else
 !           CN(mgs) = 0.01e9*rho0(mgs)/rho00*Min(2.0, Max(0.0,0.03*(ssf(mgs)-1.0)+1.)**cck ) - cx(mgs,lc) !           
            CN(mgs) = 0.01e9*Min(2.0, Max(0.0,0.03*(ssf(mgs)-1.0)+1.)**cck ) - cx(mgs,lc) !           
-          ENDIF
+          endif
        
-       ENDIF
+       endif
 
-       IF ( cn(mgs) > 0.0 ) THEN
+       if ( cn(mgs) > 0.0 ) then
        cx(mgs,lc) = cx(mgs,lc) + cn(mgs)
        
        ! ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
@@ -11387,23 +11387,23 @@ END SUBROUTINE nssl_2mom_driver
         thetap(mgs) = thetap(mgs) + felvcp(mgs)*DCLOUD/(pi0(mgs))
         qwvp(mgs) = qwvp(mgs) - DCLOUD
   !      ccnc(mgs) = Max(0.0, ccnc(mgs) - cn(mgs))
-        ENDIF
+        endif
        
 
 
-      ENDIF ! }
+      endif ! }
 
       ccna(mgs) = ccna(mgs) + cn(mgs)
 
-      ENDIF ! irenuc >= 0 .and. .not. flag_qndrop
+      endif ! irenuc >= 0 .and. .not. flag_qndrop
 
-      IF( cx(mgs,lc) .GT. 0. .AND. qx(mgs,lc) .LE. qxmin(lc)) cx(mgs,lc)=0.
-      GO TO 631
+      if( cx(mgs,lc) .GT. 0. .AND. qx(mgs,lc) .LE. qxmin(lc)) cx(mgs,lc)=0.
+      go to 631
 !.... NUCLEATION ON CLOUD INFLOW BOUNDARY POINT
 
-  613 CONTINUE
+  613 continue
 
-  631  CONTINUE
+  631  continue
 
 !
 ! Check for supersaturation greater than ssmx and adjust down
@@ -11414,7 +11414,7 @@ END SUBROUTINE nssl_2mom_driver
        
 !       IF ( flag_qndrop .and. do_satadj_for_wrfchem ) ssmx = 1.04 ! set lower threshold for progn=1 when using WRF-CHEM
 
-       IF ( qv1 .gt. (ssmx*qvs1) ) THEN
+       if ( qv1 .gt. (ssmx*qvs1) ) then
 ! use line below to disable saturation adjustment when flag_qndrop is true
 !       IF ( qv1 .gt. (ssmx*qvs1) .and. .not. flag_qndrop ) THEN
         
@@ -11424,45 +11424,45 @@ END SUBROUTINE nssl_2mom_driver
         
         qvex = 0.0
 
-        CALL QVEXCESS(ngs,mgs,qwvp,qv0,qx(1,lc),pres,thetap,theta0,qvex,   &
+        call QVEXCESS(ngs,mgs,qwvp,qv0,qx(1,lc),pres,thetap,theta0,qvex,   &
      &    pi0,tabqvs,nqsat,fqsat,cbw,fcqv1,felvcp,ssmx,pk,ngscnt)
 
 
 
-        IF ( qvex .gt. 0.0 ) THEN
+        if ( qvex .gt. 0.0 ) then
         thetap(mgs) = thetap(mgs) + felvcp(mgs)*qvex/(pi0(mgs))
-        IF ( io_flag .and. nxtra > 1 ) THEN
+        if ( io_flag .and. nxtra > 1 ) then
            axtra(igs(mgs),jy,kgs(mgs),1) = axtra(igs(mgs),jy,kgs(mgs),1) + qvex/dtp
-        ENDIF
+        endif
         qwvp(mgs) = qwvp(mgs) - qvex
         qx(mgs,lc) = qx(mgs,lc) + qvex
-        IF ( .not. flag_qndrop) THEN
-          IF ( imaxsupopt == 1 ) THEN
+        if ( .not. flag_qndrop) then
+          if ( imaxsupopt == 1 ) then
             cn(mgs) = Min( Max(ccnc(mgs),cwnccn(mgs)), rho0(mgs)*qvex/Max( cwmasn5, xmas(mgs,lc) )  )
-          ELSEIF ( imaxsupopt == 2 ) THEN
+          elseif ( imaxsupopt == 2 ) then
             cn(mgs) = Min( Max(ccnc(mgs),cwnccn(mgs)), rho0(mgs)*qvex/Max( cwmasn5, Max(cwmas30,xmas(mgs,lc)) )  )
-          ELSEIF ( imaxsupopt == 3 ) THEN
+          elseif ( imaxsupopt == 3 ) then
             cn(mgs) = Min( Max(ccnc(mgs),cwnccn(mgs)), rho0(mgs)*qvex/Max( cwmasn5, Max(cwmasx,xmas(mgs,lc)) )  )
 !            cn(mgs) = 1.5*cxmin
-          ELSEIF ( imaxsupopt == 4 ) THEN
+          elseif ( imaxsupopt == 4 ) then
             cn(mgs) = Min( Max(ccnc(mgs),cwnccn(mgs)), rho0(mgs)*qvex/Max( cwmasn5, Max(cwmas20,xmas(mgs,lc)) )  )
-          ENDIF
-        IF ( lccna > 1 ) THEN
+          endif
+        if ( lccna > 1 ) then
           ccna(mgs) = ccna(mgs) + cn(mgs)
-        ELSE
+        else
           ccnc(mgs) = Max( 0.0, ccnc(mgs) - cn(mgs) )
-        ENDIF
+        endif
         cx(mgs,lc) = cx(mgs,lc) + cn(mgs)
-        ENDIF
+        endif
         
 !        write(iunit,*) 'theta = ',theta0(mgs) + thetap(mgs)
 
 !        temg(mgs) = theta(mgs)*( pres(mgs) / poo ) ** cap
 
-        ENDIF
+        endif
 
        
-       ENDIF
+       endif
 
 !
 ! Calculate droplet volume and check if it is within bounds.
@@ -11472,11 +11472,11 @@ END SUBROUTINE nssl_2mom_driver
 
 
 !      cx(mgs,lc) = Min( cwnccn(mgs), cx(mgs,lc) )
-      IF( cx(mgs,lc) > cxmin .AND. qx(mgs,lc) .GT. qxmin(lc)) THEN
+      if( cx(mgs,lc) > cxmin .AND. qx(mgs,lc) .GT. qxmin(lc)) then
 !        SVC(mgs) = rho0(mgs)*qx(mgs,lc)/(cx(mgs,lc)*xdn(mgs,lc))
         xmas(mgs,lc) = rho0(mgs)*qx(mgs,lc)/(cx(mgs,lc))
         
-       IF (  xmas(mgs,lc) < cwmasn .or.  xmas(mgs,lc) > cwmasx ) THEN
+       if (  xmas(mgs,lc) < cwmasn .or.  xmas(mgs,lc) > cwmasx ) then
         tmp = cx(mgs,lc)
         xmas(mgs,lc) = Min( xmas(mgs,lc), cwmasx )
         xmas(mgs,lc) = Max( xmas(mgs,lc), cwmasn )
@@ -11484,8 +11484,8 @@ END SUBROUTINE nssl_2mom_driver
 !        IF ( cx(mgs,lc) > tmp*1.1 ) THEN
 !          write(0,*) 'nucond: kgs, ccw1,2 = ',kgs(mgs),tmp,cx(mgs,lc)
 !        ENDIF
-       ENDIF
-      ENDIF
+       endif
+      endif
 
 
 !      IF( cx(mgs,lc) .GT. 10.e6 .AND. qx(mgs,lc) .GT. qxmin(lc) ) GO TO 681
@@ -11510,28 +11510,28 @@ END SUBROUTINE nssl_2mom_driver
 ! 681  CONTINUE
 
         
-      IF ( ipconc .ge. 3 .and. rcond == 2 ) THEN
+      if ( ipconc .ge. 3 .and. rcond == 2 ) then
 
         
-        IF (cx(mgs,lr) .GT. 0. .AND. qx(mgs,lr) .GT. qxmin(lr))    &
+        if (cx(mgs,lr) .GT. 0. .AND. qx(mgs,lr) .GT. qxmin(lr))    &
      &       xv(mgs,lr)=rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*cx(mgs,lr))
-        IF (xv(mgs,lr) .GT. xvmx(lr)) xv(mgs,lr) = xvmx(lr)
-        IF (xv(mgs,lr) .LT. xvmn(lr)) xv(mgs,lr) = xvmn(lr)
+        if (xv(mgs,lr) .GT. xvmx(lr)) xv(mgs,lr) = xvmx(lr)
+        if (xv(mgs,lr) .LT. xvmn(lr)) xv(mgs,lr) = xvmn(lr)
 
-      ENDIF
+      endif
 
 
 
-      ENDDO ! mgs
+      enddo ! mgs
 
 
 ! ################################################################
-      DO mgs=1,ngscnt
-      IF ( lss > 1 .and. ssf(mgs) .gt. ssmax(mgs)    &
-     &  .and. ( idecss .eq. 0 .or. qx(mgs,lc) .gt. qxmin(lc)) ) THEN
+      do mgs=1,ngscnt
+      if ( lss > 1 .and. ssf(mgs) .gt. ssmax(mgs)    &
+     &  .and. ( idecss .eq. 0 .or. qx(mgs,lc) .gt. qxmin(lc)) ) then
         ssmax(mgs) = ssf(mgs)
-      ENDIF
-      ENDDO
+      endif
+      enddo
 !
 
       do mgs = 1,ngscnt
@@ -11539,9 +11539,9 @@ END SUBROUTINE nssl_2mom_driver
       an(igs(mgs),jy,kgs(mgs),lv) =  qv0(mgs) + qwvp(mgs)
 !      tmp3d(igs(mgs),jy,kgs(mgs)) = tmp3d(igs(mgs),jy,kgs(mgs)) + t9(igs(mgs),jy,kgs(mgs)) !  pi0(mgs) ! wvdf(mgs) ! ssf(mgs) ! cn(mgs)
 !
-      IF ( eqtset > 2 ) THEN
+      if ( eqtset > 2 ) then
         p2(igs(mgs),jy,kgs(mgs)) = pipert(mgs)
-      ENDIF
+      endif
 
        if ( ido(lc) .eq. 1 )  then
         an(igs(mgs),jy,kgs(mgs),lc) = qx(mgs,lc) +    &
@@ -11556,30 +11556,30 @@ END SUBROUTINE nssl_2mom_driver
 !        qx(mgs,lr) = an(igs(mgs),jy,kgs(mgs),lr)
        end if
 
-        IF ( lzr > 1 .and. rcond == 2 ) THEN
+        if ( lzr > 1 .and. rcond == 2 ) then
         an(igs(mgs),jy,kgs(mgs),lzr) = zx(mgs,lr) +  &
      &    min( an(igs(mgs),jy,kgs(mgs),lzr), 0.0 )
-        ENDIF
+        endif
 
 
-       IF (  ipconc .ge. 2 ) THEN
+       if (  ipconc .ge. 2 ) then
         an(igs(mgs),jy,kgs(mgs),lnc) = Max(cx(mgs,lc) , 0.0)
-        IF ( lss > 1 ) an(igs(mgs),jy,kgs(mgs),lss) = Max( 0.0, ssmax(mgs) )
-        IF ( ac_opt == 0 ) THEN
-          IF ( lccn .gt. 1 .and. lccna .lt. 1  ) THEN
+        if ( lss > 1 ) an(igs(mgs),jy,kgs(mgs),lss) = Max( 0.0, ssmax(mgs) )
+        if ( ac_opt == 0 ) then
+          if ( lccn .gt. 1 .and. lccna .lt. 1  ) then
             an(igs(mgs),jy,kgs(mgs),lccn) = Max(0.0,  ccnc(mgs) )
-          ENDIF
-        ENDIF
-        IF ( lccnuf .gt. 1 .and. .not. ( lccna .gt. 1 .and. i_uf_or_ccn > 0 ) ) THEN
+          endif
+        endif
+        if ( lccnuf .gt. 1 .and. .not. ( lccna .gt. 1 .and. i_uf_or_ccn > 0 ) ) then
           an(igs(mgs),jy,kgs(mgs),lccnuf) = Max(0.0,  ccncuf(mgs) )
-        ENDIF
-        IF ( lccna .gt. 1 ) THEN
+        endif
+        if ( lccna .gt. 1 ) then
           an(igs(mgs),jy,kgs(mgs),lccna) = Max(0.0, ccna(mgs) )
-        ENDIF
-       ENDIF
-       IF (  ipconc .ge. 3 .and. rcond == 2 ) THEN
+        endif
+       endif
+       if (  ipconc .ge. 3 .and. rcond == 2 ) then
         an(igs(mgs),jy,kgs(mgs),lnr) = Max(cx(mgs,lr) , 0.0)
-       ENDIF
+       endif
       end do
 
 
@@ -11617,7 +11617,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! Redistribution everywhere in the domain...
 !
-    IF ( .true. ) THEN
+    if ( .true. ) then
       
       frac = 1.0 ! 0.25 ! 1.0 ! 0.2
 !
@@ -11632,57 +11632,57 @@ END SUBROUTINE nssl_2mom_driver
       t0(ix,jy,kz) = an(ix,jy,kz,lt)*t77(ix,jy,kz)
       
       zerocx(:) = .false.
-      DO il = lc,lhab
-       IF ( iresetmoments == 1 .or. iresetmoments == il ) THEN
-        IF ( ln(il) > 1 ) zerocx(il) = ( an(ix,jy,kz,ln(il)) < cxmin )
-        IF ( lz(il) > 1 ) zerocx(il) = ( zerocx(il) .or. an(ix,jy,kz,lz(il)) < zxmin )
-       ELSE
-        IF ( il == lc ) THEN
-          IF ( ln(il) > 1 ) zerocx(il) = ( an(ix,jy,kz,ln(il)) <= 0 ) .and. .not. flag_qndrop ! do not reset if progn=1 (WRF-CHEM)
-        ELSE
-         IF ( ln(il) > 1 ) zerocx(il) = ( an(ix,jy,kz,ln(il)) <= 0 )
-        ENDIF
-       ENDIF
-      ENDDO
+      do il = lc,lhab
+       if ( iresetmoments == 1 .or. iresetmoments == il ) then
+        if ( ln(il) > 1 ) zerocx(il) = ( an(ix,jy,kz,ln(il)) < cxmin )
+        if ( lz(il) > 1 ) zerocx(il) = ( zerocx(il) .or. an(ix,jy,kz,lz(il)) < zxmin )
+       else
+        if ( il == lc ) then
+          if ( ln(il) > 1 ) zerocx(il) = ( an(ix,jy,kz,ln(il)) <= 0 ) .and. .not. flag_qndrop ! do not reset if progn=1 (WRF-CHEM)
+        else
+         if ( ln(il) > 1 ) zerocx(il) = ( an(ix,jy,kz,ln(il)) <= 0 )
+        endif
+       endif
+      enddo
 
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
       
-      IF ( lzhl .gt. 1 ) THEN
+      if ( lzhl .gt. 1 ) then
 
         an(ix,jy,kz,lzhl) = Max(0.0, an(ix,jy,kz,lzhl) )
         
-        IF ( an(ix,jy,kz,lhl) .ge. frac*qxmin(lhl) .and. rescale_low_alpha ) THEN ! check 6th moment
+        if ( an(ix,jy,kz,lhl) .ge. frac*qxmin(lhl) .and. rescale_low_alpha ) then ! check 6th moment
           
-          IF ( an(ix,jy,kz,lnhl) .gt. 0.0 ) THEN
+          if ( an(ix,jy,kz,lnhl) .gt. 0.0 ) then
 
-           IF ( lvhl .gt. 1 ) THEN
-             IF ( an(ix,jy,kz,lvhl) .gt. 0.0 ) THEN
+           if ( lvhl .gt. 1 ) then
+             if ( an(ix,jy,kz,lvhl) .gt. 0.0 ) then
                hwdn = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/an(ix,jy,kz,lvhl)
-             ELSE
+             else
                hwdn = xdn0(lhl)
-             ENDIF
+             endif
              hwdn = Max( xdnmn(lhl), hwdn )
-           ELSE
+           else
              hwdn = xdn0(lhl)
-           ENDIF
+           endif
 
              chw = an(ix,jy,kz,lnhl)
              g1 = (6.0+alphamin)*(5.0+alphamin)*(4.0+alphamin)/   &
      &            ((3.0+alphamin)*(2.0+alphamin)*(1.0+alphamin))
              z1 = g1*dn(ix,jy,kz)**2*( an(ix,jy,kz,lhl) )*an(ix,jy,kz,lhl)/chw
              z1 = z1*(6./(pi*hwdn))**2
-          ELSE
+          else
              z1 = 0.0
-          ENDIF
+          endif
           
           an(ix,jy,kz,lzhl) = Min( z1, an(ix,jy,kz,lzhl) )
           
-          IF (  an(ix,jy,kz,lnhl) .lt. 1.e-5 ) THEN
+          if (  an(ix,jy,kz,lnhl) .lt. 1.e-5 ) then
 !            an(ix,jy,kz,lzhl) = 0.9*an(ix,jy,kz,lzhl)
-          ENDIF
-        ENDIF
+          endif
+        endif
         
-      ENDIF !lzhl
+      endif !lzhl
       
       if ( an(ix,jy,kz,lhl) .lt. frac*qxmin(lhl) .or. zerocx(lhl) ) then
 
@@ -11691,44 +11691,44 @@ END SUBROUTINE nssl_2mom_driver
           an(ix,jy,kz,lhl) = 0.0
 !        ENDIF
 
-        IF ( ipconc .ge. 5 ) THEN ! .and. an(ix,jy,kz,lnh) .gt. 0.0 ) THEN
+        if ( ipconc .ge. 5 ) then ! .and. an(ix,jy,kz,lnh) .gt. 0.0 ) then
           an(ix,jy,kz,lnhl) = 0.0
-        ENDIF
+        endif
 
-        IF ( lvhl .gt. 1 ) THEN
+        if ( lvhl .gt. 1 ) then
            an(ix,jy,kz,lvhl) = 0.0
-        ENDIF
+        endif
 
-        IF ( lhlw .gt. 1 ) THEN
+        if ( lhlw .gt. 1 ) then
            an(ix,jy,kz,lhlw) = 0.0
-        ENDIF
+        endif
 
-        IF ( lnhlf .gt. 1 ) THEN
+        if ( lnhlf .gt. 1 ) then
            an(ix,jy,kz,lnhlf) = 0.0
-        ENDIF
+        endif
       
-        IF ( lzhl .gt. 1 ) THEN
+        if ( lzhl .gt. 1 ) then
            an(ix,jy,kz,lzhl) = 0.0
-        ENDIF
+        endif
 
-      ELSE
-       IF ( lvol(lhl) .gt. 1 ) THEN  ! check density
-        IF ( an(ix,jy,kz,lvhl) .gt. 0.0 ) THEN
+      else
+       if ( lvol(lhl) .gt. 1 ) then  ! check density
+        if ( an(ix,jy,kz,lvhl) .gt. 0.0 ) then
          tmp = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/an(ix,jy,kz,lvhl)
-        ELSE ! in case volume is zero but mass is above threshold (should not happen, of course)
+        else ! in case volume is zero but mass is above threshold (should not happen, of course)
           tmp = rho_qhl
           an(ix,jy,kz,lvhl) = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/tmp
-        ENDIF
+        endif
 
-        IF (  tmp .lt. xdnmn(lhl) ) THEN
+        if (  tmp .lt. xdnmn(lhl) ) then
           tmp = Max( xdnmn(lhl), tmp )
           an(ix,jy,kz,lvhl) = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/tmp
-        ENDIF
+        endif
 
-        IF ( tmp .gt. xdnmx(lhl) .and. lhlw .le. 0 ) THEN ! no liquid allowed on hail
+        if ( tmp .gt. xdnmx(lhl) .and. lhlw .le. 0 ) then ! no liquid allowed on hail
           tmp = Min( xdnmx(lhl), tmp )
           an(ix,jy,kz,lvhl) = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/tmp
-        ELSEIF ( tmp .gt. xdnmx(lhl) .and. lhlw .gt. 1 ) THEN  ! allow for liquid on hail
+        elseif ( tmp .gt. xdnmx(lhl) .and. lhlw .gt. 1 ) then  ! allow for liquid on hail
           fw = an(ix,jy,kz,lhlw)/an(ix,jy,kz,lhl)
 !          tmpmx = xdnmx(lhl) + fw*(xdnmx(lr) - xdnmx(lhl)) ! maximum possible average density
                                                            ! it is not exactly linear, but approx. is close enough for this
@@ -11736,9 +11736,9 @@ END SUBROUTINE nssl_2mom_driver
 
           tmpmx = xdnmx(lhl)/( 1. - fw*(1. - xdnmx(lhl)/xdnmx(lr) )) 
 
-          IF ( tmp .gt. tmpmx  ) THEN
+          if ( tmp .gt. tmpmx  ) then
             an(ix,jy,kz,lvhl) = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/tmpmx
-          ENDIF
+          endif
 
 !          IF ( tmp .gt. xdnmx(lhl) .and. an(ix,jy,kz,lhlw) .lt. qxmin(lhl) ) THEN
 !            tmp = Min( xdnmx(lhl), tmp )
@@ -11747,78 +11747,78 @@ END SUBROUTINE nssl_2mom_driver
 !            tmp =  xdnmx(lr)
 !            an(ix,jy,kz,lvhl) = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/tmp
 !          ENDIF
-        ENDIF
+        endif
 
-        IF ( lhlw .gt. 1 ) THEN ! check if basically pure water
-          IF ( an(ix,jy,kz,lhlw) .gt. 0.98*an(ix,jy,kz,lhl) ) THEN
+        if ( lhlw .gt. 1 ) then ! check if basically pure water
+          if ( an(ix,jy,kz,lhlw) .gt. 0.98*an(ix,jy,kz,lhl) ) then
            tmp = xdnmx(lr)
            an(ix,jy,kz,lvhl) = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/tmp
-          ENDIF
-        ENDIF
+          endif
+        endif
         
-       ENDIF
+       endif
        
        
 !  CHECK INTERCEPT
-       IF ( ipconc == 5 .and.  an(ix,jy,kz,lhl) .gt. qxmin(lhl) .and.  alphahl .le. 0.1 .and. lnhl .gt. 1 .and. lzhl == 0 ) THEN
+       if ( ipconc == 5 .and.  an(ix,jy,kz,lhl) .gt. qxmin(lhl) .and.  alphahl .le. 0.1 .and. lnhl .gt. 1 .and. lzhl == 0 ) then
        
-         IF ( lvhl .gt. 1 ) THEN
+         if ( lvhl .gt. 1 ) then
            hwdn = dn(ix,jy,kz)*an(ix,jy,kz,lhl)/an(ix,jy,kz,lvhl)
-         ELSE
+         else
            hwdn = xdn0(lhl)
-         ENDIF
+         endif
            tmp = (hwdn*an(ix,jy,kz,lnhl))/(dn(ix,jy,kz)*an(ix,jy,kz,lhl))
            tmpg = an(ix,jy,kz,lnhl)*(tmp*(3.14159))**(1./3.)
-           IF ( tmpg .lt. cnohlmn ) THEN
+           if ( tmpg .lt. cnohlmn ) then
              tmp = ( (hwdn)/(dn(ix,jy,kz)*an(ix,jy,kz,lhl))*(3.14159))**(1./3.)
               an(ix,jy,kz,lnhl) = (cnohlmn/tmp)**(3./4.)
-           ENDIF
+           endif
        
-       ENDIF
+       endif
 !      ELSE  ! check mean size here?
 
       end if
 
-      ENDIF !lhl
+      endif !lhl
 
 
 
-      IF ( lzh .gt. 1 ) THEN
+      if ( lzh .gt. 1 ) then
 
         an(ix,jy,kz,lzh) = Max(0.0, an(ix,jy,kz,lzh) )
         
-        IF ( .false. .and. an(ix,jy,kz,lh) .ge. frac*qxmin(lh) .and. rescale_low_alpha ) THEN
+        if ( .false. .and. an(ix,jy,kz,lh) .ge. frac*qxmin(lh) .and. rescale_low_alpha ) then
           
-          IF ( an(ix,jy,kz,lnh) .gt. 0.0 ) THEN
+          if ( an(ix,jy,kz,lnh) .gt. 0.0 ) then
 
-           IF ( lvh .gt. 1 ) THEN
-             IF ( an(ix,jy,kz,lvh) .gt. 0.0 ) THEN
+           if ( lvh .gt. 1 ) then
+             if ( an(ix,jy,kz,lvh) .gt. 0.0 ) then
                hwdn = dn(ix,jy,kz)*an(ix,jy,kz,lh)/an(ix,jy,kz,lvh)
-             ELSE
+             else
                hwdn = xdn0(lh)
-             ENDIF
+             endif
              hwdn = Max( xdnmn(lh), hwdn )
-           ELSE
+           else
              hwdn = xdn0(lh)
-           ENDIF
+           endif
 
              chw = an(ix,jy,kz,lnh)
              g1 = (6.0+alphamin)*(5.0+alphamin)*(4.0+alphamin)/   &
      &            ((3.0+alphamin)*(2.0+alphamin)*(1.0+alphamin))
              z1 = g1*dn(ix,jy,kz)**2*( an(ix,jy,kz,lh) )*an(ix,jy,kz,lh)/chw
              z1  = z1*(6./(pi*hwdn))**2
-          ELSE
+          else
              z1 = 0.0
-          ENDIF
+          endif
           
           an(ix,jy,kz,lzh) = Min( z1, an(ix,jy,kz,lzh) )
           
-          IF (  an(ix,jy,kz,lnh) .lt. 1.e-5 ) THEN
+          if (  an(ix,jy,kz,lnh) .lt. 1.e-5 ) then
 !            an(ix,jy,kz,lzh) = 0.9*an(ix,jy,kz,lzh)
-          ENDIF
-        ENDIF
+          endif
+        endif
         
-      ENDIF
+      endif
 
       if ( an(ix,jy,kz,lh) .lt. frac*qxmin(lh) .or. zerocx(lh) ) then
 
@@ -11827,53 +11827,53 @@ END SUBROUTINE nssl_2mom_driver
           an(ix,jy,kz,lh) = 0.0
 !        ENDIF
 
-        IF ( ipconc .ge. 5 ) THEN ! .and. an(ix,jy,kz,lnh) .gt. 0.0 ) THEN
+        if ( ipconc .ge. 5 ) then ! .and. an(ix,jy,kz,lnh) .gt. 0.0 ) then
           an(ix,jy,kz,lnh) = 0.0
-        ENDIF
+        endif
 
-        IF ( lvh .gt. 1 ) THEN
+        if ( lvh .gt. 1 ) then
            an(ix,jy,kz,lvh) = 0.0
-        ENDIF
+        endif
       
-        IF ( lhw .gt. 1 ) THEN
+        if ( lhw .gt. 1 ) then
            an(ix,jy,kz,lhw) = 0.0
-        ENDIF
+        endif
 
-        IF ( lnhf .gt. 1 ) THEN
+        if ( lnhf .gt. 1 ) then
            an(ix,jy,kz,lnhf) = 0.0
-        ENDIF
+        endif
       
-        IF ( lzh .gt. 1 ) THEN
+        if ( lzh .gt. 1 ) then
            an(ix,jy,kz,lzh) = 0.0
-        ENDIF
+        endif
 
-      ELSE
-       IF ( lvol(lh) .gt. 1 ) THEN  ! check density
-        IF ( an(ix,jy,kz,lvh) .gt. 0.0 ) THEN
+      else
+       if ( lvol(lh) .gt. 1 ) then  ! check density
+        if ( an(ix,jy,kz,lvh) .gt. 0.0 ) then
          tmp = dn(ix,jy,kz)*an(ix,jy,kz,lh)/an(ix,jy,kz,lvh)
-        ELSE
+        else
          tmp = rho_qh
           an(ix,jy,kz,lvh) = dn(ix,jy,kz)*an(ix,jy,kz,lh)/tmp
-        ENDIF
+        endif
 
-        IF (  tmp .lt. xdnmn(lh) ) THEN
+        if (  tmp .lt. xdnmn(lh) ) then
           tmp = Max( xdnmn(lh), tmp )
           an(ix,jy,kz,lvh) = dn(ix,jy,kz)*an(ix,jy,kz,lh)/tmp
-        ENDIF
+        endif
 
-        IF ( tmp .gt. xdnmx(lh) .and. lhw .le. 0 ) THEN ! no liquid allowed on graupel
+        if ( tmp .gt. xdnmx(lh) .and. lhw .le. 0 ) then ! no liquid allowed on graupel
           tmp = Min( xdnmx(lh), tmp )
           an(ix,jy,kz,lvh) = dn(ix,jy,kz)*an(ix,jy,kz,lh)/tmp
-        ELSEIF ( tmp .gt. xdnmx(lh) .and. lhw .gt. 1 ) THEN  ! allow for liquid on graupel
+        elseif ( tmp .gt. xdnmx(lh) .and. lhw .gt. 1 ) then  ! allow for liquid on graupel
           fw = an(ix,jy,kz,lhw)/an(ix,jy,kz,lh)
 !          tmpmx = xdnmx(lh) + fw*(xdnmx(lr) - xdnmx(lh)) ! maximum possible average density
                                                            ! it is not exactly linear, but approx. is close enough for this
 !          tmpmx = 1./( (1. - fw)/900. + fw/1000. ) is exact max, where 900 is xdnmx
           tmpmx = xdnmx(lh)/( 1. - fw*(1. - xdnmx(lh)/xdnmx(lr) )) 
 
-          IF ( tmp .gt. tmpmx  ) THEN
+          if ( tmp .gt. tmpmx  ) then
             an(ix,jy,kz,lvh) = dn(ix,jy,kz)*an(ix,jy,kz,lh)/tmpmx
-          ENDIF
+          endif
 
 !          IF ( tmp .gt. xdnmx(lh) .and. an(ix,jy,kz,lhw) .lt. qxmin(lh) ) THEN
 !            tmp = Min( xdnmx(lh), tmp )
@@ -11883,224 +11883,224 @@ END SUBROUTINE nssl_2mom_driver
 !            an(ix,jy,kz,lvh) = dn(ix,jy,kz)*an(ix,jy,kz,lh)/tmp
 !          ENDIF
 
-        ENDIF
+        endif
 
-        IF ( lhw .gt. 1 ) THEN ! check if basically pure water
-          IF ( an(ix,jy,kz,lhw) .gt. 0.98*an(ix,jy,kz,lh) ) THEN
+        if ( lhw .gt. 1 ) then ! check if basically pure water
+          if ( an(ix,jy,kz,lhw) .gt. 0.98*an(ix,jy,kz,lh) ) then
            tmp = xdnmx(lr)
            an(ix,jy,kz,lvh) = dn(ix,jy,kz)*an(ix,jy,kz,lh)/tmp
-          ENDIF
-        ENDIF
+          endif
+        endif
         
-       ENDIF
+       endif
 
 !  CHECK INTERCEPT
-       IF ( ipconc == 5 .and.  an(ix,jy,kz,lh) .gt. qxmin(lh) .and.  alphah .le. 0.1 .and. lnh .gt. 1 .and. lzh == 0 ) THEN
+       if ( ipconc == 5 .and.  an(ix,jy,kz,lh) .gt. qxmin(lh) .and.  alphah .le. 0.1 .and. lnh .gt. 1 .and. lzh == 0 ) then
        
-         IF ( lvh .gt. 1 ) THEN
-           IF ( an(ix,jy,kz,lvh) .gt. 0.0 ) THEN
+         if ( lvh .gt. 1 ) then
+           if ( an(ix,jy,kz,lvh) .gt. 0.0 ) then
              hwdn = dn(ix,jy,kz)*an(ix,jy,kz,lh)/an(ix,jy,kz,lvh)
-           ELSE
+           else
              hwdn = xdn0(lh)
-           ENDIF
+           endif
            hwdn = Max( xdnmn(lh), hwdn )
-         ELSE
+         else
            hwdn = xdn0(lh)
-         ENDIF
+         endif
            tmp = (hwdn*an(ix,jy,kz,lnh))/(dn(ix,jy,kz)*an(ix,jy,kz,lh))
            tmpg = an(ix,jy,kz,lnh)*(tmp*(3.14159))**(1./3.)
-           IF ( tmpg .lt. cnohmn ) THEN
+           if ( tmpg .lt. cnohmn ) then
 !           tmpg = an(ix,jy,kz,lnh)*( (hwdn*an(ix,jy,kz,lnh))/(dn(ix,jy,kz)*an(ix,jy,kz,lh))*(3.14159))**(1./3.)
 !           tmpg = an(ix,jy,kz,lnh)**(4./3.)*( (hwdn)/(dn(ix,jy,kz)*an(ix,jy,kz,lh))*(3.14159))**(1./3.)
              tmp = ( (hwdn)/(dn(ix,jy,kz)*an(ix,jy,kz,lh))*(3.14159))**(1./3.)
               an(ix,jy,kz,lnh) = (cnohmn/tmp)**(3./4.)
-           ENDIF
+           endif
        
-       ENDIF
+       endif
         
       end if
 
 
       if ( an(ix,jy,kz,ls) .lt.  frac*qxmin(ls)  .or. zerocx(ls)  & ! .or.  an(ix,jy,kz,lns) .lt. 0.1 ! .and.
      &         ) then
-      IF ( t0(ix,jy,kz) .lt. 273.15 ) THEN
+      if ( t0(ix,jy,kz) .lt. 273.15 ) then
 !        IF ( an(ix,jy,kz,ls) .gt. 0 ) THEN
           an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,ls)
           an(ix,jy,kz,ls) = 0.0
 !        ENDIF
       
-        IF ( ipconc .ge. 4 ) THEN ! .and. an(ix,jy,kz,lns) .gt. 0.0  ) THEN ! 
+        if ( ipconc .ge. 4 ) then ! .and. an(ix,jy,kz,lns) .gt. 0.0  ) then ! 
 !          an(ix,jy,kz,lni) = an(ix,jy,kz,lni) + an(ix,jy,kz,lns)
           an(ix,jy,kz,lns) = 0.0
-        ENDIF
+        endif
         
-        IF ( lvs .gt. 1 ) THEN
+        if ( lvs .gt. 1 ) then
            an(ix,jy,kz,lvs) = 0.0
-        ENDIF
+        endif
 
-        IF ( lsw .gt. 1 ) THEN
+        if ( lsw .gt. 1 ) then
            an(ix,jy,kz,lsw) = 0.0
-        ENDIF
+        endif
 
-      ELSE
+      else
 !        IF ( an(ix,jy,kz,ls) .gt. 0 ) THEN
           an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,ls)
           an(ix,jy,kz,ls) = 0.0
 !        ENDIF
 
-        IF ( lvs .gt. 1 ) THEN
+        if ( lvs .gt. 1 ) then
            an(ix,jy,kz,lvs) = 0.0
-        ENDIF
+        endif
 
-        IF ( lsw .gt. 1 ) THEN
+        if ( lsw .gt. 1 ) then
            an(ix,jy,kz,lsw) = 0.0
-        ENDIF
+        endif
 
-        IF ( ipconc .ge. 4 ) THEN ! .and. an(ix,jy,kz,lns) .gt. 0.0  ) THEN ! 
+        if ( ipconc .ge. 4 ) then ! .and. an(ix,jy,kz,lns) .gt. 0.0  ) then ! 
 !          an(ix,jy,kz,lnr) = an(ix,jy,kz,lnr) + an(ix,jy,kz,lns)
           an(ix,jy,kz,lns) = 0.0
-        ENDIF
+        endif
 
-      ENDIF
+      endif
       
 
-      ELSEIF ( lvol(ls) .gt. 1 ) THEN  ! check density
-        IF ( an(ix,jy,kz,lvs) .gt. 0.0 ) THEN
+      elseif ( lvol(ls) .gt. 1 ) then  ! check density
+        if ( an(ix,jy,kz,lvs) .gt. 0.0 ) then
           tmp = dn(ix,jy,kz)*an(ix,jy,kz,ls)/an(ix,jy,kz,lvs)
-          IF ( tmp .gt. xdnmx(ls) .or. tmp .lt. xdnmn(ls) ) THEN
+          if ( tmp .gt. xdnmx(ls) .or. tmp .lt. xdnmn(ls) ) then
             tmp = Min( xdnmx(ls), Max( xdnmn(ls), tmp ) )
             an(ix,jy,kz,lvs) = dn(ix,jy,kz)*an(ix,jy,kz,ls)/tmp
-          ENDIF
-        ELSE
+          endif
+        else
           tmp = rho_qs
           an(ix,jy,kz,lvs) = dn(ix,jy,kz)*an(ix,jy,kz,ls)/tmp
-        ENDIF
+        endif
 
 
       end if
 
-        IF ( lzr > 1 ) THEN
+        if ( lzr > 1 ) then
           an(ix,jy,kz,lzr) = Max(0.0, an(ix,jy,kz,lzr) )
-        ENDIF
+        endif
 
       if ( an(ix,jy,kz,lr) .lt. frac*qxmin(lr)  .or. zerocx(lr)  &
      &  ) then
         an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,lr)
         an(ix,jy,kz,lr) = 0.0
-        IF ( ipconc .ge. 3 ) THEN
+        if ( ipconc .ge. 3 ) then
 !          an(ix,jy,kz,lnc) = an(ix,jy,kz,lnc) + an(ix,jy,kz,lnr)
           an(ix,jy,kz,lnr) = 0.0
-        ENDIF
+        endif
         
-        IF ( lzr > 1 ) THEN
+        if ( lzr > 1 ) then
           an(ix,jy,kz,lzr) = 0.0
-        ENDIF
+        endif
 
       end if
 
 !
 !  for qci
 !
-      IF ( an(ix,jy,kz,li) .le. frac*qxmin(li) .or. zerocx(li)   & ! .or.  an(ix,jy,kz,lni) .lt. 0.1
-     &    ) THEN
+      if ( an(ix,jy,kz,li) .le. frac*qxmin(li) .or. zerocx(li)   & ! .or.  an(ix,jy,kz,lni) .lt. 0.1
+     &    ) then
       an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,li)
       an(ix,jy,kz,li)= 0.0
-       IF ( ipconc .ge. 1 ) THEN
+       if ( ipconc .ge. 1 ) then
          an(ix,jy,kz,lni) = 0.0
-       ENDIF
-      ENDIF
+       endif
+      endif
 
 !
 !  for qis
 !
-      IF ( lis > 1 ) THEN ! {
-      IF ( an(ix,jy,kz,lis) .le. frac*qxmin(lis) .or. zerocx(lis)   & ! .or.  an(ix,jy,kz,lni) .lt. 0.1
-     &    ) THEN ! { {
+      if ( lis > 1 ) then ! {
+      if ( an(ix,jy,kz,lis) .le. frac*qxmin(lis) .or. zerocx(lis)   & ! .or.  an(ix,jy,kz,lni) .lt. 0.1
+     &    ) then ! { {
       an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,lis)
       an(ix,jy,kz,lis)= 0.0
-       IF ( ipconc .ge. 1 ) THEN
+       if ( ipconc .ge. 1 ) then
          an(ix,jy,kz,lnis) = 0.0
-       ENDIF
+       endif
       
-      ELSEIF ( icespheres >= 2 ) THEN ! } {
+      elseif ( icespheres >= 2 ) then ! } {
        km1 = Max(1, kz-1)
-       IF ( 0.5*( w(ix,jy,kz) + w(ix,jy,kz+1)) < -1.0 .or.    &
+       if ( 0.5*( w(ix,jy,kz) + w(ix,jy,kz+1)) < -1.0 .or.    &
      &      (icespheres == 3 .and. ( t0(ix,jy,kz) < 232.15 .or. an(ix,jy,kz,lc) < qxmin(lc) ) ) .or. &
      &      (icespheres == 5 .and. ( t0(ix,jy,kz) < 232.15 .or. &
      &         ( an(ix,jy,kz,lc) < qxmin(lc) .and. an(ix,jy,km1,lc) < qxmin(lc)  )) ) .or. &
-     &      (icespheres == 4 .and. ( t0(ix,jy,kz) < 235.15 )) ) THEN ! transfer to regular ice crystals in downdraft or at low temp
+     &      (icespheres == 4 .and. ( t0(ix,jy,kz) < 235.15 )) ) then ! transfer to regular ice crystals in downdraft or at low temp
          an(ix,jy,kz,li) = an(ix,jy,kz,li) + an(ix,jy,kz,lis)
          an(ix,jy,kz,lni) = an(ix,jy,kz,lni) + an(ix,jy,kz,lnis)
          an(ix,jy,kz,lis)= 0.0
          an(ix,jy,kz,lnis)= 0.0
          
-       ENDIF
+       endif
        
-      ENDIF ! } }
-      ENDIF ! }
+      endif ! } }
+      endif ! }
 
 !
 !  for qcw
 !
 
-      IF ( an(ix,jy,kz,lc) .le. frac*qxmin(lc) .or. zerocx(lc)   &
-     &       ) THEN
+      if ( an(ix,jy,kz,lc) .le. frac*qxmin(lc) .or. zerocx(lc)   &
+     &       ) then
       an(ix,jy,kz,lv) = an(ix,jy,kz,lv) + an(ix,jy,kz,lc)
       an(ix,jy,kz,lc)= 0.0
-       IF ( ipconc .ge. 2 ) THEN
-        IF ( lccn .gt. 1 .or. ac_opt == 1 ) THEN
-          IF ( irenuc < 5 .and. lccna <= 1 ) THEN
-            IF ( ac_opt == 0 ) THEN
+       if ( ipconc .ge. 2 ) then
+        if ( lccn .gt. 1 .or. ac_opt == 1 ) then
+          if ( irenuc < 5 .and. lccna <= 1 ) then
+            if ( ac_opt == 0 ) then
                an(ix,jy,kz,lccn) = an(ix,jy,kz,lccn) + Max(0.0,an(ix,jy,kz,lnc))
-            ENDIF
-          ELSEIF ( lccna > 1 ) THEN
+            endif
+          elseif ( lccna > 1 ) then
             an(ix,jy,kz,lccna) = Max( 0.0, an(ix,jy,kz,lccna) - Max(0.0,an(ix,jy,kz,lnc)) )
-          ENDIF
-        ENDIF
+          endif
+        endif
          an(ix,jy,kz,lnc) = 0.0
-         IF ( lccn > 1 ) an(ix,jy,kz,lccn) = Max( 0.0, an(ix,jy,kz,lccn) )
+         if ( lccn > 1 ) an(ix,jy,kz,lccn) = Max( 0.0, an(ix,jy,kz,lccn) )
          
-         IF ( lccna > 0 .and. ac_opt == 0  ) THEN ! apply exponential decay to activated CCN to restore to environmental value
-           IF ( restoreccn ) THEN
+         if ( lccna > 0 .and. ac_opt == 0  ) then ! apply exponential decay to activated CCN to restore to environmental value
+           if ( restoreccn ) then
            tmp = an(ix,jy,kz,li) + an(ix,jy,kz,ls)  
            
-           IF ( an(ix,jy,kz,lccna) > 1. .and. tmp < qxmin(li) ) an(ix,jy,kz,lccna) = an(ix,jy,kz,lccna)*Exp(-dtp/ccntimeconst)
-           ENDIF
-         ELSEIF ( lccn > 1 .and. restoreccn .and. ac_opt == 0  ) THEN
+           if ( an(ix,jy,kz,lccna) > 1. .and. tmp < qxmin(li) ) an(ix,jy,kz,lccna) = an(ix,jy,kz,lccna)*Exp(-dtp/ccntimeconst)
+           endif
+         elseif ( lccn > 1 .and. restoreccn .and. ac_opt == 0  ) then
            ! in this case, we are treating the ccn field as ccna
            tmp = an(ix,jy,kz,li) + an(ix,jy,kz,ls)  
 !           IF ( ny == 2 .and. ix == nx/2 ) THEN
 !             write(0,*) 'restore: k, qccn,exp = ',kz,qccn,dn(ix,jy,kz)*qccn,Exp(-dtp/ccntimeconst)
 !             write(0,*) 'ccn1,ccn2 = ',an(ix,jy,kz,lccn),dn(ix,jy,kz)*qccn - Max(0.0 , dn(ix,jy,kz)*qccn - an(ix,jy,kz,lccn))*Exp(-dtp/ccntimeconst)
 !           ENDIF
-           IF ( an(ix,jy,kz,lccn) > 1. .and. tmp < qxmin(li) .and. ( an(ix,jy,kz,lccn) < dn(ix,jy,kz)*qccn .or. .not. invertccn ) ) THEN 
+           if ( an(ix,jy,kz,lccn) > 1. .and. tmp < qxmin(li) .and. ( an(ix,jy,kz,lccn) < dn(ix,jy,kz)*qccn .or. .not. invertccn ) ) then 
         !      an(ix,jy,kz,lccn) =  &
         !            an(ix,jy,kz,lccn) +  Max(0.0 , dn(ix,jy,kz)*qccn - an(ix,jy,kz,lccn))*(1.0 - Exp(-dtp/ccntimeconst))
         ! Equivalent form after expanding last term:
                an(ix,jy,kz,lccn) =  &
                     dn(ix,jy,kz)*qccn - Max(0.0 , dn(ix,jy,kz)*qccn - an(ix,jy,kz,lccn))*Exp(-dtp/ccntimeconst)
-           ENDIF
+           endif
          
-         ENDIF
+         endif
 
-       ENDIF
+       endif
 
-      ENDIF
+      endif
 
       end do
 !      end do
       end do
       
-      ENDIF ! true/false
+      endif ! true/false
       
-      IF ( ndebug .ge. 1 ) write(6,*) 'END OF ICEZVD_DR'
+      if ( ndebug .ge. 1 ) write(6,*) 'end OF ICEZVD_DR'
 !
 !
    
    
-   9999 RETURN
+   9999 return
    
-   END SUBROUTINE NUCOND
+   end subroutine NUCOND
 
 
 ! #####################################################################
@@ -13240,18 +13240,18 @@ END SUBROUTINE nssl_2mom_driver
       lrescalelow(:) = rescale_low_alpha
       lrescalelow(lr) = rescale_low_alphar .and. rescale_low_alpha
       lrescalelow(lh) = rescale_low_alphah .and. rescale_low_alpha
-      IF ( lf > 1 ) lrescalelow(lf) = rescale_low_alphah .and. rescale_low_alpha
-      IF ( lhl > 1 ) lrescalelow(lhl) = rescale_low_alphahl .and. rescale_low_alpha
+      if ( lf > 1 ) lrescalelow(lf) = rescale_low_alphah .and. rescale_low_alpha
+      if ( lhl > 1 ) lrescalelow(lhl) = rescale_low_alphahl .and. rescale_low_alpha
 
 
 !
 !  slope intercepts
 !
 
-      IF ( ngs .lt. nz ) THEN
+      if ( ngs .lt. nz ) then
 !       write(0,*) 'Error in ICEZVD: Must have ngs .ge. nz!'
 !       STOP
-      ENDIF
+      endif
 
       cntnic_noliq = 0
       q_noliqmn = 0.0
@@ -13261,9 +13261,9 @@ END SUBROUTINE nssl_2mom_driver
 
       ldovol = .false.
 
-      DO il = lc,lhab
+      do il = lc,lhab
         ldovol = ldovol .or. ( lvol(il) .gt. 1 )
-      ENDDO
+      enddo
 
 
       ffrzh = 1
@@ -13359,18 +13359,18 @@ END SUBROUTINE nssl_2mom_driver
       vmlt = Min(xvmx(lr), 0.523599*(dmlt)**3 )
       vshd = Min(xvmx(lr), 0.523599*(dshd)**3 )
 
-      IF ( snowmeltdia > 0.0 ) THEN
+      if ( snowmeltdia > 0.0 ) then
         snowmeltmass = pi/6.0 * 1000. * snowmeltdia**3  ! maximum rain particle mass from melting snow (if snowmeltdia > 0)
-      ENDIF
+      endif
 
       tdtol = 1.0e-05
       tfrcbw = tfr - cbw
       tfrcbi = tfr - cbi
       
-      IF ( mixedphase ) THEN
+      if ( mixedphase ) then
        ibinhmlr = 0
        ibinhlmlr = 0
-      ENDIF
+      endif
 !
 !
 ! #ifdef COMMAS
@@ -13396,39 +13396,39 @@ END SUBROUTINE nssl_2mom_driver
       
 !      real, parameter :: mltdiam1 = 9.0e-3, mltdiam2 = 19.0e-3, mltdiam05 = 4.5e-3
 
-      IF ( ibinnum == 1 ) THEN
+      if ( ibinnum == 1 ) then
         numdiam = 1 ! must have numdiam < ndiam because numdiam+1 holds values for the interval of mltdiam(numdiam) to mltdiam(ndiam+1)
         mltdiam(1) = 4.5e-3
-      ELSEIF ( ibinnum == 2 ) THEN
+      elseif ( ibinnum == 2 ) then
         numdiam = 2 ! must have numdiam < ndiam because numdiam+1 holds values for the interval of mltdiam(numdiam) to mltdiam(ndiam+1)
         mltdiam(1) = mltdiam1/6. ! 1.5e-3
         mltdiam(2) = mltdiam1/2. ! 4.5e-3
-      ELSEIF ( ibinnum > 2 ) THEN
+      elseif ( ibinnum > 2 ) then
         numdiam = Min(ibinnum, ndiam)
-        DO k = 1,numdiam
+        do k = 1,numdiam
           mltdiam(k) = (k - 0.5)*mltdiam1/float(numdiam)
-        ENDDO
+        enddo
       
-      ELSE
+      else
         numdiam = 5 ! must have numdiam < ndiam because numdiam+1 holds values for the interval of mltdiam(numdiam) to mltdiam(ndiam+1)
         mltdiam(1) = 0.5e-3
         mltdiam(2) = 1.0e-3
         mltdiam(3) = 2.0e-3
         mltdiam(4) = 4.0e-3
         mltdiam(5) = 6.0e-3
-      ENDIF
+      endif
 
 
-      IF ( numshedregimes == 2 ) THEN
+      if ( numshedregimes == 2 ) then
         mltdiam(ndiam+1) = mltdiam1 !  9.0e-3
         mltdiam(ndiam+2) = mltdiam3 ! 19.0e-3
         mltdiam(ndiam+3) = mltdiam4 !100.0e-3
-      ELSEIF ( numshedregimes == 3 ) THEN
+      elseif ( numshedregimes == 3 ) then
         mltdiam(ndiam+1) = mltdiam1 !  9.0e-3
         mltdiam(ndiam+2) = mltdiam2 ! 16.0e-3
         mltdiam(ndiam+3) = mltdiam3 ! 19.0e-3
         mltdiam(ndiam+4) = mltdiam4 !200.0e-3
-      ENDIF
+      endif
 
       kzb = 1
       kze = ktile
@@ -13439,19 +13439,19 @@ END SUBROUTINE nssl_2mom_driver
 !
 !      cwmasn = 4.25e-15  ! radius of 1.0e-6
       mwfac = 6.0**(1./3.)
-      IF ( ipconc .ge. 2 ) THEN
+      if ( ipconc .ge. 2 ) then
 !        cwmasn = xvmn(lc)*1000.
 !        cwradn = 1.0e-6
 !        cwmasx = xvmx(lc)*1000.
-      ENDIF
+      endif
         rwmasn = xvmn(lr)*1000.
         rwmasx = xvmx(lr)*1000.
 
-      IF ( biggsnowdiam > 0.0 ) THEN
+      if ( biggsnowdiam > 0.0 ) then
         xvbiggsnow = (pi/6.0)*biggsnowdiam**3
-      ELSE
+      else
         xvbiggsnow = xvmn(lh)
-      ENDIF
+      endif
 
 !
 !  ci constants in mks units
@@ -13494,13 +13494,13 @@ END SUBROUTINE nssl_2mom_driver
 !      t6(:,:,:) = 0
 !      t8(:,:,:) = 0
       
-      IF ( ipconc < 2 ) THEN ! Make a copy of cloud droplet mixing ratio to use for homogeneous freezing
-        DO kz = 1,kze
-         DO ix = 1,itile
+      if ( ipconc < 2 ) then ! Make a copy of cloud droplet mixing ratio to use for homogeneous freezing
+        do kz = 1,kze
+         do ix = 1,itile
            t9(ix,jy,kz) = an(ix,jy,kz,lc)
-         ENDDO
-        ENDDO
-      ENDIF
+         enddo
+        enddo
+      endif
       
 !
 !..Gather microphysics  
@@ -13530,12 +13530,12 @@ END SUBROUTINE nssl_2mom_driver
       ltemq = (temg(1)-163.15)/fqsat + 1.5
       ltemq = Min( nqsat, Max(1,ltemq) )
       qvs(1) = pqs(1)*tabqvs(ltemq)
-      IF ( iqis0 == 1 .or. temg(1) <= tfr+0.5 ) THEN
+      if ( iqis0 == 1 .or. temg(1) <= tfr+0.5 ) then
         qis(1) = pqs(1)*tabqis(ltemq)
-      ELSE
+      else
         ltemq = (tfr - 163.15)/fqsat + 1.5
         qis(1) = pqs(1)*tabqis(ltemq)
-      ENDIF
+      endif
 
       qss(1) = qvs(1)
 
@@ -13544,9 +13544,9 @@ END SUBROUTINE nssl_2mom_driver
       end if
 !
       ishail = .false.
-      IF ( lhl > 1 ) THEN
-        IF ( an(ix,jy,kz,lhl)  .gt. qxmin(lhl) ) ishail = .true.
-      ENDIF
+      if ( lhl > 1 ) then
+        if ( an(ix,jy,kz,lhl)  .gt. qxmin(lhl) ) ishail = .true.
+      endif
 
 
       
@@ -13579,13 +13579,13 @@ END SUBROUTINE nssl_2mom_driver
       xdia(:,:,:) = 0.0
       raindn(:,:) = 900.
       cx(:,:) = 0.0
-      IF ( lnhf > 1 .or. lnhlf > 1 ) chxf(:,:) = 0.0
+      if ( lnhf > 1 .or. lnhlf > 1 ) chxf(:,:) = 0.0
       alpha(:,:) = 0.0
-      DO il = li,lhab
-        DO mgs = 1,ngscnt
+      do il = li,lhab
+        do mgs = 1,ngscnt
           rimdn(mgs,il)  = rimedens ! xdn0(il)
-        ENDDO
-      ENDDO
+        enddo
+      enddo
 !
 !  define temporaries for state variables to be used in calculations
 !
@@ -13616,12 +13616,12 @@ END SUBROUTINE nssl_2mom_driver
       ltemq = (temg(mgs)-163.15)/fqsat+1.5
       ltemq = Min( nqsat, Max(1,ltemq) )
       qvs(mgs) = pqs(mgs)*tabqvs(ltemq)
-      IF ( iqis0 == 1 .or. temg(mgs) <= tfr+0.5 ) THEN
+      if ( iqis0 == 1 .or. temg(mgs) <= tfr+0.5 ) then
         qis(mgs) = pqs(mgs)*tabqis(ltemq)
-      ELSE
+      else
         ltemq = (tfr - 163.15)/fqsat + 1.5
         qis(mgs) = pqs(mgs)*tabqis(ltemq)
-      ENDIF
+      endif
       qss(mgs) = qvs(mgs)
 !      es(mgs)  = 6.1078e2*tabqvs(ltemq)
 !      eis(mgs) = 6.1078e2*tabqis(ltemq)
@@ -13634,12 +13634,12 @@ END SUBROUTINE nssl_2mom_driver
       end if
       enddo !mgs
       
-      IF ( ipconc < 1 .and. lwsm6 ) THEN
-        DO mgs = 1,ngscnt
+      if ( ipconc < 1 .and. lwsm6 ) then
+        do mgs = 1,ngscnt
           tmp = Min( 0.0, temcg(mgs) )
           cnostmp(mgs) = Min( 2.e8, 2.e6*exp(0.12*tmp) )
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
 
 !
@@ -13651,10 +13651,10 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  set temporaries for microphysics variables
 !
-      DO il = lv,lhab
+      do il = lv,lhab
       do mgs = 1,ngscnt
         qx(mgs,il) = max(an(igs(mgs),jy,kgs(mgs),il), 0.0) 
-      ENDDO
+      enddo
       end do
 
       qxw(:,:) = 0.0
@@ -13674,40 +13674,40 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 1 ) then
        do mgs = 1,ngscnt
         cx(mgs,li) = Max(an(igs(mgs),jy,kgs(mgs),lni), 0.0)
-          IF ( qx(mgs,li) .le. qxmin(li) ) THEN
+          if ( qx(mgs,li) .le. qxmin(li) ) then
             cx(mgs,li) = 0.0
-          ENDIF
+          endif
 
-        IF ( lcina .gt. 1 ) THEN
+        if ( lcina .gt. 1 ) then
          cina(mgs) = an(igs(mgs),jy,kgs(mgs),lcina)
-        ELSE
+        else
          cina(mgs) = cx(mgs,li)
-        ENDIF
-        IF ( lcin > 1 ) THEN
+        endif
+        if ( lcin > 1 ) then
          ccin(mgs) = an(igs(mgs),jy,kgs(mgs),lcin)
-        ENDIF
+        endif
        end do
       end if
       if ( ipconc .ge. 2 ) then
        do mgs = 1,ngscnt
         cx(mgs,lc) = Max(an(igs(mgs),jy,kgs(mgs),lnc), 0.0)
 !        cx(mgs,lc) = Min( ccwmx, cx(mgs,lc) )
-        IF ( qx(mgs,lc) .le. qxmin(lc) ) THEN
+        if ( qx(mgs,lc) .le. qxmin(lc) ) then
           cx(mgs,lc) = 0.0
-        ENDIF
-        IF ( lss > 1 ) THEN
+        endif
+        if ( lss > 1 ) then
         ssmax(mgs) = an(igs(mgs),jy,kgs(mgs),lss)
-        ENDIF
-        IF ( lccn .gt. 1 ) THEN
+        endif
+        if ( lccn .gt. 1 ) then
          ccnc(mgs) = an(igs(mgs),jy,kgs(mgs),lccn)
-        ELSE
+        else
          ccnc(mgs) = 0.0
-        ENDIF
-        IF ( lccna .gt. 1 ) THEN
+        endif
+        if ( lccna .gt. 1 ) then
          ccna(mgs) = an(igs(mgs),jy,kgs(mgs),lccna)
-        ELSE
+        else
          ccna(mgs) = cx(mgs,lc)
-        ENDIF
+        endif
        end do
 !       ELSE
 !       cx(mgs,lc) = Abs(ccn)
@@ -13715,58 +13715,58 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 3 ) then
        do mgs = 1,ngscnt
         cx(mgs,lr) = Max(an(igs(mgs),jy,kgs(mgs),lnr), 0.0)
-        IF ( qx(mgs,lr) .le. qxmin(lr) ) THEN
+        if ( qx(mgs,lr) .le. qxmin(lr) ) then
 !          cx(mgs,lr) = 0.0
-        ELSEIF ( cx(mgs,lr) .eq. 0.0 .and. qx(mgs,lr) .lt. 3.0*qxmin(lr) ) THEN
+        elseif ( cx(mgs,lr) .eq. 0.0 .and. qx(mgs,lr) .lt. 3.0*qxmin(lr) ) then
           qx(mgs,lv) = qx(mgs,lv) + qx(mgs,lr)
           qx(mgs,lr) = 0.0
-        ELSE
+        else
           cx(mgs,lr) = Max( 1.e-9, cx(mgs,lr) )
-        ENDIF
+        endif
        end do
       end if
       if ( ipconc .ge. 4 ) then
        do mgs = 1,ngscnt
         cx(mgs,ls) = Max(an(igs(mgs),jy,kgs(mgs),lns), 0.0)
-        IF ( qx(mgs,ls) .le. qxmin(ls) ) THEN
+        if ( qx(mgs,ls) .le. qxmin(ls) ) then
 !          cx(mgs,ls) = 0.0
-        ELSEIF ( cx(mgs,ls) .eq. 0.0 .and. qx(mgs,ls) .lt. 3.0*qxmin(ls) ) THEN
+        elseif ( cx(mgs,ls) .eq. 0.0 .and. qx(mgs,ls) .lt. 3.0*qxmin(ls) ) then
           qx(mgs,lv) = qx(mgs,lv) + qx(mgs,ls)
           qx(mgs,ls) = 0.0
-        ELSE
+        else
           cx(mgs,ls) = Max( 1.e-9, cx(mgs,ls) )
 
-         IF ( ilimit .ge. ipc(ls) ) THEN
+         if ( ilimit .ge. ipc(ls) ) then
             tmp = (xdn0(ls)*cx(mgs,ls))/(rho0(mgs)*qx(mgs,ls))
             tmp2 = (tmp*(3.14159))**(1./3.)
             cnox = cx(mgs,ls)*(tmp2)
-         IF ( cnox .gt. 3.0*cno(ls) ) THEN
+         if ( cnox .gt. 3.0*cno(ls) ) then
            cx(mgs,ls) = 3.0*cno(ls)/tmp2
-         ENDIF
-         ENDIF
-        ENDIF
+         endif
+         endif
+        endif
        end do
       end if
       if ( ipconc .ge. 5 ) then
        do mgs = 1,ngscnt
 
         cx(mgs,lh) = Max(an(igs(mgs),jy,kgs(mgs),lnh), 0.0)
-        IF ( qx(mgs,lh) .le. qxmin(lh) ) THEN
+        if ( qx(mgs,lh) .le. qxmin(lh) ) then
 !          cx(mgs,lh) = 0.0
-        ELSEIF ( cx(mgs,lh) .eq. 0.0 .and. qx(mgs,lh) .lt. 3.0*qxmin(lh) ) THEN
+        elseif ( cx(mgs,lh) .eq. 0.0 .and. qx(mgs,lh) .lt. 3.0*qxmin(lh) ) then
           qx(mgs,lv) = qx(mgs,lv) + qx(mgs,lh) 
           qx(mgs,lh) = 0.0
-        ELSE
+        else
           cx(mgs,lh) = Max( 1.e-9, cx(mgs,lh) )
-         IF ( ilimit .ge. ipc(lh) ) THEN
+         if ( ilimit .ge. ipc(lh) ) then
             tmp = (xdn0(lh)*cx(mgs,lh))/(rho0(mgs)*qx(mgs,lh))
             tmp2 = (tmp*(3.14159))**(1./3.)
             cnox = cx(mgs,lh)*(tmp2)
-         IF ( cnox .gt. 3.0*cno(lh) ) THEN
+         if ( cnox .gt. 3.0*cno(lh) ) then
            cx(mgs,lh) = 3.0*cno(lh)/tmp2
-         ENDIF
-         ENDIF
-        ENDIF
+         endif
+         endif
+        endif
 
 
        end do
@@ -13778,22 +13778,22 @@ END SUBROUTINE nssl_2mom_driver
        do mgs = 1,ngscnt
 
         cx(mgs,lhl) = Max(an(igs(mgs),jy,kgs(mgs),lnhl), 0.0)
-        IF ( qx(mgs,lhl) .le. qxmin(lhl) ) THEN
+        if ( qx(mgs,lhl) .le. qxmin(lhl) ) then
           cx(mgs,lhl) = 0.0
-        ELSEIF ( cx(mgs,lhl) .eq. 0.0 .and. qx(mgs,lhl) .lt. 3.0*qxmin(lhl) ) THEN
+        elseif ( cx(mgs,lhl) .eq. 0.0 .and. qx(mgs,lhl) .lt. 3.0*qxmin(lhl) ) then
           qx(mgs,lv) = qx(mgs,lv) + qx(mgs,lhl) 
           qx(mgs,lhl) = 0.0
-        ELSE
+        else
           cx(mgs,lhl) = Max( 1.e-9, cx(mgs,lhl) )
-         IF ( ilimit .ge. ipc(lhl) ) THEN
+         if ( ilimit .ge. ipc(lhl) ) then
             tmp = (xdn0(lhl)*cx(mgs,lhl))/(rho0(mgs)*qx(mgs,lhl))
             tmp2 = (tmp*(3.14159))**(1./3.)
             cnox = cx(mgs,lhl)*(tmp2)
-         IF ( cnox .gt. 3.0*cno(lhl) ) THEN
+         if ( cnox .gt. 3.0*cno(lhl) ) then
            cx(mgs,lhl) = 3.0*cno(lhl)/tmp2
-         ENDIF
-         ENDIF
-        ENDIF
+         endif
+         endif
+        endif
 
 
        end do
@@ -13802,23 +13802,23 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! Set mean particle volume
 !
-      IF ( ldovol ) THEN
+      if ( ldovol ) then
       
       vx(:,:) = 0.0
       
-       DO il = li,lhab
+       do il = li,lhab
         
-        IF ( lvol(il) .ge. 1 ) THEN
+        if ( lvol(il) .ge. 1 ) then
         
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
             vx(mgs,il) = Max(an(igs(mgs),jy,kgs(mgs),lvol(il)), 0.0)
-          ENDDO
+          enddo
 
-        ENDIF
+        endif
 
-       ENDDO
+       enddo
 
-      ENDIF
+      endif
 
 
 !
@@ -13834,42 +13834,42 @@ END SUBROUTINE nssl_2mom_driver
 !  6th moments
 !
 
-      IF ( ipconc .ge. 6 ) THEN
+      if ( ipconc .ge. 6 ) then
        zx(:,:) = 0.0
-       DO il = lr,lhab
-        IF ( lz(il) .gt. 1 ) THEN
-         DO mgs = 1,ngscnt
+       do il = lr,lhab
+        if ( lz(il) .gt. 1 ) then
+         do mgs = 1,ngscnt
           zx(mgs,il) = Max( an(igs(mgs),jy,kgs(mgs),lz(il)), 0.0 )
-         ENDDO
-        ENDIF
-       ENDDO
+         enddo
+        endif
+       enddo
 
-      ENDIF
+      endif
 
-      IF ( ipconc .ge. 6 ) THEN
+      if ( ipconc .ge. 6 ) then
 
-       IF ( lz(lr) .lt. 1 ) THEN
+       if ( lz(lr) .lt. 1 ) then
          g1x(:,lr) = (6.0 + alphar)*(5.0 + alphar)*(4.0 + alphar)/ &
      &            ((3.0 + alphar)*(2.0 + alphar)*(1.0 + alphar))
 
          
-         DO mgs = 1,ngscnt
-           IF ( cx(mgs,lr) .gt. 0.0 .and. qx(mgs,lr) .gt. qxmin(lr)  ) THEN
+         do mgs = 1,ngscnt
+           if ( cx(mgs,lr) .gt. 0.0 .and. qx(mgs,lr) .gt. qxmin(lr)  ) then
             
             vr = rho0(mgs)*qx(mgs,lr)/(1000.*cx(mgs,lr))
-            IF ( lzr < 1 ) THEN
-             IF ( imurain == 3 ) THEN
+            if ( lzr < 1 ) then
+             if ( imurain == 3 ) then
                zx(mgs,lr) = 3.6476*(rnu+2.0)*cx(mgs,lr)*vr**2/(rnu+1.0)
-             ELSE ! imurain == 1
+             else ! imurain == 1
                zx(mgs,lr) = 3.6476*g1x(mgs,lr)*cx(mgs,lr)*vr**2
-             ENDIF
-            ENDIF
+             endif
+            endif
              
-           ENDIF
-         ENDDO
-       ENDIF
+           endif
+         enddo
+       endif
       
-      ENDIF
+      endif
 
 
         scx(:,:) = 0.0
@@ -13877,93 +13877,93 @@ END SUBROUTINE nssl_2mom_driver
 !  set shape parameters
 !
        if ( ndebug .gt. 0 .and. my_rank>=0 ) write(0,*) my_rank,  'ICEZVD_GS: dbg = set alpha'
-      IF ( imurain == 1 ) THEN
+      if ( imurain == 1 ) then
         alpha(:,lr) = alphar
-      ELSEIF ( imurain == 3 ) THEN
+      elseif ( imurain == 3 ) then
         alpha(:,lr) = xnu(lr)
-      ENDIF
+      endif
       
       alpha(:,li) = xnu(li)
       alpha(:,lc) = xnu(lc)
-        IF ( idiagnosecnu > 0 ) THEN
-          DO mgs = 1,ngscnt
-            IF ( cx(mgs,lc) > cxmin ) THEN
-              IF ( idiagnosecnu == 1 ) THEN ! diagnose cloud drop DSD shape parameter (cnu) based on Chandrakar et al. 2016 (PNAS) data
+        if ( idiagnosecnu > 0 ) then
+          do mgs = 1,ngscnt
+            if ( cx(mgs,lc) > cxmin ) then
+              if ( idiagnosecnu == 1 ) then ! diagnose cloud drop DSD shape parameter (cnu) based on Chandrakar et al. 2016 (PNAS) data
                 alpha(mgs,lc) = cnudiag( cx(mgs,lc) )
-              ELSEIF ( idiagnosecnu > 1 ) THEN ! Geoffrey et al. (2010, ACP, eq. 12 for alpha = nu - 1)
+              elseif ( idiagnosecnu > 1 ) then ! Geoffrey et al. (2010, ACP, eq. 12 for alpha = nu - 1)
                 alpha(mgs,lc) = 1.58*rho0(mgs)*qx(mgs,lc)*1.e6 + 0.72 - 1.0
-              ENDIF
-            ENDIF
-          ENDDO
-        ENDIF
+              endif
+            endif
+          enddo
+        endif
 
-      IF ( imusnow == 1 ) THEN
+      if ( imusnow == 1 ) then
         alpha(:,ls) = alphas
-      ELSEIF ( imusnow == 3 ) THEN
+      elseif ( imusnow == 3 ) then
         alpha(:,ls) = xnu(ls)
-      ENDIF
+      endif
 
        if ( ndebug .gt. 0 .and. my_rank>=0 ) write(0,*) my_rank,  'ICEZVD_GS: dbg = set dab'
       
-      DO il = lr,lhab
+      do il = lr,lhab
       do mgs = 1,ngscnt
-        IF ( il .ge. lg ) alpha(mgs,il) = dnu(il)
+        if ( il .ge. lg ) alpha(mgs,il) = dnu(il)
 
 
-        DO ic = lc,lhab
+        do ic = lc,lhab
         dab0lh(mgs,il,ic) =  dab0(il,ic) ! dab0(ic,il)
         dab1lh(mgs,il,ic) =  dab1(il,ic) ! dab1(ic,il)
-        ENDDO
+        enddo
       end do
-      ENDDO
+      enddo
 
       
 !      DO mgs = 1,ngscnt
-        DO il = lr,lhab
+        do il = lr,lhab
           da0lx(:,il) = da0(il)
-        ENDDO
+        enddo
         da0lh(:) = da0(lh)
         da0lr(:) = da0(lr)
         da1lr(:) = da1(lr)
         da0lc(:) = da0(lc)
         da1lc(:) = da1(lc)
-        IF ( idiagnosecnu > 0 ) THEN
-          DO mgs = 1,ngscnt
-            IF ( cx(mgs,lc) > cxmin ) THEN
+        if ( idiagnosecnu > 0 ) then
+          do mgs = 1,ngscnt
+            if ( cx(mgs,lc) > cxmin ) then
               da0lc(mgs) =  delbk(bb(lc), alpha(mgs,lc), xmu(lc), 0)
               da1lc(mgs) =  delbk(bb(lc), alpha(mgs,lc), xmu(lc), 1)
-            ENDIF
-          ENDDO
-        ENDIF
+            endif
+          enddo
+        endif
 
 
        if ( ndebug .gt. 0 .and. my_rank>=0 ) write(0,*) my_rank,  'ICEZVD_GS: dbg = set rz'
 
-        IF ( lzh < 1 .or. lzhl < 1 ) THEN
+        if ( lzh < 1 .or. lzhl < 1 ) then
           rzxhlh(:) = rzhl/rz
-        ELSEIF ( lzh > 1 .and. lzhl > 1 ) THEN
+        elseif ( lzh > 1 .and. lzhl > 1 ) then
           rzxhlh(:) = 1.
-        ENDIF
-        IF ( lzr > 1 ) THEN
+        endif
+        if ( lzr > 1 ) then
           rzxh(:) = 1.
           rzxhl(:) = 1.
-        ELSE
+        else
           rzxh(:) = rz
           rzxhl(:) = rzhl
-        ENDIF
+        endif
         
-        IF ( imurain == 1 .and. imusnow == 3 .and. lzr < 1 ) THEN
+        if ( imurain == 1 .and. imusnow == 3 .and. lzr < 1 ) then
           rzxs(:) = rzs
-        ELSEIF ( imurain == imusnow .or. lzr > 1 ) THEN
+        elseif ( imurain == imusnow .or. lzr > 1 ) then
           rzxs(:) = 1.
-        ENDIF
+        endif
  !     ENDDO
       
-      IF ( lhl .gt. 1 ) THEN
-      DO mgs = 1,ngscnt
+      if ( lhl .gt. 1 ) then
+      do mgs = 1,ngscnt
         da0lhl(mgs) = da0(lhl)
-      ENDDO
-      ENDIF
+      enddo
+      endif
       
       ventrx(:) = ventr
       ventrxn(:) = ventrn
@@ -13995,27 +13995,27 @@ END SUBROUTINE nssl_2mom_driver
       felvs(mgs) = felv(mgs)*felv(mgs)
       felss(mgs) = fels(mgs)*fels(mgs)
       
-        IF ( eqtset <= 1 ) THEN
+        if ( eqtset <= 1 ) then
           felvcp(mgs) = felv(mgs)*cpi
           felscp(mgs) = fels(mgs)*cpi
           felfcp(mgs) = felf(mgs)*cpi
-        ELSE
+        else
           
           ! equations from appendix in Bryan and Morrison (2012, MWR)
           ! note that rw is Rv in the paper, and rd is R.
           
           tmp = qx(mgs,li)+qx(mgs,ls)+qx(mgs,lh)
-          IF ( lhl > 1 ) tmp = tmp + qx(mgs,lhl)
-          IF ( lf > 1 ) tmp = tmp + qx(mgs,lf)
+          if ( lhl > 1 ) tmp = tmp + qx(mgs,lhl)
+          if ( lf > 1 ) tmp = tmp + qx(mgs,lf)
           cvm = cv+cvv*qx(mgs,lv)+cpl*(qx(mgs,lc)+qx(mgs,lr))   &
                                   +cpigb*(tmp)
 
-          IF ( eqtset == 2 ) THEN ! compact form from treating dT/dt = theta*d(pi)/dt + pi*d(theta)dt and then applied to theta assuming constant pi
+          if ( eqtset == 2 ) then ! compact form from treating dT/dt = theta*d(pi)/dt + pi*d(theta)dt and then applied to theta assuming constant pi
           felvcp(mgs) = (felv(mgs)-rw*temg(mgs))/cvm
           felscp(mgs) = (fels(mgs)-rw*temg(mgs))/cvm
           felfcp(mgs) = felf(mgs)/cvm
           
-          ELSE
+          else
            ! equivalent version that applies separate updates of latent heating to theta and pi, when both are returned.
 
           cpm = cp+cpv*qx(mgs,lv)+cpl*(qx(mgs,lc)+qx(mgs,lr))   &
@@ -14030,9 +14030,9 @@ END SUBROUTINE nssl_2mom_driver
           felspi(mgs) = pi0(mgs)*rovcp*(fels(mgs)/(temg(mgs)) - rw*cpm/rmm)/cvm 
           felfpi(mgs) = pi0(mgs)*rovcp*(felf(mgs)/(cvm*temg(mgs)))
           
-          ENDIF
+          endif
 
-        ENDIF
+        endif
 !
       fgamw(mgs) = felvcp(mgs)/pi0(mgs)
       fgams(mgs) = felscp(mgs)/pi0(mgs)
@@ -14103,65 +14103,65 @@ END SUBROUTINE nssl_2mom_driver
         xdn(mgs,lr) = xdn0(lr)
         xdn(mgs,ls) = xdn0(ls)
         xdn(mgs,lh) = xdn0(lh)
-        IF ( lvol(ls) .gt. 1 ) THEN
-         IF ( vx(mgs,ls) .gt. 0.0 .and. qx(mgs,ls) .gt. qxmin(ls) ) THEN
+        if ( lvol(ls) .gt. 1 ) then
+         if ( vx(mgs,ls) .gt. 0.0 .and. qx(mgs,ls) .gt. qxmin(ls) ) then
            xdn(mgs,ls) = Min( xdnmx(ls), Max( xdnmn(ls), rho0(mgs)*qx(mgs,ls)/vx(mgs,ls) ) )
-         ENDIF
-        ENDIF
+         endif
+        endif
 
-        IF ( lvol(lh) .gt. 1 ) THEN
-         IF ( vx(mgs,lh) .gt. 0.0 .and. qx(mgs,lh) .gt. qxmin(lh) ) THEN
-           IF ( mixedphase ) THEN
-           ELSE
+        if ( lvol(lh) .gt. 1 ) then
+         if ( vx(mgs,lh) .gt. 0.0 .and. qx(mgs,lh) .gt. qxmin(lh) ) then
+           if ( mixedphase ) then
+           else
              dnmx = xdnmx(lh)
-           ENDIF
+           endif
            xdn(mgs,lh) = Min( dnmx, Max( xdnmn(lh), rho0(mgs)*qx(mgs,lh)/vx(mgs,lh) ) )
            vx(mgs,lh) = rho0(mgs)*qx(mgs,lh)/xdn(mgs,lh)
          
-         ELSEIF ( vx(mgs,lh) == 0.0 .and. qx(mgs,lh) .gt. qxmin(lh) ) THEN ! if volume is zero, need to initialize the default value
+         elseif ( vx(mgs,lh) == 0.0 .and. qx(mgs,lh) .gt. qxmin(lh) ) then ! if volume is zero, need to initialize the default value
 
            vx(mgs,lh) = rho0(mgs)*qx(mgs,lh)/xdn(mgs,lh)
          
-         ENDIF
-        ENDIF
+         endif
+        endif
 
 
-        IF ( lhl .gt. 1 ) THEN
+        if ( lhl .gt. 1 ) then
 
           xdn(mgs,lhl) = xdn0(lhl)
           xdntmp(mgs,lhl) = xdn0(lhl)
 
-          IF ( lvol(lhl) .gt. 1 ) THEN
-           IF ( vx(mgs,lhl) .gt. 0.0 .and. qx(mgs,lhl) .gt. qxmin(lhl) ) THEN
+          if ( lvol(lhl) .gt. 1 ) then
+           if ( vx(mgs,lhl) .gt. 0.0 .and. qx(mgs,lhl) .gt. qxmin(lhl) ) then
 
-           IF ( mixedphase .and. lhlw > 1 ) THEN
-           ELSE
+           if ( mixedphase .and. lhlw > 1 ) then
+           else
              dnmx = xdnmx(lhl)
-           ENDIF
+           endif
 
              xdn(mgs,lhl) = Min( dnmx, Max( xdnmn(lhl), rho0(mgs)*qx(mgs,lhl)/vx(mgs,lhl) ) )
              vx(mgs,lhl) = rho0(mgs)*qx(mgs,lhl)/xdn(mgs,lhl)
              xdntmp(mgs,lhl) = xdn(mgs,lhl)
          
-           ELSEIF ( vx(mgs,lhl) == 0.0 .and. qx(mgs,lhl) .gt. qxmin(lhl) ) THEN ! if volume is zero, need to initialize the default value
+           elseif ( vx(mgs,lhl) == 0.0 .and. qx(mgs,lhl) .gt. qxmin(lhl) ) then ! if volume is zero, need to initialize the default value
 
              vx(mgs,lhl) = rho0(mgs)*qx(mgs,lhl)/xdn(mgs,lhl)
          
-           ENDIF
-          ENDIF
+           endif
+          endif
 
-        ENDIF
+        endif
 
 
       end do
 
-      IF ( ipconc == 5 .and. imydiagalpha == 2 ) THEN
+      if ( ipconc == 5 .and. imydiagalpha == 2 ) then
 
         cwchtmp = ((3. + dnu(lh))*(2. + dnu(lh))*(1.0 + dnu(lh)))**(-1./3.)
         
-        DO mgs = 1,ngscnt
+        do mgs = 1,ngscnt
           !IF ( igs(mgs) == 19 ) write(0,*) 'k,qr,qh,cr,ch = ',kgs(mgs),qx(mgs,lr),cx(mgs,lr),qx(mgs,lh),cx(mgs,lh)
-          IF ( qx(mgs,lr) .gt. qxmin(lr) .and. cx(mgs,lr) > cxmin ) THEN
+          if ( qx(mgs,lr) .gt. qxmin(lr) .and. cx(mgs,lr) > cxmin ) then
              xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*cx(mgs,lr))            ! 
              xdia(mgs,lr,3) = (xv(mgs,lr)*6.0*cwc1)**(1./3.) 
            !  alpha(mgs,lr) = Min(alphamax, c1r*tanh(c2r*(xdia(mgs,lr,3)*1000. - c3r)) + c4r)
@@ -14181,8 +14181,8 @@ END SUBROUTINE nssl_2mom_driver
              tmp = (x/y)**(1./3.)*xdia(mgs,lr,3)*cwchtmp
 
              alpha(mgs,lr) = Min(15., 11.8*(1000.*tmp - 0.7)**2 + 2.)
-          ENDIF
-          IF ( qx(mgs,lh) .gt. qxmin(lh) .and. cx(mgs,lh) > cxmin ) THEN
+          endif
+          if ( qx(mgs,lh) .gt. qxmin(lh) .and. cx(mgs,lh) > cxmin ) then
 !      MY 2005:
              xv(mgs,lh) = rho0(mgs)*qx(mgs,lh)/(xdn(mgs,lh)*cx(mgs,lh))            ! 
              xdia(mgs,lh,3) = (xv(mgs,lh)*6.*piinv)**(1./3.) ! mwfac*xdia(mgs,lh,1) ! (xv(mgs,lh)*cwc0*6.0)**(1./3.)
@@ -14206,89 +14206,89 @@ END SUBROUTINE nssl_2mom_driver
             
            ! IF ( igs(mgs) == 19 ) write(0,*) 'imy: i,k,alph,xdia = ',igs(mgs),kgs(mgs),alpha(mgs,lh),xdia(mgs,lh,3)*1000.
             il = lh
-            DO ic = lc,lh-1 ! lhab
+            do ic = lc,lh-1 ! lhab
                i = Nint( alpha(mgs,il)*dqiacralphainv )
-               IF ( ic == lc .or. ic == li .or. ic == ls .or. (ic == lr .and. imurain == 3) ) THEN
+               if ( ic == lc .or. ic == li .or. ic == ls .or. (ic == lr .and. imurain == 3) ) then
                  alp = (3.*alpha(mgs,ic) + 2.)
                  j = Nint( (3.*alpha(mgs,ic) + 2.)*dqiacralphainv )
-               ELSE ! IF ( ic == lr .and. imurain == 1 ) ! rain
+               else ! if ( ic == lr .and. imurain == 1 ) ! rain
                  alp = alpha(mgs,ic)
                  j = Nint( alpha(mgs,ic)*dqiacralphainv )
-               ENDIF
+               endif
              
                dab0lh(mgs,ic,il) = dab0lu(j,i,ic,il)
                dab1lh(mgs,ic,il) = dab1lu(j,i,ic,il)
                dab0lh(mgs,il,ic) = dab0lu(i,j,il,ic)
                dab1lh(mgs,il,ic) = dab1lu(i,j,il,ic)
-             ENDDO
-          ENDIF
+             enddo
+          endif
 !        alpha(:,lr) = 0. ! 10.
 !        alpha(:,lh) = 0. ! 10.
-          IF ( lhl > 0 ) THEN
-          IF ( qx(mgs,lhl) .gt. qxmin(lhl) .and. cx(mgs,lhl) > cxmin ) THEN
+          if ( lhl > 0 ) then
+          if ( qx(mgs,lhl) .gt. qxmin(lhl) .and. cx(mgs,lhl) > cxmin ) then
              xv(mgs,lhl) = rho0(mgs)*qx(mgs,lhl)/(xdn(mgs,lhl)*cx(mgs,lhl))            ! 
              xdia(mgs,lhl,3) = (xv(mgs,lhl)*6.*piinv)**(1./3.)
-             IF ( xdia(mgs,lhl,3) < 0.008 ) THEN
+             if ( xdia(mgs,lhl,3) < 0.008 ) then
                alpha(mgs,lhl) = Min(alphamax, c1hl*tanh(c2hl*(xdia(mgs,lhl,3)*1000. - c3hl)) + c4hl)
-             ELSE
+             else
                alpha(mgs,lhl) = Min(alphamax, c5hl*xdia(mgs,lhl,3)*1000. + c6hl)
-             ENDIF
+             endif
 
             il = lhl
-            DO ic = lc,lh-1 ! lhab
+            do ic = lc,lh-1 ! lhab
                i = Nint( alpha(mgs,il)*dqiacralphainv )
-               IF ( ic == lc .or. ic == li .or. ic == ls .or. (ic == lr .and. imurain == 3) ) THEN
+               if ( ic == lc .or. ic == li .or. ic == ls .or. (ic == lr .and. imurain == 3) ) then
                  alp = (3.*alpha(mgs,ic) + 2.)
                  j = Nint( (3.*alpha(mgs,ic) + 2.)*dqiacralphainv )
-               ELSE ! IF ( ic == lr .and. imurain == 1 ) ! rain
+               else ! if ( ic == lr .and. imurain == 1 ) ! rain
                  alp = alpha(mgs,ic)
                  j = Nint( alpha(mgs,ic)*dqiacralphainv )
-               ENDIF
+               endif
              
                dab0lh(mgs,ic,il) = dab0lu(j,i,ic,il)
                dab1lh(mgs,ic,il) = dab1lu(j,i,ic,il)
                dab0lh(mgs,il,ic) = dab0lu(i,j,il,ic)
                dab1lh(mgs,il,ic) = dab1lu(i,j,il,ic)
-             ENDDO
+             enddo
 
-          ENDIF
-          ENDIF
+          endif
+          endif
 
 
 
-        ENDDO
-      ENDIF
+        enddo
+      endif
       
 
-       IF ( imurain == 3 ) THEN
-         IF ( lzr > 1 ) THEN
+       if ( imurain == 3 ) then
+         if ( lzr > 1 ) then
            alphashr = 0.0
            alphamlr = -2.0/3.0
            alphasmlr = -2.0/3.0
-         ELSE
+         else
            alphashr = xnu(lr)
            alphamlr = xnu(lr)
            alphasmlr = xnu(lr)
-         ENDIF
+         endif
 !         massfacshr = ( (2. + 3.*(1. +alphashr) )/( 3.*(1. + alphashr) ) )**(1./3.) ! this is the diameter factor
 !         massfacmlr = ( (2. + 3.*(1. +alphamlr) )/( 3.*(1. + alphamlr) ) )**(1./3.)
          massfacshr = ( (2. + 3.*(1. +alphashr) )**3/( 3.*(1. + alphashr) ) )  ! this is the mass or volume factor
          massfacmlr = ( (2. + 3.*(1. +alphamlr) )**3/( 3.*(1. + alphamlr) ) )
-       ELSEIF ( imurain == 1 ) THEN
-         IF ( lzr > 1 ) THEN
+       elseif ( imurain == 1 ) then
+         if ( lzr > 1 ) then
            alphashr = 4.0
            alphamlr = 4.0
            alphasmlr = alphasmlr0
-         ELSE
+         else
            alphashr = alphar
            alphamlr = alphar
            alphasmlr = alphar
-         ENDIF
+         endif
 !         massfacshr = (3.0 + alphashr)*((3.+alphashr)*(2.+alphashr)*(1. + alphashr) )**(-1./3.) ! this is the diameter factor
 !         massfacmlr = (3.0 + alphamlr)*((3.+alphamlr)*(2.+alphamlr)*(1. + alphamlr) )**(-1./3.)
          massfacshr = (3.0 + alphashr)**3/((3.+alphashr)*(2.+alphashr)*(1. + alphashr) ) ! this is the mass or volume factor
          massfacmlr = (3.0 + alphamlr)**3/((3.+alphamlr)*(2.+alphamlr)*(1. + alphamlr) )
-       ENDIF
+       endif
        
 !  Find shape parameter rain
 
@@ -14298,23 +14298,23 @@ END SUBROUTINE nssl_2mom_driver
  
 !      CALL cld_cpu('Z-MOMENT-1')  
       
-      IF ( ipconc >= 6 ) THEN
+      if ( ipconc >= 6 ) then
       
       ! set base g1x in case rain is not 3-moment
-       IF ( ipconc >= 6 .and. imurain == 3 ) THEN
+       if ( ipconc >= 6 .and. imurain == 3 ) then
          il = lr
-         DO mgs = 1,ngscnt
+         do mgs = 1,ngscnt
 !           g1x(mgs,il) = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
            g1x(mgs,il) = (alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0))
-         ENDDO
-       ENDIF
+         enddo
+       endif
 
-      IF (lzr > 1 ) THEN
-       IF ( imurain == 3 ) THEN
+      if (lzr > 1 ) then
+       if ( imurain == 3 ) then
          g1shr = (alphashr+2.0)/((alphashr+1.0))
          g1mlr = (alphamlr+2.0)/((alphamlr+1.0))
          g1smlr = (alphasmlr+2.0)/((alphasmlr+1.0))
-       ELSEIF ( imurain == 1 ) THEN
+       elseif ( imurain == 1 ) then
 !         g1shr = 36.*(6.0 + alphashr)*(5.0 + alphashr)*(4.0 + alphashr)/ &
 !     &            (pi**2*(3.0 + alphashr)*(2.0 + alphashr)*(1.0 + alphashr))
          g1shr = (6.0 + alphashr)*(5.0 + alphashr)*(4.0 + alphashr)/ &
@@ -14325,26 +14325,26 @@ END SUBROUTINE nssl_2mom_driver
      &            ((3.0 + alphamlr)*(2.0 + alphamlr)*(1.0 + alphamlr))
          g1smlr = (6.0 + alphasmlr)*(5.0 + alphasmlr)*(4.0 + alphasmlr)/ &
      &            ((3.0 + alphasmlr)*(2.0 + alphasmlr)*(1.0 + alphasmlr))
-       ENDIF
-      ENDIF
+       endif
+      endif
 
-      IF ( lzr > 1 .and. imurain == 3 ) THEN ! { RAIN SHAPE PARAM
+      if ( lzr > 1 .and. imurain == 3 ) then ! { RAIN SHAPE PARAM
       
       
 !      CALL cld_cpu('Z-MOMENT-1r')  
           il = lr
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
           
 
-         IF ( iresetmoments == 1 .or. iresetmoments == il .or. iresetmoments == -1  ) THEN ! .or. qx(mgs,il) <= qxmin(il)  THEN
-         IF ( zx(mgs,il) <= zxmin ) THEN !  .and. qx(mgs,il) > 0.05e-3  THEN
+         if ( iresetmoments == 1 .or. iresetmoments == il .or. iresetmoments == -1  ) then ! .or. qx(mgs,il) <= qxmin(il)  then
+         if ( zx(mgs,il) <= zxmin ) then !  .and. qx(mgs,il) > 0.05e-3  then
 !!            write(91,*) 'zx=0; qx,cx = ',1000.*qx(mgs,il),cx(mgs,il)
            qx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-         ELSEIF ( iresetmoments == -1 .and. qx(mgs,il) < qxmin(il) ) THEN
+         elseif ( iresetmoments == -1 .and. qx(mgs,il) < qxmin(il) ) then
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
@@ -14354,7 +14354,7 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
          
-         ELSEIF ( cx(mgs,il) <= cxmin .and. iresetmoments /= -1 ) THEN !  .and. qx(mgs,il) > 0.05e-3   THEN
+         elseif ( cx(mgs,il) <= cxmin .and. iresetmoments /= -1 ) then !  .and. qx(mgs,il) > 0.05e-3   then
          
            qx(mgs,lv) = qx(mgs,lv) + qx(mgs,il)
            zx(mgs,lr) = 0.0
@@ -14362,10 +14362,10 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),lr)
            an(igs(mgs),jgs,kgs(mgs),lr) = qx(mgs,lr)
            an(igs(mgs),jgs,kgs(mgs),lz(lr)) = zx(mgs,lr)
-         ENDIF
-         ENDIF
+         endif
+         endif
 
-         IF ( .false. .and. zx(mgs,il) <= zxmin .and. cx(mgs,il) <= cxmin ) THEN
+         if ( .false. .and. zx(mgs,il) <= zxmin .and. cx(mgs,il) <= cxmin ) then
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
@@ -14374,27 +14374,27 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-         ENDIF
+         endif
          
-         IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
+         if ( qx(mgs,lr) .gt. qxmin(lr) ) then
 
         xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*Max(1.0e-11,cx(mgs,lr)))
-        IF ( xv(mgs,lr) .gt. xvmx(lr) ) THEN
+        if ( xv(mgs,lr) .gt. xvmx(lr) ) then
 !          xv(mgs,lr) = xvmx(lr)
 !          cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmx(lr)*xdn(mgs,lr))
-        ELSEIF ( xv(mgs,lr) .lt. xvmn(lr) ) THEN
+        elseif ( xv(mgs,lr) .lt. xvmn(lr) ) then
           xv(mgs,lr) = xvmn(lr)
           cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmn(lr)*xdn(mgs,lr))
-        ENDIF
+        endif
 
-          IF ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) THEN
+          if ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) then
 !  have mass and reflectivity but no concentration, so set concentration, using default alpha
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             z   = zx(mgs,il)
             qr  = qx(mgs,il)
             cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z*xdn(mgs,lr)**2)
 !            an(igs(mgs),jgs,kgs(mgs),ln(il)) = zx(mgs,il)
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > 0.0 ) then
 !  have mass and concentration but no reflectivity, so set reflectivity, using default alpha
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             chw = cx(mgs,il)
@@ -14402,7 +14402,7 @@ END SUBROUTINE nssl_2mom_driver
             zx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(xdn(mgs,lr)**2*chw)
             an(igs(mgs),jgs,kgs(mgs),lz(lr)) = zx(mgs,lr)
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) then
 !   How did this happen?
          ! set values according to dBZ of -10, or Z = 0.1
 !              0.1 = 1.e18*0.224*an(ix,jy,kz,lzh)*(hwdn/rwdn)**2
@@ -14414,9 +14414,9 @@ END SUBROUTINE nssl_2mom_driver
                qr  = qx(mgs,il)
                cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z*1000.*1000)
                an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-          ENDIF
+          endif
         
-          IF ( zx(mgs,lr) > 0.0 ) THEN
+          if ( zx(mgs,lr) > 0.0 ) then
             xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(1000.*cx(mgs,lr))
             vr = xv(mgs,lr)
            qr = qx(mgs,lr)
@@ -14427,35 +14427,35 @@ END SUBROUTINE nssl_2mom_driver
 !           rd = z*(pi/6.*1000.)**2/xv
 
 ! determine shape parameter alpha by iteration
-           IF ( z .gt. 0.0 ) THEN
+           if ( z .gt. 0.0 ) then
 !           alpha(mgs,lr) = 3.
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
-           DO i = 1,20
-            IF ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) EXIT
+           do i = 1,20
+            if ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) exit
              alpha(mgs,lr) = Max( rnumin, Min( rnumax, alp ) )
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
              alp = Max( rnumin, Min( rnumax, alp ) )
-           ENDDO
+           enddo
 
 ! check for artificial breakup (rain larger than allowed max size)
-        IF (  (xv(mgs,il) .gt. xvmx(il) .or. (ioldlimiter >= 2 .and. xv(mgs,il) .gt. xvmx(il)/8.) )) THEN
+        if (  (xv(mgs,il) .gt. xvmx(il) .or. (ioldlimiter >= 2 .and. xv(mgs,il) .gt. xvmx(il)/8.) )) then
           tmp = cx(mgs,il)
-          IF ( ioldlimiter >= 2 ) THEN ! MY-style active breakup
+          if ( ioldlimiter >= 2 ) then ! MY-style active breakup
             x = (6.*rho0(mgs)*qx(mgs,il)/(pi*xdn(mgs,il)*cx(mgs,il)))**(1./3.)
             x1 = Max(0.0e-3, x - 3.0e-3)
             x2 = Max(0.5, x/6.0e-3)
             x3 = x2**3
             cx(mgs,il) = cx(mgs,il)*Max((1.+2.222e3*x1**2), x3)
             xv(mgs,il) = xv(mgs,il)/Max((1.+2.222e3*x1**2), x3)
-          ELSE ! simple cutoff 
+          else ! simple cutoff 
             xv(mgs,il) = Min( xvmx(il), Max( xvmn(il),xv(mgs,il) ) )
             xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
             cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
-          ENDIF
+          endif
             !xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
             !cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
 
-          IF ( tmp < cx(mgs,il) ) THEN ! breakup
+          if ( tmp < cx(mgs,il) ) then ! breakup
 
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             zx(mgs,il) = zx(mgs,il) + g1*(rho0(mgs)/xdn(mgs,il))**2*( (qx(mgs,il)/tmp)**2 * (tmp-cx(mgs,il)) )
@@ -14469,46 +14469,46 @@ END SUBROUTINE nssl_2mom_driver
 
 ! determine shape parameter alpha by iteration
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
-           DO i = 1,20
-            IF ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) EXIT
+           do i = 1,20
+            if ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) exit
              alpha(mgs,lr) = Max( rnumin, Min( rnumax, alp ) )
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
              alp = Max( rnumin, Min( rnumax, alp ) )
-           ENDDO
+           enddo
 
             
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !
 ! Check whether the shape parameter is at or less than the minimum, and if it is, reset the 
 ! concentration or reflectivity to match (prevents reflectivity from being out of balance with Q and N)
 !
               g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
-           IF ( .true. .and. (alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax) ) THEN
+           if ( .true. .and. (alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax) ) then
 
-            IF ( rescale_high_alpha .and. alp >= rnumax - 0.01  ) THEN  ! reset c at high alpha to prevent growth in Z
+            if ( rescale_high_alpha .and. alp >= rnumax - 0.01  ) then  ! reset c at high alpha to prevent growth in Z
               cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z*(1./(xdn(mgs,il)))**2
               an(igs(mgs),jy,kgs(mgs),ln(il)) = cx(mgs,il)
             
-            ELSEIF ( rescale_low_alphar .and. alp <= rnumin ) THEN
+            elseif ( rescale_low_alphar .and. alp <= rnumin ) then
              z  = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/((alpha(mgs,lr)+1.0)*pi**2)
              zx(mgs,il) = z
              an(igs(mgs),jy,kgs(mgs),lz(il)) = zx(mgs,il)
-            ENDIF
-           ENDIF
+            endif
+           endif
            
          ! set g1x to use as G factor later. If alpha is in the range ( rnumin < alpha < rnumax ), then 
          ! this will be the same as computing G from alpha.  If alpha = rnumax, however, it probably means that
          ! the moments are not matched correctly, so we compute G from the moments instead so that the dZ/dt rates
          ! stay consistent with dN/dt and dq/dt.
-           IF ( alp >= rnumax - 0.01 ) THEN
+           if ( alp >= rnumax - 0.01 ) then
 !             g1x(mgs,il) = 6**2*zx(mgs,il)/(cx(mgs,il)*(pi*xv(mgs,lr))**2)
 !             g1x(mgs,il) = xdn(mgs,il)*zx(mgs,il)*cx(mgs,il)/((rho0(mgs)*qx(mgs,lr))**2)
              g1x(mgs,il) = (pi*xdn(mgs,il))**2*zx(mgs,il)*cx(mgs,il)/((6.*rho0(mgs)*qx(mgs,il))**2)
-           ELSE
+           else
              g1x(mgs,il) = g1
-           ENDIF
+           endif
            
            tmp = alpha(mgs,lr) + 4./3.
            i = Int(dgami*(tmp))
@@ -14525,7 +14525,7 @@ END SUBROUTINE nssl_2mom_driver
 !           ventrx(mgs) = Gamma_sp(alpha(mgs,lr) + 4./3.)/(alpha(mgs,lr) + 1.)**(1./3.)/Gamma_sp(alpha(mgs,lr) + 1.)
            ventrx(mgs) = x/(y*(alpha(mgs,lr) + 1.)**(1./3.))
 
-           IF ( imurain == 3 .and. izwisventr == 2 ) THEN
+           if ( imurain == 3 .and. izwisventr == 2 ) then
 
            tmp = alpha(mgs,lr) + 1.5 + br/6.
            i = Int(dgami*(tmp))
@@ -14547,39 +14547,39 @@ END SUBROUTINE nssl_2mom_driver
 !           ventrxn(mgs) = x/y
            
            
-           ENDIF
+           endif
            
-           ENDIF
-          ENDIF
+           endif
+          endif
           
-          ENDIF
+          endif
           
-          ENDDO
+          enddo
 !        CALL cld_cpu('Z-MOMENT-1r')  
-        ENDIF ! }
+        endif ! }
         
-      ENDIF ! ipconc >= 6
+      endif ! ipconc >= 6
 
 !  Find shape parameters for graupel and hail
-      IF ( ipconc .ge. 6 ) THEN
+      if ( ipconc .ge. 6 ) then
             
-        DO il = lr,lhab
+        do il = lr,lhab
           
         ! set base values of g1x
-          IF ( (.not. ( il == lr .and. imurain == 3 )) .and. ( il == lr .or. il == lh .or. il == lhl .or. il == lf ) ) THEN
-          DO mgs = 1,ngscnt
+          if ( (.not. ( il == lr .and. imurain == 3 )) .and. ( il == lr .or. il == lh .or. il == lhl .or. il == lf ) ) then
+          do mgs = 1,ngscnt
             g1x(mgs,il) = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
-          ENDDO
-          ENDIF
+          enddo
+          endif
         
-        IF ( lz(il) .gt. 1   .and. ( .not. ( il == lr .and. imurain == 3 )) ) THEN
+        if ( lz(il) .gt. 1   .and. ( .not. ( il == lr .and. imurain == 3 )) ) then
         
-        DO mgs = 1,ngscnt
+        do mgs = 1,ngscnt
 
 
-         IF ( iresetmoments == 1 .or. iresetmoments == il .or. iresetmoments == -1  ) THEN ! .or. qx(mgs,il) <= qxmin(il) ) THEN
-         IF ( zx(mgs,il) <= zxmin ) THEN !  .and. qx(mgs,il) > 0.05e-3 ) THEN
+         if ( iresetmoments == 1 .or. iresetmoments == il .or. iresetmoments == -1  ) then ! .or. qx(mgs,il) <= qxmin(il) ) then
+         if ( zx(mgs,il) <= zxmin ) then !  .and. qx(mgs,il) > 0.05e-3 ) then
 !!            write(91,*) 'zx=0; qx,cx = ',1000.*qx(mgs,il),cx(mgs,il)
            qx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
@@ -14588,7 +14588,7 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-         ELSEIF ( iresetmoments == -1 .and. qx(mgs,il) < qxmin(il) ) THEN
+         elseif ( iresetmoments == -1 .and. qx(mgs,il) < qxmin(il) ) then
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
@@ -14598,7 +14598,7 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
          
-         ELSEIF ( cx(mgs,il) <= cxmin .and. iresetmoments /= -1 ) THEN !  .and. qx(mgs,il) > 0.05e-3  ) THEN
+         elseif ( cx(mgs,il) <= cxmin .and. iresetmoments /= -1 ) then !  .and. qx(mgs,il) > 0.05e-3  ) then
            qx(mgs,lv) = qx(mgs,lv) + qx(mgs,il)
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
@@ -14607,10 +14607,10 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-         ENDIF
-         ENDIF
+         endif
+         endif
 
-         IF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= cxmin ) THEN
+         if ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= cxmin ) then
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
@@ -14619,20 +14619,20 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-         ENDIF
+         endif
         
-        IF ( qx(mgs,il) .gt. qxmin(il) ) THEN
+        if ( qx(mgs,il) .gt. qxmin(il) ) then
 
         xv(mgs,il) = rho0(mgs)*qx(mgs,il)/(xdn(mgs,il)*Max(1.0e-9,cx(mgs,il)))
         xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
 
-        IF ( xv(mgs,il) .lt. xvmn(il) ) THEN
+        if ( xv(mgs,il) .lt. xvmn(il) ) then
           xv(mgs,il) = Min( xvmx(il), Max( xvmn(il),xv(mgs,il) ) )
           xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
           cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
-        ENDIF
+        endif
 
-          IF ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) THEN
+          if ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) then
 !  have mass and reflectivity but no concentration, so set concentration, using default alpha
             g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
@@ -14641,7 +14641,7 @@ END SUBROUTINE nssl_2mom_driver
 !            cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z
             cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(6.*qr)**2/(z*(pi*xdn(mgs,il))**2)
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > cxmin ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > cxmin ) then
 !  have mass and concentration but no reflectivity, so set reflectivity, using default alpha
 !            g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
 !     &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
@@ -14654,7 +14654,7 @@ END SUBROUTINE nssl_2mom_driver
             zx(mgs,il) = Max(zxmin*1.1, g1*dn(igs(mgs),jy,kgs(mgs))**2*(6*qr)**2/(chw*(pi*xdn(mgs,il))**2) )
             an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) then
 !   How did this happen?
          ! set values according to dBZ of -10, or Z = 0.1
 !              0.1 = 1.e18*0.224*an(ix,jy,kz,lzh)*(hwdn/rwdn)**2
@@ -14668,13 +14668,13 @@ END SUBROUTINE nssl_2mom_driver
 !               cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z
                cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(6.*qr)**2/(z*(pi*xdn(mgs,il))**2)
                an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-           ELSE
+           else
           
           chw = cx(mgs,il)
           qr  = qx(mgs,il)
           z   = zx(mgs,il)
 
-          IF ( zx(mgs,il) .gt. 0. ) THEN
+          if ( zx(mgs,il) .gt. 0. ) then
            
 !            rdi = z*(pi/6.*1000.)**2*chw/((rho0(mgs)*qr)**2)
             rdi = z*(pi/6.*xdn(mgs,il))**2*chw/((rho0(mgs)*qr)**2)
@@ -14686,18 +14686,18 @@ END SUBROUTINE nssl_2mom_driver
 !           print*,'kz, alp, alpha(mgs,il) = ',kz,alp,alpha(mgs,il),rdi,z,xv
            alp = Max( alphamin, Min( alphamax, alp ) )
            
-         IF ( newton ) THEN
-           DO i = 1,10
-             IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+         if ( newton ) then
+           do i = 1,10
+             if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
              alp = alp + ( galpha(alp) - rdi )/dgalpha(alp)
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
+           enddo
            
-         ELSE
-           DO i = 1,10
+         else
+           do i = 1,10
 !            IF ( 100.*Abs(alp - alpha(mgs,il))/(Abs(alpha(mgs,il))+1.e-5) .lt. 1. ) EXIT
-             IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+             if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
 !             alp = 1.e18*(6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/
 !     :            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
@@ -14705,36 +14705,36 @@ END SUBROUTINE nssl_2mom_driver
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
 !           print*,'i,alp = ',i,alp
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
-          ENDIF
+           enddo
+          endif
 
 
 ! check for artificial breakup (graupel/hail larger than allowed max size)
-        IF ( imaxdiaopt == 1 ) THEN
+        if ( imaxdiaopt == 1 ) then
           xvbarmax = xvmx(il) 
-        ELSEIF ( imaxdiaopt == 2 ) THEN ! test against maximum mass diameter
+        elseif ( imaxdiaopt == 2 ) then ! test against maximum mass diameter
           xvbarmax = xvmx(il) /((3. + alpha(mgs,il))**3/((3. + alpha(mgs,il))*(2. + alpha(mgs,il))*(1. + alpha(mgs,il))))
-        ELSEIF ( imaxdiaopt == 3 ) THEN ! test against mass-weighted diameter
+        elseif ( imaxdiaopt == 3 ) then ! test against mass-weighted diameter
           xvbarmax = xvmx(il) /((4. + alpha(mgs,il))**3/((3. + alpha(mgs,il))*(2. + alpha(mgs,il))*(1. + alpha(mgs,il))))
-        ELSE
+        else
           xvbarmax = xvmx(il) 
-        ENDIF
+        endif
 
-        IF (  xv(mgs,il) .gt. xvbarmax .or. (il == lr .and. ioldlimiter >= 2 .and. xv(mgs,il) .gt. xvmx(il)/8.)) THEN
+        if (  xv(mgs,il) .gt. xvbarmax .or. (il == lr .and. ioldlimiter >= 2 .and. xv(mgs,il) .gt. xvmx(il)/8.)) then
           tmp = cx(mgs,il)
-          IF( ioldlimiter >= 2 .and. il == lr) THEN ! MY-style drop limiter for rain
+          if( ioldlimiter >= 2 .and. il == lr) then ! MY-style drop limiter for rain
             x = (6.*rho0(mgs)*qx(mgs,il)/(pi*xdn(mgs,il)*cx(mgs,il)))**(1./3.)
             x1 = Max(0.0e-3, x - 3.0e-3)
             x2 = Max(0.5, x/6.0e-3)
             x3 = x2**3
             cx(mgs,il) = cx(mgs,il)*Max((1.+2.222e3*x1**2), x3)
             xv(mgs,il) = xv(mgs,il)/Max((1.+2.222e3*x1**2), x3)
-          ELSE
+          else
             xv(mgs,il) = Min( xvbarmax, Max( xvmn(il),xv(mgs,il) ) )
             xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
             cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
-          ENDIF
-          IF ( tmp < cx(mgs,il) ) THEN ! artificial breakup has happened, so need to adjust reflectivity and find new shape parameter
+          endif
+          if ( tmp < cx(mgs,il) ) then ! artificial breakup has happened, so need to adjust reflectivity and find new shape parameter
             g1 = 36.*(6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il))*pi**2)
              zx(mgs,il) = zx(mgs,il) + g1*(rho0(mgs)/xdn(mgs,il))**2*( (qx(mgs,il)/tmp)**2 * (tmp-cx(mgs,il)) )
@@ -14747,17 +14747,17 @@ END SUBROUTINE nssl_2mom_driver
             rdi = z*(pi/6.*xdn(mgs,il))**2*chw/((rho0(mgs)*qr)**2)
             alp = (6.0+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/   &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
-           DO i = 1,10
-             IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+           do i = 1,10
+             if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
              alp = (6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/   &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
+           enddo
 
             
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !
 ! Check whether the shape parameter is at or less than the minimum, and if it is, reset the 
@@ -14766,45 +14766,45 @@ END SUBROUTINE nssl_2mom_driver
              g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
  
-           IF ( ( lrescalelow(il) .or. rescale_high_alpha ) .and.  &
-     &          ( alpha(mgs,il) <= alphamin .or. alp == alphamin .or. alp == alphamax ) ) THEN
+           if ( ( lrescalelow(il) .or. rescale_high_alpha ) .and.  &
+     &          ( alpha(mgs,il) <= alphamin .or. alp == alphamin .or. alp == alphamax ) ) then
 
 
 
-            IF ( rescale_high_alpha .and. alp >= alphamax - 0.01  ) THEN  ! reset c at high alpha to prevent growth in Z
+            if ( rescale_high_alpha .and. alp >= alphamax - 0.01  ) then  ! reset c at high alpha to prevent growth in Z
               cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z*(6./(pi*xdn(mgs,il)))**2
               an(igs(mgs),jy,kgs(mgs),ln(il)) = cx(mgs,il)
             
-            ELSEIF ( lrescalelow(il) .and. alp <= alphamin .and. .not. (il == lh .and. icvhl2h > 0 ) .and. &
-                     .not. ( il == lr .and. .not. rescale_low_alphar ) ) THEN ! alpha = alphamin, so reset Z to prevent growth in C
+            elseif ( lrescalelow(il) .and. alp <= alphamin .and. .not. (il == lh .and. icvhl2h > 0 ) .and. &
+                     .not. ( il == lr .and. .not. rescale_low_alphar ) ) then ! alpha = alphamin, so reset Z to prevent growth in C
              wtest = .false.
-             IF ( irescalerainopt == 0 ) THEN
+             if ( irescalerainopt == 0 ) then
                wtest = .false.
-             ELSEIF ( irescalerainopt == 1 ) THEN
+             elseif ( irescalerainopt == 1 ) then
                wtest = qx(mgs,lc) > qxmin(lc) 
-             ELSEIF ( irescalerainopt == 2 ) THEN
+             elseif ( irescalerainopt == 2 ) then
                wtest = qx(mgs,lc) > qxmin(lc) .and. wvel(mgs) < rescale_wthresh
-             ELSEIF ( irescalerainopt == 3 ) THEN
+             elseif ( irescalerainopt == 3 ) then
                wtest = temcg(mgs) > rescale_tempthresh .and. qx(mgs,lc) > qxmin(lc) .and. wvel(mgs) < rescale_wthresh
-             ENDIF
+             endif
              
-             IF ( il == lr .and. ( wtest ) ) THEN
+             if ( il == lr .and. ( wtest ) ) then
 !             IF ( temcg(mgs) > 0.0 .and. il == lr .and. qx(mgs,lc) > qxmin(lc) ) THEN
              ! certain situations where rain number is adjusted instead of Z. Helps avoid rain being 'zapped' by autoconverted 
              ! drops (i.e., favor preserving Z when alpha tries to go negative)
              chw = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z*(6./(pi*xdn(mgs,il)))**2 ! g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z1
              cx(mgs,il) = chw
              an(igs(mgs),jy,kgs(mgs),ln(il)) = chw
-             ELSE
+             else
              
              ! Usual resetting of reflectivity moment to force consisntency between Q, N, Z, and alpha when alpha = alphamin
              z1 = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/chw
              z  = z1*(6./(pi*xdn(mgs,il)))**2
              zx(mgs,il) = z
              an(igs(mgs),jy,kgs(mgs),lz(il)) = z
-             ENDIF
-            ENDIF
-           ENDIF
+             endif
+            endif
+           endif
           
           
          ! set g1x to use as G factor later. If alpha is in the range ( rnumin < alpha < rnumax ), then 
@@ -14813,15 +14813,15 @@ END SUBROUTINE nssl_2mom_driver
          ! stay consistent with dN/dt and dq/dt.
 !          g1x(mgs,il) = zx(mgs,il)*chw*(pi*xdn(mgs,il))**2/(6.*qr*dn(igs(mgs),jy,kgs(mgs)))**2
 !          g1x(mgs,il) = g1 ! zx(mgs,il)*cx(mgs,il)/(qr)**2
-           IF ( alp >= alphamax - 0.5 ) THEN
+           if ( alp >= alphamax - 0.5 ) then
 !             g1x(mgs,il) = 6**2*zx(mgs,il)/(cx(mgs,il)*(pi*xv(mgs,lr))**2)
 !             g1x(mgs,il) = (xdn(mgs,il))**2*zx(mgs,il)*cx(mgs,il)/((rho0(mgs)*qx(mgs,il))**2)
              g1x(mgs,il) = (pi*xdn(mgs,il))**2*zx(mgs,il)*cx(mgs,il)/((6.*rho0(mgs)*qx(mgs,il))**2)
-           ELSE
+           else
              g1x(mgs,il) = g1
-           ENDIF
+           endif
           
-           ENDIF
+           endif
           
 !          IF ( ny .eq. 2 ) THEN
 !          IF ( qr .gt. 1.e-3 ) THEN
@@ -14830,9 +14830,9 @@ END SUBROUTINE nssl_2mom_driver
 !          ENDIF
           
            
-           ENDIF ! .true.
+           endif ! .true.
 
-          IF ( il == lr ) THEN
+          if ( il == lr ) then
            
 !           tmp = alpha(mgs,lr) + 4./3.
 !           i = Int(dgami*(tmp))
@@ -14855,7 +14855,7 @@ END SUBROUTINE nssl_2mom_driver
 
            gf1palp(mgs) = y
 
-           IF (   iferwisventr == 2 ) THEN
+           if (   iferwisventr == 2 ) then
            tmp = alpha(mgs,lr) + 2.5 + br/2.
            i = Int(dgami*(tmp))
            del = tmp - dgam*i
@@ -14865,12 +14865,12 @@ END SUBROUTINE nssl_2mom_driver
 
            ventrxn(mgs) = x/y
            
-           ENDIF
+           endif
            
-          ENDIF ! il==lr
+          endif ! il==lr
  
           
-          ELSE ! below mass threshold
+          else ! below mass threshold
 !             g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/
 !     &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
 !             z1 = g1*rho0(mgs)**2*(qr)*qr/chw
@@ -14878,12 +14878,12 @@ END SUBROUTINE nssl_2mom_driver
 !             z  = z1*(6./(pi*1000.))**2
 !             zx(mgs,il) = z
 !             an(igs(mgs),jy,kgs(mgs),lz(il)) = z
-          ENDIF ! ( qx(mgs,il) .gt. qxmin(il) )
+          endif ! ( qx(mgs,il) .gt. qxmin(il) )
         
         
         
 !        ENDIF
-        ENDDO ! mgs
+        enddo ! mgs
 
 !         CALL cld_cpu('Z-DELABK')  
         
@@ -14892,39 +14892,39 @@ END SUBROUTINE nssl_2mom_driver
 !           da0lr(mgs) = delbk(bb(il), xnutmp, xmu(il), 0)
 !        ENDIF
         
-        IF ( .not. ( il == lr .and. imurain == 3 ) ) THEN
+        if ( .not. ( il == lr .and. imurain == 3 ) ) then
 !          CALL cld_cpu('Z-DELABK')  
-        DO mgs = 1,ngscnt
-          IF ( qx(mgs,il) > qxmin(il) ) THEN
+        do mgs = 1,ngscnt
+          if ( qx(mgs,il) > qxmin(il) ) then
           xnutmp = (alpha(mgs,il) - 2.)/3.
           
 !          IF ( .true. ) THEN
-          DO ic = lc,lh-1 ! lhab
-           IF ( il .ne. ic .and.  qx(mgs,ic) .gt. qxmin(ic)) THEN
+          do ic = lc,lh-1 ! lhab
+           if ( il .ne. ic .and.  qx(mgs,ic) .gt. qxmin(ic)) then
              xnuc = xnu(ic)
-             IF ( ic == lc .and. idiagnosecnu > 0 ) xnuc = alpha(mgs,lc) ! alpha for droplets is actually nu
-             IF ( il /= lr .and. ic == lr .and. lzr > 1 ) THEN
-               IF ( imurain == 3 ) THEN
+             if ( ic == lc .and. idiagnosecnu > 0 ) xnuc = alpha(mgs,lc) ! alpha for droplets is actually nu
+             if ( il /= lr .and. ic == lr .and. lzr > 1 ) then
+               if ( imurain == 3 ) then
                  xnuc = alpha(mgs,lr) ! alpha is nu already
-               ELSE
+               else
                  xnuc = ( alpha(mgs,lr) - 2. )/3. ! convert alpha to nu
-               ENDIF
-             ENDIF
+               endif
+             endif
                                  ! delabk(ba,bb,nua,nub,mua,mub,k), where a (il)  is collector and b (ic) is collected
-             IF ( .false. ) THEN
+             if ( .false. ) then
              dab0lh(mgs,ic,il) =  delabk(bb(ic), bb(il), xnuc, xnutmp, xmu(ic), xmu(il), 0) !dab0(il,ic)
              dab1lh(mgs,ic,il) =  delabk(bb(ic), bb(il), xnuc, xnutmp, xmu(ic), xmu(il), 1) !dab1(il,ic)
              dab0lh(mgs,il,ic) =  delabk(bb(il), bb(ic), xnutmp, xnuc, xmu(il), xmu(ic), 0) !dab0(il,ic)
              dab1lh(mgs,il,ic) =  delabk(bb(il), bb(ic), xnutmp, xnuc, xmu(il), xmu(ic), 1) !dab1(il,ic)
-             ELSE ! use lookup table -- not interpolating yet because table resolution of 0.05 is good enough
+             else ! use lookup table -- not interpolating yet because table resolution of 0.05 is good enough
                i = Nint( alpha(mgs,il)*dqiacralphainv )
-               IF ( ic == lc .or. ic == li .or. ic == ls .or. (ic == lr .and. imurain == 3) ) THEN
+               if ( ic == lc .or. ic == li .or. ic == ls .or. (ic == lr .and. imurain == 3) ) then
                  alp = (3.*alpha(mgs,ic) + 2.)
                  j = Nint( (3.*alpha(mgs,ic) + 2.)*dqiacralphainv )
-               ELSE ! IF ( ic == lr .and. imurain == 1 ) ! rain
+               else ! if ( ic == lr .and. imurain == 1 ) ! rain
                  alp = alpha(mgs,ic)
                  j = Nint( alpha(mgs,ic)*dqiacralphainv )
-               ENDIF
+               endif
              
                dab0lh(mgs,ic,il) = dab0lu(j,i,ic,il)
                dab1lh(mgs,ic,il) = dab1lu(j,i,ic,il)
@@ -14940,7 +14940,7 @@ END SUBROUTINE nssl_2mom_driver
 !               tmp5 =  delabk(bb(il), bb(ic), xnutmp, xnuc, xmu(il), xmu(ic), 0) !dab0(il,ic)
 !               tmp6 =  delabk(bb(il), bb(ic), xnutmp, xnuc, xmu(il), xmu(ic), 1) !dab1(il,ic)
                
-               IF ( .false. .and. ny <= 2 ) THEN
+               if ( .false. .and. ny <= 2 ) then
                  write(0,*)
                  write(0,*) 'bb: ', bb(il), bb(ic), xnutmp, xnuc, xmu(il), xmu(ic)
                  write(0,*) 'il,ic = ',il,ic,alpha(mgs,il),i,xnuc,alp,j
@@ -14949,55 +14949,55 @@ END SUBROUTINE nssl_2mom_driver
                  write(0,*) 'dab0lh,tmp3 = ',dab0lh(mgs,il,ic),tmp3,tmp5
                  write(0,*) 'dab1lh,tmp4 = ',dab1lh(mgs,il,ic),tmp4,tmp6
                
-               ENDIF
+               endif
              
-             ENDIF
+             endif
              
-           ENDIF
-          ENDDO
+           endif
+          enddo
 
 !          ENDIF
            
              da0lx(mgs,il) = delbk(bb(il), xnutmp, xmu(il), 0)
-           IF ( il .eq. lh ) THEN
+           if ( il .eq. lh ) then
              da0lh(mgs) = delbk(bb(il), xnutmp, xmu(il), 0)
-            IF ( lzr > 1 ) THEN
+            if ( lzr > 1 ) then
              rzxh(mgs) = 1.
-            ELSE
+            else
              rzxh(mgs) = ((4. + alpha(mgs,il))*(5. + alpha(mgs,il))*(6. + alpha(mgs,il))*(1. + xnu(lr)))/   &
      &  ((1. + alpha(mgs,il))*(2. + alpha(mgs,il))*(3. + alpha(mgs,il))*(2. + xnu(lr)))
-            ENDIF
+            endif
             
-            IF ( lzhl < 1 ) THEN
+            if ( lzhl < 1 ) then
               rzxhlh(mgs) = rzxhl(mgs)/(((4. + alpha(mgs,il))*(5. + alpha(mgs,il))*(6. + alpha(mgs,il))*(1. + xnu(lr)))/   &
      &  ((1. + alpha(mgs,il))*(2. + alpha(mgs,il))*(3. + alpha(mgs,il))*(2. + xnu(lr))))
-            ENDIF
-           ELSEIF ( il .eq. lhl ) THEN
+            endif
+           elseif ( il .eq. lhl ) then
              da0lhl(mgs) = delbk(bb(il), xnutmp, xmu(il), 0)
-            IF ( lzr > 1 ) THEN
+            if ( lzr > 1 ) then
              rzxhl(mgs) = 1.
-            ELSE
+            else
              rzxhl(mgs) = ((4.0 + alpha(mgs,il))*(5. + alpha(mgs,il))*(6. + alpha(mgs,il))*(1. + xnu(lr)))/   &
      &  ((1. + alpha(mgs,il))*(2. + alpha(mgs,il))*(3. + alpha(mgs,il))*(2. + xnu(lr)))
-            ENDIF
-           ELSEIF ( il == lr ) THEN
+            endif
+           elseif ( il == lr ) then
              xnutmp = (alpha(mgs,il) - 2.)/3.
              da0lr(mgs) = delbk(bb(il), xnutmp, xmu(il), 0)
              da1lr(mgs) = delbk(bb(il), xnutmp, xmu(il), 1)
-           ENDIF
+           endif
           
-          ENDIF ! ( qx(mgs,il) > qxmin(il) )
-        ENDDO ! mgs
+          endif ! ( qx(mgs,il) > qxmin(il) )
+        enddo ! mgs
 !          CALL cld_cpu('Z-DELABK')  
-        ENDIF ! il /= lr
+        endif ! il /= lr
 
 !         CALL cld_cpu('Z-DELABK')  
         
-        ENDIF ! lz(il) .gt. 1
+        endif ! lz(il) .gt. 1
         
-        ENDDO ! il
+        enddo ! il
           
-      ENDIF ! ipconc .ge. 6
+      endif ! ipconc .ge. 6
 
 !      CALL cld_cpu('Z-MOMENT-1')  
 
@@ -15032,7 +15032,7 @@ END SUBROUTINE nssl_2mom_driver
 
 
       infdo = 1
-      IF ( rimdenvwgt > 0 ) infdo = 1
+      if ( rimdenvwgt > 0 ) infdo = 1
 
       call setvtz(ngscnt,qx,qxmin,qxw,cx,rho0,rhovt,xdia,cno,cnostmp,   &
      &                 xmas,vtxbar,xdn,xvmn,xvmx,xv,cdx,cdxgs,   &
@@ -15042,48 +15042,48 @@ END SUBROUTINE nssl_2mom_driver
 !     &                 itype1,itype2,temcg,infdo,alpha,0,axh,bxh,axhl,bxhl) ! ,cdh,cdhl)
 
 
-       IF ( lwsm6 .and. ipconc == 0 ) THEN
+       if ( lwsm6 .and. ipconc == 0 ) then
          tmp = Max(qxmin(lh), qxmin(ls))
-         DO mgs = 1,ngscnt
+         do mgs = 1,ngscnt
            total = qx(mgs,lh) + qx(mgs,ls)
-           IF ( total > tmp ) THEN
+           if ( total > tmp ) then
              vt2ave(mgs) = (qx(mgs,lh)*vtxbar(mgs,lh,1) + qx(mgs,ls)*vtxbar(mgs,ls,1))/total
-           ELSE
+           else
              vt2ave(mgs) = 0.0
-           ENDIF
-         ENDDO
-       ENDIF
+           endif
+         enddo
+       endif
 
 
 !
 !  Set number concentrations (need xdia from setvt)
 !
       if ( ndebug .gt. 0 ) write(0,*) 'ICEZVD_GS: Set concentration'
-      IF ( ipconc .lt. 1 ) THEN
+      if ( ipconc .lt. 1 ) then
          cina(1:ngscnt) = cx(1:ngscnt,li)
-      ENDIF
+      endif
       if ( ipconc .lt. 5 ) then
       do mgs = 1,ngscnt
 
 
-      IF ( ipconc .lt. 3 ) THEN
+      if ( ipconc .lt. 3 ) then
 !      cx(mgs,lr) = 0.0
       if ( qx(mgs,lr) .gt. qxmin(lh) )  then
 !      cx(mgs,lr) = cno(lr)*xdia(mgs,lr,1)
 !      xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*cx(mgs,lr))
       end if
-      ENDIF
+      endif
 
-      IF ( ipconc .lt. 4 ) THEN
+      if ( ipconc .lt. 4 ) then
 !      tmp = cx(mgs,ls)
 !      cx(mgs,ls) = 0.0
       if ( qx(mgs,ls) .gt. qxmin(ls) )  then
 !      cx(mgs,ls) = cno(ls)*xdia(mgs,ls,1)
 !      xv(mgs,ls) = rho0(mgs)*qx(mgs,ls)/(xdn(mgs,ls)*cx(mgs,ls))
       end if
-      ENDIF ! ( ipconc .lt. 4 )
+      endif ! ( ipconc .lt. 4 )
 
-      IF ( ipconc .lt. 5 ) THEN
+      if ( ipconc .lt. 5 ) then
 
 
 !      cx(mgs,lh) = 0.0
@@ -15093,30 +15093,30 @@ END SUBROUTINE nssl_2mom_driver
 !      xdia(mgs,lh,3) = (xv(mgs,lh)*6./pi)**(1./3.) 
       end if
 
-      ENDIF ! ( ipconc .lt. 5 )
+      endif ! ( ipconc .lt. 5 )
 
       end do
       end if
       
-      IF ( ipconc .ge. 2 ) THEN
-      DO mgs = 1,ngscnt
+      if ( ipconc .ge. 2 ) then
+      do mgs = 1,ngscnt
         
         rb(mgs) = 0.5*xdia(mgs,lc,1)*(1./(1.+alpha(mgs,lc)))**(1./6.)
         xl2p(mgs) = Max(0.0d0, 2.7e-2*xdn(mgs,lc)*cx(mgs,lc)*xv(mgs,lc)*   &
      &           ((0.5e20*rb(mgs)**3*xdia(mgs,lc,1))-0.4) )
-        IF ( rb(mgs) .gt. 3.51e-6 ) THEN
+        if ( rb(mgs) .gt. 3.51e-6 ) then
 !          rh(mgs) = Max( 0.5d0*xdia(mgs,lc,1), 6.3d-4/(1.d6*(rb(mgs) - 3.5d-6)) )
           rh(mgs) = Max( 41.d-6, 6.3d-4/(1.d6*(rb(mgs) - 3.5d-6)) )
-        ELSE
+        else
           rh(mgs) = 41.d-6
-        ENDIF
-        IF ( xl2p(mgs) .gt. 0.0 ) THEN
+        endif
+        if ( xl2p(mgs) .gt. 0.0 ) then
           nh(mgs) = 4.2d9*xl2p(mgs)
-        ELSE
+        else
           nh(mgs) = 1.e30
-        ENDIF
-      ENDDO
-      ENDIF
+        endif
+      enddo
+      endif
       
 !
 !
@@ -15125,13 +15125,13 @@ END SUBROUTINE nssl_2mom_driver
 !  maximum depletion tendency by any one source
 !
 !
-      if( ndebug .ge. 0 ) THEN
+      if( ndebug .ge. 0 ) then
 !mpi!        write(0,*) 'Set depletion max/min1'
       endif
       do mgs = 1,ngscnt
       qvimxd(mgs) = 0.70*(qx(mgs,lv)-qis(mgs))*dtpinv ! depletion by all vap. dep to ice.
       
-      IF ( qx(mgs,lc) < qxmin(lc) ) qvimxd(mgs) = 0.99*(qx(mgs,lv)-qis(mgs))*dtpinv ! this makes virtually no difference whatsoever, but what the heck
+      if ( qx(mgs,lc) < qxmin(lc) ) qvimxd(mgs) = 0.99*(qx(mgs,lv)-qis(mgs))*dtpinv ! this makes virtually no difference whatsoever, but what the heck
       
       qvimxd(mgs) = max(qvimxd(mgs), 0.0)
 
@@ -15141,10 +15141,10 @@ END SUBROUTINE nssl_2mom_driver
       qrmxd(mgs)  = frac*qx(mgs,lr)*dtpinv
       qsmxd(mgs)  = frac*qx(mgs,ls)*dtpinv
       qhmxd(mgs)  = frac*qx(mgs,lh)*dtpinv
-      IF ( lhl > 1 ) qhlmxd(mgs)  = frac*qx(mgs,lhl)*dtpinv
+      if ( lhl > 1 ) qhlmxd(mgs)  = frac*qx(mgs,lhl)*dtpinv
       end do
 !
-      if( ndebug .ge. 0 ) THEN
+      if( ndebug .ge. 0 ) then
 !mpi!        write(0,*) 'Set depletion max/min2'
       endif
 
@@ -15153,21 +15153,21 @@ END SUBROUTINE nssl_2mom_driver
       if ( qx(mgs,lc) .le. qxmin(lc) ) then
       ccmxd(mgs)  = 0.20*cx(mgs,lc)*dtpinv
       else
-      IF ( ipconc .ge. 2 ) THEN
+      if ( ipconc .ge. 2 ) then
         ccmxd(mgs)  = frac*cx(mgs,lc)*dtpinv
-      ELSE
+      else
         ccmxd(mgs)  = frac*qx(mgs,lc)/(xmas(mgs,lc)*rho0(mgs)*dtp)
-      ENDIF
+      endif
       end if
 !
       if ( qx(mgs,li) .le. qxmin(li) ) then
       cimxd(mgs)  = frac*cx(mgs,li)*dtpinv
       else
-      IF ( ipconc .ge. 1 ) THEN
+      if ( ipconc .ge. 1 ) then
         cimxd(mgs)  = frac*cx(mgs,li)*dtpinv
-      ELSE
+      else
         cimxd(mgs)  = frac*qx(mgs,li)/(xmas(mgs,li)*rho0(mgs)*dtp)
-      ENDIF
+      endif
       end if
 !
 !
@@ -15183,27 +15183,27 @@ END SUBROUTINE nssl_2mom_driver
 
       qxmxd(mgs,lv) = Max(0.0, 0.1*(qx(mgs,lv) - qvs(mgs))*dtpinv)
 
-      DO il = lc,lhab
+      do il = lc,lhab
        qxmxd(mgs,il) = frac*qx(mgs,il)*dtpinv
        cxmxd(mgs,il) = frac*cx(mgs,il)*dtpinv
-      ENDDO
+      enddo
 
       end do
 
 
 
 
-      IF ( ipconc >= 6 ) THEN
+      if ( ipconc >= 6 ) then
       frac = 0.4d0
       zxmxd(:,:) = 0.0
-      DO il = lr,lhab
-       IF ( lz(il) > 0 .or. ( il == lr ) ) THEN
-         DO mgs = 1,ngscnt
+      do il = lr,lhab
+       if ( lz(il) > 0 .or. ( il == lr ) ) then
+         do mgs = 1,ngscnt
            zxmxd(mgs,il) = frac*zx(mgs,il)*dtpinv
-         ENDDO
-       ENDIF
-      ENDDO
-      ENDIF
+         enddo
+       endif
+      enddo
+      endif
 
 
 
@@ -15212,51 +15212,51 @@ END SUBROUTINE nssl_2mom_driver
       maxmassfac(lc) = ( (2. + 3.*(1. + xnu(lc)) )**3/( 3.*(1. + xnu(lc)) ) )
       maxmassfac(li) = ( (2. + 3.*(1. + xnu(li)) )**3/( 3.*(1. + xnu(li)) ) )
 
-      IF ( imurain == 3 ) THEN
+      if ( imurain == 3 ) then
         maxmassfac(lr) = ( (2. + 3.*(1. + xnu(lr)) )**3/( 3.*(1. + xnu(lr)) ) )
-      ELSE
+      else
         maxmassfac(lr) =  (3.0 + alphar)**3/    &
      &                  ((3.+alphar)*(2.+alphar)*(1. + alphar) )
-      ENDIF
+      endif
 
-      IF ( imusnow == 3 ) THEN
+      if ( imusnow == 3 ) then
         maxmassfac(ls) = ( (2. + 3.*(1. + alphas) )**3/( 3.*(1. + alphas) ) )
-      ELSE
+      else
         maxmassfac(ls) =  (3.0 + alphas)**3/    &
      &                  ((3.+alphas)*(2.+alphas)*(1. + alphas) )
-      ENDIF
+      endif
       
         maxmassfac(lh) =  (3.0 + alphah)**3/    &
      &                  ((3.+alphah)*(2.+alphah)*(1. + alphah) )
 
-       IF ( lhl > 1 ) THEN
+       if ( lhl > 1 ) then
         maxmassfac(lhl) =  (3.0 + alphahl)**3/    &
      &                  ((3.+alphahl)*(2.+alphahl)*(1. + alphahl) )
-       ENDIF
+       endif
       
 
 
-       DO mgs = 1,ngscnt
-          DO il = lh,lhab ! graupel and hail only (and frozen drops)
+       do mgs = 1,ngscnt
+          do il = lh,lhab ! graupel and hail only (and frozen drops)
             
             vshdgs(mgs,il) = vshd ! base value
             
-            IF ( qx(mgs,il) > qxmin(il) .and. ivshdgs > 0 ) THEN
+            if ( qx(mgs,il) > qxmin(il) .and. ivshdgs > 0 ) then
               
               ! tmpdiam is weighted diameter of d^(shedalp-1), so for shedalp=3, this is the area-weighted diameter or maximum mass diameter.
               tmpdiam = (shedalp+alpha(mgs,il))*xdia(mgs,il,1) ! *( xdn(mgs,il)/917. )**(1./3.) ! erm added density factor for equiv. solid ice sphere 10.12.2015
               
-              IF ( tmpdiam > sheddiam0 ) THEN
+              if ( tmpdiam > sheddiam0 ) then
                 vshdgs(mgs,il) = 0.523599*(1.5e-3)**3/massfacshr ! 1.5mm drops from very large ice
-              ELSEIF ( tmpdiam > sheddiam ) THEN ! intermediate size
+              elseif ( tmpdiam > sheddiam ) then ! intermediate size
                 vshdgs(mgs,il) = 0.523599*(3.0e-3)**3/massfacshr ! 3.0mm drops from medium-large ice
-              ELSE
+              else
 !                vshdgs(mgs,il) = Min( xvmx(lr), xv(mgs,il)*xdn(mgs,il)*0.001 ) ! size of drop from melted mean ice particle
                 vshdgs(mgs,il) = Min( xvmx(lr), 6./pi*xdn(mgs,il)*0.001*tmpdiam**3 )/massfacshr ! size of drop from melted mean ice particle; 0.001 is 1/rhow
-              ENDIF
-            ENDIF
-          ENDDO
-       ENDDO
+              endif
+            endif
+          enddo
+       enddo
 
 !
 !
@@ -15316,7 +15316,7 @@ END SUBROUTINE nssl_2mom_driver
 
 
 ! reserve droplets
-         IF ( exwmindiam > 0 .and. qx(mgs,lc) > qxmin(lc) ) THEN
+         if ( exwmindiam > 0 .and. qx(mgs,lc) > qxmin(lc) ) then
            tmp = cx(mgs,lc)*Exp(- (exwmindiam/xdia(mgs,lc,1))**3 )
            ccwresv(mgs) =  Min( cx(mgs,lc), Max( 2.e6,  cx(mgs,lc) -  tmp ) )
            
@@ -15326,54 +15326,54 @@ END SUBROUTINE nssl_2mom_driver
            qcwresv(mgs) = qx(mgs,lc) - tmp*xdn0(lc)*rhoinv(mgs)*(volt + xv(mgs,lc))
            
            
-           IF ( .false. .and. qx(mgs,lc) > 0.1e-3 ) THEN
+           if ( .false. .and. qx(mgs,lc) > 0.1e-3 ) then
            
              write(0,*) 'cx,qx,crsv,qrsv = ',cx(mgs,lc),qx(mgs,lc),ccwresv(mgs),qcwresv(mgs)
            
-           ENDIF
+           endif
 
-         ENDIF
+         endif
 
 
       icwr(mgs) = 1
-      IF ( qx(mgs,lc) .gt. qxmin(lc) ) THEN
+      if ( qx(mgs,lc) .gt. qxmin(lc) ) then
        cwrad = 0.5*xdia(mgs,lc,1)
-      DO il = 1,8
-         IF ( cwrad .ge. 1.e-6*cwr(il,1) ) icwr(mgs) = il
-      ENDDO
-      ENDIF
+      do il = 1,8
+         if ( cwrad .ge. 1.e-6*cwr(il,1) ) icwr(mgs) = il
+      enddo
+      endif
 
 
       irwr(mgs) = 1
-      IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
+      if ( qx(mgs,lr) .gt. qxmin(lr) ) then
          rwrad = 0.5*xdia(mgs,lr,3)  ! changed to mean volume diameter (10/6/06)
-      DO il = 1,6
-         IF ( rwrad .ge. 1.e-6*grad(il,1) ) irwr(mgs) = il
-      ENDDO
-      ENDIF
+      do il = 1,6
+         if ( rwrad .ge. 1.e-6*grad(il,1) ) irwr(mgs) = il
+      enddo
+      endif
 
 
       igwr(mgs) = 1
 !      IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
 !         rwrad = 0.5*xdia(mgs,lr,1)
 ! setting erw = 1 always, so now use igwr for graupel
-      IF ( qx(mgs,lh) .gt. qxmin(lh) ) THEN
+      if ( qx(mgs,lh) .gt. qxmin(lh) ) then
          rwrad = 0.5*xdia(mgs,lh,3)  ! changed to mean volume diameter (10/6/06)
-      DO il = 1,6
-         IF ( rwrad .ge. 1.e-6*grad(il,1) ) igwr(mgs) = il
-      ENDDO
-      ENDIF
+      do il = 1,6
+         if ( rwrad .ge. 1.e-6*grad(il,1) ) igwr(mgs) = il
+      enddo
+      endif
 
 
-      IF ( lhl .gt. 1 ) THEN ! hail is turned on
+      if ( lhl .gt. 1 ) then ! hail is turned on
       ihlr(mgs) = 1
-      IF ( qx(mgs,lhl) .gt. qxmin(lhl) ) THEN
+      if ( qx(mgs,lhl) .gt. qxmin(lhl) ) then
          rwrad = 0.5*xdia(mgs,lhl,3)  ! changed to mean volume diameter (10/6/06)
-      DO il = 1,6
-         IF ( rwrad .ge. 1.e-6*grad(il,1) ) ihlr(mgs) = il
-      ENDDO
-      ENDIF
-      ENDIF
+      do il = 1,6
+         if ( rwrad .ge. 1.e-6*grad(il,1) ) ihlr(mgs) = il
+      enddo
+      endif
+      endif
 
 !
 !
@@ -15418,10 +15418,10 @@ END SUBROUTINE nssl_2mom_driver
 !
       if ( qx(mgs,lr).gt.qxmin(lr) .and. qx(mgs,lc).gt.qxmin(lc) ) then
 
-       IF ( lnr .gt. 1 ) THEN
+       if ( lnr .gt. 1 ) then
        erw(mgs) = 1.0
 
-       ELSE
+       else
 
 !      cwrad = 0.5*xdia(mgs,lc,1)
 !      erw(mgs) =
@@ -15455,15 +15455,15 @@ END SUBROUTINE nssl_2mom_driver
 !       write(iunit,*)
 
        erw(mgs) = Max(0.0, erw(mgs) )
-       IF ( rwrad .lt. 50.e-6 ) THEN
+       if ( rwrad .lt. 50.e-6 ) then
          erw(mgs) = 0.0
-       ELSEIF (  rwrad .lt. 100.e-6 ) THEN  ! linear change from zero at 50 to erw at 100 microns
+       elseif (  rwrad .lt. 100.e-6 ) then  ! linear change from zero at 50 to erw at 100 microns
          erw(mgs) = erw(mgs)*(rwrad - 50.e-6)/50.e-6
-       ENDIF
+       endif
 
-       ENDIF
+       endif
       end if
-      IF ( cx(mgs,lc) .le. 0.0 ) erw(mgs) = 0.0
+      if ( cx(mgs,lc) .le. 0.0 ) erw(mgs) = 0.0
 !
       if ( qx(mgs,lr).gt.qxmin(lr) .and. qx(mgs,lr).gt.qxmin(lr) ) then
       err(mgs)=1.0
@@ -15499,82 +15499,82 @@ END SUBROUTINE nssl_2mom_driver
         esw(mgs) = 0.5
         if ( xdia(mgs,lc,1) .gt. 15.e-6 .and. xdia(mgs,ls,1) .gt. 100.e-6) then
           esw(mgs) = 0.5
-        ELSEIF ( xdia(mgs,ls,1) .ge. 500.e-6 ) THEN
+        elseif ( xdia(mgs,ls,1) .ge. 500.e-6 ) then
           esw(mgs) = Min(0.5, 0.05 + (0.8-0.05)/(40.e-6)*xdia(mgs,lc,1) )
-        ENDIF
+        endif
       end if
 !
       if ( qx(mgs,ls).gt.qxmin(ls) .and. qx(mgs,lr).gt.qxmin(lr)  &
      &     .and. temg(mgs) .lt. tfr - 1.   &
      &                               ) then
       esr(mgs)=Exp(-(40.e-6)**3/xv(mgs,lr))*Exp(-40.e-6/xdia(mgs,ls,1))
-      IF ( qx(mgs,ls) < 1.e-4 .and. qx(mgs,lr) < 1.e-4 ) il2(mgs) = 1
+      if ( qx(mgs,ls) < 1.e-4 .and. qx(mgs,lr) < 1.e-4 ) il2(mgs) = 1
       end if
       
-      IF ( ipconc < 3 .and. temg(mgs) < tfr .and. qx(mgs,lr).gt.qxmin(lr) .and. qx(mgs,lr) < 1.e-4 ) THEN
+      if ( ipconc < 3 .and. temg(mgs) < tfr .and. qx(mgs,lr).gt.qxmin(lr) .and. qx(mgs,lr) < 1.e-4 ) then
         il3(mgs) = 1
-      ENDIF
+      endif
 !
 !      if ( qx(mgs,ls).gt.qxmin(ls) ) then
       if ( temcg(mgs) < 0.0 ) then
             
-      IF ( ipconc .lt. 4 .or. temcg(mgs) < esstem1 ) THEN
+      if ( ipconc .lt. 4 .or. temcg(mgs) < esstem1 ) then
         ess(mgs) = 0.0
 !        ess(mgs)=0.1*exp(0.1*min(temcg(mgs),0.0))
 !        ess(mgs)=min(0.1,ess(mgs))
       
-      ELSE
+      else
       
         fac = Abs(ess0)
-        IF ( iessopt == 2 ) THEN ! experimental code
+        if ( iessopt == 2 ) then ! experimental code
 !         IF ( wvel(mgs) > 2.0 .or. wvel(mgs) < -0.5 .or. ssi(mgs) < 1.0 ) THEN
-         IF ( wvel(mgs) > 2.0 ) THEN
+         if ( wvel(mgs) > 2.0 ) then
           ! assume convective cell or downdraft
            fac = 0.0
-         ELSEIF ( wvel(mgs) > 1.0 ) THEN ! transition to stratiform range of values
+         elseif ( wvel(mgs) > 1.0 ) then ! transition to stratiform range of values
            fac = Max(0.0, 2.0 - wvel(mgs))*fac
-         ENDIF
-        ELSEIF ( iessopt == 3 ) THEN ! factor based on ice supersat
-           IF ( ssi(mgs) <= 1.0 ) THEN
+         endif
+        elseif ( iessopt == 3 ) then ! factor based on ice supersat
+           if ( ssi(mgs) <= 1.0 ) then
              fac = 0.0
              ehsfac(mgs) = 0.0
-           ELSEIF ( ssi(mgs) <= 1.02 ) THEN
+           elseif ( ssi(mgs) <= 1.02 ) then
              fac = fac*(ssi(mgs) - 1.0)/0.02
              ehsfac(mgs) = (ssi(mgs) - 1.0)/0.02
-           ENDIF
-        ELSEIF ( iessopt == 4 ) THEN ! factor based on ice supersat
-           IF ( ssi(mgs) <= 1.0 ) THEN
+           endif
+        elseif ( iessopt == 4 ) then ! factor based on ice supersat
+           if ( ssi(mgs) <= 1.0 ) then
              fac = 0.1
              ehsfac(mgs) = 0.1
-           ELSEIF ( ssi(mgs) <= 1.005 ) THEN
+           elseif ( ssi(mgs) <= 1.005 ) then
              fac = Max(0.1, fac*(ssi(mgs) - 1.0)/0.005)
              ehsfac(mgs) = Max(0.1, (ssi(mgs) - 1.0)/0.005)
-           ENDIF
-        ENDIF
+           endif
+        endif
         
-        IF ( temcg(mgs) > esstem1 .and. temcg(mgs) < esstem2 ) THEN  ! only nonzero for T > esstem1
+        if ( temcg(mgs) > esstem1 .and. temcg(mgs) < esstem2 ) then  ! only nonzero for T > esstem1
           ess(mgs) = fac*Exp(ess1*(esstem2) )*(temcg(mgs) - esstem1)/(esstem2 - esstem1) ! linear ramp up from zero at esstem1 to value at esstem2
-        ELSEIF ( temcg(mgs) >= esstem2 ) THEN
+        elseif ( temcg(mgs) >= esstem2 ) then
           ess(mgs) = fac*Exp(ess1*Min( temcg(mgs), 0.0 ) )
-        ENDIF
+        endif
         
-      ENDIF
+      endif
       end if
 !
       if ( qx(mgs,ls).gt.qxmin(ls) .and. qx(mgs,li).gt.qxmin(li) ) then
        esiclsn(mgs) = esi_collsn
 !      IF ( ipconc .lt. 4 ) THEN
-      IF ( ipconc < 1 .and. lwsm6 ) THEN
+      if ( ipconc < 1 .and. lwsm6 ) then
         esi(mgs) = exp(0.7*min(temcg(mgs),0.0))
-      ELSE
+      else
         esi(mgs) = esi0*exp(0.1*min(temcg(mgs),0.0))
         esi(mgs) = Min(0.1,esi(mgs))
-      ENDIF
-      IF ( ipconc .le. 3 ) THEN
+      endif
+      if ( ipconc .le. 3 ) then
        esi(mgs) =  exp(0.025*min(temcg(mgs),0.0)) ! LFO
 !       esi(mgs) =  Min(0.5, exp(0.025*min(temcg(mgs),0.0)) ) ! LFO
 !       esi(mgs)=0.5*exp(0.1*min(temcg(mgs),0.0))  ! 10ice
-      ENDIF
+      endif
 !      ELSE ! zrnic/ziegler 1993
 !      esi(mgs)= 0.1 ! 0.5*exp(0.1*min(temcg(mgs),0.0))
 !      ENDIF
@@ -15590,15 +15590,15 @@ END SUBROUTINE nssl_2mom_driver
        xmascw(mgs) = xmas(mgs,lc)
       if ( qx(mgs,lh).gt.qxmin(lh) .and. qx(mgs,lc).gt.qxmin(lc) ) then !{
        ehw(mgs) = 1.0
-       IF ( iehw .eq. 0 ) THEN
+       if ( iehw .eq. 0 ) then
        ehw(mgs) = ehw0  ! default value is 1.0
-       ELSEIF ( iehw .eq. 1 .or. iehw .eq. 10 ) THEN
+       elseif ( iehw .eq. 1 .or. iehw .eq. 10 ) then
       cwrad = 0.5*xdia(mgs,lc,1)
       ehw(mgs) = Min( ehw0,    &
      &  ewfac*min((aradcw + cwrad*(bradcw + cwrad*   &
      &  (cradcw + cwrad*(dradcw)))), 1.0) )
       
-       ELSEIF ( iehw .eq. 2 .or. iehw .eq. 10 ) THEN
+       elseif ( iehw .eq. 2 .or. iehw .eq. 10 ) then
        ic = icwr(mgs)
        icp1 = Min( 8, ic+1 )
        ir = igwr(mgs)
@@ -15627,24 +15627,24 @@ END SUBROUTINE nssl_2mom_driver
 !      ehw(mgs) = ehw(mgs) + (ehw(mgs) - 1.0)*(rho0(mgs) - rho00)/rho00
 !      ehw(mgs) = ehw(mgs) + (1.0 - ehw(mgs))*((Max(0.0,rho00 - rho0(mgs)))/rho00)**2
 
-       ELSEIF ( iehw .eq. 3 .or. iehw .eq. 10 ) THEN ! use fraction of droplets greater than dmincw diameter
+       elseif ( iehw .eq. 3 .or. iehw .eq. 10 ) then ! use fraction of droplets greater than dmincw diameter
          tmp = Exp(- (dmincw/xdia(mgs,lc,1))**3)
          xmascw(mgs) = xmas(mgs,lc) + xdn0(lc)*(pi*dmincw**3/6.0) ! this is the average mass of the droplets with d > dmincw
          ehw(mgs) = Min( ehw(mgs), tmp )
-       ELSEIF ( iehw .eq. 4 .or. iehw .eq. 10 ) THEN ! Cober and List 1993, eq. 19-20
+       elseif ( iehw .eq. 4 .or. iehw .eq. 10 ) then ! Cober and List 1993, eq. 19-20
          tmp =  &
      &   2.0*xdn(mgs,lc)*vtxbar(mgs,lh,1)*(0.5*xdia(mgs,lc,1))**2 &
      &  /(9.0*fadvisc(mgs)*0.5*xdia(mgs,lh,3))
          tmp = Max( 1.5, Min(10.0, tmp) )
          ehw(mgs) = Min( ehw(mgs), 0.55*Log10(2.51*tmp) )
-       ENDIF
+       endif
       if ( xdia(mgs,lc,1) .lt. 2.4e-06 ) ehw(mgs)=0.0
 
        ehw(mgs) = Min( ehw0, ehw(mgs) )
        
-       IF ( ibfc == -1 .and. temcg(mgs) < -41.0 ) THEN
+       if ( ibfc == -1 .and. temcg(mgs) < -41.0 ) then
         ehw(mgs) = 0.0
-       ENDIF 
+       endif 
 
       end if !}
 !
@@ -15657,31 +15657,31 @@ END SUBROUTINE nssl_2mom_driver
        ehr(mgs) = Min( ehr0, ehr(mgs) )
       end if
 !
-      IF ( qx(mgs,ls).gt.qxmin(ls) ) THEN
-        IF ( ipconc .ge. 4 ) THEN
+      if ( qx(mgs,ls).gt.qxmin(ls) ) then
+        if ( ipconc .ge. 4 ) then
         ehscnv(mgs) = ehs0*exp(ehs1*min(temcg(mgs),0.0)) ! for 2-moment, used as default for ehs and ehls. Otherwise not used for snow->graupel conversion
-        ELSE
+        else
         ehscnv(mgs) = exp(0.09*min(temcg(mgs),0.0))
-        ENDIF
+        endif
         
-        IF ( qx(mgs,lh).gt.qxmin(lh) .and. qx(mgs,lc) >= qxmin(lc)  ) THEN
+        if ( qx(mgs,lh).gt.qxmin(lh) .and. qx(mgs,lc) >= qxmin(lc)  ) then
 !          ehsclsn(mgs) = ehs_collsn
 !          ehs(mgs) = ehscnv(mgs)*ehsfac(mgs)*Min(1.0, Max(0.0,xdn(mgs,lh) - 300.)/300.  )
 !        ELSEIF ( qx(mgs,lh).gt.qxmin(lh) .and. qx(mgs,lc) >= qxmin(lc)  ) then
           ehsclsn(mgs) = ehs_collsn
-          IF ( xdia(mgs,ls,3) < 40.e-6 ) THEN
+          if ( xdia(mgs,ls,3) < 40.e-6 ) then
             ehsclsn(mgs) = 0.0
-          ELSEIF ( xdia(mgs,ls,3) < 150.e-6 ) THEN
+          elseif ( xdia(mgs,ls,3) < 150.e-6 ) then
             ehsclsn(mgs) =  ehs_collsn*(xdia(mgs,ls,3) - 40.e-6)/(150.e-6 - 40.e-6)
-          ELSE
+          else
             ehsclsn(mgs) = ehs_collsn
-          ENDIF
+          endif
 !          ehs(mgs) = ehscnv(mgs)*Min(1.0, Max(0., xdn(mgs,lh) - xdnmn(lh)*1.2)/xdnmn(lh)  ) ! shut off qhacs as graupel goes to lowest density
           ehs(mgs) = ehscnv(mgs)*Min(1.0, Max(0.0,xdn(mgs,lh) - 300.)/300.  ) ! shut off qhacs as graupel goes to low density; limits scavenging of snow in bright band
 !          ehs(mgs) = ehscnv(mgs) ! *Min(1.0, Max(0.0,xdn(mgs,lh) - 300.)/300.  ) ! shut off qhacs as graupel goes to low density
           ehs(mgs) = Min(ehs(mgs),ehsmax)
         end if
-      ENDIF
+      endif
 !
       if ( qx(mgs,lh).gt.qxmin(lh) .and. qx(mgs,li).gt.qxmin(li) ) then
       ehiclsn(mgs) = ehi_collsn
@@ -15690,14 +15690,14 @@ END SUBROUTINE nssl_2mom_driver
 !      if ( temg(mgs) .gt. 273.15 .or. ( qx(mgs,lc) < qxmin(lc)) ) ehi(mgs) = 0.0
       end if
 
-      IF ( lis > 1 ) THEN
+      if ( lis > 1 ) then
       if ( qx(mgs,lh).gt.qxmin(lh) .and. qx(mgs,lis).gt.qxmin(lis) ) then
       ehisclsn(mgs) = ehi_collsn
       ehis(mgs)=eii0*exp(eii1*min(temcg(mgs),0.0))
       ehis(mgs) = Min( ehimax, Max( ehis(mgs), ehimin ) )
 !      if ( temg(mgs) .gt. 273.15 .or. ( qx(mgs,lc) < qxmin(lc)) ) ehis(mgs) = 0.0
       end if
-      ENDIF
+      endif
 
  
 !
@@ -15705,21 +15705,21 @@ END SUBROUTINE nssl_2mom_driver
 !  Hail: Collection (cxc) efficiencies
 !
 !
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
 
       if ( qx(mgs,lhl).gt.qxmin(lhl) .and. qx(mgs,lc).gt.qxmin(lc) ) then
-       IF ( iehw == 3 ) iehlw = 3
-       IF ( iehw == 4 ) iehlw = 4
+       if ( iehw == 3 ) iehlw = 3
+       if ( iehw == 4 ) iehlw = 4
        ehlw(mgs) = ehlw0
-       IF ( iehlw .eq. 0 ) THEN
+       if ( iehlw .eq. 0 ) then
        ehlw(mgs) = ehlw0  ! default value is 1.0
-       ELSEIF ( iehlw .eq. 1 .or. iehlw .eq. 10 ) THEN
+       elseif ( iehlw .eq. 1 .or. iehlw .eq. 10 ) then
       cwrad = 0.5*xdia(mgs,lc,1)
       ehlw(mgs) = Min( ehlw0,    &
      &  ewfac*min((aradcw + cwrad*(bradcw + cwrad*   &
      &  (cradcw + cwrad*(dradcw)))), 1.0) )
       
-       ELSEIF ( iehlw .eq. 2 .or. iehlw .eq. 10 ) THEN
+       elseif ( iehlw .eq. 2 .or. iehlw .eq. 10 ) then
        ic = icwr(mgs)
        icp1 = Min( 8, ic+1 )
        ir = ihlr(mgs)
@@ -15743,22 +15743,22 @@ END SUBROUTINE nssl_2mom_driver
 !      ehw(mgs) = ehw(mgs) + (ehw(mgs) - 1.0)*(rho0(mgs) - rho00)/rho00
 !      ehlw(mgs) = ehlw(mgs) + (1.0 - ehlw(mgs))*((Max(0.0,rho00 - rho0(mgs)))/rho00)**2
 
-       ELSEIF ( iehlw .eq. 3 .or. iehlw .eq. 10 ) THEN ! use fraction of droplets greater than 15 micron diameter
+       elseif ( iehlw .eq. 3 .or. iehlw .eq. 10 ) then ! use fraction of droplets greater than 15 micron diameter
          tmp = Exp(- (dmincw/xdia(mgs,lc,1))**3)
          ehlw(mgs) = Min( ehlw(mgs), tmp )
-       ELSEIF ( iehlw .eq. 4 .or. iehlw .eq. 10 ) THEN ! Cober and List 1993
+       elseif ( iehlw .eq. 4 .or. iehlw .eq. 10 ) then ! Cober and List 1993
          tmp =  &
      &   2.0*xdn(mgs,lc)*vtxbar(mgs,lhl,1)*(0.5*xdia(mgs,lc,1))**2 &
      &  /(9.0*fadvisc(mgs)*0.5*xdia(mgs,lhl,3))
          tmp = Max( 1.5, Min(10.0, tmp) )
          ehlw(mgs) = Min( ehlw(mgs), 0.55*Log10(2.51*tmp) )
-       ENDIF
+       endif
       if ( xdia(mgs,lc,1) .lt. 2.4e-06 ) ehlw(mgs)=0.0
        ehlw(mgs) = Min( ehlw0, ehlw(mgs) )
 
-       IF ( ibfc == -1 .and. temcg(mgs) < -41.0 ) THEN 
+       if ( ibfc == -1 .and. temcg(mgs) < -41.0 ) then 
         ehlw(mgs) = 0.0
-       ENDIF 
+       endif 
 
       end if
 !
@@ -15769,13 +15769,13 @@ END SUBROUTINE nssl_2mom_driver
        ehlr(mgs) = Min( ehlr0, ehlr(mgs) )
       end if
 !
-      IF ( qx(mgs,ls).gt.qxmin(ls) ) THEN
+      if ( qx(mgs,ls).gt.qxmin(ls) ) then
         if ( qx(mgs,lhl).gt.qxmin(lhl)  ) then
           ehlsclsn(mgs) = ehls_collsn
           ehls(mgs) = ehscnv(mgs)
           ehls(mgs) = Min(ehls(mgs),ehsmax)
         end if
-      ENDIF
+      endif
 !
       if ( qx(mgs,lhl).gt.qxmin(lhl) .and. qx(mgs,li).gt.qxmin(li) ) then
       ehliclsn(mgs) = ehli_collsn
@@ -15784,19 +15784,19 @@ END SUBROUTINE nssl_2mom_driver
       if ( temg(mgs) .gt. 273.15 .or. ( qx(mgs,lc) < qxmin(lc)) ) ehli(mgs) = 0.0
       end if
 
-      IF ( lis > 1 ) THEN
+      if ( lis > 1 ) then
       if ( qx(mgs,lhl).gt.qxmin(lhl) .and. qx(mgs,lis).gt.qxmin(lis) ) then
       ehlisclsn(mgs) = ehli_collsn
       ehlis(mgs)=eii0*exp(eii1*min(temcg(mgs),0.0))
       ehlis(mgs) = Min( ehimax, Max( ehlis(mgs), ehimin ) )
       if ( temg(mgs) .gt. 273.15 .or. ( qx(mgs,lc) < qxmin(lc)) ) ehlis(mgs) = 0.0
       end if
-      ENDIF
+      endif
 
 
-      ENDIF ! lhl .gt. 1
+      endif ! lhl .gt. 1
 
-      ENDDO  ! mgs loop for collection efficiencies
+      enddo  ! mgs loop for collection efficiencies
 
 !
 !
@@ -15843,9 +15843,9 @@ END SUBROUTINE nssl_2mom_driver
 !
       do mgs = 1,ngscnt
       qracw(mgs) =  0.0
-      IF ( qx(mgs,lr) .gt. qxmin(lr) .and. erw(mgs) .gt. 0.0 ) THEN
-      IF ( ipconc .lt. 3 ) THEN
-       IF ( erw(mgs) .gt. 0.0 .and. qx(mgs,lr) .gt. 1.e-7 ) THEN
+      if ( qx(mgs,lr) .gt. qxmin(lr) .and. erw(mgs) .gt. 0.0 ) then
+      if ( ipconc .lt. 3 ) then
+       if ( erw(mgs) .gt. 0.0 .and. qx(mgs,lr) .gt. 1.e-7 ) then
        vt = (ar*(xdia(mgs,lc,1)**br))*rhovt(mgs)
        qracw(mgs) =    &
      &   (0.25)*pi*erw(mgs)*(qx(mgs,lc)-qcwresv(mgs))*cx(mgs,lr) &
@@ -15859,20 +15859,20 @@ END SUBROUTINE nssl_2mom_driver
 !      write(iunit,*) 'qracw,cx =',qracw(mgs),cx(mgs,lc),kgs(mgs),cx(mgs,lr),1.e6*xdia(mgs,lr,1),vtxbar(mgs,lr,1),vt
 !      write(iunit,*) 'vtr: ',vtxbar(mgs,lr,1), ar*gf4br/6.0*xdia(mgs,lr,1)**br, rhovt(mgs),
 !     :         ar*gf4br/6.0*xdia(mgs,lr,1)**br * rhovt(mgs)
-       ENDIF
-      ELSE
+       endif
+      else
 
-      IF ( dmrauto <= 0 .or.  rho0(mgs)*qx(mgs,lr) > 1.2*xl2p(mgs) ) THEN 
+      if ( dmrauto <= 0 .or.  rho0(mgs)*qx(mgs,lr) > 1.2*xl2p(mgs) ) then 
        rwrad = 0.5*xdia(mgs,lr,3)
-        IF ( rwrad .gt. rh(mgs) ) THEN ! .or. cx(mgs,lr) .gt. nh(mgs) ) THEN
-         IF ( rwrad .gt. rwradmn ) THEN
+        if ( rwrad .gt. rh(mgs) ) then ! .or. cx(mgs,lr) .gt. nh(mgs) ) then
+         if ( rwrad .gt. rwradmn ) then
 !      DM1CCC=A2*XNC*XNR*XVC*(((CNU+2.)/(CNU+1.))*XVC+XVR)       ! (A12)
 !     NOTE: Result is independent of imurain, assumes mucloud = 3
            qracw(mgs) = erw(mgs)*aa2*cx(mgs,lr)*cx(mgs,lc)*xmas(mgs,lc)*   &
      &        ((alpha(mgs,lc) + 2.)*xv(mgs,lc)/(alpha(mgs,lc) + 1.) + xv(mgs,lr))/rho0(mgs) !*rhoinv(mgs)
-         ELSE
+         else
 
-          IF ( imurain == 3 ) THEN
+          if ( imurain == 3 ) then
 
 !      DM1CCC=A1*XNC*XNR*(((CNU+3.)*(CNU+2.)/(CNU+1.)**2)*XVC**3+ ! (A14)
 !     1 ((RNU+2.)/(RNU+1.))*XVC*XVR**2)
@@ -15885,30 +15885,30 @@ END SUBROUTINE nssl_2mom_driver
      &        ((alpha(mgs,lc) + 3.)*(alpha(mgs,lc) + 2.)*xv(mgs,lc)**2/(alpha(mgs,lc) + 1.)**2 +    &
      &         (alpha(mgs,lr) + 2.)*xv(mgs,lr)**2/(alpha(mgs,lr) + 1.)) 
            
-           ELSE ! imurain == 1
+           else ! imurain == 1
 
            qracw(mgs) = aa1*cx(mgs,lr)*(qx(mgs,lc)-qcwresv(mgs))*   &
      &        ((alpha(mgs,lc) + 3.)*(alpha(mgs,lc) + 2.)*xv(mgs,lc)**2/(alpha(mgs,lc) + 1.)**2 +    &
      &         (alpha(mgs,lr) + 6.)*(alpha(mgs,lr) + 5.)*(alpha(mgs,lr) + 4.)*xv(mgs,lr)**2/ &
      &          ((alpha(mgs,lr) + 3.)*(alpha(mgs,lr) + 2.)*(alpha(mgs,lr) + 1.))) 
            
-           ENDIF
+           endif
            
-         ENDIF
-        ENDIF
-        ENDIF
-       ENDIF
+         endif
+        endif
+        endif
+       endif
 !       qracw(mgs) = Min(qracw(mgs), qx(mgs,lc))
        qracw(mgs) = Min(qracw(mgs), qcmxd(mgs))
-       ENDIF
+       endif
       end do
 !
       do mgs = 1,ngscnt
       qraci(mgs) = 0.0
       craci(mgs) = 0.0
       qracs(mgs) = 0.0
-      IF ( eri(mgs) .gt. 0.0 .and. iacr .ge. 1 .and. xdia(mgs,lr,3) .gt. 2.*rwradmn ) THEN
-        IF ( ipconc .ge. 3 ) THEN
+      if ( eri(mgs) .gt. 0.0 .and. iacr .ge. 1 .and. xdia(mgs,lr,3) .gt. 2.*rwradmn ) then
+        if ( ipconc .ge. 3 ) then
 
            tmp = eri(mgs)*aa2*cx(mgs,lr)*cx(mgs,li)*   &
      &        ((cinu + 2.)*xv(mgs,li)/(cinu + 1.) + xv(mgs,lr))
@@ -15936,7 +15936,7 @@ END SUBROUTINE nssl_2mom_driver
 !          qraci(mgs) = Min( qraci(mgs), qxmxd(mgs,li) )
 !          craci(mgs) = Min( craci(mgs), cxmxd(mgs,li) )
 
-        ELSE
+        else
           qraci(mgs) =    &
      &     min(   &
      &     (0.25)*pi*eri(mgs)*qx(mgs,li)*cx(mgs,lr)   &
@@ -15945,22 +15945,22 @@ END SUBROUTINE nssl_2mom_driver
      &      + 2.0*gf2*xdia(mgs,lr,1)*xdia(mgs,li,1)    &
      &      + gf1*xdia(mgs,li,2) )     &
      &    , qimxd(mgs))
-        ENDIF
+        endif
       if ( temg(mgs) .gt. 268.15 ) then
       qraci(mgs) = 0.0
       end if
-      ENDIF
+      endif
       end do
 !
-      IF ( ipconc < 3 ) THEN
+      if ( ipconc < 3 ) then
       do mgs = 1,ngscnt
       qracs(mgs) = 0.0
-      IF ( ers(mgs) .gt. 0.0 .and. ipconc < 3 ) THEN
-       IF ( lwsm6 .and. ipconc == 0 ) THEN
+      if ( ers(mgs) .gt. 0.0 .and. ipconc < 3 ) then
+       if ( lwsm6 .and. ipconc == 0 ) then
          vt = vt2ave(mgs)
-       ELSE
+       else
          vt = vtxbar(mgs,ls,1)
-       ENDIF
+       endif
       qracs(mgs) =      &
      &   min(     &
      &   ((0.25)*pi/gf4)*ers(mgs)*qx(mgs,ls)*cx(mgs,lr)     &
@@ -15969,9 +15969,9 @@ END SUBROUTINE nssl_2mom_driver
      &    + 2.0*gf5*gf2*xdia(mgs,ls,1)*xdia(mgs,lr,1)      &
      &    + gf4*gf3*xdia(mgs,lr,2) )      &
      &  , qsmxd(mgs))
-      ENDIF
+      endif
       end do
-      ENDIF
+      endif
 
 !
 !
@@ -15981,9 +15981,9 @@ END SUBROUTINE nssl_2mom_driver
       qsacw(mgs) =  0.0
       csacw(mgs) =  0.0
       vsacw(mgs) =  0.0
-      IF ( esw(mgs) .gt. 0.0 ) THEN
+      if ( esw(mgs) .gt. 0.0 ) then
 
-       IF ( ipconc .ge. 4 ) THEN
+       if ( ipconc .ge. 4 ) then
 !      QSACC=CECS*RVT*A2*XNC*XNS*XVC*ROS*
 !     *    (((CNU+2.)/(CNU+1.))*XVC+XVS)/RO
 
@@ -15995,24 +15995,24 @@ END SUBROUTINE nssl_2mom_driver
         qsacw(mgs) = Min( qxmxd(mgs,lc), tmp*xmas(mgs,lc)*rhoinv(mgs) )
         csacw(mgs) = Min( cxmxd(mgs,lc), tmp )
 
-          IF ( lvol(ls) .gt. 1 ) THEN
-             IF ( temg(mgs) .lt. 273.15) THEN
+          if ( lvol(ls) .gt. 1 ) then
+             if ( temg(mgs) .lt. 273.15) then
              rimdn(mgs,ls) = rimc1*(-((0.5)*(1.e+06)*xdia(mgs,lc,1))   &
      &                *((0.60)*vtxbar(mgs,ls,1))   &
      &                /(temg(mgs)-273.15))**(rimc2)
              rimdn(mgs,ls) = Min( Max( rimc3, rimdn(mgs,ls) ), rimc4 )
-             ELSE
+             else
              rimdn(mgs,ls) = 1000.
-             ENDIF
+             endif
 
            vsacw(mgs) = rho0(mgs)*qsacw(mgs)/rimdn(mgs,ls)
 
-          ENDIF
+          endif
 
 
 !        qsacw(mgs) = cecs*aa2*cx(mgs,ls)*cx(mgs,lc)*xmas(mgs,lc)*
 !     :        ((alpha(mgs,lc) + 2.)*xv(mgs,lc)/(alpha(mgs,lc) + 1.) + xv(mgs,ls))*rhoinv(mgs)
-       ELSE
+       else
 !      qsacw(mgs) =
 !     >   min(
 !     >   ((0.25)*pi)*esw(mgs)*qx(mgs,lc)*cx(mgs,ls)
@@ -16030,8 +16030,8 @@ END SUBROUTINE nssl_2mom_driver
      &            da1lc(mgs)*xdia(mgs,lc,3)**2 )
         qsacw(mgs) = Min( qsacw(mgs), qxmxd(mgs,ls) )
         csacw(mgs) = rho0(mgs)*qsacw(mgs)/xmas(mgs,lc)
-       ENDIF
-      ENDIF
+       endif
+      endif
       end do
 !
 !
@@ -16039,8 +16039,8 @@ END SUBROUTINE nssl_2mom_driver
       qsaci(mgs) = 0.0
       csaci(mgs) = 0.0
       csaci0(mgs) = 0.0
-      IF ( ipconc .ge. 4 ) THEN
-      IF ( esi(mgs) .gt. 0.0 .or. ( ipelec > 0 .and. esiclsn(mgs) > 0.0 )) THEN
+      if ( ipconc .ge. 4 ) then
+      if ( esi(mgs) .gt. 0.0 .or. ( ipelec > 0 .and. esiclsn(mgs) > 0.0 )) then
 !      QSCOI=CEXS*RVT*A2*XNCI*XNS*XVCI*ROS*
 !     *  (((CINU+2.)/(CINU+1.))*VCIP+XVS)/RO
 
@@ -16059,9 +16059,9 @@ END SUBROUTINE nssl_2mom_driver
 !     >    + 2.0*gf2*xdia(mgs,ls,1)*xdia(mgs,li,1)
 !     >    + gf1*xdia(mgs,li,2) )
 !     <  , qimxd(mgs))
-      ENDIF
-      ELSE ! 
-      IF ( esi(mgs) .gt. 0.0 ) THEN
+      endif
+      else ! 
+      if ( esi(mgs) .gt. 0.0 ) then
          qsaci(mgs) =    &
      &   min(   &
      &   ((0.25)*pi)*esi(mgs)*qx(mgs,li)*cx(mgs,ls)   &
@@ -16070,8 +16070,8 @@ END SUBROUTINE nssl_2mom_driver
      &    + 2.0*gf2*xdia(mgs,ls,1)*xdia(mgs,li,1)    &
      &    + gf1*xdia(mgs,li,2) )     &
      &  , qimxd(mgs))
-      ENDIF
-      ENDIF
+      endif
+      endif
       end do
 !
 !
@@ -16080,8 +16080,8 @@ END SUBROUTINE nssl_2mom_driver
       qsacr(mgs) = 0.0
       qsacrs(mgs) = 0.0
       csacr(mgs) = 0.0
-      IF ( esr(mgs) .gt. 0.0 ) THEN
-      IF ( ipconc .ge. 3 ) THEN
+      if ( esr(mgs) .gt. 0.0 ) then
+      if ( ipconc .ge. 3 ) then
 !       vt = Sqrt((vtxbar(mgs,ls,1)-vtxbar(mgs,lr,1))**2 + 
 !     :            0.04*vtxbar(mgs,ls,1)*vtxbar(mgs,lr,1) )
 !       qsacr(mgs) = esr(mgs)*cx(mgs,ls)*vt*
@@ -16092,12 +16092,12 @@ END SUBROUTINE nssl_2mom_driver
 !        qsacr(mgs) = Min( qsacr(mgs), qrmxd(mgs) )
 !        csacr(mgs) = qsacr(mgs)*cx(mgs,lr)/qx(mgs,lr)
 !        csacr(mgs) = min(csacr(mgs),crmxd(mgs))
-      ELSE
-       IF ( lwsm6 .and. ipconc == 0 ) THEN
+      else
+       if ( lwsm6 .and. ipconc == 0 ) then
          vt = vt2ave(mgs)
-       ELSE
+       else
          vt = vtxbar(mgs,ls,1)
-       ENDIF
+       endif
        
        qsacr(mgs) =   &
      &   min(   &
@@ -16107,8 +16107,8 @@ END SUBROUTINE nssl_2mom_driver
      &    + 2.0*gf5*gf2*xdia(mgs,lr,1)*xdia(mgs,ls,1)    &
      &    + gf4*gf3*xdia(mgs,ls,2) )    &
      &  , qrmxd(mgs))
-      ENDIF
-      ENDIF
+      endif
+      endif
       end do
 !
 !
@@ -16124,24 +16124,24 @@ END SUBROUTINE nssl_2mom_driver
       vhsoak(mgs) = 0.0
       zhacw(mgs) = 0.0
       
-      IF ( .false. ) THEN
+      if ( .false. ) then
         vtmax = (gz(igs(mgs),jgs,kgs(mgs))*dtpinv)
         vtxbar(mgs,lh,1) = Min( vtmax, vtxbar(mgs,lh,1))
         vtxbar(mgs,lh,2) = Min( vtmax, vtxbar(mgs,lh,2))
         vtxbar(mgs,lh,3) = Min( vtmax, vtxbar(mgs,lh,3))
-      ENDIF
-      IF ( ehw(mgs) .gt. 0.0 ) THEN
+      endif
+      if ( ehw(mgs) .gt. 0.0 ) then
 
-        IF ( ipconc .ge. 2 ) THEN
+        if ( ipconc .ge. 2 ) then
 
-        IF ( .false. ) THEN  
+        if ( .false. ) then  
         qhacw(mgs) = (ehw(mgs)*(qx(mgs,lc)-qcwresv(mgs))*cx(mgs,lh)*pi*   &
      &    abs(vtxbar(mgs,lh,1)-vtxbar(mgs,lc,1))*   &
      &    (2.0*xdia(mgs,lh,1)*(xdia(mgs,lh,1) +    &
      &         xdia(mgs,lc,1)*gf73rds) +    &
      &      xdia(mgs,lc,2)*gf83rds))/4.     
      
-         ELSE  ! using Seifert coefficients
+         else  ! using Seifert coefficients
             vt = abs(vtxbar(mgs,lh,1)-vtxbar(mgs,lc,1)) 
 
           qhacw(mgs) = 0.25*pi*ehw(mgs)*cx(mgs,lh)*(qx(mgs,lc)-qcwresv(mgs))*vt*   &
@@ -16149,10 +16149,10 @@ END SUBROUTINE nssl_2mom_driver
      &            dab1lh(mgs,lh,lc)*xdia(mgs,lh,3)*xdia(mgs,lc,3) +    &
      &            da1lc(mgs)*xdia(mgs,lc,3)**2 ) 
          
-         ENDIF
+         endif
           qhacw(mgs) = Min( qhacw(mgs), 0.5*qx(mgs,lc)*dtpinv )
         
-         IF ( lzh .gt. 1 ) THEN
+         if ( lzh .gt. 1 ) then
           tmp = qx(mgs,lh)/cx(mgs,lh)
           
 !!          g1 = (6.0 + alpha(mgs,lh))*(5.0 + alpha(mgs,lh))*(4.0 + alpha(mgs,lh))/
@@ -16161,9 +16161,9 @@ END SUBROUTINE nssl_2mom_driver
 !          g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/
 !     :         ((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
 !          zhacw(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( qx(mgs,lh)/cx(mgs,lh)) * qhacw(mgs) )
-         ENDIF
+         endif
         
-        ELSE
+        else
          qhacw(mgs) =    &
      &   min(   &
      &   ((0.25)*pi)*ehw(mgs)*(qx(mgs,lc)-qcwresv(mgs))*cx(mgs,lh)   &
@@ -16176,24 +16176,24 @@ END SUBROUTINE nssl_2mom_driver
 !     <  , qcmxd(mgs))
        
        
-         IF ( lwsm6 .and. qsacw(mgs) > 0.0 .and.  qhacw(mgs) > 0.0) THEN
+         if ( lwsm6 .and. qsacw(mgs) > 0.0 .and.  qhacw(mgs) > 0.0) then
            qaacw = ( qx(mgs,ls)*qsacw(mgs) + qx(mgs,lh)*qhacw(mgs) )/(qx(mgs,ls) + qx(mgs,lh))
 !           qaacw = Min( qaacw, 0.5*(qsacw(mgs) + qhacw(mgs) ) )
            qsacw(mgs) = qaacw
            qhacw(mgs) = qaacw
-         ENDIF
+         endif
          
-       ENDIF
+       endif
 
           qhacwmlr(mgs) = qhacw(mgs)
-          IF ( temg(mgs) > tfr .and. iqhacwshr == 0 ) THEN
+          if ( temg(mgs) > tfr .and. iqhacwshr == 0 ) then
             qhacw(mgs) = 0.0
-          ENDIF
+          endif
           
-          IF ( lvol(lh) .gt. 1 .or. lhl .gt. 1 ) THEN ! calculate rime density for graupel volume and/or for graupel conversion to hail
+          if ( lvol(lh) .gt. 1 .or. lhl .gt. 1 ) then ! calculate rime density for graupel volume and/or for graupel conversion to hail
              
-             IF ( temg(mgs) .lt. 273.15) THEN
-               IF ( irimdenopt == 1 ) THEN ! Heymsfield and Pflaum (1985)
+             if ( temg(mgs) .lt. 273.15) then
+               if ( irimdenopt == 1 ) then ! Heymsfield and Pflaum (1985)
                vt = ( (1.0-rimdenvwgt)*vtxbar(mgs,lh,1) + rimdenvwgt*vtxbar(mgs,lh,2) )
                
              rimdn(mgs,lh) = rimc1*(-((0.5)*(1.e+06)*xdia(mgs,lc,1))   &
@@ -16210,7 +16210,7 @@ END SUBROUTINE nssl_2mom_driver
 !                 write(0,*) 'rimdn,alpha = ',rimdn(mgs,lh),alpha(mgs,lh)
 !               ENDIF
 
-               ELSEIF ( irimdenopt == 2 ) THEN ! Cober and List (1993)
+               elseif ( irimdenopt == 2 ) then ! Cober and List (1993)
 
                 tmp = (-((0.5)*(1.e+06)*xdia(mgs,lc,1))   &
      &                *( (1.0-rimdenvwgt)*vtxbar(mgs,lh,1) + rimdenvwgt*vtxbar(mgs,lh,2) )   &
@@ -16219,42 +16219,42 @@ END SUBROUTINE nssl_2mom_driver
                 
                 rimdn(mgs,lh) = 1000.*(0.051 + 0.114*tmp - 0.0055*tmp**2)
 
-               ELSEIF ( irimdenopt == 3 .or. irimdenopt == 4) THEN ! Macklin (3) or Saunders and Hosseini 2001
+               elseif ( irimdenopt == 3 .or. irimdenopt == 4) then ! Macklin (3) or Saunders and Hosseini 2001
 
                 tmp = (-((0.5)*(1.e+06)*xdia(mgs,lc,1))   &
      &                *( (1.0-rimdenvwgt)*vtxbar(mgs,lh,1) + rimdenvwgt*vtxbar(mgs,lh,2) )   &
      &                /(temg(mgs)-273.15))
               !  tmp = Min( 5.5/0.6, Max( 0.3/0.6, tmp ) )
                 
-                IF ( irimdenopt == 3 ) THEN
+                if ( irimdenopt == 3 ) then
                   rimdn(mgs,lh) =  Min(900., Max( 170., 110.*tmp**0.76 ) )
-                ELSEIF ( irimdenopt == 4 ) THEN ! Saunders and Hosseini
+                elseif ( irimdenopt == 4 ) then ! Saunders and Hosseini
                   rimdn(mgs,lh) =  Min(917., Max( 10.,  900.0*(1.0 - 0.905**tmp ) ) )
-                ENDIF
+                endif
                
-               ENDIF
-             ELSE
+               endif
+             else
              rimdn(mgs,lh) = 1000.
-             ENDIF
+             endif
              
-             IF ( lvol(lh) > 1 ) vhacw(mgs) = rho0(mgs)*qhacw(mgs)/rimdn(mgs,lh)
+             if ( lvol(lh) > 1 ) vhacw(mgs) = rho0(mgs)*qhacw(mgs)/rimdn(mgs,lh)
 
-          ENDIF
+          endif
       
-        IF ( qx(mgs,lh) .gt. qxmin(lh) .and. ipelec .ge. 1 ) THEN
+        if ( qx(mgs,lh) .gt. qxmin(lh) .and. ipelec .ge. 1 ) then
          rarx(mgs,lh) =     &
      &    qhacw(mgs)*1.0e3*rho0(mgs)/((pi/2.0)*xdia(mgs,lh,2)*cx(mgs,lh))
-        ENDIF
+        endif
       
-      ENDIF  
+      endif  
       end do   
 !
 !
       do mgs = 1,ngscnt
       qhaci(mgs) = 0.0
       qhaci0(mgs) = 0.0
-      IF ( ehi(mgs) .gt. 0.0 ) THEN
-       IF (  ipconc .ge. 5 ) THEN
+      if ( ehi(mgs) .gt. 0.0 ) then
+       if (  ipconc .ge. 5 ) then
 
        vt = Sqrt((vtxbar(mgs,lh,1)-vtxbar(mgs,li,1))**2 +    &
      &            0.04*vtxbar(mgs,lh,1)*vtxbar(mgs,li,1) )
@@ -16264,7 +16264,7 @@ END SUBROUTINE nssl_2mom_driver
      &            dab1lh(mgs,lh,li)*xdia(mgs,lh,3)*xdia(mgs,li,3) +    &
      &            da1(li)*xdia(mgs,li,3)**2 ) 
           qhaci(mgs) = Min( ehi(mgs)*qhaci0(mgs), qimxd(mgs) )
-       ELSE
+       else
         qhaci(mgs) =    &
      &  min(   &
      &  ((0.25)*pi)*ehi(mgs)*ehiclsn(mgs)*qx(mgs,li)*cx(mgs,lh)   &
@@ -16273,16 +16273,16 @@ END SUBROUTINE nssl_2mom_driver
      &    + 2.0*gf2*xdia(mgs,lh,1)*xdia(mgs,li,1)    &
      &    + gf1*xdia(mgs,li,2) )     &
      &  , qimxd(mgs))
-       ENDIF
-      ENDIF
+       endif
+      endif
       end do   
 
 
-      IF ( lis > 1 .and. ipconc >= 5 ) THEN
+      if ( lis > 1 .and. ipconc >= 5 ) then
       do mgs = 1,ngscnt
       qhacis(mgs) = 0.0
       qhacis0(mgs) = 0.0
-      IF ( ehis(mgs) .gt. 0.0 ) THEN
+      if ( ehis(mgs) .gt. 0.0 ) then
 
        vt = Sqrt((vtxbar(mgs,lh,1)-vtxbar(mgs,lis,1))**2 +    &
      &            0.04*vtxbar(mgs,lh,1)*vtxbar(mgs,lis,1) )
@@ -16292,17 +16292,17 @@ END SUBROUTINE nssl_2mom_driver
      &            dab1lh(mgs,lh,lis)*xdia(mgs,lh,3)*xdia(mgs,lis,3) +    &
      &            da1(li)*xdia(mgs,lis,3)**2 ) 
           qhacis(mgs) = Min( ehis(mgs)*qhacis0(mgs), qxmxd(mgs,lis) )
-      ENDIF
+      endif
       end do
-      ENDIF
+      endif
 
 !
 !
       do mgs = 1,ngscnt
       qhacs(mgs) = 0.0
       qhacs0(mgs) = 0.0
-      IF ( ehs(mgs) .gt. 0.0 ) THEN
-       IF ( ipconc .ge. 5 ) THEN
+      if ( ehs(mgs) .gt. 0.0 ) then
+       if ( ipconc .ge. 5 ) then
 
        vt = Sqrt((vtxbar(mgs,lh,1)-vtxbar(mgs,ls,1))**2 +    &
      &            0.04*vtxbar(mgs,lh,1)*vtxbar(mgs,ls,1) )
@@ -16314,7 +16314,7 @@ END SUBROUTINE nssl_2mom_driver
       
           qhacs(mgs) = Min( ehs(mgs)*qhacs0(mgs), qsmxd(mgs) )
 
-       ELSE
+       else
          qhacs(mgs) =   &
      &   min(   &
      &   ((0.25)*pi/gf4)*ehs(mgs)*ehsclsn(mgs)*qx(mgs,ls)*cx(mgs,lh)   &
@@ -16323,8 +16323,8 @@ END SUBROUTINE nssl_2mom_driver
      &    + 2.0*gf5*gf2*xdia(mgs,ls,1)*xdia(mgs,lh,1)   &
      &    + gf4*gf3*xdia(mgs,lh,2) )   &
      &  , qsmxd(mgs))
-        ENDIF
-      ENDIF
+        endif
+      endif
       end do   
 !
       do mgs = 1,ngscnt
@@ -16333,10 +16333,10 @@ END SUBROUTINE nssl_2mom_driver
       vhacr(mgs) = 0.0
       chacr(mgs) = 0.0
       zhacr(mgs) = 0.0
-      IF ( temg(mgs) .gt. tfr ) raindn(mgs,lh) = 1000.0
+      if ( temg(mgs) .gt. tfr ) raindn(mgs,lh) = 1000.0
 
-      IF ( ehr(mgs) .gt. 0.0 ) THEN
-      IF ( ipconc .ge. 3 ) THEN
+      if ( ehr(mgs) .gt. 0.0 ) then
+      if ( ipconc .ge. 3 ) then
        vt = Sqrt((vtxbar(mgs,lh,1)-vtxbar(mgs,lr,1))**2 +    &
      &            0.04*vtxbar(mgs,lh,1)*vtxbar(mgs,lr,1) )
 !       qhacr(mgs) = ehr(mgs)*cx(mgs,lh)*vt*
@@ -16359,14 +16359,14 @@ END SUBROUTINE nssl_2mom_driver
 
             qhacrmlr(mgs) = qhacr(mgs)
         
-        IF ( temg(mgs) > tfr .and. iehr0c == 0 ) THEN
+        if ( temg(mgs) > tfr .and. iehr0c == 0 ) then
           qhacr(mgs) = 0.0
 
-          IF ( iqhacrmlr == 0 ) THEN
+          if ( iqhacrmlr == 0 ) then
               qhacrmlr(mgs) = -qhacw(mgs)
-          ENDIF
+          endif
 
-        ELSE
+        else
 !        chacr(mgs) = Min( qhacr(mgs)*rho0(mgs)/xmas(mgs,lr), cxmxd(mgs,lr) )
 
 !       chacr(mgs) = ehr(mgs)*cx(mgs,lh)*vt*
@@ -16385,7 +16385,7 @@ END SUBROUTINE nssl_2mom_driver
 !        chacr(mgs) = qhacr(mgs)*cx(mgs,lr)/qx(mgs,lr)
         chacr(mgs) = min(chacr(mgs),crmxd(mgs))
 
-      IF ( lzh .gt. 1 ) THEN
+      if ( lzh .gt. 1 ) then
           tmp = qx(mgs,lh)/cx(mgs,lh)
 
 !          g1 = (6.0 + alpha(mgs,lh))*(5.0 + alpha(mgs,lh))*(4.0 + alpha(mgs,lh))/
@@ -16395,15 +16395,15 @@ END SUBROUTINE nssl_2mom_driver
 !     :         ((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
 !        zhacr(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( tmp ) * qhacr(mgs) - tmp**2 * chacr(mgs) )
 !        zhacr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*( tmp ) * qhacr(mgs) )
-      ENDIF
-      ENDIF ! temg > tfr
+      endif
+      endif ! temg > tfr
       
-      ELSE
-       IF ( lwsm6 .and. ipconc == 0 ) THEN
+      else
+       if ( lwsm6 .and. ipconc == 0 ) then
          vt = vt2ave(mgs)
-       ELSE
+       else
          vt = vtxbar(mgs,lh,1)
-       ENDIF
+       endif
 
       qhacr(mgs) =   &
      &   min(   &
@@ -16414,27 +16414,27 @@ END SUBROUTINE nssl_2mom_driver
      &    + gf4*gf3*xdia(mgs,lh,2) )   &
      &  , qrmxd(mgs))
       
-        IF ( temg(mgs) > tfr ) THEN
-          IF ( iqhacrmlr >= 1 ) qhacrmlr(mgs) = qhacr(mgs)
+        if ( temg(mgs) > tfr ) then
+          if ( iqhacrmlr >= 1 ) qhacrmlr(mgs) = qhacr(mgs)
           qhacr(mgs) = 0.0
-        ENDIF
+        endif
       
-      ENDIF
-          IF ( lvol(lh) .gt. 1 .or. lhl .gt. 1 ) THEN ! calculate rime density for graupel volume and/or for graupel conversion to hail
+      endif
+          if ( lvol(lh) .gt. 1 .or. lhl .gt. 1 ) then ! calculate rime density for graupel volume and/or for graupel conversion to hail
              
-             IF ( temg(mgs) .lt. 273.15) THEN
+             if ( temg(mgs) .lt. 273.15) then
              raindn(mgs,lh) = rimc1*(-((0.5)*(1.e+06)*xdia(mgs,lr,3))   &
      &                *((0.60)*vt)   &
      &                /(temg(mgs)-273.15))**(rimc2)
 
              raindn(mgs,lh) = Min( Max( rimc3, rimdn(mgs,lh) ), rimc4 )
-             ELSE
+             else
              raindn(mgs,lh) = 1000.
-             ENDIF
+             endif
              
-             IF ( lvol(lh) > 1 )  vhacr(mgs) = rho0(mgs)*qhacr(mgs)/raindn(mgs,lh)
-        ENDIF
-      ENDIF
+             if ( lvol(lh) > 1 )  vhacr(mgs) = rho0(mgs)*qhacr(mgs)/raindn(mgs,lh)
+        endif
+      endif
       end do
 
 !
@@ -16447,18 +16447,18 @@ END SUBROUTINE nssl_2mom_driver
       qhlacwmlr(mgs) = 0.0
       vhlacw(mgs) = 0.0
       vhlsoak(mgs) = 0.0
-      IF ( lhl > 1 .and. .true.) THEN
+      if ( lhl > 1 .and. .true.) then
         vtmax = (gz(igs(mgs),jgs,kgs(mgs))*dtpinv)
         vtxbar(mgs,lhl,1) = Min( vtmax, vtxbar(mgs,lhl,1))
         vtxbar(mgs,lhl,2) = Min( vtmax, vtxbar(mgs,lhl,2))
         vtxbar(mgs,lhl,3) = Min( vtmax, vtxbar(mgs,lhl,3))
-      ENDIF
+      endif
 
-      IF ( lhl > 0 ) THEN
+      if ( lhl > 0 ) then
       rarx(mgs,lhl) = 0.0
-      ENDIF
+      endif
 
-      IF ( lhl .gt. 1 .and. ehlw(mgs) .gt. 0.0 ) THEN
+      if ( lhl .gt. 1 .and. ehlw(mgs) .gt. 0.0 ) then
 
 
 !        IF ( ipconc .ge. 2 ) THEN
@@ -16474,20 +16474,20 @@ END SUBROUTINE nssl_2mom_driver
           qhlacw(mgs) = Min( qhlacw(mgs), 0.5*qx(mgs,lc)*dtpinv )
 
           qhlacwmlr(mgs) = qhlacw(mgs)
-          IF ( temg(mgs) > tfr .and. iqhlacwshr == 0 ) THEN
+          if ( temg(mgs) > tfr .and. iqhlacwshr == 0 ) then
             qhlacw(mgs) = 0.0
-          ENDIF
+          endif
 
-          IF ( lvol(lhl) .gt. 1 ) THEN
+          if ( lvol(lhl) .gt. 1 ) then
 
-             IF ( temg(mgs) .lt. 273.15) THEN
-               IF ( irimdenopt == 1 ) THEN ! Heymsfeld and Pflaum (1985)
+             if ( temg(mgs) .lt. 273.15) then
+               if ( irimdenopt == 1 ) then ! Heymsfeld and Pflaum (1985)
              rimdn(mgs,lhl) = rimc1*(-((0.5)*(1.e+06)*xdia(mgs,lc,1))   &
      &                *((0.60)*( (1.0-rimdenvwgt)*vtxbar(mgs,lhl,1) + rimdenvwgt*vtxbar(mgs,lhl,2) ))   &
      &                /(temg(mgs)-273.15))**(rimc2)
              rimdn(mgs,lhl) = Min( Max( hldnmn, rimc3, rimdn(mgs,lhl) ), rimc4 )
                
-               ELSEIF ( irimdenopt == 2 ) THEN ! Cober and List (1993)
+               elseif ( irimdenopt == 2 ) then ! Cober and List (1993)
                 tmp = -0.5*(1.e+06)*xdia(mgs,lc,1)   &
      &                *( (1.0-rimdenvwgt)*vtxbar(mgs,lhl,1) + rimdenvwgt*vtxbar(mgs,lhl,2) )   &
      &                /(temg(mgs)-273.15)
@@ -16495,42 +16495,42 @@ END SUBROUTINE nssl_2mom_driver
                 
                 rimdn(mgs,lhl) = 1000.*(0.051 + 0.114*tmp - 0.005*tmp**2)
                
-               ELSEIF ( irimdenopt == 3 .or. irimdenopt == 4) THEN ! Macklin (3) or Saunders and Hosseini 2001
+               elseif ( irimdenopt == 3 .or. irimdenopt == 4) then ! Macklin (3) or Saunders and Hosseini 2001
                 tmp = -0.5*(1.e+06)*xdia(mgs,lc,1)   &
      &                *( (1.0-rimdenvwgt)*vtxbar(mgs,lhl,1) + rimdenvwgt*vtxbar(mgs,lhl,2) )  &
      &                /(temg(mgs)-273.15)
               !  tmp = Min( 5.5/0.6, Max( 0.3/0.6, tmp ) )
                 
-                IF ( irimdenopt == 3 ) THEN
+                if ( irimdenopt == 3 ) then
                   rimdn(mgs,lhl) =  Min(900., Max( 170., 110.*tmp**0.76 ) )
-                ELSEIF ( irimdenopt == 4 ) THEN ! Saunders and Hosseini
+                elseif ( irimdenopt == 4 ) then ! Saunders and Hosseini
                   rimdn(mgs,lhl) =  Min(917., Max( 10.,  900.0*(1.0 - 0.905**tmp ) ) )
-                ENDIF
+                endif
                
-               ENDIF
-             ELSE
+               endif
+             else
              rimdn(mgs,lhl) = 1000.
-             ENDIF
+             endif
 
              vhlacw(mgs) = rho0(mgs)*qhlacw(mgs)/rimdn(mgs,lhl)
 
-          ENDIF
+          endif
 
 
-        IF ( qx(mgs,lhl) .gt. qxmin(lhl) .and. ipelec .ge. 1 ) THEN
+        if ( qx(mgs,lhl) .gt. qxmin(lhl) .and. ipelec .ge. 1 ) then
          rarx(mgs,lhl) =     &
      &    qhlacw(mgs)*1.0e3*rho0(mgs)/((pi/2.0)*xdia(mgs,lhl,2)*cx(mgs,lhl))
-        ENDIF
+        endif
 
-      ENDIF
+      endif
       end do
 
       qhlaci(:) = 0.0
       qhlaci0(:) = 0.0
-      IF ( lhl .gt. 1  ) THEN
+      if ( lhl .gt. 1  ) then
       do mgs = 1,ngscnt
-      IF ( ehli(mgs) .gt. 0.0 ) THEN
-       IF (  ipconc .ge. 5 ) THEN
+      if ( ehli(mgs) .gt. 0.0 ) then
+       if (  ipconc .ge. 5 ) then
 
        vt = Sqrt((vtxbar(mgs,lhl,1)-vtxbar(mgs,li,1))**2 +    &
      &            0.04*vtxbar(mgs,lhl,1)*vtxbar(mgs,li,1) )
@@ -16541,17 +16541,17 @@ END SUBROUTINE nssl_2mom_driver
      &            da1(li)*xdia(mgs,li,3)**2 )
         ! qhlaci(mgs) = Min( qhlaci(mgs), qimxd(mgs) )
           qhlaci(mgs) = Min( ehli(mgs)*qhlaci0(mgs), qimxd(mgs) )
-       ENDIF
-      ENDIF
+       endif
+      endif
       end do
-      ENDIF
+      endif
 !
       qhlacs(:) = 0.0
       qhlacs0(:) = 0.0
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
       do mgs = 1,ngscnt
-      IF ( ehls(mgs) .gt. 0.0) THEN
-       IF ( ipconc .ge. 5 ) THEN
+      if ( ehls(mgs) .gt. 0.0) then
+       if ( ipconc .ge. 5 ) then
 
        vt = Sqrt((vtxbar(mgs,lhl,1)-vtxbar(mgs,ls,1))**2 +    &
      &            0.04*vtxbar(mgs,lhl,1)*vtxbar(mgs,ls,1) )
@@ -16562,10 +16562,10 @@ END SUBROUTINE nssl_2mom_driver
      &            da1(ls)*xdia(mgs,ls,3)**2 )
 
           qhlacs(mgs) = Min( ehls(mgs)*qhlacs0(mgs), qsmxd(mgs) )
-        ENDIF
-      ENDIF
+        endif
+      endif
       end do
-      ENDIF
+      endif
 
 
       do mgs = 1,ngscnt
@@ -16573,10 +16573,10 @@ END SUBROUTINE nssl_2mom_driver
       qhlacrmlr(mgs) = 0.0
       chlacr(mgs) = 0.0
       vhlacr(mgs) = 0.0
-      IF ( lhl .gt. 1 .and. temg(mgs) .gt. tfr ) raindn(mgs,lhl) = 1000.0
+      if ( lhl .gt. 1 .and. temg(mgs) .gt. tfr ) raindn(mgs,lhl) = 1000.0
 
-      IF ( lhl .gt. 1 .and. ehlr(mgs) .gt. 0.0 ) THEN
-      IF ( ipconc .ge. 3 ) THEN
+      if ( lhl .gt. 1 .and. ehlr(mgs) .gt. 0.0 ) then
+      if ( ipconc .ge. 3 ) then
        vt = Sqrt((vtxbar(mgs,lhl,1)-vtxbar(mgs,lr,1))**2 +    &
      &            0.04*vtxbar(mgs,lhl,1)*vtxbar(mgs,lr,1) )
 
@@ -16593,14 +16593,14 @@ END SUBROUTINE nssl_2mom_driver
         qhlacr(mgs) = Min( qhlacr(mgs), qxmxd(mgs,lr) )
 
      
-        IF ( iqhlacrmlr >= 1 ) qhlacrmlr(mgs) = qhlacr(mgs)
+        if ( iqhlacrmlr >= 1 ) qhlacrmlr(mgs) = qhlacr(mgs)
         
-        IF ( temg(mgs) > tfr .and. iehlr0c == 0) THEN
+        if ( temg(mgs) > tfr .and. iehlr0c == 0) then
           qhlacr(mgs) = 0.0
-          IF ( iqhlacrmlr == 0 ) THEN
+          if ( iqhlacrmlr == 0 ) then
               qhlacrmlr(mgs) = -qhlacw(mgs)
-          ENDIF
-        ELSE
+          endif
+        else
         chlacr(mgs) = 0.25*pi*ehlr(mgs)*cx(mgs,lhl)*cx(mgs,lr)*vt*   &
      &         (  da0lhl(mgs)*xdia(mgs,lhl,3)**2 +     &
      &            dab0lh(mgs,lhl,lr)*xdia(mgs,lhl,3)*xdia(mgs,lr,3) +    &
@@ -16608,12 +16608,12 @@ END SUBROUTINE nssl_2mom_driver
 
         chlacr(mgs) = min(chlacr(mgs),crmxd(mgs))
 
-        IF ( lvol(lhl) .gt. 1 ) THEN
+        if ( lvol(lhl) .gt. 1 ) then
          vhlacr(mgs) = rho0(mgs)*qhlacr(mgs)/raindn(mgs,lhl)
-        ENDIF
-        ENDIF
-      ENDIF
-      ENDIF
+        endif
+        endif
+      endif
+      endif
       end do
 
 
@@ -16628,7 +16628,7 @@ END SUBROUTINE nssl_2mom_driver
 !
       do mgs = 1,ngscnt
       qiacw(mgs) = 0.0
-      IF ( eiw(mgs) .gt. 0.0 ) THEN
+      if ( eiw(mgs) .gt. 0.0 ) then
 
        vt = Sqrt((vtxbar(mgs,li,1)-vtxbar(mgs,lc,1))**2 +    &
      &            0.04*vtxbar(mgs,li,1)*vtxbar(mgs,lc,1) )
@@ -16639,7 +16639,7 @@ END SUBROUTINE nssl_2mom_driver
      &            da1lc(mgs)*xdia(mgs,lc,3)**2 )
 
        qiacw(mgs) = Min( qiacw(mgs), qxmxd(mgs,lc) )
-      ENDIF
+      endif
       end do
 
 
@@ -16659,24 +16659,24 @@ END SUBROUTINE nssl_2mom_driver
       qsplinter(mgs) = 0.0
       csplinter2(mgs) = 0.0
       qsplinter2(mgs) = 0.0
-      IF ( iacr .ge. 1 .and. eri(mgs) .gt. 0.0    &
-     &     .and. temg(mgs) .le. 270.15 ) THEN
-      IF ( ipconc .ge. 3 ) THEN
+      if ( iacr .ge. 1 .and. eri(mgs) .gt. 0.0    &
+     &     .and. temg(mgs) .le. 270.15 ) then
+      if ( ipconc .ge. 3 ) then
        ni = 0.0
-         IF ( xdia(mgs,li,1) .ge. 10.e-6 ) THEN
+         if ( xdia(mgs,li,1) .ge. 10.e-6 ) then
           ni = ni + cx(mgs,li)*Exp(- (40.e-6/xdia(mgs,li,1))**3 )
-         ENDIF
-       IF ( imurain == 1 ) THEN ! gamma of diameter
-           IF ( iacrsize /= 4 ) THEN
-           IF ( iacrsize .eq. 1 ) THEN
+         endif
+       if ( imurain == 1 ) then ! gamma of diameter
+           if ( iacrsize /= 4 ) then
+           if ( iacrsize .eq. 1 ) then
              ratio = 500.e-6/xdia(mgs,lr,1)
-           ELSEIF ( iacrsize .eq. 2 ) THEN
+           elseif ( iacrsize .eq. 2 ) then
              ratio = 300.e-6/xdia(mgs,lr,1)
-           ELSEIF ( iacrsize .eq. 3 ) THEN
+           elseif ( iacrsize .eq. 3 ) then
              ratio = 40.e-6/xdia(mgs,lr,1)
-           ELSEIF ( iacrsize .eq. 5 ) THEN
+           elseif ( iacrsize .eq. 5 ) then
              ratio = 150.e-6/xdia(mgs,lr,1)
-           ENDIF
+           endif
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
            j = Int(Max(0.0,Min(15.,alpha(mgs,lr)))*dqiacralphainv)
 !           j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lr)))*dqiacralphainv)
@@ -16701,10 +16701,10 @@ END SUBROUTINE nssl_2mom_driver
            
            qr = (tmp1 + dely*dqiacralphainv*(tmp2 - tmp1))*qx(mgs,lr)
            
-           ELSE ! iacrsize == 4 : use all
+           else ! iacrsize == 4 : use all
              nr = cx(mgs,lr)
              qr = qx(mgs,lr)
-           ENDIF
+           endif
 
           vt = Sqrt((vtxbar(mgs,lr,1)-vtxbar(mgs,li,1))**2 +     &
      &            0.04*vtxbar(mgs,lr,1)*vtxbar(mgs,li,1) )
@@ -16729,28 +16729,28 @@ END SUBROUTINE nssl_2mom_driver
 !          write(iunit,*) 'i,j,ratio = ',i,j,ciacrratio(i,j),qiacrratio(i,j)
 !          write(iunit,*) 'ni,ci = ',ni,cx(mgs,li),qx(mgs,li)
 
-       ELSEIF ( imurain == 3 ) THEN ! gamma of volume
+       elseif ( imurain == 3 ) then ! gamma of volume
 !   Set nr to the number of drops greater than 40 microns.
          arg = 1000.*xdia(mgs,lr,3)
 !         nr = cx(mgs,lr)*gaml02( arg )
 !        IF ( iacr .eq. 1 ) THEN
-         IF ( ipconc .ge. 3 ) THEN
-           IF ( iacrsize .eq. 1 ) THEN
+         if ( ipconc .ge. 3 ) then
+           if ( iacrsize .eq. 1 ) then
             nr = cx(mgs,lr)*gaml02d500( arg )  ! number greater than 500 microns in diameter
-           ELSEIF ( iacrsize .eq. 2 .or. iacrsize .eq. 5 ) THEN
+           elseif ( iacrsize .eq. 2 .or. iacrsize .eq. 5 ) then
             nr = cx(mgs,lr)*gaml02d300( arg )  ! number greater than 300 microns in diameter
-           ELSEIF ( iacrsize .eq. 3 ) THEN
+           elseif ( iacrsize .eq. 3 ) then
             nr = cx(mgs,lr)*gaml02( arg ) ! number greater than 40 microns in diameter
-           ELSEIF ( iacrsize .eq. 4 ) THEN
+           elseif ( iacrsize .eq. 4 ) then
             nr = cx(mgs,lr) ! all raindrops
-           ENDIF
-         ELSE
+           endif
+         else
          nr = cx(mgs,lr)*gaml02( arg )
-         ENDIF
+         endif
 !        ELSEIF ( iacr .eq. 2 ) THEN
 !         nr = cx(mgs,lr)*gaml02d300( arg )  ! number greater than 300 microns in diameter
 !        ENDIF
-       IF ( ni .gt. 0.0 .and. nr .gt. 0.0 ) THEN
+       if ( ni .gt. 0.0 .and. nr .gt. 0.0 ) then
        d0 = xdia(mgs,lr,3)
        qiacr(mgs) = xdn(mgs,lr)*rhoinv(mgs)*   &
      &     (0.217239*(0.522295*(d0**5) +    &
@@ -16767,22 +16767,22 @@ END SUBROUTINE nssl_2mom_driver
      &      2.133344e10*(d0**6))*ni*nr)
       ciacr(mgs) = Min( crmxd(mgs), ciacr(mgs) )
 !      ciacr(mgs) = qiacr(mgs)*cx(mgs,lr)/qx(mgs,lr)
-      ENDIF
-      ENDIF
-       IF ( iacr .eq. 1 .or. iacr .eq. 3 ) THEN
+      endif
+      endif
+       if ( iacr .eq. 1 .or. iacr .eq. 3 ) then
          ciacrf(mgs) = Min(ciacr(mgs), qiacr(mgs)/(1.0*vr1mm*1000.0)*rho0(mgs) ) ! *rzxh(mgs)
-       ELSEIF ( iacr .eq. 2 ) THEN
+       elseif ( iacr .eq. 2 ) then
          ciacrf(mgs) = ciacr(mgs) ! *rzxh(mgs)
-       ELSEIF ( iacr .eq. 4 ) THEN
+       elseif ( iacr .eq. 4 ) then
          ciacrf(mgs) = Min(ciacr(mgs), qiacr(mgs)/(1.0*vfrz*1000.0)*rho0(mgs) ) ! *rzxh(mgs)
-       ELSEIF ( iacr .eq. 5 ) THEN
+       elseif ( iacr .eq. 5 ) then
          ciacrf(mgs) = ciacr(mgs)*rzxh(mgs)
-       ENDIF 
+       endif 
 !      crfrzf(mgs) = Min(crfrz(mgs), qrfrz(mgs)/(bfnu*27.0*vr1mm*1000.0)*rho0(mgs) ) ! rzxh(mgs)*crfrz(mgs)
-       ENDIF
+       endif
       
       
-      ELSE ! single-moment rain
+      else ! single-moment rain
       qiacr(mgs) =    &
      &  min(        &
      &   ((0.25/gf4)*pi)*eri(mgs)*cx(mgs,li)*qx(mgs,lr)   &
@@ -16791,46 +16791,46 @@ END SUBROUTINE nssl_2mom_driver
      &    + 2.0*gf5*gf2*xdia(mgs,lr,1)*xdia(mgs,li,1)    &
      &    + gf4*gf3*xdia(mgs,li,2) )     &
      &  , qrmxd(mgs))
-      ENDIF
+      endif
 !      if ( temg(mgs) .gt. 268.15 ) then
 !      qiacr(mgs) = 0.0
 !      ciacr(mgs) = 0.0
 !      end if
 
-      IF ( ipconc .ge. 1 ) THEN
-        IF ( nsplinter .ge. 1000 ) THEN
+      if ( ipconc .ge. 1 ) then
+        if ( nsplinter .ge. 1000 ) then
         ! Lawson et al. 2015 JAS
          ! ave. diam of freezing drops in microns
-           IF ( qiacr(mgs)*dtp > qxmin(lh) .and. ciacr(mgs) > 1.e-3 ) THEN
+           if ( qiacr(mgs)*dtp > qxmin(lh) .and. ciacr(mgs) > 1.e-3 ) then
              tmpdiam = 1.e6*( 6.*qiacr(mgs)/(1000.*pi*ciacr(mgs) ) )**(1./3.) ! avg. diameter of newly frozen drops in microns
              csplinter(mgs) = lawson_splinter_fac*tmpdiam**4*ciacr(mgs)
-           ENDIF
-        ELSEIF ( nsplinter .ge. 0 ) THEN
+           endif
+        elseif ( nsplinter .ge. 0 ) then
           csplinter(mgs) = nsplinter*ciacr(mgs)
-        ELSE
+        else
           csplinter(mgs) = -nsplinter*ciacrf(mgs)
-        ENDIF
+        endif
         qsplinter(mgs) = Min(0.1*qiacr(mgs), csplinter(mgs)*splintermass/rho0(mgs) ) ! makes splinters smaller if too much mass is taken from graupel
-      ENDIF
+      endif
       
       frach = 1.0
-           IF ( ibiggsnow == 2 .or. ibiggsnow == 3 ) THEN
-           IF ( ciacr(mgs) > qxmin(lh) ) THEN
+           if ( ibiggsnow == 2 .or. ibiggsnow == 3 ) then
+           if ( ciacr(mgs) > qxmin(lh) ) then
            xvfrz = rho0(mgs)*qiacr(mgs)/(ciacr(mgs)*900.) ! mean volume of frozen drops; 900. for frozen drop density
            frach = 0.5 *(1. +  Tanh(0.2e12 *( xvfrz - 1.15*xvbiggsnow)))
 
              qiacrs(mgs) = (1.-frach)*qiacr(mgs)
              ciacrs(mgs) = (1.-frach)*ciacrf(mgs) ! *rzxh(mgs)
            
-           ENDIF
-           ENDIF
+           endif
+           endif
 
       qiacrf(mgs) = frach*qiacr(mgs)
       ciacrf(mgs) = frach*ciacrf(mgs)
 
-      IF ( lvol(lh) > 1 ) THEN
+      if ( lvol(lh) > 1 ) then
          viacrf(mgs) = rho0(mgs)*qiacrf(mgs)/rhofrz
-      ENDIF
+      endif
       
       end do
 !
@@ -16842,25 +16842,25 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 4 ) then !
       do mgs = 1,ngscnt
       csacs(mgs) = 0.0
-      IF ( qx(mgs,ls) > qxmin(ls) .and. ess(mgs) .gt. 0.0 ) THEN ! .and. xv(mgs,ls) < 0.25*xvmx(ls)*Max(1.,100./Min(100.,xdn(mgs,ls)))  ) THEN
+      if ( qx(mgs,ls) > qxmin(ls) .and. ess(mgs) .gt. 0.0 ) then ! .and. xv(mgs,ls) < 0.25*xvmx(ls)*Max(1.,100./Min(100.,xdn(mgs,ls)))  ) then
 
-        IF ( iessec0flag == 0 ) THEN
+        if ( iessec0flag == 0 ) then
           ec0(mgs) = 1.0
-        ELSE
+        else
           tmp = xv(mgs,ls)/(xvmx(ls)*Max(1.,100./Min(100.,xdn(mgs,ls)))) ! fraction of max snow mass
-          IF ( tmp .lt. essfrac1 ) THEN
+          if ( tmp .lt. essfrac1 ) then
             ec0(mgs) = 1.0
-          ELSEIF ( tmp .ge. essfrac2 ) THEN
+          elseif ( tmp .ge. essfrac2 ) then
             ec0(mgs) = 0.0
-          ELSE
+          else
             ec0(mgs) = (essfrac2 - tmp)/(essfrac2 - essfrac1)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
       csacs(mgs) = ec0(mgs)*rvt*aa2*ess(mgs)*cx(mgs,ls)**2*Min( xv(mgs,ls), 4.*pii/3.*essrmax**3 ) ! *Min(1.,xdn(mgs,ls)/100. ) ! Min func tries to recalibrate for low diagnosed density 
 !      csacs(mgs) = rvt*aa2*ess(mgs)*cx(mgs,ls)**2*Min( xv(mgs,ls), 4.*pii/3.*0.02**3 ) ! *Min(1.,xdn(mgs,ls)/100. ) ! Min func tries to recalibrate for low diagnosed density 
       csacs(mgs) = Min(csacs(mgs),csmxd(mgs))
-      ENDIF
+      endif
       end do
       end if
 !
@@ -16869,10 +16869,10 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 2 .or. ipelec .ge. 9 ) then
       do mgs = 1,ngscnt
       ciacw(mgs) = 0.0
-      IF ( eiw(mgs) .gt. 0.0 ) THEN
+      if ( eiw(mgs) .gt. 0.0 ) then
         ciacw(mgs) = qiacw(mgs)*rho0(mgs)/xmas(mgs,lc)
         ciacw(mgs) = min(ciacw(mgs),ccmxd(mgs))
-      ENDIF
+      endif
       end do
 
       end if
@@ -16883,93 +16883,93 @@ END SUBROUTINE nssl_2mom_driver
        cracw(mgs) = 0.0
        cracr(mgs) = 0.0
        ec0(mgs) = 1.e9
-      IF ( qx(mgs,lc) .gt. qxmin(lc) .and. qx(mgs,lr) .gt. qxmin(lr)    &
-     &      .and. qracw(mgs) .gt. 0.0 ) THEN
+      if ( qx(mgs,lc) .gt. qxmin(lc) .and. qx(mgs,lr) .gt. qxmin(lr)    &
+     &      .and. qracw(mgs) .gt. 0.0 ) then
 
-       IF ( ipconc .lt. 3 ) THEN
-        IF ( erw(mgs) .gt. 0.0 ) THEN
+       if ( ipconc .lt. 3 ) then
+        if ( erw(mgs) .gt. 0.0 ) then
         cracw(mgs) =   &
      &   ((0.25)*pi)*erw(mgs)*(cx(mgs,lc) - ccwresv(mgs))*cx(mgs,lr)   &
      &  *abs(vtxbar(mgs,lr,1)-vtxbar(mgs,lc,1))   &
      &  *(  gf1*xdia(mgs,lc,2)   &
      &    + 2.0*gf2*xdia(mgs,lc,1)*xdia(mgs,lr,1)   &
      &    + gf3*xdia(mgs,lr,2) )
-        ENDIF
-       ELSE ! IF ( ipconc .ge. 3 .and. 
-        IF ( dmrauto <= 0 .or.  rho0(mgs)*qx(mgs,lr) > 1.2*xl2p(mgs) ) THEN  !{
-        IF ( 0.5*xdia(mgs,lr,3) .gt. rh(mgs) ) THEN ! { .or. cx(mgs,lr) .gt. nh(mgs) 
+        endif
+       else ! if ( ipconc .ge. 3 .and. 
+        if ( dmrauto <= 0 .or.  rho0(mgs)*qx(mgs,lr) > 1.2*xl2p(mgs) ) then  !{
+        if ( 0.5*xdia(mgs,lr,3) .gt. rh(mgs) ) then ! { .or. cx(mgs,lr) .gt. nh(mgs) 
 !        IF ( qx(mgs,lc) .gt. qxmin(lc) .and. qx(mgs,lr) .gt. qxmin(lr) ) THEN
-          IF ( 0.5*xdia(mgs,lr,3) .gt. rwradmn ) THEN ! r > 50.e-6 
+          if ( 0.5*xdia(mgs,lr,3) .gt. rwradmn ) then ! r > 50.e-6 
 !          DM0CCC=A2*XNC*XNR*(XVC+XVR)                               ! (A11)
 !         NOTE: murain drops out, so same result for imurain = 1 and 3
             cracw(mgs) = aa2*cx(mgs,lr)*(cx(mgs,lc) - ccwresv(mgs))*(xv(mgs,lc) + xv(mgs,lr))
-          ELSE
-            IF ( imurain == 3 ) THEN
+          else
+            if ( imurain == 3 ) then
 !          DM0CCC=A1*XNC*XNR*(((CNU+2.)/(CNU+1.))*XVC**2+((RNU+2.)/(RNU+1.))*XVR**2) ! (A13)
             cracw(mgs) = aa1*cx(mgs,lr)*(cx(mgs,lc) - ccwresv(mgs))*   &
      &          ((alpha(mgs,lc) + 2.)*xv(mgs,lc)**2/(alpha(mgs,lc) + 1.) +    &
      &          (alpha(mgs,lr) + 2.)*xv(mgs,lr)**2/(alpha(mgs,lr) + 1.))
-            ELSE ! imurain == 1 USE CP00 for rain DSD in diameter
+            else ! imurain == 1 use CP00 for rain DSD in diameter
             cracw(mgs) = aa1*cx(mgs,lr)*(cx(mgs,lc) - ccwresv(mgs))*   &
      &          ((alpha(mgs,lc) + 2.)*xv(mgs,lc)**2/(alpha(mgs,lc) + 1.) +    &
      &          (alpha(mgs,lr) + 6.)*(alpha(mgs,lr) + 5.)*(alpha(mgs,lr) + 4.)*xv(mgs,lr)**2/  &
      &             ((alpha(mgs,lr) + 3.)*(alpha(mgs,lr) + 2.)*(alpha(mgs,lr) + 1.)) )
-            ENDIF ! imurain
-          ENDIF
-        ENDIF ! } rh
-        ENDIF ! } dmrauto
-       ENDIF ! ipconc
-      ENDIF ! qc > qcmin & qr > qrmin
+            endif ! imurain
+          endif
+        endif ! } rh
+        endif ! } dmrauto
+       endif ! ipconc
+      endif ! qc > qcmin & qr > qrmin
         
 ! Rain self collection (cracr) and break-up (factor of ec0)
 !
 !       
         ec0(mgs) = 2.e9
-        IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
+        if ( qx(mgs,lr) .gt. qxmin(lr) ) then
         rwrad = 0.5*xdia(mgs,lr,3)
         
         
         ! check median volume diameter
-        IF ( icracrthresh > 1 ) THEN
-         IF ( imurain == 1 ) THEN
+        if ( icracrthresh > 1 ) then
+         if ( imurain == 1 ) then
            tmp =  (3.67+alpha(mgs,lr))*xdia(mgs,lr,1) ! median volume diameter; units of mm (Ulbrich 1983, JCAM)
-         ELSE ! imurain == 3, 
+         else ! imurain == 3, 
            tmp =  (1.678+alpha(mgs,lr))**(1./3.)*xdia(mgs,lr,1) ! units of mm (using method of Ulbrich 1983. See ventillation_stuff.nb)
-         ENDIF
-        ELSE
+         endif
+        else
           tmp = xdia(mgs,lr,3) - 0.1e-3
-        ENDIF
+        endif
          
 !        IF ( xdia(mgs,lr,3) .gt. 2.0e-3 .or. icracr <= 0 ) THEN
-        IF ( tmp .gt. 1.9e-3 .or. icracr <= 0 ) THEN
+        if ( tmp .gt. 1.9e-3 .or. icracr <= 0 ) then
           ec0(mgs) = 0.0
           cracr(mgs) = 0.0
-        ELSE
-         IF ( dmrauto <= 0 .or.  rho0(mgs)*qx(mgs,lr) > 1.2*xl2p(mgs) ) THEN 
-          IF ( xdia(mgs,lr,3) .lt. 6.1e-4 ) THEN
+        else
+         if ( dmrauto <= 0 .or.  rho0(mgs)*qx(mgs,lr) > 1.2*xl2p(mgs) ) then 
+          if ( xdia(mgs,lr,3) .lt. 6.1e-4 ) then
             ec0(mgs) = 1.0
-          ELSE
+          else
             ec0(mgs) = Exp(-50.0*(50.0*(xdia(mgs,lr,3) - 6.0e-4)))
-          ENDIF
+          endif
           
 
-          IF ( rwrad .ge. 50.e-6 ) THEN
+          if ( rwrad .ge. 50.e-6 ) then
               cracr(mgs) = ec0(mgs)*aa2*cx(mgs,lr)**2*xv(mgs,lr)
-          ELSE
-            IF ( imurain == 3 ) THEN
+          else
+            if ( imurain == 3 ) then
              cracr(mgs) = ec0(mgs)*aa1*(cx(mgs,lr)*xv(mgs,lr))**2*   &
      &                   (alpha(mgs,lr) + 2.)/(alpha(mgs,lr) + 1.)
-            ELSE ! imurain == 1
+            else ! imurain == 1
              cracr(mgs) = ec0(mgs)*aa1*(cx(mgs,lr)*xv(mgs,lr))**2*   &
      &                   (alpha(mgs,lr) + 6.)*(alpha(mgs,lr) + 5.)*(alpha(mgs,lr) + 4.)/ &
      &                  ((alpha(mgs,lr) + 3.)*(alpha(mgs,lr) + 2.)*(alpha(mgs,lr) + 1.))
               
-            ENDIF
-          ENDIF
+            endif
+          endif
 !          cracr(mgs) = Min(cracr(mgs),crmxd(mgs))
-         ENDIF
-        ENDIF
-        ENDIF
+         endif
+        endif
+        endif
 
 !      cracw(mgs) = min(cracw(mgs),cxmxd(mgs,lc)) 
       end do
@@ -16985,8 +16985,8 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 1 .or. ipelec .ge. 1 ) then
       do mgs = 1,ngscnt
 
-      IF ( ipconc .ge. 5 ) THEN
-       IF ( qhacw(mgs) .gt. 0.0 .and. xmas(mgs,lc) .gt. 0.0 ) THEN
+      if ( ipconc .ge. 5 ) then
+       if ( qhacw(mgs) .gt. 0.0 .and. xmas(mgs,lc) .gt. 0.0 ) then
 
 !  This is the explict version of chacw, which turns out to be very close to the
 !  approximation that the droplet size does not change, to within a few percent.
@@ -17003,10 +17003,10 @@ END SUBROUTINE nssl_2mom_driver
         chacw(mgs) = qhacw(mgs)*rho0(mgs)/xmascw(mgs)
 !        chacw(mgs) = min(chacw(mgs),cxmxd(mgs,lc))
         chacw(mgs) = Min( chacw(mgs), 0.5*(cx(mgs,lc) - ccwresv(mgs))*dtpinv )
-       ELSE
+       else
         qhacw(mgs) = 0.0
-       ENDIF
-      ELSE
+       endif
+      else
       ! single-moment
       chacw(mgs) =   &
      &   ((0.25)*pi)*ehw(mgs)*cx(mgs,lc)*cx(mgs,lh)   &
@@ -17017,7 +17017,7 @@ END SUBROUTINE nssl_2mom_driver
       chacw(mgs) = min(chacw(mgs),0.5*cx(mgs,lc)*dtpinv)
 !      chacw(mgs) = min(chacw(mgs),cxmxd(mgs,lc))
 !      chacw(mgs) = min(chacw(mgs),ccmxd(mgs))
-      ENDIF
+      endif
       end do
       end if
 !
@@ -17026,8 +17026,8 @@ END SUBROUTINE nssl_2mom_driver
       chaci0(:) = 0.0
       if ( ipconc .ge. 1 .or. ipelec .ge. 1 ) then
       do mgs = 1,ngscnt
-      IF ( ehi(mgs) .gt. 0.0 .or. ( ehiclsn(mgs) > 0.0 .and. ipelec > 0 )) THEN
-       IF ( ipconc .ge. 5 ) THEN
+      if ( ehi(mgs) .gt. 0.0 .or. ( ehiclsn(mgs) > 0.0 .and. ipelec > 0 )) then
+       if ( ipconc .ge. 5 ) then
 
        vt = Sqrt((vtxbar(mgs,lh,1)-vtxbar(mgs,li,1))**2 +    &
      &            0.04*vtxbar(mgs,lh,1)*vtxbar(mgs,li,1) )
@@ -17037,17 +17037,17 @@ END SUBROUTINE nssl_2mom_driver
      &            dab0lh(mgs,lh,li)*xdia(mgs,lh,3)*xdia(mgs,li,3) +    &
      &            da0(li)*xdia(mgs,li,3)**2 )
 
-       ELSE
+       else
         chaci0(mgs) =   &
      &   ((0.25)*pi)*ehiclsn(mgs)*cx(mgs,li)*cx(mgs,lh)   &
      &  *abs(vtxbar(mgs,lh,1)-vtxbar(mgs,li,1))   &
      &  *(  gf1*xdia(mgs,li,2)   &
      &    + 2.0*gf2*xdia(mgs,li,1)*xdia(mgs,lh,1)   &
      &    + gf3*xdia(mgs,lh,2) )
-        ENDIF
+        endif
 
         chaci(mgs) = min(ehi(mgs)*chaci0(mgs),cimxd(mgs))
-       ENDIF
+       endif
       end do
       end if
 
@@ -17055,7 +17055,7 @@ END SUBROUTINE nssl_2mom_driver
       chacis(:) = 0.0
       if ( lis > 1 .and. ipconc .ge. 5 .or. ipelec .ge. 1 ) then
       do mgs = 1,ngscnt
-      IF ( ehis(mgs) .gt. 0.0 .or. ( ehisclsn(mgs) > 0.0 .and. ipelec > 0 )) THEN
+      if ( ehis(mgs) .gt. 0.0 .or. ( ehisclsn(mgs) > 0.0 .and. ipelec > 0 )) then
 
        vt = Sqrt((vtxbar(mgs,lh,1)-vtxbar(mgs,lis,1))**2 +    &
      &            0.04*vtxbar(mgs,lh,1)*vtxbar(mgs,lis,1) )
@@ -17067,7 +17067,7 @@ END SUBROUTINE nssl_2mom_driver
 
 
         chacis(mgs) = min(ehis(mgs)*chacis0(mgs),cxmxd(mgs,lis))
-       ENDIF
+       endif
       end do
       end if
 !
@@ -17077,8 +17077,8 @@ END SUBROUTINE nssl_2mom_driver
       chacs0(:) = 0.0
       if ( ipconc .ge. 1 .or. ipelec .ge. 1 ) then
       do mgs = 1,ngscnt
-      IF ( ehs(mgs) .gt. 0 ) THEN
-       IF ( ipconc .ge. 5 .or. ( ehsclsn(mgs) > 0.0 .and. ipelec > 0 ) ) THEN
+      if ( ehs(mgs) .gt. 0 ) then
+       if ( ipconc .ge. 5 .or. ( ehsclsn(mgs) > 0.0 .and. ipelec > 0 ) ) then
 
        vt = Sqrt((vtxbar(mgs,lh,1)-vtxbar(mgs,ls,1))**2 +    &
      &            0.04*vtxbar(mgs,lh,1)*vtxbar(mgs,ls,1) )
@@ -17088,16 +17088,16 @@ END SUBROUTINE nssl_2mom_driver
      &            dab0lh(mgs,lh,ls)*xdia(mgs,lh,3)*xdia(mgs,ls,3) +    &
      &            da0(ls)*xdia(mgs,ls,3)**2 )
 
-       ELSE
+       else
       chacs0(mgs) =   &
      &   ((0.25)*pi)*ehsclsn(mgs)*cx(mgs,ls)*cx(mgs,lh)   &
      &  *abs(vtxbar(mgs,lh,1)-vtxbar(mgs,ls,1))   &
      &  *(  gf3*gf1*xdia(mgs,ls,2)   &
      &    + 2.0*gf2*gf2*xdia(mgs,ls,1)*xdia(mgs,lh,1)   &
      &    + gf1*gf3*xdia(mgs,lh,2) )
-      ENDIF
+      endif
       chacs(mgs) = min(ehs(mgs)*chacs0(mgs),csmxd(mgs))
-      ENDIF
+      endif
       end do
       end if
 
@@ -17111,8 +17111,8 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 1 .or. ipelec .ge. 1 ) then
       do mgs = 1,ngscnt
 
-      IF ( lhl .gt. 1 .and. ipconc .ge. 5 ) THEN
-       IF ( qhlacw(mgs) .gt. 0.0 .and. xmas(mgs,lc) .gt. 0.0 ) THEN
+      if ( lhl .gt. 1 .and. ipconc .ge. 5 ) then
+       if ( qhlacw(mgs) .gt. 0.0 .and. xmas(mgs,lc) .gt. 0.0 ) then
 
 !  This is the explict version of chacw, which turns out to be very close to the
 !  approximation that the droplet size does not change, to within a few percent.
@@ -17129,9 +17129,9 @@ END SUBROUTINE nssl_2mom_driver
         chlacw(mgs) = qhlacw(mgs)*rho0(mgs)/xmascw(mgs)
 !        chlacw(mgs) = min(chlacw(mgs),cxmxd(mgs,lc))
         chlacw(mgs) = Min( chlacw(mgs), 0.5*cx(mgs,lc)*dtpinv )
-       ELSE
+       else
         qhlacw(mgs) = 0.0
-       ENDIF
+       endif
 !      ELSE
 !      chlacw(mgs) =
 !     >   ((0.25)*pi)*ehlw(mgs)*cx(mgs,lc)*cx(mgs,lhl)
@@ -17142,7 +17142,7 @@ END SUBROUTINE nssl_2mom_driver
 !      chlacw(mgs) = min(chlacw(mgs),0.5*cx(mgs,lc)*dtpinv)
 !      chlacw(mgs) = min(chlacw(mgs),cxmxd(mgs,lc))
 !      chlacw(mgs) = min(chlacw(mgs),ccmxd(mgs))
-      ENDIF
+      endif
       end do
       end if
 !
@@ -17151,8 +17151,8 @@ END SUBROUTINE nssl_2mom_driver
       chlaci0(:) = 0.0
       if ( ipconc .ge. 1 .or. ipelec .ge. 1 ) then
       do mgs = 1,ngscnt
-      IF ( lhl .gt. 1 .and. ( ehli(mgs) .gt. 0.0 .or. (ipelec > 0 .and. ehliclsn(mgs) > 0.0) )  ) THEN
-       IF ( ipconc .ge. 5 ) THEN
+      if ( lhl .gt. 1 .and. ( ehli(mgs) .gt. 0.0 .or. (ipelec > 0 .and. ehliclsn(mgs) > 0.0) )  ) then
+       if ( ipconc .ge. 5 ) then
 
        vt = Sqrt((vtxbar(mgs,lhl,1)-vtxbar(mgs,li,1))**2 +    &
      &            0.04*vtxbar(mgs,lhl,1)*vtxbar(mgs,li,1) )
@@ -17169,21 +17169,21 @@ END SUBROUTINE nssl_2mom_driver
 !     >  *(  gf1*xdia(mgs,li,2)
 !     >    + 2.0*gf2*xdia(mgs,li,1)*xdia(mgs,lhl,1)
 !     >    + gf3*xdia(mgs,lhl,2) )
-        ENDIF
+        endif
 
         chlaci(mgs) = min(ehli(mgs)*chlaci0(mgs),cimxd(mgs))
-       ENDIF
+       endif
       end do
       end if
 
 
-      IF ( lis > 1 .and. ipconc .ge. 5) THEN
+      if ( lis > 1 .and. ipconc .ge. 5) then
       
       if (ndebug .gt. 0 ) write(0,*) 'ICEZVD_GS: conc 22kk'
       chlacis(:) = 0.0
       chlacis0(:) = 0.0
        do mgs = 1,ngscnt
-      IF ( lhl .gt. 1 .and. ( ehlis(mgs) .gt. 0.0 .or. (ipelec > 0 .and. ehlisclsn(mgs) > 0.0) )  ) THEN
+      if ( lhl .gt. 1 .and. ( ehlis(mgs) .gt. 0.0 .or. (ipelec > 0 .and. ehlisclsn(mgs) > 0.0) )  ) then
 
        vt = Sqrt((vtxbar(mgs,lhl,1)-vtxbar(mgs,lis,1))**2 +    &
      &            0.04*vtxbar(mgs,lhl,1)*vtxbar(mgs,lis,1) )
@@ -17195,9 +17195,9 @@ END SUBROUTINE nssl_2mom_driver
 
 
         chlacis(mgs) = min(ehlis(mgs)*chlacis0(mgs),cxmxd(mgs,lis))
-       ENDIF
+       endif
       end do
-      ENDIF
+      endif
 
 !
 !
@@ -17206,8 +17206,8 @@ END SUBROUTINE nssl_2mom_driver
       chlacs0(:) = 0.0
       if ( ipconc .ge. 1 .or. ipelec .ge. 1 ) then
       do mgs = 1,ngscnt
-      IF ( lhl .gt. 1 .and. ( ehls(mgs) .gt. 0.0 .or. (ipelec > 0 .and. ehlsclsn(mgs) > 0.0) ) ) THEN
-       IF ( ipconc .ge. 5 ) THEN
+      if ( lhl .gt. 1 .and. ( ehls(mgs) .gt. 0.0 .or. (ipelec > 0 .and. ehlsclsn(mgs) > 0.0) ) ) then
+       if ( ipconc .ge. 5 ) then
 
        vt = Sqrt((vtxbar(mgs,lhl,1)-vtxbar(mgs,ls,1))**2 +    &
      &            0.04*vtxbar(mgs,lhl,1)*vtxbar(mgs,ls,1) )
@@ -17224,9 +17224,9 @@ END SUBROUTINE nssl_2mom_driver
 !     >  *(  gf3*gf1*xdia(mgs,ls,2)
 !     >    + 2.0*gf2*gf2*xdia(mgs,ls,1)*xdia(mgs,lhl,1)
 !     >    + gf1*gf3*xdia(mgs,lhl,2) )
-      ENDIF
+      endif
       chlacs(mgs) = min(ehls(mgs)*chlacs0(mgs),csmxd(mgs))
-      ENDIF
+      endif
       end do
       end if
 
@@ -17234,30 +17234,30 @@ END SUBROUTINE nssl_2mom_driver
 ! Ziegler (1985) autoconversion
 !
 !
-      IF ( ipconc .ge. 2 ) THEN
+      if ( ipconc .ge. 2 ) then
       if (ndebug .gt. 0 ) write(0,*) 'conc 26a'
       
-      DO mgs = 1,ngscnt
+      do mgs = 1,ngscnt
         zrcnw(mgs) = 0.0
         qrcnw(mgs) = 0.0
         crcnw(mgs) = 0.0
         cautn(mgs) = 0.0
-      ENDDO
+      enddo
       
-      IF ( dmrauto >= -1 ) THEN !{
-      DO mgs = 1,ngscnt
+      if ( dmrauto >= -1 ) then !{
+      do mgs = 1,ngscnt
 !      qracw(mgs) = 0.0
 !      cracw(mgs) = 0.0
-       IF ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. 1000. .and. temg(mgs) .gt. tfrh+4.) THEN
+       if ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. 1000. .and. temg(mgs) .gt. tfrh+4.) then
        !( .and. w(igs(mgs),jgs,kgs(mgs)) > 5.0) THEN ! DTD: added w threshold for testing                                                                                                            
          volb = xv(mgs,lc)*(1./(1.+alpha(mgs,lc)))**(1./2.)
          cautn(mgs) = Min(ccmxd(mgs),   &
      &      ((alpha(mgs,lc)+2.)/(alpha(mgs,lc)+1.))*aa1*cx(mgs,lc)**2*xv(mgs,lc)**2)
          cautn(mgs) = Max( 0.0d0, cautn(mgs) )
-         IF ( rb(mgs) .le. 7.51d-6 .or. dmrauto == -1) THEN
+         if ( rb(mgs) .le. 7.51d-6 .or. dmrauto == -1) then
            t2s = 1.d30
 !           cautn(mgs) = 0.0
-         ELSE
+         else
 !         XL2P=2.7E-2*XNC*XVC*((1.E12*RB**3*RC)-0.4)
          
 !        T2S=3.72E-3/(((1.E4*RB)-7.5)*XNC*XVC) 
@@ -17268,63 +17268,63 @@ END SUBROUTINE nssl_2mom_driver
            qrcnw(mgs) = Max( 0.0d0, xl2p(mgs)/(t2s*rho0(mgs)) )
            crcnw(mgs) = Max( 0.0d0, Min(3.5e9*xl2p(mgs)/t2s,0.5*cautn(mgs)) )
            
-           IF ( dmrauto == 0 ) THEN
-             IF ( qx(mgs,lr)*rho0(mgs) > 1.2*xl2p(mgs) .and. cx(mgs,lr) > cxmin ) THEN ! Cohard and Pinty (2000a) switch over from (18) to (19)
+           if ( dmrauto == 0 ) then
+             if ( qx(mgs,lr)*rho0(mgs) > 1.2*xl2p(mgs) .and. cx(mgs,lr) > cxmin ) then ! Cohard and Pinty (2000a) switch over from (18) to (19)
                crcnw(mgs) = cx(mgs,lr)/qx(mgs,lr)*qrcnw(mgs)
-             ELSEIF ( ( dmropt == 1 .or. dmropt == 3 ) .and. qx(mgs,lr) > qxmin(lr) ) THEN
+             elseif ( ( dmropt == 1 .or. dmropt == 3 ) .and. qx(mgs,lr) > qxmin(lr) ) then
                tmp = qrcnw(mgs)*cx(mgs,lr)/qx(mgs,lr)
                crcnw(mgs) = Min(tmp,crcnw(mgs) )
-             ELSEIF ( ( dmropt == 4 ) .and. qx(mgs,lr) > qxmin(lr) ) THEN
+             elseif ( ( dmropt == 4 ) .and. qx(mgs,lr) > qxmin(lr) ) then
                tmp = crcnw(mgs)
                tmp2 = qrcnw(mgs)*cx(mgs,lr)/qx(mgs,lr)
                ! try mass-weighted average of old and new Dmr using converted qc mass
                crcnw(mgs) = (tmp*qrcnw(mgs)+tmp2*qx(mgs,lr))/(qrcnw(mgs)+qx(mgs,lr))
-             ELSEIF ( ( dmropt == 5 ) .and. qx(mgs,lr) > qxmin(lr) ) THEN
+             elseif ( ( dmropt == 5 ) .and. qx(mgs,lr) > qxmin(lr) ) then
                tmp = crcnw(mgs)
                tmp2 = qrcnw(mgs)*cx(mgs,lr)/qx(mgs,lr)
                ! try mass-weighted average of old and new Dmr using full qc mass
                crcnw(mgs) = (tmp*qx(mgs,lc)+tmp2*qx(mgs,lr))/(qx(mgs,lc)+qx(mgs,lr))
-             ELSEIF ( ( dmropt == 6 ) .and. qx(mgs,lr) > qxmin(lr) ) THEN
+             elseif ( ( dmropt == 6 ) .and. qx(mgs,lr) > qxmin(lr) ) then
                tmp = crcnw(mgs)
                tmp2 = qrcnw(mgs)*cx(mgs,lr)/qx(mgs,lr)
                ! try mass*diameter-weighted average of old and new Dmr (using full qc mass)
                crcnw(mgs) = (tmp*xdia(mgs,lc,3)*qx(mgs,lc)+tmp2*xdia(mgs,lr,3)*qx(mgs,lr))/(xdia(mgs,lc,3)*qx(mgs,lc)+xdia(mgs,lr,3)*qx(mgs,lr))
-             ELSEIF ( ( dmropt == 7 ) .and. qx(mgs,lr) > qxmin(lr) ) THEN
+             elseif ( ( dmropt == 7 ) .and. qx(mgs,lr) > qxmin(lr) ) then
                tmp = crcnw(mgs)
                tmp2 = qrcnw(mgs)*cx(mgs,lr)/qx(mgs,lr)
                ! try diameter-weighted average of old and new Dmr
                crcnw(mgs) = (tmp*xdia(mgs,lc,3)+tmp2*xdia(mgs,lr,3))/(xdia(mgs,lc,3)+xdia(mgs,lr,3))
-             ELSEIF ( ( dmropt == 8 ) .and. qx(mgs,lr) > qxmin(lr) ) THEN
+             elseif ( ( dmropt == 8 ) .and. qx(mgs,lr) > qxmin(lr) ) then
                tmp = crcnw(mgs)
                tmp2 = qrcnw(mgs)*cx(mgs,lr)/qx(mgs,lr)
                ! try sqrt(diameter)-weighted average of old and new Dmr
                crcnw(mgs) = (tmp*sqrt(xdia(mgs,lc,3))+tmp2*sqrt(xdia(mgs,lr,3)))/(sqrt(xdia(mgs,lc,3))+sqrt(xdia(mgs,lr,3)))
-             ENDIF
-           ELSEIF ( dmrauto == 1  .and. cx(mgs,lr) > cxmin) THEN
-             IF ( qx(mgs,lr) > qxmin(lr) ) THEN
+             endif
+           elseif ( dmrauto == 1  .and. cx(mgs,lr) > cxmin) then
+             if ( qx(mgs,lr) > qxmin(lr) ) then
                tmp = qrcnw(mgs)*cx(mgs,lr)/qx(mgs,lr)
                crcnw(mgs) = Min(tmp,crcnw(mgs) )
-             ENDIF
-           ELSEIF ( dmrauto == 2  .and. cx(mgs,lr) > cxmin) THEN
+             endif
+           elseif ( dmrauto == 2  .and. cx(mgs,lr) > cxmin) then
                tmp = crcnw(mgs)
                tmp2 = qrcnw(mgs)*cx(mgs,lr)/qx(mgs,lr)
                ! try mass-weighted average of old and new Dmr
                crcnw(mgs) = (tmp*qrcnw(mgs)+tmp2*qx(mgs,lr))/(qrcnw(mgs)+qx(mgs,lr))
-           ELSEIF ( dmrauto == 3  .and. cx(mgs,lr) > cxmin) THEN ! adapted from MY/CP code
+           elseif ( dmrauto == 3  .and. cx(mgs,lr) > cxmin) then ! adapted from MY/CP code
               tmp = Max( 2.d0*rh(mgs), dble( xdia(mgs,lr,3) ) )
               crcnw(mgs) = rho0(mgs)*qrcnw(mgs)/(pi/6.*1000.*tmp**3)
-           ENDIF
+           endif
            
-           IF ( crcnw(mgs) < 1.e-30 ) qrcnw(mgs) = 0.0
+           if ( crcnw(mgs) < 1.e-30 ) qrcnw(mgs) = 0.0
 
-           IF ( ipconc >= 6 ) THEN
-           IF ( lzr > 1 .and. qrcnw(mgs) > 0.0 ) THEN
+           if ( ipconc >= 6 ) then
+           if ( lzr > 1 .and. qrcnw(mgs) > 0.0 ) then
 !            vr = rho0(mgs)*qrcnw(mgs)/(1000.*crcnw(mgs))
 !            zrcnw(mgs) = 36.*(xnu(lr)+2.0)*crcnw(mgs)*vr**2/((xnu(lr)+1.0)*pi**2)
              ! DTD: If rain exists at a grid point already either use the alpha-preserving Z-rate eqn. (dmrauto == 1)
              ! or a mass-weighted average of the alpha-preserving Z-rate eqn. and the init. rate eqn. (dmrauto == 2)
              ! or the original initiation rate equation (dmrauto == 0).  Not sure if this is the correct way to go but seems to work ok.
-             IF (qx(mgs,lr) .gt. qxmin(lr) .and. ( dmrauto == 1 .or. dmrauto ==2 ) ) THEN
+             if (qx(mgs,lr) .gt. qxmin(lr) .and. ( dmrauto == 1 .or. dmrauto ==2 ) ) then
               tmp3 = qx(mgs,lr)/cx(mgs,lr)
               tmp4 =  g1x(mgs,lr)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2* &
      &                 ( 2.*tmp3 * qrcnw(mgs) - tmp3**2 * crcnw(mgs)  )
@@ -17334,30 +17334,30 @@ END SUBROUTINE nssl_2mom_driver
               else
                 tmp3 = galpharaut*(6.*rho0(mgs)*qrcnw(mgs)/(pi*xdn0(lr)))**2/crcnw(mgs)
               endif
-              IF ( dmrauto == 1 ) THEN ! Preserve alpha
+              if ( dmrauto == 1 ) then ! Preserve alpha
                 zrcnw(mgs) = tmp4
-              ELSEIF ( dmrauto == 2 ) THEN ! Mass-weighted average
+              elseif ( dmrauto == 2 ) then ! Mass-weighted average
                 zrcnw(mgs) = (tmp3*qrcnw(mgs)+tmp4*qx(mgs,lr))/(qrcnw(mgs)+qx(mgs,lr))
-              ENDIF
+              endif
              else ! original formulation
-              IF ( imurain == 3 ) THEN
+              if ( imurain == 3 ) then
                 vr = rho0(mgs)*qrcnw(mgs)/(1000.) ! crcnw(mgs) not divided here but is in next line, cancels one factor in the numerator
                 zrcnw(mgs) = 36.*(xnu(lc)+2.0)*vr**2/(crcnw(mgs)*(xnu(lc)+1.0)*pi**2)
-              ELSE ! rain in gamma of diameter
-                IF ( dmropt <= 1 .or. dmropt >= 4 .or. ( qx(mgs,lr) < qxmin(lr) .and. cx(mgs,lr) < cxmin ) ) THEN
+              else ! rain in gamma of diameter
+                if ( dmropt <= 1 .or. dmropt >= 4 .or. ( qx(mgs,lr) < qxmin(lr) .and. cx(mgs,lr) < cxmin ) ) then
                   zrcnw(mgs) = galpharaut*(6.*rho0(mgs)*qrcnw(mgs)/(pi*xdn0(lr)))**2/crcnw(mgs)
-                ELSE
+                else
                   tmp3 = qx(mgs,lr)/cx(mgs,lr)
                   zrcnw(mgs) =  g1x(mgs,lr)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2* &
      &                 ( 2.*tmp3 * qrcnw(mgs) - tmp3**2 * crcnw(mgs)  )
-                ENDIF
+                endif
 !             vr = rho0(mgs)*qrcnw(mgs)/(1000.) ! crcnw(mgs) not divided here but is in next line, cancels one factor in the numerator
 !             zrcnw(mgs) = 36.*(xnu(lc)+2.0)*vr**2/(crcnw(mgs)*(xnu(lc)+1.0)*pi**2)
-              ENDIF
+              endif
              endif
 !             z  = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/((alpha(mgs,lr)+1.0)*pi**2)
-           ENDIF 
-           ENDIF ! ipconc >= 6
+           endif 
+           endif ! ipconc >= 6
 !           IF (  crcnw(mgs) .gt. cautn(mgs) .and. crcnw(mgs) .gt. 1.0 )
 !     :          THEN
 !             write(0,*)  'crcnw,cautn ',crcnw(mgs)/cautn(mgs),
@@ -17382,17 +17382,17 @@ END SUBROUTINE nssl_2mom_driver
 !            write(0,*)  rb,0.5*xdia(mgs,lc,1),mgs,igs(mgs),kgs(mgs)
 !           ENDIF
 !           qrcnw(mgs) = Min(qrcnw(mgs),qcmxd(mgs))
-         ENDIF
+         endif
 
 
-       ENDIF
-      ENDDO
+       endif
+      enddo
       
-      ENDIF !} dmrauto >= 0
+      endif !} dmrauto >= 0
 
 
 
-      ELSE
+      else
 
 !
 !  Berry 1968 auto conversion for rain (Orville & Kopp 1977)
@@ -17413,7 +17413,7 @@ END SUBROUTINE nssl_2mom_driver
       end if
       end do
 
-      ENDIF
+      endif
 !
 !
 !
@@ -17475,7 +17475,7 @@ END SUBROUTINE nssl_2mom_driver
 
 
 
-      ENDIF  !  ( ipconc .ge. 2 )
+      endif  !  ( ipconc .ge. 2 )
 
 !
 !
@@ -17495,13 +17495,13 @@ END SUBROUTINE nssl_2mom_driver
       zrfrzf(:)  = 0.0
       qwcnr(:) = 0.0
       
-      IF ( .not. ( ipconc == 0 .and. lwsm6 ) ) THEN
+      if ( .not. ( ipconc == 0 .and. lwsm6 ) ) then
       
       do mgs = 1,ngscnt 
       if ( qx(mgs,lr) .gt. qxmin(lr) .and. temcg(mgs) .lt. -5. .and. ibiggopt > 0 ) then
 !      brz = 100.0
 !      arz = 0.66
-       IF ( ipconc .lt. 3 ) THEN
+       if ( ipconc .lt. 3 ) then
        qrfrz(mgs) =    &
      &  min(   &
      &  (20.0)*(pi**2)*brz*(xdn(mgs,lr)/rho0(mgs))   &
@@ -17511,14 +17511,14 @@ END SUBROUTINE nssl_2mom_driver
         qrfrzf(mgs) = qrfrz(mgs)
 
 !       ELSEIF ( ipconc .ge. 3 .and. xv(mgs,lr) .gt. 1.1*xvmn(lr) ) THEN
-       ELSEIF ( ipconc .ge. 3 ) THEN
+       elseif ( ipconc .ge. 3 ) then
 !         tmp = brz*cx(mgs,lr)*(Exp(Max( -arz*temcg(mgs), 0.0 )) - 1.0)
 !         crfrz(mgs) = xv(mgs,lr)*tmp
 
          frach = 1.0d0
          
 !         IF ( ibiggopt == 2 .and. imurain == 1 .and. lzr < 1 ) THEN ! lzr check because results are weird for 3-moment
-         IF ( ibiggopt == 2 .and. imurain == 1 ) THEN !
+         if ( ibiggopt == 2 .and. imurain == 1 ) then !
          ! integrate from Bigg diameter (for given supercooling Ts) to infinity
            
            volt = exp( 16.2 + 1.0*temcg(mgs) )* 1.0e-6 !  Ts == -temcg ; volt comes from the fit in Fig. 1 in Bigg 1953 (Proc. Phys. Soc. London) 
@@ -17527,16 +17527,16 @@ END SUBROUTINE nssl_2mom_driver
            dbigg = (6./pi* volt )**(1./3.) 
            
            ! perhaps should also test that W > V_t_dbigg, i.e., that drops the size of dbigg are being lifted and cooled. 
-           IF ( dbigg < 8.e-3 ) THEN !{ only bother if freezing diameter is reasonable
+           if ( dbigg < 8.e-3 ) then !{ only bother if freezing diameter is reasonable
            
              ratio = Min(maxratiolu, dbigg/xdia(mgs,lr,1) )
            
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lr)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lr)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lr) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -17559,16 +17559,16 @@ END SUBROUTINE nssl_2mom_driver
            qrfrz(mgs) = (tmp1 + dely*dqiacralphainv*(tmp2 - tmp1))*qx(mgs,lr)*dtpinv
            qrfrzf(mgs) = qrfrz(mgs)
 
-           IF ( qrfrz(mgs)*dtp < qxmin(lh) .or. crfrz(mgs)*dtp < cxmin ) THEN
+           if ( qrfrz(mgs)*dtp < qxmin(lh) .or. crfrz(mgs)*dtp < cxmin ) then
            
              crfrz(mgs) = 0.0
              qrfrz(mgs) = 0.0
              qrfrzf(mgs) = 0.0
             
-           ELSE !{
+           else !{
 
             
-           IF ( ipconc >= 6 .and. lzr > 1 ) THEN
+           if ( ipconc >= 6 .and. lzr > 1 ) then
            ! interpolate along x, i.e., ratio; 
             tmp1 = ziacrratio(i,j) + delx*dqiacrratioinv*(ziacrratio(ip1,j) - ziacrratio(i,j))
             tmp2 = ziacrratio(i,jp1) + delx*dqiacrratioinv*(ziacrratio(ip1,jp1) - ziacrratio(i,jp1))
@@ -17576,9 +17576,9 @@ END SUBROUTINE nssl_2mom_driver
            ! interpolate along alpha; 
            
             zrfrz(mgs) = (tmp1 + dely*dqiacralphainv*(tmp2 - tmp1))*zx(mgs,lr)*dtpinv
-           ENDIF
+           endif
            
-            IF ( ibiggsmallrain > 0 .and. xv(mgs,lr) < 2.*xvmn(lr) .and. ( ibiggsnow == 1 .or. ibiggsnow == 3 ) ) THEN
+            if ( ibiggsmallrain > 0 .and. xv(mgs,lr) < 2.*xvmn(lr) .and. ( ibiggsnow == 1 .or. ibiggsnow == 3 ) ) then
 !            IF ( ibiggsmallrain > 0 .and. xv(mgs,lr) < xvbiggsnow .and. ( ibiggsnow == 1 .or. ibiggsnow == 3 ) ) THEN
              ! rain drops are so small that they cannot be pushed smaller, so put into snow (or cloud ice, depending on ifrzs)
               crfrzf(mgs) = 0.0
@@ -17586,26 +17586,26 @@ END SUBROUTINE nssl_2mom_driver
               crfrzs(mgs) = crfrz(mgs)
               qrfrzs(mgs) = qrfrz(mgs)
 
-              IF ( ipconc >= 6 .and. lzr > 1 ) THEN
+              if ( ipconc >= 6 .and. lzr > 1 ) then
                 zrfrzs(mgs) = zrfrz(mgs)
                 zrfrzf(mgs) = 0.
-              ENDIF
-           ELSEIF ( dbigg < Max( biggsnowdiam, Max(dfrz,dhmn)) .and. ( ibiggsnow == 1 .or. ibiggsnow == 3 ) ) THEN ! { convert some to snow or ice crystals
+              endif
+           elseif ( dbigg < Max( biggsnowdiam, Max(dfrz,dhmn)) .and. ( ibiggsnow == 1 .or. ibiggsnow == 3 ) ) then ! { convert some to snow or ice crystals
             ! temporarily store qrfrz and crfrz in snow terms and caclulate new crfrzf, qrfrzf, and zrfrzf. Leave crfrz etc. alone!
             
             crfrzs(mgs) = crfrz(mgs)
             qrfrzs(mgs) = qrfrz(mgs)
             
-            IF ( ibiggsmallrain > 0 .and. xv(mgs,lr) < 1.2*xvmn(lr) ) THEN
+            if ( ibiggsmallrain > 0 .and. xv(mgs,lr) < 1.2*xvmn(lr) ) then
              ! rain drops are so small that they cannot be pushed smaller, so put into snow (or cloud ice, depending on ifrzs)
             crfrzf(mgs) = 0.0
             qrfrzf(mgs) = 0.0
 
-             IF (ipconc >= 6 .and. lzr > 1 ) THEN
+             if (ipconc >= 6 .and. lzr > 1 ) then
                zrfrzs(mgs) = zrfrz(mgs)
                zrfrzf(mgs) = 0.
-             ENDIF
-            ELSE !{
+             endif
+            else !{
             
            ! recalculate using dhmn for ratio
            ratio = Min( maxratiolu, Max(dfrz,dhmn)/xdia(mgs,lr,1) )
@@ -17613,11 +17613,11 @@ END SUBROUTINE nssl_2mom_driver
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lr)))*dqiacralphainv)
 !           j = Int(Max(alphamin,Min(alphamax,alpha(mgs,lr)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lr)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lr)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lr) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -17644,7 +17644,7 @@ END SUBROUTINE nssl_2mom_driver
             crfrzs(mgs) = crfrzs(mgs) - crfrzf(mgs)
             qrfrzs(mgs) = qrfrzs(mgs) - qrfrzf(mgs)
 
-           IF ( ipconc >= 6 .and. lzr > 1 ) THEN
+           if ( ipconc >= 6 .and. lzr > 1 ) then
             zrfrzs(mgs) = zrfrz(mgs)
            ! interpolate along x, i.e., ratio; 
             tmp1 = ziacrratio(i,j) + delx*dqiacrratioinv*(ziacrratio(ip1,j) - ziacrratio(i,j))
@@ -17655,17 +17655,17 @@ END SUBROUTINE nssl_2mom_driver
             zrfrzf(mgs) = (tmp1 + dely*dqiacralphainv*(tmp2 - tmp1))*zx(mgs,lr)*dtpinv
             zrfrzs(mgs) = zrfrzs(mgs) - zrfrzf(mgs)
             zrfrzf(mgs) = (1000./900.)**2*zrfrzf(mgs)
-           ENDIF
-            ENDIF ! }
-           ELSE
+           endif
+            endif ! }
+           else
             crfrzs(mgs) = 0.0
             qrfrzs(mgs) = 0.0
             zrfrzs(mgs) = 0.0
-           ENDIF ! }
+           endif ! }
            
-           ENDIF !}
+           endif !}
            
-           IF ( (qrfrz(mgs))*dtp > qx(mgs,lr) ) THEN
+           if ( (qrfrz(mgs))*dtp > qx(mgs,lr) ) then
              fac = ( qrfrz(mgs) )*dtp/qx(mgs,lr)
              qrfrz(mgs) = fac*qrfrz(mgs)
              qrfrzs(mgs) = fac*qrfrzs(mgs)
@@ -17673,13 +17673,13 @@ END SUBROUTINE nssl_2mom_driver
              crfrz(mgs) = fac*crfrz(mgs)
              crfrzs(mgs) = fac*crfrzs(mgs)
              crfrzf(mgs) = fac*crfrzf(mgs)
-             IF ( ipconc >= 6 .and. lzr > 1 ) THEN
+             if ( ipconc >= 6 .and. lzr > 1 ) then
                zrfrz(mgs) = fac*zrfrz(mgs)
                zrfrzf(mgs) = fac*zrfrzf(mgs)
-             ENDIF
-           ENDIF
+             endif
+           endif
            
-            ENDIF !}
+            endif !}
 
 !           IF ( (crfrzs(mgs) + crfrz(mgs))*dtp > cx(mgs,lr) ) THEN
 !             fac = ( crfrzs(mgs) + crfrz(mgs) )*dtp/cx(mgs,lr)
@@ -17694,17 +17694,17 @@ END SUBROUTINE nssl_2mom_driver
    !        crfrz(mgs) = crfrzf(mgs) + crfrzs(mgs)
 
            
-         ELSEIF ( ibiggopt == 1 ) THEN
+         elseif ( ibiggopt == 1 ) then
          ! Z85, eq. A34
          tmp = xv(mgs,lr)*brz*cx(mgs,lr)*(Exp(Max( -arz*temcg(mgs), 0.0 )) - 1.0)
-         IF ( .false. .and. tmp .gt. cxmxd(mgs,lr) ) THEN ! {
+         if ( .false. .and. tmp .gt. cxmxd(mgs,lr) ) then ! {
 !           write(iunit,*) 'Bigg Freezing problem!',mgs,igs(mgs),kgs(mgs)
 !           write(iunit,*)  'tmp, cx(lr), xv = ',tmp, cx(mgs,lr), xv(mgs,lr), (Exp(Max( -arz*temcg(mgs), 0.0 )) - 1.0)
 !           write(iunit,*)  'qr,temcg = ',qx(mgs,lr)*1000.,temcg(mgs)
            crfrz(mgs) = cxmxd(mgs,lr) ! cx(mgs,lr)*dtpinv
            qrfrz(mgs) = qxmxd(mgs,lr) ! qx(mgs,lr)*dtpinv
 !           STOP
-         ELSE ! } {
+         else ! } {
          crfrz(mgs) = tmp
  !        crfrzfmx = cx(mgs,lr)*Exp(-4./3.*pi*(40.e-6)**3/xv(mgs,lr))
  !        IF ( crfrz(mgs) .gt. crfrzmx ) THEN
@@ -17712,40 +17712,40 @@ END SUBROUTINE nssl_2mom_driver
  !          qrfrz(mgs) = bfnu*xmas(mgs,lr)*rhoinv(mgs)*crfrzmx
  !          qwcnr(mgs) = cx(mgs,lr) - crfrzmx
  !        ELSE
-         IF ( lzr < 1 ) THEN
-           IF ( imurain == 3 ) THEN
+         if ( lzr < 1 ) then
+           if ( imurain == 3 ) then
              bfnu = bfnu0
-           ELSE !imurain == 1
+           else !imurain == 1
              bfnu = bfnu1
-           ENDIF
-         ELSE
+           endif
+         else
  !         bfnu = 1.0 ! (alpha(mgs,lr)+2.0)/(alpha(mgs,lr)+1.)
-           IF ( imurain == 3 ) THEN
+           if ( imurain == 3 ) then
              bfnu = (alpha(mgs,lr)+2.0)/(alpha(mgs,lr)+1.)
-           ELSE !imurain == 1
+           else !imurain == 1
 !             bfnu = bfnu1
             bfnu = (4. + alpha(mgs,lr))*(5. + alpha(mgs,lr))*(6. + alpha(mgs,lr))/  &
      &            ((1. + alpha(mgs,lr))*(2. + alpha(mgs,lr))*(3. + alpha(mgs,lr)))
 !            bfnu = 1.
-           ENDIF
-         ENDIF 
+           endif
+         endif 
          qrfrz(mgs) = bfnu*xmas(mgs,lr)*rhoinv(mgs)*crfrz(mgs)
 
          qrfrz(mgs) = Min( qrfrz(mgs), 1.*qx(mgs,lr)*dtpinv ) ! qxmxd(mgs,lr) 
          crfrz(mgs) = Min( crfrz(mgs), 1.*cx(mgs,lr)*dtpinv ) !cxmxd(mgs,lr) 
          qrfrz(mgs) = Min( qrfrz(mgs), qx(mgs,lr) )
          qrfrzf(mgs) = qrfrz(mgs)
-         ENDIF !}
+         endif !}
 
          
          
          
-         IF ( crfrz(mgs) .gt. qxmin(lh) ) THEN !{ Yes, it compares cx and qxmin, but this is just to be sure that 
+         if ( crfrz(mgs) .gt. qxmin(lh) ) then !{ Yes, it compares cx and qxmin, but this is just to be sure that 
                                                   ! crfrz is greater than zero in the division
 !          IF ( xdia(mgs,lr,1) .lt. 200.e-6 ) THEN
 !           IF ( xv(mgs,lr) .lt. xvmn(lh) ) THEN
            
-           IF ( (ibiggsnow == 1 .or. ibiggsnow == 3 ) .and. ibiggopt /= 2 ) THEN
+           if ( (ibiggsnow == 1 .or. ibiggsnow == 3 ) .and. ibiggopt /= 2 ) then
            xvfrz = rho0(mgs)*qrfrz(mgs)/(crfrz(mgs)*900.) ! mean volume of frozen drops; 900. for frozen drop density
            frach = 0.5 *(1. +  Tanh(0.2e12 *( xvfrz - 1.15*xvmn(lh))))
 
@@ -17753,66 +17753,66 @@ END SUBROUTINE nssl_2mom_driver
              crfrzs(mgs) = (1.-frach)*crfrz(mgs) ! *rzxh(mgs)
 !             qrfrzf(mgs) = frach*qrfrz(mgs)
            
-           ENDIF
+           endif
            
-           IF ( ipconc .ge. 14 .and. 1.e-3*rho0(mgs)*qrfrz(mgs)/crfrz(mgs) .lt. xvmn(lh) ) THEN
+           if ( ipconc .ge. 14 .and. 1.e-3*rho0(mgs)*qrfrz(mgs)/crfrz(mgs) .lt. xvmn(lh) ) then
              qrfrzs(mgs) = qrfrz(mgs)
              crfrzs(mgs) = crfrz(mgs) ! *rzxh(mgs)
-           ELSE
+           else
 !           crfrz(mgs) = Min( crfrz(mgs), 0.1*cx(mgs,lr)*dtpinv ) ! cxmxd(mgs,lr) 
 !           qrfrz(mgs) = Min( qrfrz(mgs), 0.1*qx(mgs,lr)*dtpinv ) ! qxmxd(mgs,lr) 
              qrfrzf(mgs) = frach*qrfrz(mgs)
 !             crfrzf(mgs) = Min( qrfrz(mgs)*rho0(mgs)/(xdn(mgs,lh)*vgra), crfrz(mgs) )
-            IF ( ibfr .le. 1 ) THEN
+            if ( ibfr .le. 1 ) then
              crfrzf(mgs) = frach*Min(crfrz(mgs), qrfrz(mgs)/(bfnu*1.0*vr1mm*1000.0)*rho0(mgs) ) ! rzxh(mgs)*crfrz(mgs)
-            ELSEIF ( ibfr .eq. 5 ) THEN
+            elseif ( ibfr .eq. 5 ) then
              crfrzf(mgs) = frach*Min(crfrz(mgs), qrfrz(mgs)/(bfnu*vfrz*1000.0)*rho0(mgs) )*rzxh(mgs)  !*crfrz(mgs)
-            ELSEIF ( ibfr .eq. 2 ) THEN
+            elseif ( ibfr .eq. 2 ) then
              crfrzf(mgs) = frach*Min(crfrz(mgs), qrfrz(mgs)/(bfnu*vfrz*1000.0)*rho0(mgs) ) ! rzxh(mgs)*crfrz(mgs)
-            ELSEIF ( ibfr .eq. 6 ) THEN
+            elseif ( ibfr .eq. 6 ) then
              crfrzf(mgs) = frach*Max(crfrz(mgs), qrfrz(mgs)/(bfnu*9.*xv(mgs,lr)*1000.0)*rho0(mgs) ) ! rzxh(mgs)*crfrz(mgs)
-            ELSE
+            else
              crfrzf(mgs) = frach*crfrz(mgs)
-            ENDIF 
+            endif 
 !             crfrzf(mgs) = Min(crfrz(mgs), qrfrz(mgs)/(bfnu*xvmn(lh)*1000.0)*rho0(mgs) ) ! rzxh(mgs)*crfrz(mgs)
 !            IF ( lz(lr) > 1 .and. lz(lh) > 1 ) THEN
 !              crfrzf(mgs) = crfrz(mgs)
 !            ENDIF
             
-           ENDIF
+           endif
 !         crfrz(mgs) = Min( cxmxd(mgs,lr), rho0(mgs)*qrfrz(mgs)/xmas(mgs,lr) )
-         ELSE
+         else
           crfrz(mgs) = 0.0
           qrfrz(mgs) = 0.0
-         ENDIF !}
+         endif !}
 
-         ENDIF ! ibiggopt
+         endif ! ibiggopt
 
-          IF ( lvol(lh) .gt. 1 ) THEN
+          if ( lvol(lh) .gt. 1 ) then
            vrfrzf(mgs) = rho0(mgs)*qrfrzf(mgs)/rhofrz
-          ENDIF
+          endif
 
         
-        IF ( nsplinter .ne. 0 ) THEN
-          IF ( nsplinter .ge. 1000 ) THEN
+        if ( nsplinter .ne. 0 ) then
+          if ( nsplinter .ge. 1000 ) then
            ! Lawson et al. 2015 JAS
            ! ave. diam of freezing drops in microns
             tmp = 0
-            IF ( qrfrz(mgs)*dtp > qxmin(lh) .and. crfrz(mgs) > 1.e-3 ) THEN
+            if ( qrfrz(mgs)*dtp > qxmin(lh) .and. crfrz(mgs) > 1.e-3 ) then
               tmpdiam = 1.e6*( 6.*qrfrz(mgs)/(1000.*pi*crfrz(mgs) ))**(1./3.)  ! avg. diameter of newly frozen drops in microns
               tmp = lawson_splinter_fac*tmpdiam**4*crfrz(mgs)
-            ENDIF
-          ELSEIF ( nsplinter .gt. 0 ) THEN
+            endif
+          elseif ( nsplinter .gt. 0 ) then
             tmp = nsplinter*crfrz(mgs)
-          ELSE
+          else
             tmp = -nsplinter*crfrzf(mgs)
-          ENDIF
+          endif
           csplinter2(mgs) = tmp
           qsplinter2(mgs) = Min(0.1*qrfrz(mgs), tmp*splintermass/rho0(mgs) ) ! makes splinters smaller if too much mass is taken from graupel
 
 !          csplinter(mgs) = csplinter(mgs) + tmp
 !          qsplinter(mgs) = qsplinter(mgs) + Min(0.1*qrfrz(mgs), tmp*splintermass/rho0(mgs) ) ! makes splinters smaller if too much mass is taken from graupel
-        ENDIF
+        endif
 !         IF ( temcg(mgs) .lt. -31.0 ) THEN
 !           qrfrz(mgs) = qx(mgs,lr)*dtpinv + qrcnw(mgs)
 !           qrfrzf(mgs) = qrfrz(mgs)
@@ -17823,14 +17823,14 @@ END SUBROUTINE nssl_2mom_driver
 !         qrfrz(mgs) = Min( qrfrz(mgs), ffrz*qrmxd(mgs) )
 !         crfrz(mgs) = Min( crmxd(mgs), ffrz*crfrz(mgs))
 !         crfrz(mgs) = Min(crmxd(mgs),qrfrz(mgs)*rho0(mgs)/xmas(mgs,lr))
-       ENDIF
+       endif
 !      if ( temg(mgs) .gt. 268.15 ) then
       else
 !      end if
       end if
       end do
       
-      ENDIF
+      endif
 !
 !  Homogeneous freezing of cloud drops to ice crystals
 !  following Bigg (1953) and Ferrier (1994).
@@ -17843,34 +17843,34 @@ END SUBROUTINE nssl_2mom_driver
       cwfrzc(mgs) = 0.0
       qwfrzp(mgs) = 0.0
       cwfrzp(mgs) = 0.0
-      IF ( ibfc .ge. 1 .and. ibfc /= 3 .and. temg(mgs) < 268.15 ) THEN
+      if ( ibfc .ge. 1 .and. ibfc /= 3 .and. temg(mgs) < 268.15 ) then
 !      if ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. 1.  .and.   &
 !     &     .not. (ipconc .ge. 2 .and. xdia(mgs,lc,1) .lt. 10.e-6) ) then
-      if ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. cxmin ) THEN
-      IF ( ipconc < 2 ) THEN
+      if ( qx(mgs,lc) .gt. qxmin(lc) .and. cx(mgs,lc) .gt. cxmin ) then
+      if ( ipconc < 2 ) then
       qwfrz(mgs) = ((2.0)*(brz)/(xdn(mgs,lc)*cx(mgs,lc)))   &
      &  *(exp(max(-arz*temcg(mgs), 0.0))-1.0)   &
      &  *rho0(mgs)*(qx(mgs,lc)**2)
       qwfrz(mgs) = max(qwfrz(mgs), 0.0)
       qwfrz(mgs) = min(qwfrz(mgs),qcmxd(mgs))
          cwfrz(mgs) = qwfrz(mgs)*rho0(mgs)/xmas(mgs,li)
-       ELSEIF ( ipconc .ge. 2 ) THEN
-         IF ( xdia(mgs,lc,3) > 0.e-6 ) THEN
+       elseif ( ipconc .ge. 2 ) then
+         if ( xdia(mgs,lc,3) > 0.e-6 ) then
           volt = exp( 16.2 + 1.0*temcg(mgs) )* 1.0e-6 !  Ts == -temcg ; volt comes from the fit in Fig. 1 in Bigg 1953 
                                                ! for mean temperature for freezing: -ln (V) = a*Ts - b
                                                ! volt is given in cm**3, so factor of 1.e-6 to convert to m**3
 !           dbigg = (6./pi* volt )**(1./3.) 
 
-         IF (  alpha(mgs,lc) == 0.0 ) THEN
+         if (  alpha(mgs,lc) == 0.0 ) then
          cwfrz(mgs) = cx(mgs,lc)*Exp(-volt/xv(mgs,lc))*dtpinv ! number of droplets with volume greater than volt
 !turn off limit so that all can freeze at low temp
 !!!       cwfrz(mgs) = Min(cwfrz(mgs),ccmxd(mgs))
 
          qwfrz(mgs) = cwfrz(mgs)*xdn0(lc)*rhoinv(mgs)*(volt + xv(mgs,lc))
-          ELSE
+          else
             ratio = (1. + alpha(mgs,lc))*volt/xv(mgs,lc)
             
-            IF ( .false. .and. usegamxinfcnu ) THEN
+            if ( .false. .and. usegamxinfcnu ) then
               i = Nint(dgami*(1. + alpha(mgs,lc)))
               gcnup1 = gmoi(i)
               i = Nint(dgami*(2. + alpha(mgs,lc)))
@@ -17880,7 +17880,7 @@ END SUBROUTINE nssl_2mom_driver
 
               qwfrz(mgs) = cx(mgs,lc)*xdn0(lc)*xv(mgs,lc)*rhoinv(mgs)*Gamxinf(2.+alpha(mgs,lc), ratio)/(dtp*gcnup2) !  gamxinflu(i,j,12,1)
             
-            ELSE
+            else
             
               ratio = Min( maxratiolu, ratio )
 !              write(0,*) 'cwfrz: temp,ratio = ',temcg(mgs),ratio
@@ -17894,18 +17894,18 @@ END SUBROUTINE nssl_2mom_driver
 !              write(0,*) 'cwfrz: tmp2 = ',tmp
               qwfrz(mgs) = cx(mgs,lc)*xdn0(lc)*xv(mgs,lc)*rhoinv(mgs)*dtpinv*tmp ! Gamxinf(2.+alpha(mgs,lc), ratio)/(dtp*gcnup2) !  gamxinflu(i,j,12,1)
             
-            ENDIF
+            endif
           
-          ENDIF
+          endif
 
-         ENDIF
-       ENDIF
+         endif
+       endif
       if ( temg(mgs) .gt. 268.15 ) then
       qwfrz(mgs) = 0.0
       cwfrz(mgs) = 0.0
       end if
       end if
-      ENDIF
+      endif
 !
         if ( xplate(mgs) .eq. 1 ) then
           qwfrzp(mgs) = qwfrz(mgs)
@@ -17942,13 +17942,13 @@ END SUBROUTINE nssl_2mom_driver
        qwctfzc(mgs) = 0.0
        cwctfzp(mgs) = 0.0
        qwctfzp(mgs) = 0.0
-       IF ( icfn .ge. 1 ) THEN
+       if ( icfn .ge. 1 ) then
 
-       IF ( temg(mgs) .lt. 271.15  .and. qx(mgs,lc) .gt. qxmin(lc)) THEN
+       if ( temg(mgs) .lt. 271.15  .and. qx(mgs,lc) .gt. qxmin(lc)) then
 
 !       find available # of ice nuclei & limit value to max depletion of cloud water
 
-        IF ( icfn .ge. 2 ) THEN
+        if ( icfn .ge. 2 ) then
          ccia(mgs) = exp( 4.11 - (0.262)*temcg(mgs) )  ! in m-3, see Walko et al. 1995; 1000*exp(-2.8 -b*t) = exp(6.91)*exp(-2.8 - b*t) = exp(4.11 -b*t)
          !ccia(mgs) = Min(cwctfz(mgs), ccmxd(mgs) )
 
@@ -17984,21 +17984,21 @@ END SUBROUTINE nssl_2mom_driver
 !          write(6,*) 'more = ',nstep,ssw(mgs),dfar(mgs),gtp(mgs),felv(mgs),pres(mgs)
 !         ENDIF
 
-        ELSEIF ( icfn .eq. 1 ) THEN
-         IF ( wvel(mgs) .lt. -0.05 ) THEN ! older kludgy version
+        elseif ( icfn .eq. 1 ) then
+         if ( wvel(mgs) .lt. -0.05 ) then ! older kludgy version
            cwctfz(mgs) = cfnfac*exp( (-2.80) - (0.262)*temcg(mgs) )
            cwctfz(mgs) = Min((1.0e3)*cwctfz(mgs), ccmxd(mgs) )  !convert to m-3
-         ENDIF
-        ENDIF   ! icfn
+         endif
+        endif   ! icfn
 
-        IF ( ipconc .ge. 2 ) THEN
+        if ( ipconc .ge. 2 ) then
          cwctfz(mgs) = Min( cwctfz(mgs)*dtpinv, ccmxd(mgs) )
          qwctfz(mgs) = xmas(mgs,lc)*cwctfz(mgs)/rho0(mgs)
-        ELSE
+        else
          qwctfz(mgs) = (cimasn)*cwctfz(mgs)/(dtp*rho0(mgs))
          qwctfz(mgs) = max(qwctfz(mgs), 0.0)
          qwctfz(mgs) = min(qwctfz(mgs),qcmxd(mgs))
-        ENDIF
+        endif
 
 !
         if ( xplate(mgs) .eq. 1 ) then
@@ -18021,7 +18021,7 @@ END SUBROUTINE nssl_2mom_driver
 !
        end if
 
-       ENDIF ! icfn
+       endif ! icfn
 
       end do
 !
@@ -18039,7 +18039,7 @@ END SUBROUTINE nssl_2mom_driver
       qicichr(mgs) = 0.0
       cipiphr(mgs) = 0.0
       qipiphr(mgs) = 0.0
-      IF ( ihrn .ge. 1 ) THEN
+      if ( ihrn .ge. 1 ) then
       if ( qx(mgs,lc) .gt. qxmin(lc) ) then
       if ( temg(mgs) .lt. 273.15 ) then
 !      write(iunit,'(3(1x,i3),3(1x,1pe12.5))')
@@ -18052,7 +18052,7 @@ END SUBROUTINE nssl_2mom_driver
 !     : (alog(cx(mgs,lc)*(1.e-6)/(3.0)) *
 !     >  ((1.e-3)*rho0(mgs)*qx(mgs,lc))/(cx(mgs,lc)*(1.e-6)))
 
-      IF ( Log(cx(mgs,lc)*(1.e-6)/(3.0)) .gt. 0.0 ) THEN
+      if ( Log(cx(mgs,lc)*(1.e-6)/(3.0)) .gt. 0.0 ) then
       ciihr(mgs) = ((1.69e17)/dthr)   &
      & *(log(cx(mgs,lc)*(1.e-6)/(3.0)) *   &
      &  ((1.e-3)*rho0(mgs)*qx(mgs,lc))/(cx(mgs,lc)*(1.e-6)))**(7./3.)
@@ -18060,7 +18060,7 @@ END SUBROUTINE nssl_2mom_driver
       qiihr(mgs) = hrifac*ciihr(mgs)/rho0(mgs)
       qiihr(mgs) = max(qiihr(mgs), 0.0)
       qiihr(mgs) = min(qiihr(mgs),qcmxd(mgs))
-      ENDIF
+      endif
 !
       if ( xplate(mgs) .eq. 1 ) then
       qipiphr(mgs) = qiihr(mgs)
@@ -18077,7 +18077,7 @@ END SUBROUTINE nssl_2mom_driver
 !
       end if
       end if
-      ENDIF ! ihrn
+      endif ! ihrn
       end do
 !
 !
@@ -18110,13 +18110,13 @@ END SUBROUTINE nssl_2mom_driver
       cscnvis(mgs) = 0.0
 !      IF ( .false. ) THEN
 !      IF ( temg(mgs) .lt. tfr .and. ssi(mgs) .gt. 1.01 .and. qx(mgs,li) .gt. qxmin(li) ) THEN
-      IF ( temg(mgs) .lt. tfr .and. qx(mgs,li) .gt. qxmin(li) ) THEN
-        IF ( ipconc .ge. 4 .and. .false. ) THEN
+      if ( temg(mgs) .lt. tfr .and. qx(mgs,li) .gt. qxmin(li) ) then
+        if ( ipconc .ge. 4 .and. .false. ) then
          if ( cx(mgs,li) .gt. 10. .and. xdia(mgs,li,1) .gt. 50.e-6 ) then !{
          cirdiatmp =   &
      &  (qx(mgs,li)*rho0(mgs)   &
      & /(pi*xdn(mgs,li)*cx(mgs,li)))**(1./3.)
-          IF ( cirdiatmp .gt. 100.e-6 ) THEN !{
+          if ( cirdiatmp .gt. 100.e-6 ) then !{
           qscnvi(mgs) =   &
      &  ((pi*xdn(mgs,li)*cx(mgs,li)) / (6.0*rho0(mgs)*dtp))   &
      & *exp(-hdia0/cirdiatmp)   &
@@ -18124,21 +18124,21 @@ END SUBROUTINE nssl_2mom_driver
      &  + 6.0*(hdia0)*(cirdiatmp**2) + 6.0*(cirdiatmp**3) )
       qscnvi(mgs) =   &
      &  min(qscnvi(mgs),qimxd(mgs))
-          IF ( ipconc .ge. 4 ) THEN
+          if ( ipconc .ge. 4 ) then
             cscnvi(mgs) = Min( cimxd(mgs), cx(mgs,li)*Exp(-hdia0/cirdiatmp))
-          ENDIF
-         ENDIF  ! }
+          endif
+         endif  ! }
         end if ! }
 
-       ELSEIF ( ipconc .lt. 4 ) THEN
+       elseif ( ipconc .lt. 4 ) then
 
         qscnvi(mgs) = 0.001*eii(mgs)*max((qx(mgs,li)-1.e-3),0.0)
         qscnvi(mgs) = min(qscnvi(mgs),qxmxd(mgs,li))
         cscnvi(mgs) = qscnvi(mgs)*rho0(mgs)/xmas(mgs,li)
         cscnvis(mgs) = 0.5*cscnvi(mgs)
 
-       ENDIF
-      ENDIF
+       endif
+      endif
 !      ENDIF
       end do
 
@@ -18163,9 +18163,9 @@ END SUBROUTINE nssl_2mom_driver
       civentg = 1.70
 
       do mgs = 1,ngscnt
-      IF ( icond .eq. 1 .or. temg(mgs) .le. tfrh    &
-     &      .or. (qx(mgs,lr) .le. qxmin(lr) .and. qx(mgs,lc) .le. qxmin(lc)) ) THEN
-      IF ( qx(mgs,li) .gt. qxmin(li) ) THEN
+      if ( icond .eq. 1 .or. temg(mgs) .le. tfrh    &
+     &      .or. (qx(mgs,lr) .le. qxmin(lr) .and. qx(mgs,lc) .le. qxmin(lc)) ) then
+      if ( qx(mgs,li) .gt. qxmin(li) ) then
       cireyn =   &
      &  (civenta*xdia(mgs,li,1)**civentb   &
      &  +civentc*xdia(mgs,li,1)**civentd)   &
@@ -18178,12 +18178,12 @@ END SUBROUTINE nssl_2mom_driver
       if ( xcivent .ge. 1.0 ) then
       civent(mgs) = 0.86 + 0.28*xcivent
       end if
-      ELSE
+      else
        civent(mgs) = 0.0
-      ENDIF
+      endif
 
 
-      ENDIF ! icond .eq. 1
+      endif ! icond .eq. 1
       end do
 
 !
@@ -18193,27 +18193,27 @@ END SUBROUTINE nssl_2mom_driver
       rwventa = (0.78)*gmoi(igmrwa)  ! 0.78
       rwventb = (0.308)*gmoi(igmrwb) ! 0.562825
       do mgs = 1,ngscnt
-      IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
-        IF ( ipconc .ge. 3 ) THEN
-          IF ( imurain == 3 ) THEN
-           IF ( izwisventr == 1 ) THEN
+      if ( qx(mgs,lr) .gt. qxmin(lr) ) then
+        if ( ipconc .ge. 3 ) then
+          if ( imurain == 3 ) then
+           if ( izwisventr == 1 ) then
             rwvent(mgs) = ventrx(mgs)*(1.6 + 124.9*(1.e-3*rho0(mgs)*qx(mgs,lr))**.2046)
-           ELSE ! izwisventr = 2
+           else ! izwisventr = 2
 !  Following Wisner et al. (1972) but using gamma of volume. Note that Ferrier rain fall speed does not integrate with gamma of volume, so using Vr = ar*d^br
           rwvent(mgs) =   &
      &  (0.78*ventrx(mgs) + 0.308*ventrxn(mgs)*fvent(mgs)   &
      &   *Sqrt((ar*rhovt(mgs)))   &
      &    *(xdia(mgs,lr,1)**((1.0+br)/2.0)) )
-           ENDIF
+           endif
 
-          ELSE ! imurain == 1
+          else ! imurain == 1
        ! linear interpolation of complete gamma function
 !        tmp = 2. + alpha(mgs,lr)
 !        i = Int(dgami*(tmp))
 !        del = tmp - dgam*i
 !        x = gmoi(i) + (gmoi(i+1) - gmoi(i))*del*dgami
 
-        IF ( iferwisventr == 1 ) THEN
+        if ( iferwisventr == 1 ) then
 
   ! Ferrier fall speed in the ventillation term [uses fx(lr) ]
   
@@ -18221,7 +18221,7 @@ END SUBROUTINE nssl_2mom_driver
 
         x =  1. + alpha(mgs,lr)
 
-        IF ( ipconc >= 6 .and. lzr > 1 ) THEN ! 3 moment
+        if ( ipconc >= 6 .and. lzr > 1 ) then ! 3 moment
         tmp = 1. + alpr ! alpha(mgs,lr)
         i = Int(dgami*(tmp))
         del = tmp - dgam*i
@@ -18231,9 +18231,9 @@ END SUBROUTINE nssl_2mom_driver
         i = Int(dgami*(tmp))
         del = tmp - dgam*i
         y = (gmoi(i) + (gmoi(i+1) - gmoi(i))*del*dgami)/g1palp ! ratio of gamma functions
-        ELSE
+        else
          y = ventrxn(mgs)
-        ENDIF
+        endif
 
 !         vent1 = dble(xdia(mgs,lr,1))**(-2. - alpr) ! Actually OK
 !         vent2 = dble(1./xdia(mgs,lr,1) + 0.5*fx(lr))**dble(2.5+alpr+0.5*bx(lr))  ! Actually OK
@@ -18254,7 +18254,7 @@ END SUBROUTINE nssl_2mom_driver
 !     &            Sqrt(ax(lr)*rhovt(mgs))*(vent1/vent2)
 
 
-        ELSEIF ( iferwisventr == 2 ) THEN
+        elseif ( iferwisventr == 2 ) then
           
 !  Following Wisner et al. (1972) but using gamma of volume. Note that Ferrier rain fall speed does not integrate with gamma of volume, so using Vr = ar*d^br
          x =  1. + alpha(mgs,lr)
@@ -18265,7 +18265,7 @@ END SUBROUTINE nssl_2mom_driver
      &    *(xdia(mgs,lr,1)**((1.0+br)/2.0)) )
 
 
-        IF ( ipconc >= 7 ) THEN
+        if ( ipconc >= 7 ) then
         alpr = Min(alpharmax,alpha(mgs,lr) )
 
            tmp = alpr + 5.5 + br/2.
@@ -18280,21 +18280,21 @@ END SUBROUTINE nssl_2mom_driver
      &    0.308*fvent(mgs)*   &
      &            Sqrt(ax(lr)*rhovt(mgs))*(y/gf1palp(mgs))*(xdia(mgs,lr,1)**((1.0+br)/2.0))
 
-        ENDIF
+        endif
 
           
-          ENDIF ! iferwisventr
+          endif ! iferwisventr
           
-          ENDIF ! imurain
-        ELSE
+          endif ! imurain
+        else
          rwvent(mgs) =   &
      &  (rwventa + rwventb*fvent(mgs)   &
      &   *Sqrt((ar*rhovt(mgs)))   &
      &    *(xdia(mgs,lr,1)**((1.0+br)/2.0)) )
-        ENDIF
-      ELSE
+        endif
+      else
        rwvent(mgs) = 0.0
-      ENDIF
+      endif
       end do
 !
       igmswa = 100.0*2.0
@@ -18302,19 +18302,19 @@ END SUBROUTINE nssl_2mom_driver
       swventa = (0.78)*gmoi(igmswa)
       swventb = (0.308)*gmoi(igmswb)
       do mgs = 1,ngscnt
-      IF ( qx(mgs,ls) .gt. qxmin(ls) ) THEN
-      IF ( ipconc .ge. 4 ) THEN
+      if ( qx(mgs,ls) .gt. qxmin(ls) ) then
+      if ( ipconc .ge. 4 ) then
       swvent(mgs) = 0.65 + 0.44*fvent(mgs)*Sqrt(vtxbar(mgs,ls,1)*xdia(mgs,ls,1))
-      ELSE
+      else
 ! 10-ice version:
        swvent(mgs) =   &
      &  (swventa + swventb*fvent(mgs)   &
      &   *Sqrt((cs*rhovt(mgs)))   &
      &   *(xdia(mgs,ls,1)**((1.0+ds)/2.0)) )
-      ENDIF
-      ELSE
+      endif
+      else
       swvent(mgs) = 0.0
-      ENDIF
+      endif
       end do
 !
 !
@@ -18328,14 +18328,14 @@ END SUBROUTINE nssl_2mom_driver
       hwventy(:) = 0.0
 
       do mgs = 1,ngscnt
-      IF ( qx(mgs,lh) .gt. qxmin(lh) ) THEN
+      if ( qx(mgs,lh) .gt. qxmin(lh) ) then
        hwventc = (4.0*gr/(3.0*cdxgs(mgs,lh)))**(0.25)
-       IF ( .false. .or. alpha(mgs,lh) .eq. 0.0 ) THEN
+       if ( .false. .or. alpha(mgs,lh) .eq. 0.0 ) then
         hwvent(mgs) =   &
      &  ( hwventa + hwventb*hwventc*fvent(mgs)   &
      &    *((xdn(mgs,lh)/rho0(mgs))**(0.25))   &
      &    *(xdia(mgs,lh,1)**(0.75)))
-       ELSE ! Ferrier 1994, eq. B.36
+       else ! Ferrier 1994, eq. B.36
        ! linear interpolation of complete gamma function
 !        tmp = 2. + alpha(mgs,lh)
 !        i = Int(dgami*(tmp))
@@ -18363,33 +18363,33 @@ END SUBROUTINE nssl_2mom_driver
 !     &    0.308*fvent(mgs)*y*(xdia(mgs,lh,1)**(0.5 + 0.5*bxx(mgs,lh)))*   &
 !     &            Sqrt(axx(mgs,lh)*rhovt(mgs)) )
        
-       ENDIF
-      ELSE
+       endif
+      else
       hwvent(mgs) = 0.0
       hwventy(mgs) = 0.0
-      ENDIF
+      endif
       end do
       
 
       hlvent(:) = 0.0
       hlventy(:) = 0.0
 
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
       igmhwa = 100.0*2.0
       igmhwb = 100.0*2.75
       hwventa = (0.78)*gmoi(igmhwa)
       hwventb = (0.308)*gmoi(igmhwb)
 !      hwventc = (4.0*gr/(3.0*cdx(lhl)))**(0.25)
       do mgs = 1,ngscnt
-      IF ( qx(mgs,lhl) .gt. qxmin(lhl) ) THEN
+      if ( qx(mgs,lhl) .gt. qxmin(lhl) ) then
       hwventc = (4.0*gr/(3.0*cdxgs(mgs,lhl)))**(0.25)
 
-       IF ( .false. .or. alpha(mgs,lhl) .eq. 0.0 ) THEN
+       if ( .false. .or. alpha(mgs,lhl) .eq. 0.0 ) then
         hlvent(mgs) =   &
      &  ( hwventa + hwventb*hwventc*fvent(mgs)   &
      &    *((xdn(mgs,lhl)/rho0(mgs))**(0.25))   &
      &    *(xdia(mgs,lhl,1)**(0.75)))
-       ELSE ! Ferrier 1994, eq. B.36
+       else ! Ferrier 1994, eq. B.36
        ! linear interpolation of complete gamma function
 !        tmp = 2. + alpha(mgs,lhl)
 !        i = Int(dgami*(tmp))
@@ -18418,10 +18418,10 @@ END SUBROUTINE nssl_2mom_driver
 !     &            Sqrt(axx(mgs,lhl)*rhovt(mgs)))
 !     :            Sqrt(xdn(mgs,lhl)*ax(lhl)*rhovt(mgs)/rg0))/tmp
 
-        ENDIF
-       ENDIF
+        endif
+       endif
       end do
-      ENDIF
+      endif
 
 !
 !
@@ -18471,10 +18471,10 @@ END SUBROUTINE nssl_2mom_driver
       qimlr(:) = 0.0 ! this is not used. qi melts to qc way down in the code.
       qhmlr(:) = 0.0
       qhlmlr(:) = 0.0
-      IF ( lhwlg > 1 ) THEN
+      if ( lhwlg > 1 ) then
         qhmlrlg(:) = 0.0
         qhlmlrlg(:) = 0.0
-      ENDIF
+      endif
       qhfzh(:) = 0.0
       qffzf(:) = 0.0
       qhlfzhl(:) = 0.0
@@ -18512,14 +18512,14 @@ END SUBROUTINE nssl_2mom_driver
       if ( .not. mixedphase ) then !{
       do mgs = 1,ngscnt
 !
-      IF ( temg(mgs) .gt. tfr ) THEN
+      if ( temg(mgs) .gt. tfr ) then
       
-      IF (  qx(mgs,ls) .gt. qxmin(ls) ) THEN
+      if (  qx(mgs,ls) .gt. qxmin(ls) ) then
       qsmlr(mgs) =   &
      &   min(   &
      &  (c1sw*fmlt1(mgs)*cx(mgs,ls)*swvent(mgs)*xdia(mgs,ls,1) ) & ! /rhosm    &
      &   , 0.0 )
-      ENDIF
+      endif
 
       
 !       IF ( qx(mgs,ls) .gt. 0.1e-4 ) write(0,*) 'qsmlr: ',qsmlr(mgs),qx(mgs,ls),cx(mgs,ls),fmlt1(mgs),
@@ -18533,15 +18533,15 @@ END SUBROUTINE nssl_2mom_driver
 !     >   fmlt2(mgs)*(qsacr(mgs)+qsacw(mgs)) )
 !     <   , 0.0 )
 
-      IF (  qx(mgs,lh) .gt. qxmin(lh) ) THEN
+      if (  qx(mgs,lh) .gt. qxmin(lh) ) then
 
-      IF ( ibinhmlr == 0 .or. lzh < 1 ) THEN
+      if ( ibinhmlr == 0 .or. lzh < 1 ) then
        qhmlr(mgs) =   &
      &   meltfac*min(   &
      &  fmlt1(mgs)*cx(mgs,lh)*hwvent(mgs)*xdia(mgs,lh,1)   &
      &  + fmlt2(mgs)*(qhacrmlr(mgs)+qhacwmlr(mgs))    &
      &   , 0.0 )
-       ELSEIF ( ibinhmlr == 1 ) THEN ! use incomplete gamma functions to approximate the bin results
+       elseif ( ibinhmlr == 1 ) then ! use incomplete gamma functions to approximate the bin results
 
 
        qhmlr(mgs) =   &
@@ -18562,22 +18562,22 @@ END SUBROUTINE nssl_2mom_driver
         del = tmp - dgam*i
         g4palp = gmoi(i) + (gmoi(i+1) - gmoi(i))*del*dgami
  
-       DO k = 1,numshedregimes ! do not need mltdiam4 -- treat as infinity; goes to 3 to cover the top 3 diameters (independent of ndiam, the number of smaller diameters)
+       do k = 1,numshedregimes ! do not need mltdiam4 -- treat as infinity; goes to 3 to cover the top 3 diameters (independent of ndiam, the number of smaller diameters)
         
 !        ratio = mltdiam1/xdia(mgs,lh,1)
         ratio = Min( maxratiolu, mltdiam(ndiam+k)/xdia(mgs,lh,1) )
 
         
-        IF ( usegamxinf2 ) THEN
+        if ( usegamxinf2 ) then
            x = gamxinfdp(2. + alpha(mgs,lh), ratio)/g1palp
-        ELSE
+        else
            x = gaminterp(ratio,alpha(mgs,lh),2,1)
-        ENDIF ! usegamxinf
+        endif ! usegamxinf
 
 ! qxd(ndiam+2), cxd(ndiam+2), qhml(ndiam+2)        
-        IF ( usegamxinf2 ) THEN
+        if ( usegamxinf2 ) then
            cxd1 = cx(mgs,lh)*(1. - gamxinfdp(1. + alpha(mgs,lh), ratio)/g1palp)
-        ELSE
+        else
 
           tmp = gaminterp(ratio,alpha(mgs,lh),1,1)
 
@@ -18585,13 +18585,13 @@ END SUBROUTINE nssl_2mom_driver
 !           tmp = gamxinfdp(1. + alpha(mgs,lh), ratio)/g1palp
 !          ENDIF
           cxd1 = cx(mgs,lh)*(1. - tmp)
-        ENDIF
+        endif
 
          cxd(ndiam+k) = cxd1
 
-        IF ( usegamxinf2 ) THEN
+        if ( usegamxinf2 ) then
          qxd1 = qx(mgs,lh)*(1. - gamxinfdp(4. + alpha(mgs,lh), ratio)/g4palp)
-        ELSE
+        else
 
           tmp = gaminterp(ratio,alpha(mgs,lh),4,1)
 
@@ -18600,17 +18600,17 @@ END SUBROUTINE nssl_2mom_driver
 !           ENDIF
            
            qxd1 = qx(mgs,lh)*(1. - tmp)
-        ENDIF
+        endif
 
          qxd(ndiam+k) = qxd1
 
-        IF ( usegamxinf2 ) THEN
+        if ( usegamxinf2 ) then
           y =  gamxinfdp(2.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh), ratio)/g1palp
-        ELSE
+        else
 
           y = gaminterp(ratio,alpha(mgs,lh),3,1)
 
-        ENDIF
+        endif
         
           hwvent1 =  0.78*x + y*hwventy(mgs) 
 
@@ -18628,9 +18628,9 @@ END SUBROUTINE nssl_2mom_driver
 !        ENDIF
 
        
-       ENDDO ! k
+       enddo ! k
 
-         IF ( numshedregimes == 2 ) THEN
+         if ( numshedregimes == 2 ) then
 
            dqhml(ndiam+2) = qhml(ndiam+2) ! qhml0(ndiam+3) - qhml0(ndiam+2) ! amount of melting for  19mm < D < mltdiam4
            dqhml(ndiam+1) = qhml0(ndiam+2) - qhml0(ndiam+1) ! amount of melting for 9mm < D < 19mm
@@ -18640,7 +18640,7 @@ END SUBROUTINE nssl_2mom_driver
            qhmlr12 = qhml(ndiam+1)-qhml(ndiam+2) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
 
          
-         ELSEIF ( numshedregimes == 3 ) THEN
+         elseif ( numshedregimes == 3 ) then
          
            dqhml(ndiam+3) = qhml(ndiam+3) ! qhml0(ndiam+3) - qhml0(ndiam+2) ! amount of melting for  19mm < D < mltdiam4
            dqhml(ndiam+2) = qhml0(ndiam+3) - qhml0(ndiam+2) ! amount of melting for  19mm < D < mltdiam3
@@ -18652,42 +18652,42 @@ END SUBROUTINE nssl_2mom_driver
            qhmlr12 = qhml(ndiam+1)-qhml(ndiam+2) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
            qhmlr23 = qhml(ndiam+2)-qhml(ndiam+3) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
          
-         ENDIF
+         endif
 
 
-         IF ( .not. mixedphase ) qhmlrlg(mgs) = qhmlr1
+         if ( .not. mixedphase ) qhmlrlg(mgs) = qhmlr1
          
 
-        IF ( igs(mgs) == 40 .and. qhmlr(mgs) < -qxmin(lh) ) THEN
+        if ( igs(mgs) == 40 .and. qhmlr(mgs) < -qxmin(lh) ) then
  !         write(iunit,*) 'k,qhml0(n+1,+2,+3) = ',kgs(mgs),qhml0(ndiam+1),qhml0(ndiam+2),qhml0(ndiam+3)
  !         write(iunit,*) 'k,qhml(n+1,+2,+3) = ',kgs(mgs),qhml(ndiam+1),qhml(ndiam+2),qhml(ndiam+3)
  !         write(iunit,*) 'qhmlr1,qhmlr2,qhmlr12 = ',qhmlr1,qhmlr2,qhmlr12,qhml(ndiam+1)-qhml(ndiam+2)
  !         write(iunit,*) 'qhmlr,qhmlrlg = ',qhmlr(mgs),qhmlrlg(mgs)
-        ENDIF
+        endif
 
 
 ! First calc of number rate from 0 to D1
 ! numdiam is the number of diameter "bins" for finding the number loss at diameters less than mltdiam1 (9mm)
 ! If alpha > 1.5, this will be replaced with integrated value
 
-        DO k = 1,numdiam !{
+        do k = 1,numdiam !{
         
 !        ratio = mltdiam05/xdia(mgs,lh,1)
         ratio = Min(maxratiolu, mltdiam(k)/xdia(mgs,lh,1) )
 
         
-        IF ( usegamxinf2 ) THEN
+        if ( usegamxinf2 ) then
           x =  gamxinf(2. + alpha(mgs,lh), ratio)/g1palp
-        ELSE
+        else
 
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lh))))
 !           j = Int(Max(alphamin,Min(alphamax,alpha(mgs,lh)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lh)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lh) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -18703,14 +18703,14 @@ END SUBROUTINE nssl_2mom_driver
 
          
            x = (tmp1 + dely*dqiacralphainv*(tmp2 - tmp1))
-        ENDIF
+        endif
         ! number and mass from 0 to mltdiam05
 
 !        IF ( usegamxinf2 .or. k == 1 ) THEN
-        IF ( usegamxinf2 ) THEN
+        if ( usegamxinf2 ) then
           cxd05 = cx(mgs,lh)*(1. - gamxinf(1. + alpha(mgs,lh), ratio)/g1palp)
 
-          IF ( .false. .and. igs(mgs) == 52 .and. kgs(mgs) == 6 ) THEN
+          if ( .false. .and. igs(mgs) == 52 .and. kgs(mgs) == 6 ) then
            tmp = gaminterp(ratio,alpha(mgs,lh),1,1)
            tmp2 = cx(mgs,lh)*(1. - tmp)
            tmp3 = 2.*100.*Abs(cxd05 - tmp2)/(cxd05 + tmp2)
@@ -18718,8 +18718,8 @@ END SUBROUTINE nssl_2mom_driver
 !           IF ( tmp3 > 50. .and. (cxd05 > 0.1 .or. tmp2 > 0.1 )) write(0,*) 'k,cxd05,lu = ',k,igs(mgs),kgs(mgs),cxd05,tmp2, tmp3
 !            write(0,*) 'k,igs,kgs,cxd05,lu = ',k,igs(mgs),kgs(mgs),cxd05, cx(mgs,lh)*(1. - tmp)
            cxd05 = tmp2
-          ENDIF
-        ELSE
+          endif
+        else
 
            ! interpolate along x, i.e., ratio; 
 !           i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
@@ -18730,7 +18730,7 @@ END SUBROUTINE nssl_2mom_driver
            ! interpolate along alpha; 
            
 !           tmp = (tmp1 + dely*dqiacralphainv*(tmp2 - tmp1))
-          IF ( .false. .and. igs(mgs) == 52 .and. kgs(mgs) == 6 ) THEN
+          if ( .false. .and. igs(mgs) == 52 .and. kgs(mgs) == 6 ) then
           cxd05 = cx(mgs,lh)*(1. - gamxinf(1. + alpha(mgs,lh), ratio)/g1palp)
            tmp = gaminterp(ratio,alpha(mgs,lh),1,1)
            tmp2 = cx(mgs,lh)*(1. - tmp)
@@ -18738,38 +18738,38 @@ END SUBROUTINE nssl_2mom_driver
         
 !           IF ( tmp3 > 5. ) write(0,*) 'k,cxd05,lu = ',k,igs(mgs),kgs(mgs),cxd05,tmp2, tmp3
           
-          ENDIF
+          endif
 
            tmp = gaminterp(ratio,alpha(mgs,lh),1,1)
 
-           IF ( tmp > 0.98 ) THEN ! Interpolated values can be flaky close to 1.0, so revert to expensive gamxinf subroutine
+           if ( tmp > 0.98 ) then ! Interpolated values can be flaky close to 1.0, so revert to expensive gamxinf subroutine
              cxd05 = cx(mgs,lh)*(1. - gamxinf(1. + alpha(mgs,lh), ratio)/g1palp)
-           ELSE
+           else
              cxd05 = cx(mgs,lh)*(1. - tmp)
-           ENDIF
+           endif
 
-        ENDIF
+        endif
         
          cxd(k) = cxd05
 
 
 !        IF ( usegamxinf2 .or. k == 1 ) THEN
-        IF ( usegamxinf2 ) THEN
+        if ( usegamxinf2 ) then
           qxd05 = qx(mgs,lh)*(1. - gamxinf(4. + alpha(mgs,lh), ratio)/g4palp)
 
 !           tmp = gaminterp(ratio,alpha(mgs,lh),4,1)
 !           tmp2 = qx(mgs,lh)*(1. - tmp)
 !           tmp3 = 2.*100.*(qxd05 - tmp2)/(qxd05 + tmp2)
         
-           IF ( Abs(tmp3) > 50. .and. (cxd05 > 0.1 .or. tmp2 > 0.1 )) THEN
+           if ( Abs(tmp3) > 50. .and. (cxd05 > 0.1 .or. tmp2 > 0.1 )) then
 !            write(0,*) 'k,qxd05,lu = ',k,igs(mgs),kgs(mgs),qxd05,tmp2, tmp3
 !            write(0,*) 'ratio,alph,gam,interp = ', ratio,alpha(mgs,lh),1.0 - gamxinf(4. + alpha(mgs,lh), ratio)/g4palp, 1.0 - tmp
-           ENDIF
+           endif
 !            write(0,*) 'k,igs,kgs,cxd05,lu = ',k,igs(mgs),kgs(mgs),cxd05, cx(mgs,lh)*(1. - tmp)
 !          qxd05 = tmp2
 
 
-        ELSE
+        else
            ! interpolate along x, i.e., ratio; 
 !           tmp1 = gamxinflu(i,j,4,1) + delx*dqiacrratioinv*(gamxinflu(ip1,j,4,1) - gamxinflu(i,j,4,1))
 !           tmp2 = gamxinflu(i,jp1,4,1) + delx*dqiacrratioinv*(gamxinflu(ip1,jp1,4,1) - gamxinflu(i,jp1,4,1))
@@ -18780,19 +18780,19 @@ END SUBROUTINE nssl_2mom_driver
 
            tmp = gaminterp(ratio,alpha(mgs,lh),4,1)
 
-           IF ( tmp > 0.98 ) THEN ! Interpolated values can be flaky close to 1.0, so revert to expensive gamxinf subroutine
+           if ( tmp > 0.98 ) then ! Interpolated values can be flaky close to 1.0, so revert to expensive gamxinf subroutine
              qxd05 = qx(mgs,lh)*(1. - gamxinf(4. + alpha(mgs,lh), ratio)/g4palp)
-           ELSE
+           else
              qxd05 = qx(mgs,lh)*(1. - tmp)
-           ENDIF
+           endif
 
-        ENDIF
+        endif
         
         qxd(k) = qxd05
 
-        IF ( usegamxinf ) THEN
+        if ( usegamxinf ) then
           y = gamxinf(2.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh), ratio)/g1palp
-        ELSE
+        else
            ! interpolate along x, i.e., ratio; 
            tmp1 = gamxinflu(i,j,3,1) + delx*dqiacrratioinv*(gamxinflu(ip1,j,3,1) - gamxinflu(i,j,3,1))
            tmp2 = gamxinflu(i,jp1,3,1) + delx*dqiacrratioinv*(gamxinflu(ip1,jp1,3,1) - gamxinflu(i,jp1,3,1))
@@ -18804,7 +18804,7 @@ END SUBROUTINE nssl_2mom_driver
            tmp = gaminterp(ratio,alpha(mgs,lh),3,1)
 
             y =  tmp ! 
-        ENDIF
+        endif
 
 
         
@@ -18818,13 +18818,13 @@ END SUBROUTINE nssl_2mom_driver
 !       qhml0(k) = qhmlr05
 ! zero to 0.5*mltdiam1 is then the difference between qhmlr and qhmlr05
 !       qhmlr05 = qhmlr(mgs) - qhmlr05
-        IF ( k == 1 ) THEN
+        if ( k == 1 ) then
          dqhml(k) = qhml0(k) ! qhmlr(mgs) - qhml0(k)
-        ELSE 
+        else 
          dqhml(k) = qhml0(k) - qhml0(k-1)
-        ENDIF
+        endif
        
-       ENDDO ! } k loop over diameters less than 9mm
+       enddo ! } k loop over diameters less than 9mm
 
 ! compute between last diameter and 9mm
        dqhml(numdiam+1) = qhml0(ndiam+1) - qhml0(numdiam)
@@ -18839,15 +18839,15 @@ END SUBROUTINE nssl_2mom_driver
      dqxd(1) = qxd(1)
      tmpcmlt =  dqhml(1)*dcxd(1)/dqxd(1)
      
-     IF ( .false. .and. igs(mgs) == 52 ) THEN
+     if ( .false. .and. igs(mgs) == 52 ) then
        write(0,*) 'HML: kgs, tmpcmlt = ',kgs(mgs),tmpcmlt,dqhml(1),dcxd(1),dqxd(1)
        write(0,*) 'dqhml+1,+2 = ',dqhml(ndiam+1),dqhml(ndiam+2)
        write(0,*) 'qhml0+1,+2 = ',qhml0(ndiam+1),qhml0(ndiam+2)
        write(0,*) 'qhml+1,+2 = ',qhml(ndiam+1),qhml(ndiam+2)
        write(0,*) 'qhmlr(mgs) = ',qhmlr(mgs)
-     ENDIF
+     endif
      
-     DO k = 2,numdiam+1
+     do k = 2,numdiam+1
       dcxd(k) = cxd(k) - cxd(k-1)
       dqxd(k) = qxd(k) - qxd(k-1)
 !     IF ( .false. .and. igs(mgs) == 52 ) THEN
@@ -18855,10 +18855,10 @@ END SUBROUTINE nssl_2mom_driver
 !       write(0,*) cxd(ndiam+1), cxd(ndiam+1)-cxd(k-1)
 !       write(0,*) qxd(ndiam+1), qxd(ndiam+1)-qxd(k-1)
 !     ENDIF
-      IF ( dqxd(k) > qxmin(lh) ) THEN
+      if ( dqxd(k) > qxmin(lh) ) then
         tmpcmlt = tmpcmlt + dqhml(k)*dcxd(k)/dqxd(k)
-      ENDIF
-     ENDDO
+      endif
+     enddo
 
      ! now, qhmlr1 and qhmlr2 lose mass but not number
      ! qhmlr0 loses both mass and number
@@ -18871,7 +18871,7 @@ END SUBROUTINE nssl_2mom_driver
 
 ! test integrated N rate for graupel
 
-        IF ( alpha(mgs,lh) > 1.5 ) THEN
+        if ( alpha(mgs,lh) > 1.5 ) then
         
         ratio = Min( maxratiolu, mltdiam1/xdia(mgs,lh,1) )
 
@@ -18886,19 +18886,19 @@ END SUBROUTINE nssl_2mom_driver
         i1 = Int(dgami*(tmp))
         del = tmp - dgam*i1
 
-        IF ( usegamxinf ) THEN
+        if ( usegamxinf ) then
 !          x = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami - gamxinf(-1. + alpha(mgs,lh), ratio))/g1palp
           x = (Gamma_sp(-1. + alpha(mgs,lh)) - gamxinf(-1. + alpha(mgs,lh), ratio))/g1palp
-        ELSE
+        else
 
           
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lh)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lh) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -18922,25 +18922,25 @@ END SUBROUTINE nssl_2mom_driver
             
             x = tmp3  ! changed lookup table to be the difference (gam - gamxinf)/g1palp
         
-        ENDIF
+        endif
 
         tmp = -0.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh)
         i1 = Int(dgami*(tmp))
         del = tmp - dgam*i1
 
-        IF ( usegamxinf ) THEN
+        if ( usegamxinf ) then
 !           y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami  - gamxinf(-0.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh), ratio))/g1palp
            y = (Gamma_sp(-0.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh)) - gamxinf(-0.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh), ratio))/g1palp
-        ELSE
+        else
           ! FIX THIS FOR NUMBER!
 
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lh)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lh) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -18956,7 +18956,7 @@ END SUBROUTINE nssl_2mom_driver
         !   y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami)/g1palp  - tmp3 
            y = tmp3
            
-        ENDIF
+        endif
 
         hwvent1 =  0.78*x + y*hwventy(mgs)
         
@@ -18981,29 +18981,29 @@ END SUBROUTINE nssl_2mom_driver
 !          write(iunit,*) 'tmpcmlt old/new, alph = ',tmpcmlt,tmp,alpha(mgs,lh)
 !        ENDIF
        
-       ENDIF
+       endif
 
 ! test using mltdiam05
 !         chmlrr(mgs) = (qhml0(ndiam+1)-qhmlr05)/((qxd1-qxd05)/(cxd1-cxd05)) + qhmlr05/(qxd05/cxd05) + rho0(mgs)*(qhmlr2*mltmass1inv + qhmlr12*mltmass2inv)
 !         tmpcmlt = (qhml0(ndiam+1)-qhmlr05)/((qxd1-qxd05)/(cxd1-cxd05)) + qhmlr05/(qxd05/cxd05)
-         IF ( numshedregimes == 2 ) THEN
+         if ( numshedregimes == 2 ) then
            chmlrr(mgs) = tmpcmlt + rho0(mgs)*(qhmlr2*mltmass1inv + qhmlr12*mltmass2inv)
 
-         ELSEIF ( numshedregimes == 3 ) THEN
+         elseif ( numshedregimes == 3 ) then
 !           qhmlr3 = qhml(ndiam+3) ! dqhml(ndiam+2)
 !           qhmlr2 = qhml(ndiam+2) ! dqhml(ndiam+2)
 !           qhmlr1 = qhml(ndiam+1)
 !           qhmlr12 = qhml(ndiam+1)-qhml(ndiam+2) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
 !           qhmlr23 = qhml(ndiam+2)-qhml(ndiam+3) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
            chmlrr(mgs) = tmpcmlt + rho0(mgs)*(qhmlr3*mltmass1inv + qhmlr23*mltmass2inv + qhmlr12*mltmass3inv)
-         ENDIF
+         endif
 
 !         IF ( igs(mgs) == 40 .and. qhmlr(mgs) < -qxmin(lh) ) THEN
 !           write(iunit,*) 'k,qh,alp,qhmlr,chmlrr(mgs),xdia ',kgs(mgs),1.e3*qx(mgs,lh),alpha(mgs,lh),qhmlr(mgs),chmlrr(mgs),xdia(mgs,lh,3)
 !           write(iunit,*) 'zx,tmpcmlt,qhmlr2,qhmlr12,xdn ',zx(mgs,lh),tmpcmlt,qhmlr2,qhmlr12,xdn(mgs,lh),qhmlr12*mltmass2inv,qhmlr2*mltmass1inv
 !         ENDIF
 
-         IF ( .true. .or. alpha(mgs,lh) < alphamax - delta_alphamlr .or. xdia(mgs,lh,3) > binmlrmxdia ) THEN ! { allow spectrum to get narrower
+         if ( .true. .or. alpha(mgs,lh) < alphamax - delta_alphamlr .or. xdia(mgs,lh,3) > binmlrmxdia ) then ! { allow spectrum to get narrower
      !     chmlr(mgs)  = qhmlr0/(rho0(mgs)*qxd1/cxd1) 
           chmlr(mgs)  =  tmpcmlt ! (qhml0(ndiam+1)-qhmlr05)/((qxd1-qxd05)/(cxd1-cxd05)) + qhmlr05/(qxd05/cxd05)
           
@@ -19031,7 +19031,7 @@ END SUBROUTINE nssl_2mom_driver
 !     &    0.308*fvent(mgs)*y*(xdia(mgs,lh,1)**(0.5 + 0.5*bxx(mgs,lh)))*   &
 !     &            Sqrt(axx(mgs,lh)*rhovt(mgs)) )
        
-       IF ( .false. ) THEN
+       if ( .false. ) then
        ! full shedding version
        zhmlr(mgs) =   &
      &   min(   rho0(mgs)* &
@@ -19043,7 +19043,7 @@ END SUBROUTINE nssl_2mom_driver
 ! alternate zhmlr assumes Z = N D**6, from which dZ/dt = (dN/dt)*D**6 = (1/M) dM/dt D**6
 ! turns out to be exactly a factor of 2 smaller than the other zhmlr (and matches with bin results when set to remove full particles
 ! from each bin, i.e., particles do not shrink)
-       ELSE
+       else
        ! whole particle loss version: factor of 1/2 different from shedding version
        zhmlr(mgs) =   &
      &   min(   rho0(mgs)* &
@@ -19051,7 +19051,7 @@ END SUBROUTINE nssl_2mom_driver
      &   , 0.0 )/xdn(mgs,lh)*(6./pi)  
          ! also note that fmlt1 includes a factor of 2*pi, resulting in a correct numerical factor of 12
          ! factor of rho0 to nullify the 1/rho0 in fmlt1
-       ENDIF
+       endif
        
        zhmlr0inf = zhmlr(mgs)
 
@@ -19062,7 +19062,7 @@ END SUBROUTINE nssl_2mom_driver
 !     &  / (felf(mgs))
 
 
-          IF ( .false. .and. igs(mgs) == 40 .and. qhmlr(mgs) < -qxmin(lh) ) THEN
+          if ( .false. .and. igs(mgs) == 40 .and. qhmlr(mgs) < -qxmin(lh) ) then
           tmp1 = zhmlr0inf
           
           g1 = g1x(mgs,lh) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
@@ -19076,7 +19076,7 @@ END SUBROUTINE nssl_2mom_driver
           
     !      zhmlr(mgs) = 0.5*(zhmlr(mgs) + zhmlrtmp)
           
-          ENDIF
+          endif
 
 !        IF ( .false. .and. igs(mgs) == 40 ) THEN !.and. zhmlr(mgs) < -zxmin  THEN
 ! #include 'bintest.F90'  
@@ -19091,7 +19091,7 @@ END SUBROUTINE nssl_2mom_driver
           qr  = qx(mgs,il) + qhmlr(mgs)
           z   = zx(mgs,il)  ! + zhmlr(mgs)
 
-          IF ( .false. .and. z .gt. zxmin .and. qr > qxmin(lh) .and. chw > cxmin ) THEN
+          if ( .false. .and. z .gt. zxmin .and. qr > qxmin(lh) .and. chw > cxmin ) then
            
            il = lh
            
@@ -19103,23 +19103,23 @@ END SUBROUTINE nssl_2mom_driver
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
            alp = Max( alphamin, Min( alphamax, alp ) )
            
-         IF ( newton ) THEN
-           DO i = 1,10
-             IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+         if ( newton ) then
+           do i = 1,10
+             if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
              alp = alp + ( galpha(alp) - rdi )/dgalpha(alp)
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
+           enddo
            
-         ELSE
-           DO i = 1,10
-             IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+         else
+           do i = 1,10
+             if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
              alp = (6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/   &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
-          ENDIF
+           enddo
+          endif
           
             
             g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
@@ -19130,9 +19130,9 @@ END SUBROUTINE nssl_2mom_driver
             
             alpha(mgs,lh) = tmp2 ! restore alpha
             
-          ENDIF ! everything greater than min values
+          endif ! everything greater than min values
 
-      ENDIF !}
+      endif !}
 !
 ! not sure this is right -- should it use g1x(mgs,lh) or some assumed value for melt rain?
 !
@@ -19156,18 +19156,18 @@ END SUBROUTINE nssl_2mom_driver
         i1 = Int(dgami*(tmp))
         del = tmp - dgam*i1
 
-        IF ( usegamxinf ) THEN
+        if ( usegamxinf ) then
 !          x = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami - gamxinf(5. + alpha(mgs,lh), ratio))/g1palp
           x = (Gamma_sp(5. + alpha(mgs,lh)) - gamxinf(5. + alpha(mgs,lh), ratio))/g1palp
-        ELSE
+        else
 
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lh)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lh) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -19195,23 +19195,23 @@ END SUBROUTINE nssl_2mom_driver
          x = tmp3 ! changed lookup table to be the difference (gam - gamxinf)/g1palp
        !  x = Max(0.0,x)
          
-        ENDIF
+        endif
 
         tmp = 5.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh)
         i1 = Int(dgami*(tmp))
         del = tmp - dgam*i1
 
-        IF ( usegamxinf ) THEN
+        if ( usegamxinf ) then
 !           y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami  - gamxinf(5.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh), ratio))/g1palp
            y = (Gamma_sp(5.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh))  - gamxinf(5.5 + alpha(mgs,lh) + 0.5*bxx(mgs,lh), ratio))/g1palp
-        ELSE
+        else
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lh)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lh) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -19230,15 +19230,15 @@ END SUBROUTINE nssl_2mom_driver
          !  y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami)/g1palp  - tmp3 
            y = tmp3 ! changed lookup table to be the difference (gam - gamxinf)/g1palp
            y = Max(0.0, y)
-        ENDIF
-        IF ( .false. .and. igs(mgs) == 38 .and. qhmlr(mgs) < 0.0 ) THEN
+        endif
+        if ( .false. .and. igs(mgs) == 38 .and. qhmlr(mgs) < 0.0 ) then
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lh)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lh)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lh) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -19258,7 +19258,7 @@ END SUBROUTINE nssl_2mom_driver
           write(iunit,*) 'interpolated y = ', y,tmp1,tmp2,tmp3, &
                gamxinflu(i,j,6,1),gamxinflu(ip1,j,6,1),gamxinflu(i,jp1,6,1),gamxinflu(ip1,jp1,6,1)
            
-        ENDIF
+        endif
 
         hwvent1 =  0.78*x + y*hwventy(mgs)
        
@@ -19278,14 +19278,14 @@ END SUBROUTINE nssl_2mom_driver
        ! yes, I think it should -- NOPE!
        ! zhmlr(mgs) = 2.*zhmlrr(mgs) + (zhmlr0inf - zhmlrr(mgs))
 
-          IF ( .false. .and. igs(mgs) == 40 .and. qhmlr(mgs) < -qxmin(lh) ) THEN
+          if ( .false. .and. igs(mgs) == 40 .and. qhmlr(mgs) < -qxmin(lh) ) then
           
           g1 = g1x(mgs,lh) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
           tmp = qx(mgs,lh)/cx(mgs,lh)
 !          zhmlrtmp =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*tmp * qhmlr(mgs) - tmp**2 * chmlr(mgs)  )
           zhmlrtmp =  g1*rho0(mgs)*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*tmp * qhmlr(mgs)   - tmp**2 * qhmlr(mgs)/tmp  )
 
-        IF ( alpha(mgs,lh) >= alphamax - delta_alphamlr ) THEN
+        if ( alpha(mgs,lh) >= alphamax - delta_alphamlr ) then
         tmp = 1.0 + alpha(mgs,lh)
         i = Int(dgami*(tmp))
         del = tmp - dgam*i
@@ -19313,27 +19313,27 @@ END SUBROUTINE nssl_2mom_driver
         
         tmp = zhmlrr(mgs) + 2.*(zhmlr0inf - zhmlrr(mgs)) 
         
-       ENDIF
+       endif
           
 !          write(iunit,*) 'zhmlrtmp,zhmlr,zhmlr0inf: ',zhmlrtmp,zhmlr(mgs),zhmlr0inf,zhmlrtmp/(zhmlr(mgs)),alpha(mgs,lh),tmp,zhmlrtmp/(zhmlr0inf)
                     
-          ENDIF
+          endif
 
 !          zhmlrr(mgs) =  Min(0.0, (xdn(mgs,lh)/xdn(mgs,lr))**2 * &
 !     &       g1x(mgs,lh)*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*tmp * qhmlr0 - tmp**2 * chmlr(mgs)  ) )
 
-         IF ( numshedregimes == 2 ) THEN
+         if ( numshedregimes == 2 ) then
            zhmlrr(mgs) = (xdn(mgs,lh)/1000.)**2*zhmlrr(mgs) + rho0(mgs)*   &
      &                   (qhmlr2*mltmass1inv*(0.01*takshedsize1)**6 + qhmlr12*mltmass2inv*(0.01*takshedsize2)**6 )
-         ELSEIF ( numshedregimes == 3 ) THEN
+         elseif ( numshedregimes == 3 ) then
 !           chlmlrr(mgs) = tmpcmlt + rho0(mgs)*(qhlmlr3*mltmass1inv + qhlmlr23*mltmass2inv + qhlmlr12*mltmass3inv)
           zhmlrr(mgs) = (xdn(mgs,lh)/1000.)**2 *zhmlrr(mgs) + rho0(mgs)*  &
      &              (qhmlr3*mltmass1inv*(0.01*takshedsize1)**6 + qhmlr23*mltmass2inv*(0.01*takshedsize2)**6  + &
      &               qhmlr12*mltmass3inv*(0.01*takshedsize3)**6 )
-         ENDIF
+         endif
 
 
-         IF ( alpha(mgs,lh) >= alphamax - delta_alphamlr ) THEN ! { cannot allow spectrum to get any narrower, 
+         if ( alpha(mgs,lh) >= alphamax - delta_alphamlr ) then ! { cannot allow spectrum to get any narrower, 
          
           chmlr(mgs)  = (cx(mgs,lh)/(qx(mgs,lh)+1.e-20))*qhmlr(mgs)
          
@@ -19359,7 +19359,7 @@ END SUBROUTINE nssl_2mom_driver
 !            chmlrr(mgs) =  rho0(mgs)*qhmlr(mgs)/(xdn(mgs,lr)*vshdgs(mgs,lh))  ! into rain 
 !          ENDIF
 
-         ELSEIF (  xdia(mgs,lh,3) > binmlrmxdia ) THEN ! 
+         elseif (  xdia(mgs,lh,3) > binmlrmxdia ) then ! 
          
           chmlrtmp  = (cx(mgs,lh)/(qx(mgs,lh)+1.e-20))*qhmlr(mgs)
           g1 = g1x(mgs,lh) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
@@ -19367,10 +19367,10 @@ END SUBROUTINE nssl_2mom_driver
           zhmlrtmp =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*tmp * qhmlr(mgs) - tmp**2 * chmlrtmp )
           
           tmp1 = 1.e-3
-          IF ( xdia(mgs,lh,3) > binmlrmxdia + tmp1 ) THEN 
+          if ( xdia(mgs,lh,3) > binmlrmxdia + tmp1 ) then 
              chmlr(mgs) = chmlrtmp
              zhmlr(mgs) = zhmlrtmp
-          ELSE ! weighted average
+          else ! weighted average
 !            IF ( igs(mgs) == 3 ) THEN
 !              write(0,*) 'k,xdia,chmlr,zhmlr = ',kgs(mgs),xdia(mgs,lh,3)*1.e3,chmlr(mgs),zhmlr(mgs)
 !              write(0,*) 'weights 1,2 = ',(xdia(mgs,lh,3) - binmlrmxdia )/tmp1 , (binmlrmxdia + tmp1 - xdia(mgs,lh,3))/tmp1
@@ -19382,10 +19382,10 @@ END SUBROUTINE nssl_2mom_driver
 !              write(0,*) 'tmp,chlmlr,= ',chlmlrtmp,chlmlr(mgs)
 !              write(0,*) 'tmp,zhlmlr,= ',zhlmlrtmp,zhlmlr(mgs)
 !            ENDIF
-          ENDIF
+          endif
           
 
-         ENDIF ! }
+         endif ! }
 
            
 !         IF ( igs(mgs) == 38 ) THEN
@@ -19397,34 +19397,34 @@ END SUBROUTINE nssl_2mom_driver
 !           write(iunit,*) 'qhmlr0: ',qhmlr0,qhmlr05,qhmlr2,qhmlr12
 !         ENDIF
          
-       ELSEIF ( ibinhmlr == 2 .or. ibinhmlr == 3 ) THEN
+       elseif ( ibinhmlr == 2 .or. ibinhmlr == 3 ) then
 
-       ENDIF
+       endif
        
        
-       IF ( ivhmltsoak > 0 .and. qhmlr(mgs) < 0.0 .and. lvol(lh) > 1 .and. xdn(mgs,lh) .lt. xdnmx(lh) ) THEN
+       if ( ivhmltsoak > 0 .and. qhmlr(mgs) < 0.0 .and. lvol(lh) > 1 .and. xdn(mgs,lh) .lt. xdnmx(lh) ) then
          ! act as if 100% of the meltwater were soaked into the graupel
            v1 = (1. - xdn(mgs,lh)/xdnmx(lh))*(vx(mgs,lh) + rho0(mgs)*qhmlr(mgs)/xdn(mgs,lh) )/(dtp) ! volume available for filling
            v2 = -1.0*rho0(mgs)*qhmlr(mgs)/xdnmx(lh)  ! volume of melted ice if it were refrozen in the matrix
            
            vhsoak(mgs) = Min(v1,v2)
            
-       ENDIF
+       endif
 
-      ENDIF !  qx(mgs,lh) .gt. qxmin(lh)
+      endif !  qx(mgs,lh) .gt. qxmin(lh)
 
       
-      IF ( lhl .gt. 1  .and. lhlw < 1 ) THEN
+      if ( lhl .gt. 1  .and. lhlw < 1 ) then
 
-       IF ( qx(mgs,lhl) .gt. qxmin(lhl) ) THEN
-         IF ( ibinhlmlr == 0  .or. lzhl < 1) THEN
+       if ( qx(mgs,lhl) .gt. qxmin(lhl) ) then
+         if ( ibinhlmlr == 0  .or. lzhl < 1) then
        qhlmlr(mgs) =   &
      &   meltfac*min(   &
      &  fmlt1(mgs)*cx(mgs,lhl)*hlvent(mgs)*xdia(mgs,lhl,1)   &
      &  + fmlt2(mgs)*(qhlacrmlr(mgs)+qhlacwmlr(mgs))    &
      &   , 0.0 )
 
-       ELSEIF ( ibinhlmlr == 1 ) THEN ! use incomplete gamma functions to approximate the bin results
+       elseif ( ibinhlmlr == 1 ) then ! use incomplete gamma functions to approximate the bin results
 
 ! #ifdef 1
 ! #if (defined 1) && defined( COMMAS ) || defined( COMMASTMP )
@@ -19447,31 +19447,31 @@ END SUBROUTINE nssl_2mom_driver
         del = tmp - dgam*i
         g4palp = gmoi(i) + (gmoi(i+1) - gmoi(i))*del*dgami
  
-       DO k = 1,numshedregimes  ! do not need k=3, treat as infinity; goes to 3 to cover the top 3 diameters (independent of ndiam, the number of smaller diameters)
+       do k = 1,numshedregimes  ! do not need k=3, treat as infinity; goes to 3 to cover the top 3 diameters (independent of ndiam, the number of smaller diameters)
         
 !        ratio = mltdiam1/xdia(mgs,lhl,1)
         ratio = Min(maxratiolu, mltdiam(ndiam+k)/xdia(mgs,lhl,1) )
 
         
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
         x =  gamxinfdp(2. + alpha(mgs,lhl), ratio)/g1palp
-        ELSE
+        else
 
           x = gaminterp(ratio,alpha(mgs,lhl),2,2)
           
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = gamxinfdp(2. + alpha(mgs,lhl), ratio)/g1palp
               write(6,*) 'gamcheck01: i,k,xint,x = ',igs(mgs),kgs(mgs),x,tmpgam
-            ENDIF
-          ENDIF
+            endif
+          endif
 
-       ENDIF ! usegamxinf
+       endif ! usegamxinf
 
 ! qxd(ndiam+2), cxd(ndiam+2), qhml(ndiam+2)        
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
          cxd1 = cx(mgs,lhl)*(1. - gamxinfdp(1. + alpha(mgs,lhl), ratio)/g1palp)
-        ELSE
+        else
 
           tmp = gaminterp(ratio,alpha(mgs,lhl),1,2)
 
@@ -19482,21 +19482,21 @@ END SUBROUTINE nssl_2mom_driver
 
           cxd1 = cx(mgs,lhl)*(1. - tmp)
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = cx(mgs,lhl)*(1. - gamxinfdp(1. + alpha(mgs,lhl), ratio)/g1palp)
               write(6,*) 'gamcheck02: i,k,cxd1,x = ',igs(mgs),kgs(mgs),cxd1,tmpgam
-            ENDIF
-          ENDIF
+            endif
+          endif
 
 
-        ENDIF
+        endif
 
          cxd(ndiam+k) = cxd1
 
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
          qxd1 = qx(mgs,lhl)*(1. - gamxinfdp(4. + alpha(mgs,lhl), ratio)/g4palp)
-        ELSE
+        else
 
           tmp = gaminterp(ratio,alpha(mgs,lhl),4,2)
 
@@ -19506,12 +19506,12 @@ END SUBROUTINE nssl_2mom_driver
 
            qxd1 = qx(mgs,lhl)*(1. - tmp)
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = qx(mgs,lhl)*(1. - gamxinfdp(4. + alpha(mgs,lhl), ratio)/g4palp)
              ! tmp1 =  qx(mgs,lhl)*(1. - gaminterp(ratio,alpha(mgs,lhl),10,2))
               write(6,*) 'gamcheck03: i,k,qxd1,x = ',igs(mgs),kgs(mgs),qxd1,tmpgam !,tmp1
-             IF ( .false. ) THEN
+             if ( .false. ) then
               write(6,*) 'alpha,gaminterp = ',alpha(mgs,lhl),tmp
               write(6,*) 'ratio,ratio2,mltdiam,xdia = ',ratio,mltdiam(ndiam+k)/xdia(mgs,lhl,1),mltdiam(ndiam+k),xdia(mgs,lhl,1) 
               tmp1=gamxinfdp(4. + alpha(mgs,lhl), ratio)
@@ -19520,11 +19520,11 @@ END SUBROUTINE nssl_2mom_driver
            alp = alpha(mgs,lhl)
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(maxalphalu,alp))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lhl)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = Min(maxratiolu,ratio) - float(i)*dqiacrratio
            dely = Min(maxalphalu, alp ) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -19543,41 +19543,41 @@ END SUBROUTINE nssl_2mom_driver
            
            temp3 = (tmp1 + dely*dqiacralphainv*(tmp2 - tmp1))
               write(6,*) 'i,j,temp3,gam1,',i,j,temp3, gamxinflu(i,j,luindex,il)
-            ENDIF ! false/true
+            endif ! false/true
             
-            ENDIF
-          ENDIF
+            endif
+          endif
 
-        ENDIF
+        endif
 
          qxd(ndiam+k) = qxd1
 
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
           y =  gamxinfdp(2.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio)/g1palp
-        ELSE
+        else
 
           y = gaminterp(ratio,alpha(mgs,lhl),3,2)
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = gamxinfdp(2.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio)/g1palp
               write(6,*) 'gamcheck04: i,k,yint,y = ',igs(mgs),kgs(mgs),y,tmpgam
-            ENDIF
-          ENDIF
+            endif
+          endif
 
-        ENDIF
+        endif
         
           hwvent1 =  0.78*x + y*hlventy(mgs) 
 
           qhlmlr1 = min( fmlt1(mgs)*cx(mgs,lhl)*hwvent1*xdia(mgs,lhl,1), 0.0 )
 
-        IF ( igs(mgs) == 40 ) THEN
+        if ( igs(mgs) == 40 ) then
 !          write(0,*) 'kgs,k,usegamxinf/2/3 = ',kgs(mgs),k,usegamxinf,usegamxinf2,usegamxinf3
 !          write(0,*) 'diam loop k,qhmlr1 = ',k,qhmlr1,qxd1,cxd1
 !          write(0,*) 'fmlt1 = ',fmlt1(mgs),cx(mgs,lhl),hwvent1,x,y,hwventy(mgs)
 !          write(0,*) 'ratio0,ratio,xdia(1) = ',mltdiam(ndiam+k)/xdia(mgs,lhl,1),ratio,xdia(mgs,lhl,1)
         
-        ENDIF
+        endif
 
 ! zero to mltdiam1 is then the difference between qhlmlr and qhlmlr1
        qhlmlr0 = qhlmlr(mgs) - qhlmlr1
@@ -19591,9 +19591,9 @@ END SUBROUTINE nssl_2mom_driver
 !        
 !        ENDIF
        
-       ENDDO ! k = 1,2
+       enddo ! k = 1,2
 
-         IF ( numshedregimes == 2 ) THEN
+         if ( numshedregimes == 2 ) then
            dqhml(ndiam+2) = qhml(ndiam+2) ! qhml0(ndiam+3) - qhml0(ndiam+2) ! amount of melting for  19mm < D < mltdiam3
            dqhml(ndiam+1) = qhml0(ndiam+2) - qhml0(ndiam+1) ! amount of melting for 9mm < D < 19mm
          
@@ -19601,7 +19601,7 @@ END SUBROUTINE nssl_2mom_driver
            qhlmlr1 = qhml(ndiam+1)
            qhlmlr12 = qhml(ndiam+1)-qhml(ndiam+2) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
          
-         ELSEIF ( numshedregimes == 3 ) THEN
+         elseif ( numshedregimes == 3 ) then
          
            dqhml(ndiam+3) = qhml(ndiam+3) ! qhml0(ndiam+3) - qhml0(ndiam+2) ! amount of melting for  19mm < D < mltdiam3
            dqhml(ndiam+2) = qhml0(ndiam+3) - qhml0(ndiam+2) ! amount of melting for  19mm < D < mltdiam3
@@ -19613,31 +19613,31 @@ END SUBROUTINE nssl_2mom_driver
            qhlmlr12 = qhml(ndiam+1)-qhml(ndiam+2) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
            qhlmlr23 = qhml(ndiam+2)-qhml(ndiam+3) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
          
-         ENDIF
+         endif
 
-         IF ( .not. mixedphase ) qhlmlrlg(mgs) = qhlmlr1
+         if ( .not. mixedphase ) qhlmlrlg(mgs) = qhlmlr1
          
 
 !  integrate from mltdiam1/2 to infinity
 
-        DO k = 1,numdiam
+        do k = 1,numdiam
         
 !        ratio = mltdiam05/xdia(mgs,lhl,1)
         ratio = Min( maxratiolu,  mltdiam(k)/xdia(mgs,lhl,1) )
 
         
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
           x =  gamxinf(2. + alpha(mgs,lhl), ratio)/g1palp
-        ELSE
+        else
 
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lhl))))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lhl)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lhl) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -19653,22 +19653,22 @@ END SUBROUTINE nssl_2mom_driver
 
           x = gaminterp(ratio,alpha(mgs,lhl),2,2)
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = gamxinfdp(2.0 + alpha(mgs,lhl), ratio)/g1palp
               write(6,*) 'gamcheck05: i,k,xint,x = ',igs(mgs),kgs(mgs),x,tmpgam
-            ENDIF
-          ENDIF
+            endif
+          endif
 
          
-        ENDIF
+        endif
         ! number and mass from 0 to mltdiam05
 
 !        IF ( usegamxinf2 .or. k == 1 ) THEN
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
           cxd05 = cx(mgs,lhl)*(1. - gamxinf(1. + alpha(mgs,lhl), ratio)/g1palp)
 
-          IF ( .false. .and. igs(mgs) == 52 .and. kgs(mgs) == 6 ) THEN
+          if ( .false. .and. igs(mgs) == 52 .and. kgs(mgs) == 6 ) then
            tmp = gaminterp(ratio,alpha(mgs,lhl),1,2)
            tmp2 = cx(mgs,lhl)*(1. - tmp)
            tmp3 = 2.*100.*Abs(cxd05 - tmp2)/(cxd05 + tmp2)
@@ -19676,8 +19676,8 @@ END SUBROUTINE nssl_2mom_driver
        !    IF ( tmp3 > 50. .and. (cxd05 > 0.1 .or. tmp2 > 0.1 )) write(0,*) 'k,cxd05,lu = ',k,igs(mgs),kgs(mgs),cxd05,tmp2, tmp3
 !            write(0,*) 'k,igs,kgs,cxd05,lu = ',k,igs(mgs),kgs(mgs),cxd05, cx(mgs,lhl)*(1. - tmp)
           cxd05 = tmp2
-          ENDIF
-        ELSE
+          endif
+        else
 
            ! interpolate along x, i.e., ratio; 
 !           i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
@@ -19688,7 +19688,7 @@ END SUBROUTINE nssl_2mom_driver
            ! interpolate along alpha; 
            
 !           tmp = (tmp1 + dely*dqiacralphainv*(tmp2 - tmp1))
-          IF ( .false. .and. igs(mgs) == 52 .and. kgs(mgs) == 6 ) THEN
+          if ( .false. .and. igs(mgs) == 52 .and. kgs(mgs) == 6 ) then
           cxd05 = cx(mgs,lhl)*(1. - gamxinf(1. + alpha(mgs,lhl), ratio)/g1palp)
            tmp = gaminterp(ratio,alpha(mgs,lhl),1,2)
            tmp2 = cx(mgs,lhl)*(1. - tmp)
@@ -19696,49 +19696,49 @@ END SUBROUTINE nssl_2mom_driver
         
 !           IF ( tmp3 > 5. ) write(0,*) 'k,cxd05,lu = ',k,igs(mgs),kgs(mgs),cxd05,tmp2, tmp3
           
-          ENDIF
+          endif
 
            tmp = gaminterp(ratio,alpha(mgs,lhl),1,2)
 
-           IF ( tmp > 0.98 ) THEN
+           if ( tmp > 0.98 ) then
              cxd05 = cx(mgs,lhl)*(1. - gamxinfdp(1. + alpha(mgs,lhl), ratio)/g1palp)
-           ELSE
+           else
              cxd05 = cx(mgs,lhl)*(1. - tmp)
-           ENDIF
+           endif
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = gamxinfdp(1.0 + alpha(mgs,lhl), ratio)/g1palp
               write(6,*) 'gamcheck06: i,k,tmp,x = ',igs(mgs),kgs(mgs),tmp,tmpgam
               tmp1 =  cx(mgs,lhl)*(1. - gamxinfdp(1. + alpha(mgs,lhl), ratio)/g1palp)
               write(6,*) 'cxd05,gam: ',cxd05,tmp1
-            ENDIF
-          ENDIF
+            endif
+          endif
           
           cxd05 = Max(0.0, cxd05)
 
-        ENDIF
+        endif
         
          cxd(k) = cxd05
 
 
 !        IF ( usegamxinf2 .or. k == 1 ) THEN
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
           qxd05 = qx(mgs,lhl)*(1. - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp)
 
 !           tmp = gaminterp(ratio,alpha(mgs,lhl),4,2)
 !           tmp2 = qx(mgs,lhl)*(1. - tmp)
 !           tmp3 = 2.*100.*(qxd05 - tmp2)/(qxd05 + tmp2)
         
-           IF ( Abs(tmp3) > 50. .and. (cxd05 > 0.1 .or. tmp2 > 0.1 )) THEN
+           if ( Abs(tmp3) > 50. .and. (cxd05 > 0.1 .or. tmp2 > 0.1 )) then
 !            write(0,*) 'k,qxd05,lu = ',k,igs(mgs),kgs(mgs),qxd05,tmp2, tmp3
 !            write(0,*) 'ratio,alph,gam,interp = ', ratio,alpha(mgs,lhl),1.0 - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp, 1.0 - tmp
-           ENDIF
+           endif
 !            write(0,*) 'k,igs,kgs,cxd05,lu = ',k,igs(mgs),kgs(mgs),cxd05, cx(mgs,lhl)*(1. - tmp)
 !          qxd05 = tmp2
 
 
-        ELSE
+        else
            ! interpolate along x, i.e., ratio; 
 !           tmp1 = gamxinflu(i,j,4,2) + delx*dqiacrratioinv*(gamxinflu(ip1,j,4,2) - gamxinflu(i,j,4,2))
 !           tmp2 = gamxinflu(i,jp1,4,2) + delx*dqiacrratioinv*(gamxinflu(ip1,jp1,4,2) - gamxinflu(i,jp1,4,2))
@@ -19749,29 +19749,29 @@ END SUBROUTINE nssl_2mom_driver
 
            tmp = gaminterp(ratio,alpha(mgs,lhl),4,2)
 
-           IF ( tmp > 0.98 ) THEN
+           if ( tmp > 0.98 ) then
              qxd05 = qx(mgs,lhl)*(1. - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp)
-           ELSE
+           else
              qxd05 = qx(mgs,lhl)*(1. - tmp)
-           ENDIF
+           endif
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp
               write(6,*) 'gamcheck07: i,k,tmp,x = ',igs(mgs),kgs(mgs),tmp,tmpgam
               tmp1 =  qx(mgs,lhl)*(1. - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp)
               write(6,*) 'qxd05,gam: ',qxd05,tmp1
-            ENDIF
-          ENDIF
+            endif
+          endif
 
 
-        ENDIF
+        endif
         
         qxd(k) = qxd05
 
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
           y = gamxinf(2.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio)/g1palp
-        ELSE
+        else
            ! interpolate along x, i.e., ratio; 
            tmp1 = gamxinflu(i,j,3,2) + delx*dqiacrratioinv*(gamxinflu(ip1,j,3,2) - gamxinflu(i,j,3,2))
            tmp2 = gamxinflu(i,jp1,3,2) + delx*dqiacrratioinv*(gamxinflu(ip1,jp1,3,2) - gamxinflu(i,jp1,3,2))
@@ -19784,16 +19784,16 @@ END SUBROUTINE nssl_2mom_driver
 
             y =  tmp ! 
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = gamxinf(2.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio)/g1palp
               write(6,*) 'gamcheck08: i,k,tmp,y = ',igs(mgs),kgs(mgs),tmp,tmpgam
           !    tmp1 =  qx(mgs,lhl)*(1. - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp)
           !    write(6,*) 'qxd05,gam: ',qxd05,tmp1
-            ENDIF
-          ENDIF
+            endif
+          endif
 
-        ENDIF
+        endif
 
 
         
@@ -19805,24 +19805,24 @@ END SUBROUTINE nssl_2mom_driver
        qhml0(k) = qhlmlr(mgs) - qhml(k)                                    ! from zero to diam
  
  
-        IF ( igs(mgs) == 40 ) THEN
+        if ( igs(mgs) == 40 ) then
 !          write(0,*) '2 kgs,k,usegamxinf/2/3 = ',kgs(mgs),k,usegamxinf,usegamxinf2,usegamxinf3
 !          write(0,*) '2 diam loop k,qhml,qhml0 = ',k,qhml(k),qhml0(k) ,qxd05,cxd05
 !          write(0,*) '2 fmlt1 = ',fmlt1(mgs),cx(mgs,lhl),hwvent1,x,y,hwventy(mgs)
 !          write(0,*) '2 ratio0,ratio,xdia(1) = ',mltdiam(k)/xdia(mgs,lhl,1),ratio,xdia(mgs,lhl,1),alpha(mgs,lhl)
         
-        ENDIF
+        endif
       
 !       qhml0(k) = qhlmlr05
 ! zero to 0.5*mltdiam1 is then the difference between qhlmlr and qhlmlr05
 !       qhlmlr05 = qhlmlr(mgs) - qhlmlr05
-        IF ( k == 1 ) THEN
+        if ( k == 1 ) then
          dqhml(k) = qhml0(k) ! qhlmlr(mgs) - qhml0(k)
-        ELSE 
+        else 
          dqhml(k) = qhml0(k) - qhml0(k-1)
-        ENDIF
+        endif
        
-       ENDDO ! k loop over diameters less than 9mm
+       enddo ! k loop over diameters less than 9mm
 
 ! compute between last diameter and 9mm
        dqhml(numdiam+1) = qhml0(ndiam+1) - qhml0(numdiam)
@@ -19837,26 +19837,26 @@ END SUBROUTINE nssl_2mom_driver
      dqxd(1) = qxd(1)
      tmpcmlt =  dqhml(1)*dcxd(1)/dqxd(1)
      
-     IF ( .false. .and. igs(mgs) == 52 ) THEN
+     if ( .false. .and. igs(mgs) == 52 ) then
        write(0,*) 'HML: kgs, tmpcmlt = ',kgs(mgs),tmpcmlt,dqhml(1),dcxd(1),dqxd(1)
        write(0,*) 'dqhml+1,+2 = ',dqhml(ndiam+1),dqhml(ndiam+2)
        write(0,*) 'qhml0+1,+2 = ',qhml0(ndiam+1),qhml0(ndiam+2)
        write(0,*) 'qhml+1,+2 = ',qhml(ndiam+1),qhml(ndiam+2)
        write(0,*) 'qhlmlr(mgs) = ',qhlmlr(mgs)
-     ENDIF
+     endif
      
-     DO k = 2,numdiam+1
+     do k = 2,numdiam+1
       dcxd(k) = cxd(k) - cxd(k-1)
       dqxd(k) = qxd(k) - qxd(k-1)
-     IF ( .false. .and. igs(mgs) == 52 ) THEN
+     if ( .false. .and. igs(mgs) == 52 ) then
        write(0,*) 'HML: kgs, k,delta- tmpcmlt = ',kgs(mgs),k,dqhml(k)*dcxd(k)/dqxd(k), dqhml(k),dcxd(k),dqxd(k),cxd(k),cxd(k-1)
        write(0,*) cxd(ndiam+1), cxd(ndiam+1)-cxd(k-1)
        write(0,*) qxd(ndiam+1), qxd(ndiam+1)-qxd(k-1)
-     ENDIF
-      IF ( dqxd(k) > qxmin(lhl) ) THEN
+     endif
+      if ( dqxd(k) > qxmin(lhl) ) then
         tmpcmlt = tmpcmlt + dqhml(k)*dcxd(k)/dqxd(k) ! this value of tmpcmlt is used if alpha(lhl) <= 1.5
-      ENDIF
-     ENDDO
+      endif
+     enddo
 
      ! now, qhlmlr1 and qhlmlr2 lose mass but not number
      ! qhlmlr0 loses both mass and number
@@ -19874,7 +19874,7 @@ END SUBROUTINE nssl_2mom_driver
 
 ! test integrated N rate for Hail
 
-        IF ( alpha(mgs,lhl) > 1.5 ) THEN ! For lower alpha, the estimate of tmpcmlt from above is used
+        if ( alpha(mgs,lhl) > 1.5 ) then ! For lower alpha, the estimate of tmpcmlt from above is used
         
         ratio = Min( maxratiolu,  mltdiam1/xdia(mgs,lhl,1) )
 
@@ -19887,19 +19887,19 @@ END SUBROUTINE nssl_2mom_driver
         i1 = Int(dgami*(tmp))
         del = tmp - dgam*i1
 
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
 !          x = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami - gamxinf(-1. + alpha(mgs,lhl), ratio))/g1palp
           x = (Gamma_sp(-1. + alpha(mgs,lhl)) - gamxinf(-1. + alpha(mgs,lhl), ratio))/g1palp
-        ELSE
+        else
 
           
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(maxalphalu,alpha(mgs,lhl)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lhl)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lhl) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -19920,34 +19920,34 @@ END SUBROUTINE nssl_2mom_driver
           !  x = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami)/g1palp - tmp3
             x = tmp3 ! changed lookup table to be the difference already:  Gamma_sp(-1+alp) - Gamma_sp(-1+alp,ratio)
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = (Gamma_sp(-1. + alpha(mgs,lhl)) - gamxinf(-1. + alpha(mgs,lhl), ratio))/g1palp
               tmp1 = gaminterp(ratio,alpha(mgs,lhl),7,2)
               write(6,*) 'gamcheck09: i,k,tmp3,interp,x = ',igs(mgs),kgs(mgs),tmp3,tmp1,tmpgam
           !    tmp1 =  qx(mgs,lhl)*(1. - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp)
           !    write(6,*) 'qxd05,gam: ',qxd05,tmp1
-            ENDIF
-          ENDIF
+            endif
+          endif
         
-        ENDIF
+        endif
 
         tmp = -0.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl)
         i1 = Int(dgami*(tmp))
         del = tmp - dgam*i1
 
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
 !           y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami  - gamxinf(-0.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
            y = (Gamma_sp( alpha(mgs,lhl) - 0.5 + 0.5*bxx(mgs,lhl) )  - gamxinf( alpha(mgs,lhl) - 0.5 + 0.5*bxx(mgs,lhl), ratio))/g1palp
-        ELSE
+        else
 
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(maxalphalu,alpha(mgs,lhl)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lhl)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lhl) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -19963,16 +19963,16 @@ END SUBROUTINE nssl_2mom_driver
         !   y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami)/g1palp  - tmp3 
            y = tmp3
            
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = (Gamma_sp(-0.5 + alpha(mgs,lhl)) - gamxinf(-0.5 + alpha(mgs,lhl), ratio))/g1palp
               tmp1 = gaminterp(ratio,alpha(mgs,lhl),8,2)
               write(6,*) 'gamcheck10: i,k,tmp3,interp,x = ',igs(mgs),kgs(mgs),tmp3,tmp1,tmpgam
           !    tmp1 =  qx(mgs,lhl)*(1. - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp)
           !    write(6,*) 'qxd05,gam: ',qxd05,tmp1
-            ENDIF
-          ENDIF
-        ENDIF
+            endif
+          endif
+        endif
 
         hwvent1 =  0.78*x + y*hlventy(mgs)
         
@@ -19997,21 +19997,21 @@ END SUBROUTINE nssl_2mom_driver
 !          write(iunit,*) 'tmpcmlt old/new, alph = ',tmpcmlt,tmp,alpha(mgs,lhl)
 !        ENDIF
        
-       ENDIF
+       endif
 
 ! test using mltdiam05
 !         chlmlrr(mgs) = (qhlml0(ndiam+1)-qhlmlr05)/((qxd1-qxd05)/(cxd1-cxd05)) + qhlmlr05/(qxd05/cxd05) + rho0(mgs)*(qhlmlr2*mltmass1inv + qhlmlr12*mltmass2inv)
 !         tmpcmlt = (qhlml0(ndiam+1)-qhlmlr05)/((qxd1-qxd05)/(cxd1-cxd05)) + qhlmlr05/(qxd05/cxd05)
-         IF ( numshedregimes == 2 ) THEN
+         if ( numshedregimes == 2 ) then
            chlmlrr(mgs) = tmpcmlt + rho0(mgs)*(qhlmlr2*mltmass1inv + qhlmlr12*mltmass2inv)
-         ELSEIF ( numshedregimes == 3 ) THEN
+         elseif ( numshedregimes == 3 ) then
 !           qhlmlr3 = qhml(ndiam+3) ! dqhml(ndiam+2)
 !           qhlmlr2 = qhml(ndiam+2) ! dqhml(ndiam+2)
 !           qhlmlr1 = qhml(ndiam+1)
 !           qhlmlr12 = qhml(ndiam+1)-qhml(ndiam+2) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
 !           qhlmlr23 = qhml(ndiam+2)-qhml(ndiam+3) ! dqhml(ndiam+1) ! qhmlr1 - qhmlr2
            chlmlrr(mgs) = tmpcmlt + rho0(mgs)*(qhlmlr3*mltmass1inv + qhlmlr23*mltmass2inv + qhlmlr12*mltmass3inv)
-         ENDIF
+         endif
          
          ! hack!
          !  chlmlrr(mgs) =  rho0(mgs)*qhlmlr(mgs)*mltmass0inv
@@ -20028,14 +20028,14 @@ END SUBROUTINE nssl_2mom_driver
 !           write(iunit,*) 'zx,tmpcmlt,qhlmlr2,qhlmlr12,xdn',zx(mgs,lhl),tmpcmlt,qhlmlr2,qhlmlr12,xdn(mgs,lhl),qhlmlr12*mltmass2inv,qhlmlr2*mltmass1inv
 !         ENDIF
 
-         IF ( .true. .or. alpha(mgs,lhl) < alphamax - delta_alphamlr ) THEN ! { allow spectrum to get narrower, BUT still want to calculate chlmlrr
+         if ( .true. .or. alpha(mgs,lhl) < alphamax - delta_alphamlr ) then ! { allow spectrum to get narrower, BUT still want to calculate chlmlrr
      !     chlmlr(mgs)  = qhlmlr0/(rho0(mgs)*qxd1/cxd1) 
           chlmlr(mgs)  =  tmpcmlt ! (qhlml0(ndiam+1)-qhlmlr05)/((qxd1-qxd05)/(cxd1-cxd05)) + qhlmlr05/(qxd05/cxd05)
           
           ! check for negative value of cx, and, if so revert to typical number loss rate.
-          IF ( cx(mgs,lhl) + dtp*chlmlr(mgs) < 0.0 ) THEN
+          if ( cx(mgs,lhl) + dtp*chlmlr(mgs) < 0.0 ) then
              chlmlr(mgs) = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlmlr(mgs)
-          ENDIF
+          endif
           
 ! test integrated Z rate for hail
 
@@ -20066,7 +20066,7 @@ END SUBROUTINE nssl_2mom_driver
 
        zhlmlr0inf = zhlmlr(mgs)
 
-      ENDIF !}
+      endif !}
 
 
 !
@@ -20092,10 +20092,10 @@ END SUBROUTINE nssl_2mom_driver
         i1 = Int(dgami*(tmp))
         del = tmp - dgam*i1
 
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
 !          x = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami - gamxinf(5. + alpha(mgs,lhl), ratio))/g1palp
           x = (Gamma_sp(5. + alpha(mgs,lhl)) - gamxinf(5. + alpha(mgs,lhl), ratio))/g1palp
-        ELSE
+        else
 
 !           i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
@@ -20116,15 +20116,15 @@ END SUBROUTINE nssl_2mom_driver
 
            tmp3 = gaminterp(ratio,alpha(mgs,lhl),5,2)
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = (Gamma_sp(5. + alpha(mgs,lhl)) - gamxinf(5. + alpha(mgs,lhl), ratio))/g1palp
             !  tmp1 = gaminterp(ratio,alpha(mgs,lhl),8,2)
               write(6,*) 'gamcheck11: i,k,tmp3,x = ',igs(mgs),kgs(mgs),tmp3,tmpgam
           !    tmp1 =  qx(mgs,lhl)*(1. - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp)
           !    write(6,*) 'qxd05,gam: ',qxd05,tmp1
-            ENDIF
-          ENDIF
+            endif
+          endif
 
 !           IF ( tmp3 > 0.98 ) THEN
 !            tmp3 = gamxinf(5. + alpha(mgs,lhl), ratio)/g1palp
@@ -20137,30 +20137,30 @@ END SUBROUTINE nssl_2mom_driver
            x = tmp3
            x2 = x
 
-          IF ( x <= 0.0 ) THEN ! check for unphysical negative result from interpolation
+          if ( x <= 0.0 ) then ! check for unphysical negative result from interpolation
        !    x = 0.0
     !       x = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami - gamxinf(5. + alpha(mgs,lhl), ratio))/g1palp
            x = (Gamma_sp(5. + alpha(mgs,lhl)) - gamxinf(5. + alpha(mgs,lhl), ratio))/g1palp
-          ELSE
+          else
     !       x2 = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami - gamxinf(5. + alpha(mgs,lhl), ratio))/g1palp
     !       x2 = (Gamma_sp(5. + alpha(mgs,lhl)) - gamxinf(5. + alpha(mgs,lhl), ratio))/g1palp
-          ENDIF
+          endif
 
-          IF ( .false. .and. igs(mgs) == 40 ) THEN
+          if ( .false. .and. igs(mgs) == 40 ) then
             write(0,*) '3 x: tmp3,tmp5 = ',tmp3,tmp5
-          ENDIF
+          endif
 
-        ENDIF
+        endif
 
         tmp = 5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl)
         i1 = Int(dgami*(tmp))
         del = tmp - dgam*i1
 
         ! problem with interpolation of this one....
-        IF ( usegamxinf3 ) THEN
+        if ( usegamxinf3 ) then
 !           y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami  - gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
            y = (Gamma_sp(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl))  - gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
-        ELSE
+        else
 !           i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
 !           delx = ratio - float(i)*dqiacrratio
@@ -20183,31 +20183,31 @@ END SUBROUTINE nssl_2mom_driver
              tmp3 = gaminterp(ratio,alpha(mgs,lhl),6,2)
 !           ENDIF
 
-          IF ( gammacheck ) THEN
-            IF ( igs(mgs) == nx/2 ) THEN
+          if ( gammacheck ) then
+            if ( igs(mgs) == nx/2 ) then
               tmpgam = (Gamma_sp(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl))  - &
                         gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
             !  tmp1 = gaminterp(ratio,alpha(mgs,lhl),8,2)
               write(6,*) 'gamcheck12: i,k,tmp3,y = ',igs(mgs),kgs(mgs),tmp3,tmpgam
           !    tmp1 =  qx(mgs,lhl)*(1. - gamxinf(4. + alpha(mgs,lhl), ratio)/g4palp)
           !    write(6,*) 'qxd05,gam: ',qxd05,tmp1
-            ENDIF
-          ENDIF
+            endif
+          endif
            
       !     y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami)/g1palp  - tmp3 
            y = tmp3
            y2 = y
 
-          IF ( y <= 0.0 ) THEN ! check for unphysical negative result from interpolation
+          if ( y <= 0.0 ) then ! check for unphysical negative result from interpolation
           ! y = 0.0
           ! y = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami  - gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
            y = (Gamma_sp(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl))  - gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
-          ELSE
+          else
 !           y2 = (gmoi(i1) + (gmoi(i1+1) - gmoi(i1))*del*dgami  - gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
 !           y2 = (Gamma_sp(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl))  - gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
-          ENDIF
+          endif
            
-        IF ( .false. .and. igs(mgs) == nx/2 ) THEN
+        if ( .false. .and. igs(mgs) == nx/2 ) then
           write(0,*) '3 kgs,k,usegamxinf/2/3 = ',kgs(mgs),k,usegamxinf,usegamxinf2,usegamxinf3
           write(0,*) '3 y-interp, tmp = ',y,tmp
           tmp = (gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio))/g1palp
@@ -20221,17 +20221,17 @@ END SUBROUTINE nssl_2mom_driver
                        gamxinf(5.5 + alpha(mgs,lhl) + 0.5*bxx(mgs,lhl), ratio)/g1palp
           write(0,*) '3 ratio0,ratio,xdia(1) = ',mltdiam1/xdia(mgs,lhl,1),ratio,xdia(mgs,lhl,1),alpha(mgs,lhl)
         
-        ENDIF
+        endif
            
-        ENDIF
-        IF ( .false. .and. igs(mgs) == 38 .and. qhlmlr(mgs) < 0.0 ) THEN
+        endif
+        if ( .false. .and. igs(mgs) == 38 .and. qhlmlr(mgs) < 0.0 ) then
            i = Min(nqiacrratio,Int(ratio*dqiacrratioinv))
 !           j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
-           IF ( alp0flag ) THEN
+           if ( alp0flag ) then
            j = Int(Max(0.0,Min(15.,alpha(mgs,lhl)))*dqiacralphainv)
-           ELSE
+           else
            j = Int(Max(minalphalu,Min(maxalphalu,alpha(mgs,lhl)))*dqiacralphainv)
-           ENDIF
+           endif
            delx = ratio - float(i)*dqiacrratio
            dely = alpha(mgs,lhl) - float(j)*dqiacralpha
            ip1 = Min( i+1, nqiacrratio )
@@ -20251,7 +20251,7 @@ END SUBROUTINE nssl_2mom_driver
           write(iunit,*) 'interpolated y = ', y,tmp1,tmp2,tmp3, &
                gamxinflu(i,j,6,2),gamxinflu(ip1,j,6,2),gamxinflu(i,jp1,6,2),gamxinflu(ip1,jp1,6,2)
            
-        ENDIF
+        endif
 
         hwvent1 =  0.78*x + y*hlventy(mgs)
 !        hwvent1 =    &
@@ -20264,7 +20264,7 @@ END SUBROUTINE nssl_2mom_driver
      &  fmlt1(mgs)*cx(mgs,lhl)*hwvent1*xdia(mgs,lhl,1)**4   &
      &   , 0.0 )/xdn(mgs,lhl)*(6./pi)  ! factor of 6 comes from d/dt(D^6) = 6*D^5; 1/(xdn(mgs,lhl))/pi comes from removing the mass/volume factors; 
 
-        IF ( .false. .and. igs(mgs) == nx/2 ) THEN
+        if ( .false. .and. igs(mgs) == nx/2 ) then
          tmp3 = &
      &   rho0(mgs)*min(   &
      &  fmlt1(mgs)*cx(mgs,lhl)*(0.78*x2 + y2*hlventy(mgs))*xdia(mgs,lhl,1)**4   &
@@ -20273,7 +20273,7 @@ END SUBROUTINE nssl_2mom_driver
           write(0,*) '3 zhlmlrr(mgs),zhlmlrr2 = ',zhlmlrr(mgs),tmp3
           write(0,*) '3 x,x2,y,y2 = ',x,x2,y,y2,hwvent1,0.78*x + y2*hlventy(mgs)
         
-        ENDIF
+        endif
 
 ! so now have zhmlrr as the Z whole-particle loss for hail for 0 to mltdiam1, and zhmlr0inf as the integrated whole-particle loss
 ! We want whole particle loss for 0 < d < mltdiam1, plus shedding loss for d > mltdiam1. Shedding loss is simple double the whole particle loss
@@ -20285,7 +20285,7 @@ END SUBROUTINE nssl_2mom_driver
        ! yes, I think it should -- NOPE!
      !  zhlmlr(mgs) = 2.*zhlmlrr(mgs) + Min(0.0, (zhlmlr0inf - zhlmlrr(mgs)) )
 
-        IF ( .false. .and. igs(mgs) == nx/2 ) THEN
+        if ( .false. .and. igs(mgs) == nx/2 ) then
 
           write(0,'(a,i3,10(1pe18.10))') 'kz, zhlmlr0inf,z0-zrr,zhlmlrr,zhlmlr  = ',kgs(mgs),zhlmlr0inf, &
                      zhlmlr0inf - zhlmlrr(mgs),zhlmlrr(mgs),zhlmlr(mgs)
@@ -20294,25 +20294,25 @@ END SUBROUTINE nssl_2mom_driver
           write(0,'(a,10(1pe18.10))') 'new - old = ',zhlmlr(mgs) - ( zhlmlrr(mgs) + 2.*(zhlmlr0inf - zhlmlrr(mgs)) )
         !  write(0,*) '3 x,x2,y,y2 = ',x,x2,y,y2,hwvent1,0.78*x + y2*hlventy(mgs)
         
-        ENDIF
+        endif
 
 !          zhlmlrr(mgs) =  Min(0.0, (xdn(mgs,lhl)/xdn(mgs,lr))**2 * &
 !     &       g1x(mgs,lhl)*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*tmp * qhlmlr0 - tmp**2 * chlmlr(mgs)  ) )
 
          tmp1 = (xdn(mgs,lhl)/1000.)**2 * zhlmlrr(mgs) 
-         IF ( numshedregimes == 2 ) THEN
+         if ( numshedregimes == 2 ) then
           zhlmlrr(mgs) = (xdn(mgs,lhl)/1000.)**2 *zhlmlrr(mgs) + rho0(mgs)*  &
      &              (qhlmlr2*mltmass1inv*(0.01*takshedsize1)**6 + qhlmlr12*mltmass2inv*(0.01*takshedsize2)**6 )
-         ELSEIF ( numshedregimes == 3 ) THEN
+         elseif ( numshedregimes == 3 ) then
 !           chlmlrr(mgs) = tmpcmlt + rho0(mgs)*(qhlmlr3*mltmass1inv + qhlmlr23*mltmass2inv + qhlmlr12*mltmass3inv)
           zhlmlrr(mgs) = (xdn(mgs,lhl)/1000.)**2 *zhlmlrr(mgs) + rho0(mgs)*  &
      &              (qhlmlr3*mltmass1inv*(0.01*takshedsize1)**6 + qhlmlr23*mltmass2inv*(0.01*takshedsize2)**6  + &
      &               qhlmlr12*mltmass3inv*(0.01*takshedsize3)**6 )
 !     &              (qhlmlr3*mltmass1inv*(0.01*0.5*takshedsize1)**6 + qhlmlr23*mltmass2inv*(0.01*0.5*takshedsize2)**6  + &
 !     &               qhlmlr12*mltmass3inv*(0.01*0.5*takshedsize3)**6 )
-         ENDIF
+         endif
          
-         IF ( .false. .and. igs(mgs) == nx/2 ) THEN
+         if ( .false. .and. igs(mgs) == nx/2 ) then
           write(0,'(a,i3,10(1pe18.10))') 'kz, zhlmlrr1,zhlmlrr,zhlmlr  = ',kgs(mgs),tmp1,zhlmlrr(mgs),zhlmlr(mgs)
           write(0,'(a,10(1pe18.10))') 'z1,z2,z3 = ', rho0(mgs)*qhlmlr3*mltmass1inv*(0.01*takshedsize1)**6 , &
      &               rho0(mgs)*qhlmlr23*mltmass2inv*(0.01*takshedsize2)**6 , &
@@ -20320,12 +20320,12 @@ END SUBROUTINE nssl_2mom_driver
 !          write(0,'(a,10(1pe18.10))') 'z1,z2,z3 = ', rho0(mgs)*qhlmlr3*mltmass1inv*(0.01*0.5*takshedsize1)**6 , rho0(mgs)*qhlmlr23*mltmass2inv*(0.01*0.5*takshedsize2)**6 , &
 !     &               rho0(mgs)*qhlmlr12*mltmass3inv*(0.01*0.5*takshedsize3)**6 
           write(0,*) 'chlmlrr = ',chlmlrr(mgs)
-         ENDIF
+         endif
 
          ! chlmlr(mgs)  = Min( chlmlr(mgs), (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlmlr(mgs)) ! Make sure hail size does not go *down*
 
 !          tmp = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlmlr(mgs)
-         IF ( alpha(mgs,lhl) >= alphamax - delta_alphamlr ) THEN ! { cannot allow spectrum to get any narrower, revert to 2-moment method
+         if ( alpha(mgs,lhl) >= alphamax - delta_alphamlr ) then ! { cannot allow spectrum to get any narrower, revert to 2-moment method
          
           chlmlr(mgs)  = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlmlr(mgs)
 !          chlmlrsave(mgs) = chlmlr(mgs)
@@ -20361,7 +20361,7 @@ END SUBROUTINE nssl_2mom_driver
 !     &       g1*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*tmp * qhlmlr(mgs) - tmp**2 * chlmlrr(mgs)  ) )
 
          
-         ELSEIF (  xdia(mgs,lhl,3) > binmlrmxdia ) THEN ! 
+         elseif (  xdia(mgs,lhl,3) > binmlrmxdia ) then ! 
          
           chlmlrtmp  = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlmlr(mgs)
           g1 = g1x(mgs,lhl) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
@@ -20369,10 +20369,10 @@ END SUBROUTINE nssl_2mom_driver
           zhlmlrtmp =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*tmp * qhlmlr(mgs) - tmp**2 * chlmlrtmp )
           
           tmp1 = 1.e-3
-          IF ( xdia(mgs,lhl,3) > binmlrmxdia + tmp1 ) THEN 
+          if ( xdia(mgs,lhl,3) > binmlrmxdia + tmp1 ) then 
              chlmlr(mgs) = chlmlrtmp
              zhlmlr(mgs) = zhlmlrtmp
-          ELSE ! weighted average
+          else ! weighted average
 !            IF ( igs(mgs) == 3 ) THEN
 !              write(0,*) 'k,xdia,chlmlr,zhlmlr = ',kgs(mgs),xdia(mgs,lhl,3)*1.e3,chlmlr(mgs),zhlmlr(mgs)
 !              write(0,*) 'weights 1,2 = ',(xdia(mgs,lhl,3) - binmlrmxdia )/tmp1 , (binmlrmxdia + tmp1 - xdia(mgs,lhl,3))/tmp1
@@ -20384,46 +20384,46 @@ END SUBROUTINE nssl_2mom_driver
 !              write(0,*) 'tmp,chlmlr,= ',chlmlrtmp,chlmlr(mgs)
 !              write(0,*) 'tmp,zhlmlr,= ',zhlmlrtmp,zhlmlr(mgs)
 !            ENDIF
-          ENDIF
+          endif
 
           ! check for negative value of cx, and, if so revert to typical number loss rate.
-          IF ( cx(mgs,lhl) + dtp*chlmlr(mgs) < 0.0 ) THEN
+          if ( cx(mgs,lhl) + dtp*chlmlr(mgs) < 0.0 ) then
              chlmlr(mgs) = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlmlr(mgs)
              zhlmlr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*tmp * qhlmlr(mgs) - tmp**2 * chlmlr(mgs)  )
-          ENDIF
+          endif
           
          
-         ENDIF !} 
+         endif !} 
 
 
-       ELSEIF ( ibinhlmlr == -1 ) THEN ! OLD VERSION use incomplete gamma functions to approximate the bin results
+       elseif ( ibinhlmlr == -1 ) then ! OLD VERSION use incomplete gamma functions to approximate the bin results
 
-        ENDIF ! ibinhlmlr
+        endif ! ibinhlmlr
 
 
-       IF ( ivhmltsoak > 0 .and.  qhlmlr(mgs) < 0.0 .and. lvol(lhl) > 1 .and. xdn(mgs,lhl) .lt. xdnmx(lhl) ) THEN
+       if ( ivhmltsoak > 0 .and.  qhlmlr(mgs) < 0.0 .and. lvol(lhl) > 1 .and. xdn(mgs,lhl) .lt. xdnmx(lhl) ) then
          ! act as if 50% of the meltwater were soaked into the graupel
            v1 = (1. - xdn(mgs,lhl)/xdnmx(lhl))*(vx(mgs,lhl) + rho0(mgs)*qhlmlr(mgs)/xdn(mgs,lhl) )/(dtp) ! volume available for filling
            v2 = -1.0*rho0(mgs)*qhlmlr(mgs)/xdnmx(lhl)  ! volume of melted ice if it were refrozen in the matrix
            
            vhlsoak(mgs) = Min(v1,v2)
            
-       ENDIF
+       endif
         
-        ENDIF
-       ENDIF
+        endif
+       endif
 
-      ENDIF
+      endif
       
 !
 !      qimlr(mgs)  = max( qimlr(mgs), -qimxd(mgs) ) 
 !      qsmlr(mgs)  = max( qsmlr(mgs),  -qsmxd(mgs) ) 
 ! erm 5/10/2007 changed to next line:
       if ( .not. mixedphase ) qsmlr(mgs)  = max( qsmlr(mgs),  Min( -qsmxd(mgs), -0.7*qx(mgs,ls)*dtpinv ) ) 
-      IF ( .not. mixedphase ) THEN
+      if ( .not. mixedphase ) then
         qhmlr(mgs)  = max( qhmlr(mgs),  Min( -qhmxd(mgs), -0.95*qx(mgs,lh)*dtpinv ) ) 
         chmlr(mgs)  = max( chmlr(mgs),  Min( -chmxd(mgs), -0.95*cx(mgs,lh)*dtpinv ) ) 
-      ENDIF
+      endif
 !      qhmlr(mgs)  = max( max( qhmlr(mgs),  -qhmxd(mgs) ) , -0.5*qx(mgs,lh)*dtpinv ) !limits to 1/2 qh or max depletion
       qhmlh(mgs)  = 0. ! not used
 
@@ -20431,10 +20431,10 @@ END SUBROUTINE nssl_2mom_driver
       ! Rasmussen and Heymsfield say melt water remains on graupel up to 9 mm before shedding
 
 
-      IF ( lhl .gt. 1 .and. lhlw < 1 ) THEN
+      if ( lhl .gt. 1 .and. lhlw < 1 ) then
         qhlmlr(mgs)  = max( qhlmlr(mgs),  Min( -qxmxd(mgs,lhl), -0.95*qx(mgs,lhl)*dtpinv ) )
         chlmlr(mgs)  = max( chlmlr(mgs),  Min( -cxmxd(mgs,lhl), -0.95*cx(mgs,lhl)*dtpinv ) )
-      ENDIF
+      endif
 
 !
       end do
@@ -20444,21 +20444,21 @@ END SUBROUTINE nssl_2mom_driver
       if ( ipconc .ge. 1 ) then
       do mgs = 1,ngscnt
       cimlr(mgs)  = (cx(mgs,li)/(qx(mgs,li)+1.e-20))*qimlr(mgs)
-      IF ( .not. mixedphase ) THEN !{
-        IF ( xdia(mgs,ls,1) .gt. 1.e-6 .and. -qsmlr(mgs) .ge. 0.5*qxmin(ls) .and. ipconc .ge. 4 ) THEN 
+      if ( .not. mixedphase ) then !{
+        if ( xdia(mgs,ls,1) .gt. 1.e-6 .and. -qsmlr(mgs) .ge. 0.5*qxmin(ls) .and. ipconc .ge. 4 ) then 
 !         csmlr(mgs)  = rho0(mgs)*qsmlr(mgs)/(xv(mgs,ls)*rhosm)
          csmlr(mgs)  = (cx(mgs,ls)/(qx(mgs,ls)))*qsmlr(mgs)
-        ELSEIF ( qx(mgs,ls) > qxmin(ls) ) THEN
+        elseif ( qx(mgs,ls) > qxmin(ls) ) then
          csmlr(mgs)  = (cx(mgs,ls)/(qx(mgs,ls)))*qsmlr(mgs)
-        ENDIF
+        endif
         
         csmlrr(mgs) = csmlr(mgs)/rzxs(mgs)
-         IF ( -csmlrr(mgs)*dtp > cxmin .and. -qsmlr(mgs)*dtp > qxmin(lr) .and. snowmeltdia > 0.0 ) THEN
+         if ( -csmlrr(mgs)*dtp > cxmin .and. -qsmlr(mgs)*dtp > qxmin(lr) .and. snowmeltdia > 0.0 ) then
            rmas = rho0(mgs)*qsmlr(mgs)/csmlrr(mgs)
-           IF ( rmas > snowmeltmass ) THEN
+           if ( rmas > snowmeltmass ) then
              csmlrr(mgs) = rho0(mgs)*qsmlr(mgs)/snowmeltmass
-           ENDIF
-         ENDIF
+           endif
+         endif
            
 
 
@@ -20466,9 +20466,9 @@ END SUBROUTINE nssl_2mom_driver
 !          chmlr(mgs) = rho0(mgs)*qhmlr(mgs)/(pi*xdn(mgs,lh)*xdia(mgs,lh,1)**3)  ! out of hail
 !          chmlr(mgs) = Max( chmlr(mgs), -chmxd(mgs) )
 !        ELSE
-         IF ( ibinhmlr == 0 .or. lzh < 1 ) THEN
+         if ( ibinhmlr == 0 .or. lzh < 1 ) then
            chmlr(mgs)  = (cx(mgs,lh)/(qx(mgs,lh)+1.e-20))*qhmlr(mgs)
-           IF ( imltshddmr == 3 .and. qhmlr(mgs) < -qxmin(lh) ) THEN
+           if ( imltshddmr == 3 .and. qhmlr(mgs) < -qxmin(lh) ) then
             !  tmpdiam = (shedalp+alpha(mgs,lh))*xdia(mgs,lh,1)
             !  
             !  IF ( tmpdiam > sheddiam ) THEN ! let size get smaller until it reaches sheddiam
@@ -20494,32 +20494,32 @@ END SUBROUTINE nssl_2mom_driver
             chmlr(mgs)  = (cx(mgs,lh)/(qx(mgs,lh)+1.e-20))*(qhmlr(mgs) - qhlmlr1)
            
            
-           ENDIF
+           endif
 !           IF ( igs(mgs) == 40 ) THEN
 !             write(0,*) 'is this running? chmlr = ',kgs(mgs), chmlr(mgs)
 !           ENDIF
-         ENDIF
+         endif
 !        ENDIF
 
 
-     IF ( chmlr(mgs) < 0.0 .and. (ibinhmlr < 1 .or. lzh < 1) ) THEN ! { already done if ibinhmlr > 0
-      IF (  ipconc >= 6 .and. lzr .gt. 1 .and. lzh < 1  .and. qx(mgs,lh) > qxmin(lh) ) THEN ! Only compute if rain is 3-moment but graupel is not, otherwise is computed later
+     if ( chmlr(mgs) < 0.0 .and. (ibinhmlr < 1 .or. lzh < 1) ) then ! { already done if ibinhmlr > 0
+      if (  ipconc >= 6 .and. lzr .gt. 1 .and. lzh < 1  .and. qx(mgs,lh) > qxmin(lh) ) then ! Only compute if rain is 3-moment but graupel is not, otherwise is computed later
           tmp = qx(mgs,lh)/cx(mgs,lh)
           alp = alpha(mgs,lh)
           g1 = g1x(mgs,lh) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
         
         zhmlr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*tmp * qhmlr(mgs) - tmp**2 * chmlr(mgs)  )
 
-      ENDIF
+      endif
       
-      IF ( ibinhmlr == 0 .or. lzh < 1 ) THEN
-      IF ( ihmlt .eq. 1 ) THEN
+      if ( ibinhmlr == 0 .or. lzh < 1 ) then
+      if ( ihmlt .eq. 1 ) then
         chmlrr(mgs)  = Min( chmlr(mgs), rho0(mgs)*qhmlr(mgs)/(xdn(mgs,lr)*vmlt) ) ! into rain 
-      ELSEIF ( ihmlt .eq. 2 ) THEN
-        IF ( xv(mgs,lh) .gt. 0.0 .and. chmlr(mgs) .lt. 0.0 ) THEN
+      elseif ( ihmlt .eq. 2 ) then
+        if ( xv(mgs,lh) .gt. 0.0 .and. chmlr(mgs) .lt. 0.0 ) then
 !        chmlrr(mgs) = Min( chmlr(mgs), rho0(mgs)*qhmlr(mgs)/(xdn(mgs,lh)*xv(mgs,lh)) ) ! into rain 
 ! guess what, this is the same as chmlr: rho0*qhmlr/xmas(lh) --> cx/qx = rho0/xmas
-          IF(imltshddmr == 1) THEN
+          if(imltshddmr == 1) then
             ! DTD: If Dmg < sheddiam, then assume complete melting into
             ! maximal raindrop.  Between sheddiam and sheddiam0 mm, linearly ramp down to a 3 mm shed drop
             tmp = -rho0(mgs)*qhmlr(mgs)/(Min(xdn(mgs,lr)*xvmx(lr), xdn(mgs,lh)*xv(mgs,lh))) ! Min of Maximum raindrop size/mean hail size
@@ -20527,35 +20527,35 @@ END SUBROUTINE nssl_2mom_driver
             
             chmlrr(mgs) = tmp*(sheddiam0-xdia(mgs,lh,3))/(sheddiam0-sheddiam)+tmp2*(xdia(mgs,lh,3)-sheddiam)/(sheddiam0-sheddiam)  ! old version
             chmlrr(mgs) = -Max(tmp,Min(tmp2,chmlrr(mgs)))
-          ELSEIF ( imltshddmr == 2 .or. imltshddmr == 3 ) THEN
+          elseif ( imltshddmr == 2 .or. imltshddmr == 3 ) then
             ! 8/26/2015 ERM updated to use shedalp and tmpdiam
             ! tmpdiam = (shedalp+alpha(mgs,lh))*xdia(mgs,lh,1)
             chmlrr(mgs) =  rho0(mgs)*qhmlr(mgs)/(xdn(mgs,lr)*vshdgs(mgs,lh))  ! into rain 
-          ELSE ! Old method
+          else ! Old method
             chmlrr(mgs) =  rho0(mgs)*qhmlr(mgs)/(Min(xdn(mgs,lr)*xvmx(lr), xdn(mgs,lh)*xv(mgs,lh)))  ! into rain 
-         ENDIF
-        ELSE
+         endif
+        else
         chmlrr(mgs) = chmlr(mgs)
-        ENDIF
-      ELSEIF ( ihmlt .eq. 0 ) THEN
+        endif
+      elseif ( ihmlt .eq. 0 ) then
         chmlrr(mgs) = chmlr(mgs)
-      ENDIF
+      endif
 
-      ELSE ! ibinhmlr < 0? Already have an outer IF test for ibinhmlr < 1
+      else ! ibinhmlr < 0? Already have an outer if test for ibinhmlr < 1
         chmlrr(mgs)  = Min( chmlrr(mgs), rho0(mgs)*qhmlr(mgs)/(xdn(mgs,lr)*xvmx(lr)) ) ! into rain 
-      ENDIF
+      endif
       
-      ENDIF ! } ( chmlr(mgs) < 0.0 .and. ibinhmlr < 1)
+      endif ! } ( chmlr(mgs) < 0.0 .and. ibinhmlr < 1)
 
-      IF ( lhl .gt. 1 .and. lhlw < 1 .and. .not. mixedphase .and. qhlmlr(mgs) < 0.0 ) THEN ! {
+      if ( lhl .gt. 1 .and. lhlw < 1 .and. .not. mixedphase .and. qhlmlr(mgs) < 0.0 ) then ! {
       
-      IF ( ibinhlmlr == 0 .or. lzhl < 1 ) THEN
+      if ( ibinhlmlr == 0 .or. lzhl < 1 ) then
 !      IF ( xdia(mgs,lhl,1) .gt. 1.e-6 .and. Abs(qhlmlr(mgs)) .ge. qxmin(lhl) ) THEN
 !      chlmlr(mgs) = rho0(mgs)*qhlmlr(mgs)/(pi*xdn(mgs,lhl)*xdia(mgs,lhl,1)**3)  ! out of hail
 !      chlmlr(mgs) = Max( chlmlr(mgs), -cxmxd(mgs,lhl) )
 !      ELSE
       chlmlr(mgs)  = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlmlr(mgs)
-           IF ( imltshddmr == 3 .and. qhlmlr(mgs) < -qxmin(lhl) ) THEN
+           if ( imltshddmr == 3 .and. qhlmlr(mgs) < -qxmin(lhl) ) then
 !           IF ( .false. .and. imltshddmr == 3  ) THEN
 !              tmpdiam = (shedalp+alpha(mgs,lhl))*xdia(mgs,lhl,1)
 !              
@@ -20581,43 +20581,43 @@ END SUBROUTINE nssl_2mom_driver
 
             chlmlr(mgs)  = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*Min(0.0, qhlmlr(mgs) - qhlmlr1)
 
-            ENDIF
+            endif
 !      ENDIF
-      ENDIF
+      endif
       
-      IF ( ibinhlmlr == 0 .or. lzhl < 1 ) THEN !{
-      IF ( ihmlt .eq. 1 ) THEN
+      if ( ibinhlmlr == 0 .or. lzhl < 1 ) then !{
+      if ( ihmlt .eq. 1 ) then
         chlmlrr(mgs)  = Min( chlmlr(mgs), rho0(mgs)*qhlmlr(mgs)/(xdn(mgs,lr)*vmlt) ) ! into rain 
-      ELSEIF ( ihmlt .eq. 2 ) THEN
-        IF ( xv(mgs,lhl) .gt. 0.0 .and. chlmlr(mgs) .lt. 0.0 ) THEN
+      elseif ( ihmlt .eq. 2 ) then
+        if ( xv(mgs,lhl) .gt. 0.0 .and. chlmlr(mgs) .lt. 0.0 ) then
 !        chlmlrr(mgs) = rho0(mgs)*qhlmlr(mgs)/(Min(xdn(mgs,lr)*xvmx(lr), xdn(mgs,lhl)*xv(mgs,lhl)))  ! into rain 
 !        chlmlrr(mgs) = Min( chlmlr(mgs), rho0(mgs)*qhlmlr(mgs)/(xdn(mgs,lhl)*xv(mgs,lhl)) ) ! into rain 
-          IF(imltshddmr == 1 ) THEN
+          if(imltshddmr == 1 ) then
             tmp = -rho0(mgs)*qhlmlr(mgs)/(Min(xdn(mgs,lr)*xvmx(lr), xdn(mgs,lhl)*xv(mgs,lhl))) ! Min of Maximum raindrop size/mean hail size
             tmp2 = -rho0(mgs)*qhlmlr(mgs)/(xdn(mgs,lr)*vr3mm) ! conc. change for a 3 mm mean drop diameter
             chlmlrr(mgs) = tmp*(20.e-3-xdia(mgs,lhl,3))/(20.e-3-sheddiam)+tmp2*(xdia(mgs,lhl,3)-sheddiam)/(20.e-3-sheddiam)
             chlmlrr(mgs) = -Max(tmp,Min(tmp2,chlmlrr(mgs)))
-          ELSEIF ( imltshddmr == 2 .or. imltshddmr == 3 ) THEN
+          elseif ( imltshddmr == 2 .or. imltshddmr == 3 ) then
             ! 8/26/2015 ERM updated to use shedalp and tmpdiam
             ! tmpdiam = (shedalp+alpha(mgs,lh))*xdia(mgs,lh,1)
             chlmlrr(mgs) =  rho0(mgs)*qhlmlr(mgs)/(xdn(mgs,lr)*vshdgs(mgs,lhl))  ! into rain 
-          ELSE ! old method
+          else ! old method
             chlmlrr(mgs) = rho0(mgs)*qhlmlr(mgs)/(Min(xdn(mgs,lr)*xvmx(lr), xdn(mgs,lhl)*xv(mgs,lhl)))  ! into rain 
-          ENDIF
-        ELSE
+          endif
+        else
         chlmlrr(mgs) = chlmlr(mgs)
-        ENDIF
-      ELSEIF ( ihmlt .eq. 0 ) THEN
+        endif
+      elseif ( ihmlt .eq. 0 ) then
         chlmlrr(mgs) = chlmlr(mgs)
-      ENDIF
+      endif
 
-      ELSE ! } { ibinhlmlr > 0
+      else ! } { ibinhlmlr > 0
         chlmlrr(mgs)  = Min( chlmlrr(mgs), rho0(mgs)*qhlmlr(mgs)/(xdn(mgs,lr)*xvmx(lr)) ) ! into rain 
-      ENDIF !}
+      endif !}
       
         
-       IF ( ipconc >= 8 .and. lzhl .gt. 1 .and. ibinhlmlr <= 0 ) THEN
-        IF ( cx(mgs,lhl) > 0.0 ) THEN
+       if ( ipconc >= 8 .and. lzhl .gt. 1 .and. ibinhlmlr <= 0 ) then
+        if ( cx(mgs,lhl) > 0.0 ) then
 
           tmp = qx(mgs,lhl)/cx(mgs,lhl)
           alp = alpha(mgs,lhl)
@@ -20625,11 +20625,11 @@ END SUBROUTINE nssl_2mom_driver
           g1 = g1x(mgs,lhl) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
         
         zhlmlr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( tmp * qhlmlr(mgs) )
-       ENDIF
-      ENDIF
-      ENDIF ! }
+       endif
+      endif
+      endif ! }
 
-      ENDIF ! }.not. mixedphase 
+      endif ! }.not. mixedphase 
 
 ! 10ice versions:
 !      chmlr(mgs)  = (cx(mgs,lh)/(qx(mgs,lh)+1.e-20))*qhmlr(mgs)
@@ -20640,12 +20640,12 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  deposition/sublimation of ice
 !
-      DO mgs = 1,ngscnt
+      do mgs = 1,ngscnt
 
       rwcap(mgs) = (0.5)*xdia(mgs,lr,1)
       swcap(mgs) = (0.5)*xdia(mgs,ls,1)
       hwcap(mgs) = (0.5)*xdia(mgs,lh,1)
-      IF ( lhl .gt. 1 ) hlcap(mgs) = (0.5)*xdia(mgs,lhl,1)
+      if ( lhl .gt. 1 ) hlcap(mgs) = (0.5)*xdia(mgs,lhl,1)
 
       if ( qx(mgs,li).gt.qxmin(li) .and. xdia(mgs,li,1) .gt. 0.0 ) then
 !
@@ -20658,18 +20658,18 @@ END SUBROUTINE nssl_2mom_driver
         fval = min(0.99,eval)
         gval = alog( abs( (1.+fval)/(1.-fval) ) )
         cicap(mgs) = cval*fval / gval
-      ELSE
+      else
        cicap(mgs) = 0.0
       end if
-      ENDDO
+      enddo
 !
 !
       qhdsv(:) = 0.0
       qhldsv(:) = 0.0
 
       do mgs = 1,ngscnt
-      IF ( icond .eq. 1 .or. temg(mgs) .le. tfrh    &
-     &      .or. (qx(mgs,lr) .le. qxmin(lr) .and. qx(mgs,lc) .le. qxmin(lc)) ) THEN
+      if ( icond .eq. 1 .or. temg(mgs) .le. tfrh    &
+     &      .or. (qx(mgs,lr) .le. qxmin(lr) .and. qx(mgs,lc) .le. qxmin(lc)) ) then
         qidsv(mgs) =   &
      &    fvds(mgs)*cx(mgs,li)*civent(mgs)*cicap(mgs)*depfac
         qsdsv(mgs) =   &
@@ -20680,14 +20680,14 @@ END SUBROUTINE nssl_2mom_driver
 !         write(0,*) 'qidsv = ',nstep,kgs(mgs),qidsv(mgs),temg(mgs)-tfrh,100.*(qx(mgs,lv)/qis(mgs) - 1.),1.e6*xdia(mgs,li,1),
 !     :            fvds(mgs),civent(mgs),cicap(mgs)
 !        ENDIF
-      ELSE
+      else
         qidsv(mgs) = 0.0
         qsdsv(mgs) = 0.0
-      ENDIF
+      endif
         qhdsv(mgs) =   &
      &    fvds(mgs)*cx(mgs,lh)*hwvent(mgs)*hwcap(mgs)*depfac
 
-        IF ( lhl .gt. 1 ) qhldsv(mgs) = fvds(mgs)*cx(mgs,lhl)*hlvent(mgs)*hlcap(mgs)*depfac
+        if ( lhl .gt. 1 ) qhldsv(mgs) = fvds(mgs)*cx(mgs,lhl)*hlvent(mgs)*hlcap(mgs)*depfac
 !
 !
       end do
@@ -20701,13 +20701,13 @@ END SUBROUTINE nssl_2mom_driver
 !  and rain evaporation
 !
 !
-      IF ( DoSublimationFix ) THEN
+      if ( DoSublimationFix ) then
       
       do mgs = 1,ngscnt
 
         qitmp(mgs) = qx(mgs,li) + qx(mgs,ls) + qx(mgs,lh)
-        IF ( lis > 1 ) qitmp(mgs) = qitmp(mgs) + qx(mgs,lis)
-        IF ( lhl > 1 ) qitmp(mgs) = qitmp(mgs) + qx(mgs,lhl)
+        if ( lis > 1 ) qitmp(mgs) = qitmp(mgs) + qx(mgs,lis)
+        if ( lhl > 1 ) qitmp(mgs) = qitmp(mgs) + qx(mgs,lhl)
         qrtmp(mgs) = qx(mgs,lr)
         qctmp(mgs) = qx(mgs,lc)
         qsimxdep(mgs) = 0.0
@@ -20716,7 +20716,7 @@ END SUBROUTINE nssl_2mom_driver
         
 
 !      IF ( ( qitmp(mgs) > qxmin(li) .or. qrtmp(mgs) > qxmin(lr) ) ) THEN
-      IF ( qitmp(mgs) > qxmin(li)  ) THEN
+      if ( qitmp(mgs) > qxmin(li)  ) then
       
         qitmp1    = qitmp(mgs)
         qctmp1    = qctmp(mgs)
@@ -20744,12 +20744,12 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  calculate super-saturation
 !
-      IF ( itertd == 1 ) THEN
+      if ( itertd == 1 ) then
       
-      ELSE
+      else
         dqcitmp(mgs) = dqci(mgs)
    !     dqwvtmp(mgs) = dqwv(mgs)
-      ENDIF
+      endif
 
       dqcw(mgs) = 0.0
       dqci(mgs) = 0.0
@@ -20768,7 +20768,7 @@ END SUBROUTINE nssl_2mom_driver
 !
        qvptmp = qvptmp - ( dqcw(mgs) + dqci(mgs) )  ! add to perturbation vapor
 
-       IF ( itertd == 2 .and. eqtset > 1 ) THEN
+       if ( itertd == 2 .and. eqtset > 1 ) then
        ! if eqtset == 2, then need to update the latent heats for change in hydrometeor content
           tmp = qitmp(mgs) !+ qx(mgs,lh)
 !          IF ( lhl > 1 ) tmp = tmp + qx(mgs,lhl)
@@ -20777,7 +20777,7 @@ END SUBROUTINE nssl_2mom_driver
 
           felvcptmp = (felv(mgs)-rw*temg(mgs))/cvm
           felscptmp = (fels(mgs)-rw*temg(mgs))/cvm
-       ENDIF
+       endif
 
 
 !      qitmp(mgs) = qx(mgs,li)
@@ -20792,7 +20792,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! condensation/deposition
 !
-      IF ( dqwv(mgs) .ge. 0. ) THEN ! {
+      if ( dqwv(mgs) .ge. 0. ) then ! {
       
 !      write(iunit,*) 'satadj: mgs,iter = ',mgs,itertd,dqwv(mgs),qss(mgs),qx(mgs,lv),qx(mgs,lc)
 !
@@ -20834,7 +20834,7 @@ END SUBROUTINE nssl_2mom_driver
       qctmp(mgs) = qctmp(mgs) + dqcw(mgs)
       qitmp(mgs) = qitmp(mgs) + dqci(mgs)
 
-       IF ( itertd == 2 .and. eqtset > 1 ) THEN
+       if ( itertd == 2 .and. eqtset > 1 ) then
        ! if eqtset == 2, then need to update the latent heats for change in hydrometeor content
           tmp = qitmp(mgs) ! + qx(mgs,lh)
 !          IF ( lhl > 1 ) tmp = tmp + qx(mgs,lhl)
@@ -20843,21 +20843,21 @@ END SUBROUTINE nssl_2mom_driver
 
           felvcptmp = (felv(mgs)-rw*temg(mgs))/cvm
           felscptmp = (fels(mgs)-rw*temg(mgs))/cvm
-       ENDIF
+       endif
 
-      IF ( eqtset > 2 ) THEN
+      if ( eqtset > 2 ) then
         pipert(mgs) = pipert(mgs) + (0   &
      &  +felspi(mgs)*dqci(mgs)    &
      &  +felvpi(mgs)*dqcw(mgs))*dtp
-      ENDIF
+      endif
 
 !
 !
-      END IF ! } dqwv(mgs) .ge. 0.
+      end if ! } dqwv(mgs) .ge. 0.
 
 
 !
-      IF ( itertd == 1 ) THEN
+      if ( itertd == 1 ) then
       ! update temporary saturation values
 
       thetatmp = thetaptmp + theta0(mgs)
@@ -20876,19 +20876,19 @@ END SUBROUTINE nssl_2mom_driver
 !      qsstmp = qvstmp
       qsstmp = qisstmp
       
-      ELSE
+      else
        ! set max depletion
         qctmp(mgs) = max( 0.0, qctmp(mgs) )
         qitmp(mgs) = max( 0.0, qitmp(mgs) )
        
-        IF ( qitmp(mgs) < qitmp1 ) THEN
+        if ( qitmp(mgs) < qitmp1 ) then
           qsimxsub(mgs) = (qitmp1 - qitmp(mgs))*dtpinv
-        ELSEIF ( qitmp(mgs) > qitmp1 ) THEN
+        elseif ( qitmp(mgs) > qitmp1 ) then
           qsimxdep(mgs) = (qitmp(mgs) - qitmp1)*dtpinv
-        ENDIF
+        endif
        
       
-      ENDIF
+      endif
 !      pceds(mgs) = (thetap(mgs) - thsave(mgs))*dtpinv
 !      write(iunit,*) 'satadj2: mgs,iter = ',mgs,itertd,dqwv(mgs),qss(mgs),qxtmp,qctmp(mgs)
 !
@@ -20896,18 +20896,18 @@ END SUBROUTINE nssl_2mom_driver
 !
       end do ! itertd
       
-      ENDIF
+      endif
       
       end do ! mgs
       
-      ELSE
+      else
       
-       DO mgs = 1,ngscnt
+       do mgs = 1,ngscnt
          qsimxdep(mgs) = qvimxd(mgs)
          qsimxsub(mgs) = 1.e20
-       ENDDO
+       enddo
       
-      ENDIF
+      endif
 
 ! end of qlimit
 
@@ -20925,46 +20925,46 @@ END SUBROUTINE nssl_2mom_driver
       qhsbv(mgs) = 0.0
       qscev(mgs) = 0.0
       cscev(mgs) = 0.0
-      IF ( icond .eq. 1 .or. temg(mgs) .le. tfrh    &
-     &      .or. (qx(mgs,lr) .le. qxmin(lr) .and. qx(mgs,lc) .le. qxmin(lc)) ) THEN ! last condition (qr<qmin & qc<qmin) for case icond=0
+      if ( icond .eq. 1 .or. temg(mgs) .le. tfrh    &
+     &      .or. (qx(mgs,lr) .le. qxmin(lr) .and. qx(mgs,lc) .le. qxmin(lc)) ) then ! last condition (qr<qmin & qc<qmin) for case icond=0
 !        qisbv(mgs) = max( min(qidsv(mgs), 0.0), -qimxd(mgs) )
 !        qssbv(mgs) = max( min(qsdsv(mgs), 0.0), -qsmxd(mgs) )
 ! erm 5/10/2007:
         qisbv(mgs) = max( min(qidsv(mgs), 0.0),  Min( -qimxd(mgs), -0.5*qx(mgs,li)*dtpinv ) )
-        IF ( temg(mgs) < tfr .or. .not. qsmlr(mgs) < 0.0 ) THEN
+        if ( temg(mgs) < tfr .or. .not. qsmlr(mgs) < 0.0 ) then
         qssbv(mgs) = max( min(qsdsv(mgs), 0.0),  Min( -qsmxd(mgs), -0.5*qx(mgs,ls)*dtpinv ) )
-        ENDIF
+        endif
         qidpv(mgs) = Max(qidsv(mgs), 0.0)
         qsdpv(mgs) = Max(qsdsv(mgs), 0.0)
         
-        IF ( qsmlr(mgs) < 0.0 .and. .not. mixedphase ) THEN ! switch snow sublimation to evaporation if there is melting
+        if ( qsmlr(mgs) < 0.0 .and. .not. mixedphase ) then ! switch snow sublimation to evaporation if there is melting
 
           qscev(mgs) = evapfac*   &
      &  4.0*pi*(qx(mgs,lv)-qss0(mgs))*cx(mgs,ls)*swcap(mgs)*swvent(mgs)/(qss0(mgs)*(fav(mgs)+fbv(mgs)))
           qscev(mgs) = Max( Min(0.0,qscev(mgs)),  Min( -qsmxd(mgs), -0.5*qx(mgs,ls)*dtpinv ) )
-        ELSE
+        else
 
-        ENDIF
+        endif
 
 
 
-      ELSE
+      else
         qisbv(mgs) = 0.0
         qssbv(mgs) = 0.0
         qidpv(mgs) = 0.0
         qsdpv(mgs) = 0.0
-      ENDIF
+      endif
 
       qhsbv(mgs) = 0.0
       qhdpv(mgs) = 0.0
-      IF ( qx(mgs,lh) > qxmin(lh) ) THEN
-      IF ( temg(mgs) < tfr .or. .not. qhmlr(mgs) < 0.0 ) THEN
+      if ( qx(mgs,lh) > qxmin(lh) ) then
+      if ( temg(mgs) < tfr .or. .not. qhmlr(mgs) < 0.0 ) then
       ! no liquid from melting, so evaporation is greater. Thus can calculate sublimation rate
       qhsbv(mgs) = max( min(qhdsv(mgs), 0.0), -qhmxd(mgs) )
       qhdpv(mgs) = Max(qhdsv(mgs), 0.0)
-      ENDIF
+      endif
       
-      IF ( .true. .and. qhmlr(mgs) < 0.0 .and. .not. mixedphase ) THEN
+      if ( .true. .and. qhmlr(mgs) < 0.0 .and. .not. mixedphase ) then
         ! Liquid is forming, so find the evaporation that was subtracted from melting (if it is not condensing)
 !       qhcev(mgs) =   &
 !     &   evapfac*min(   &
@@ -20975,28 +20975,28 @@ END SUBROUTINE nssl_2mom_driver
 
       qhcev(mgs)  = max(qhcev(mgs), -qhmxd(mgs))
         
-      ENDIF
-      ENDIF
+      endif
+      endif
 
 
       qhlsbv(mgs) = 0.0
       qhldpv(mgs) = 0.0
-      IF ( lhl .gt. 1 ) THEN
-      IF ( qx(mgs,lhl) > qxmin(lhl) ) THEN
-        IF ( temg(mgs) < tfr .or. .not. qhlmlr(mgs) < 0.0 ) THEN
+      if ( lhl .gt. 1 ) then
+      if ( qx(mgs,lhl) > qxmin(lhl) ) then
+        if ( temg(mgs) < tfr .or. .not. qhlmlr(mgs) < 0.0 ) then
         qhlsbv(mgs) = max( min(qhldsv(mgs), 0.0), -qxmxd(mgs,lhl) )
         qhldpv(mgs) = Max(qhldsv(mgs), 0.0)
-        ENDIF
-        IF ( qhlmlr(mgs) < 0.0 .and. .not. mixedphase ) THEN
+        endif
+        if ( qhlmlr(mgs) < 0.0 .and. .not. mixedphase ) then
         ! Liquid is forming, so find the evaporation that was subtracted from melting (if it is not condensing)
          qhlcev(mgs) =  evapfac*  &
      &      2.0*pi*(qx(mgs,lv)-qss0(mgs))*cx(mgs,lhl)*xdia(mgs,lhl,1)*hlvent(mgs)/(qss0(mgs)*(fav(mgs)+fbv(mgs)))
 
          qhlcev(mgs)  = max(qhlcev(mgs), -qhlmxd(mgs))
         
-      ENDIF
-      ENDIF
-      ENDIF
+      endif
+      endif
+      endif
       
       temp1 = qidpv(mgs) + qsdpv(mgs) + qhdpv(mgs) + qhldpv(mgs)
 
@@ -21004,7 +21004,7 @@ END SUBROUTINE nssl_2mom_driver
 
 !      frac = qvimxd(mgs)/temp1
 
-      IF ( temp1 .gt. qsimxdep(mgs) ) THEN
+      if ( temp1 .gt. qsimxdep(mgs) ) then
       frac = qsimxdep(mgs)/temp1
 
       qidpv(mgs) = frac*qidpv(mgs)
@@ -21017,12 +21017,12 @@ END SUBROUTINE nssl_2mom_driver
 !         write(0,*) 'qidpv,frac = ',kgs(mgs),qidpv(mgs),frac
 !        ENDIF
 
-      ENDIF
+      endif
 
       temp1 = qisbv(mgs) + qssbv(mgs) + qhsbv(mgs) + qhlsbv(mgs)
 
 
-      IF ( temp1 <  -qsimxsub(mgs) ) THEN
+      if ( temp1 <  -qsimxsub(mgs) ) then
       frac = -qsimxsub(mgs)/temp1
 
       qisbv(mgs) = frac*qisbv(mgs)
@@ -21035,7 +21035,7 @@ END SUBROUTINE nssl_2mom_driver
 !         write(0,*) 'qidpv,frac = ',kgs(mgs),qidpv(mgs),frac
 !        ENDIF
 
-      ENDIF
+      endif
 
 
       end do
@@ -21046,7 +21046,7 @@ END SUBROUTINE nssl_2mom_driver
       cssbv(mgs)  = (cx(mgs,ls)/(qx(mgs,ls)+1.e-20))*qssbv(mgs)
       cisbv(mgs)  = (cx(mgs,li)/(qx(mgs,li)+1.e-20))*qisbv(mgs)
       chsbv(mgs)  = (cx(mgs,lh)/(qx(mgs,lh)+1.e-20))*qhsbv(mgs)
-      IF ( lhl .gt. 1 ) chlsbv(mgs)  = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlsbv(mgs)
+      if ( lhl .gt. 1 ) chlsbv(mgs)  = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlsbv(mgs)
       csdpv(mgs)  = 0.0 ! (cx(mgs,ls)/(qx(mgs,ls)+1.e-20))*qsdpv(mgs)
       cidpv(mgs) =  0.0 ! (cx(mgs,li)/(qx(mgs,li)+1.e-20))*qidpv(mgs)
       cisdpv(mgs) = 0.0
@@ -21064,15 +21064,15 @@ END SUBROUTINE nssl_2mom_driver
       cscni(mgs) = 0.0
       cscnis(mgs) = 0.0
       if ( ipconc .ge. 4 .and. iscni .ge. 1 .and. qx(mgs,li) .gt. qxmin(li) ) then
-        IF ( iscni .eq. 1 ) THEN
+        if ( iscni .eq. 1 ) then
          qscni(mgs) =    &
      &      pi*rho0(mgs)*((0.25)/(6.0))   &
      &      *eii(mgs)*(qx(mgs,li)**2)*(xdia(mgs,li,2))   &
      &      *vtxbar(mgs,li,1)/xmas(mgs,li)
          cscni(mgs) = Min(cimxd(mgs),qscni(mgs)*rho0(mgs)/xmas(mgs,li))
          cscnis(mgs) = 0.5*cscni(mgs)
-        ELSEIF ( iscni .eq. 2 .or. iscni .eq. 4 .or. iscni .eq. 5 ) THEN  ! Zeigler 1985/Zrnic 1993, sort of
-          IF ( iscni .ne. 5 .and. qidpv(mgs) .gt. 0.0 .and.  xdia(mgs,li,3) .ge. 100.e-6 ) THEN
+        elseif ( iscni .eq. 2 .or. iscni .eq. 4 .or. iscni .eq. 5 ) then  ! Zeigler 1985/Zrnic 1993, sort of
+          if ( iscni .ne. 5 .and. qidpv(mgs) .gt. 0.0 .and.  xdia(mgs,li,3) .ge. 100.e-6 ) then
           ! convert larger crystals to snow
 !            IF ( xdia(mgs,ls,3) .gt. xdia(mgs,li,3) ) THEN
 !              qscni(mgs) = Max(0.1,xdia(mgs,li,3)/xdia(mgs,ls,3))*qidpv(mgs)
@@ -21089,9 +21089,9 @@ END SUBROUTINE nssl_2mom_driver
 !            ELSE
 !              cscnis(mgs) = 0.0
 !            ENDIF
-          ENDIF
+          endif
 
-           IF ( iscni .ne. 4 ) THEN
+           if ( iscni .ne. 4 ) then
            ! crystal aggregation to become snow
 ! erm 9/5/08 commented second line and added xv to 1st line (zrnic et al 1993)
              tmp = ess(mgs)*rvt*aa2*cx(mgs,li)*cx(mgs,li)*xv(mgs,li)
@@ -21102,23 +21102,23 @@ END SUBROUTINE nssl_2mom_driver
              qscni(mgs) = qscni(mgs) + Min( qxmxd(mgs,li), 2.0*tmp*xmas(mgs,li)*rhoinv(mgs) )
              cscni(mgs) = cscni(mgs) + Min( cxmxd(mgs,li), 2.0*tmp )
              cscnis(mgs) = cscnis(mgs) + Min( cxmxd(mgs,li), tmp )
-           ENDIF
-        ELSEIF ( iscni .eq. 3 ) THEN ! LFO
+           endif
+        elseif ( iscni .eq. 3 ) then ! LFO
            qscni(mgs) = 0.001*eii(mgs)*max((qx(mgs,li)-1.e-3),0.0)
            qscni(mgs) = min(qscni(mgs),qxmxd(mgs,li))
            cscni(mgs) = qscni(mgs)*rho0(mgs)/xmas(mgs,li)
            cscnis(mgs) = 0.5*cscni(mgs)
 !           write(iunit,*) 'qscni, qi = ',qscni(mgs),qx(mgs,li),igs(mgs),kgs(mgs)
-        ENDIF
+        endif
 
-      ELSEIF ( ipconc < 4 ) THEN ! LFO
-           IF ( lwsm6 ) THEN
+      elseif ( ipconc < 4 ) then ! LFO
+           if ( lwsm6 ) then
              qimax = rhoinv(mgs)*roqimax
              qscni(mgs) = Min(0.90*qx(mgs,li), Max( 0.0, (qx(mgs,li) - qimax)*dtpinv ) )
-           ELSE
+           else
              qscni(mgs) = 0.001*eii(mgs)*max((qx(mgs,li)-1.e-3),0.0)
              qscni(mgs) = min(qscni(mgs),qxmxd(mgs,li))
-           ENDIF
+           endif
       else ! 10-ice version
       if ( iscni > 0 .and. qx(mgs,li) .gt. qxmin(li) ) then
           qscni(mgs) =    &
@@ -21150,18 +21150,18 @@ END SUBROUTINE nssl_2mom_driver
 !
 
       qhldry(mgs) = 0.0
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
       qhldry(mgs)  = qhlaci(mgs)    + qhlacs(mgs)   &
      &               + qhlacr(mgs)   &
      &               + qhlacw(mgs)
-      ENDIF
+      endif
       end do
 !
 !  set wet growth and shedding
 !
       do mgs = 1,ngscnt
       
-      IF ( tfrdry < temg(mgs) .and. temg(mgs) < tfr ) THEN
+      if ( tfrdry < temg(mgs) .and. temg(mgs) < tfr ) then
 !
 !      qswet(mgs) =
 !     >  ( xdia(mgs,ls,1)*swvent(mgs)*cx(mgs,ls)*fwet1(mgs)
@@ -21172,34 +21172,34 @@ END SUBROUTINE nssl_2mom_driver
 !      IF ( dnu(lh) .ne. 0. ) THEN
 !        qhwet(mgs) = qhdry(mgs)
 !      ELSE
-       IF ( incwet == 0 ) THEN
+       if ( incwet == 0 ) then
         qhwet(mgs) =   &
      &    ( xdia(mgs,lh,1)*hwvent(mgs)*cx(mgs,lh)*fwet1(mgs)   &
      &   + fwet2(mgs)*(qhaci(mgs) + qhacs(mgs)) )
        qhwet(mgs) = max( 0.0, qhwet(mgs))
-         ELSE
-         ENDIF
+         else
+         endif
 
 !      ENDIF
 
 
        qhlwet(mgs) = 0.0
-       IF ( lhl .gt. 1 ) THEN
-         IF ( incwet == 0 ) THEN
+       if ( lhl .gt. 1 ) then
+         if ( incwet == 0 ) then
          qhlwet(mgs) =   &
      &     ( xdia(mgs,lhl,1)*hlvent(mgs)*cx(mgs,lhl)*fwet1(mgs)   &
      &     + fwet2(mgs)*(qhlaci(mgs) + qhlacs(mgs)) )
          qhlwet(mgs) = max( 0.0, qhlwet(mgs))
          
-         ELSE
-         ENDIF ! incwet
-       ENDIF
+         else
+         endif ! incwet
+       endif
        
-       ELSE
+       else
        
         qhwet(mgs) = qhdry(mgs)
         qhlwet(mgs) = qhldry(mgs)
-       ENDIF
+       endif
 !
 !      qhlwet(mgs) = qhldry(mgs)
 
@@ -21259,17 +21259,17 @@ END SUBROUTINE nssl_2mom_driver
 !
       if ( temg(mgs) .gt. tfr ) then
 
-       IF ( .false. ) THEN ! old and incorrect -- Thanks to Shaofeng Hua for noticing this error (9/17/2017)
+       if ( .false. ) then ! old and incorrect -- Thanks to Shaofeng Hua for noticing this error (9/17/2017)
        qsshr(mgs)  = -qsdry(mgs)
        qhshr(mgs)  = -qhdry(mgs)
        qhlshr(mgs) = -qhldry(mgs)
-       ELSE ! new and correct
+       else ! new and correct
        ! note that the qxacr terms should be zero here, so shedding at T > 0 is all from the droplets
        qsshr(mgs)   = - qsacr(mgs) - qsacw(mgs) ! -qsdry(mgs)
        qhlshr(mgs)  = - qhlacw(mgs) - qhlacr(mgs) ! -qhldry(mgs)
        qhshr(mgs)  = - qhacw(mgs) - qhacr(mgs) ! -qhdry(mgs)
 
-       ENDIF
+       endif
 
        vhshdr(mgs)  = -vhacw(mgs) - vhacr(mgs)
        vhlshdr(mgs)  = -vhlacw(mgs) - vhlacr(mgs)
@@ -21281,10 +21281,10 @@ END SUBROUTINE nssl_2mom_driver
         wetsfc(mgs) =  (qhshr(mgs) .lt. 0.0 .and. temg(mgs) < tfr ) .or. ( qhmlr(mgs) < -qxmin(lh) .and.  temg(mgs) > tfr )
         wetgrowth(mgs) = (qhshr(mgs) .lt. 0.0 .and. temg(mgs) < tfr )
 !      ENDIF
-      if (qhlshr(mgs) .lt. 0.0 .and. temg(mgs) < tfr ) THEN
+      if (qhlshr(mgs) .lt. 0.0 .and. temg(mgs) < tfr ) then
         wetsfchl(mgs) = (qhlshr(mgs) .lt. 0.0 .and. temg(mgs) < tfr ) .or. ( qhlmlr(mgs) < -qxmin(lhl) .and.  temg(mgs) > tfr )
         wetgrowthhl(mgs) = (qhlshr(mgs) .lt. 0.0 .and. temg(mgs) < tfr )
-      ENDIF
+      endif
 
       end do
 !
@@ -21304,7 +21304,7 @@ END SUBROUTINE nssl_2mom_driver
       
       chlshr(mgs) = 0.0
       chlshrr(mgs) = 0.0
-      IF ( lhl .gt. 1 ) THEN 
+      if ( lhl .gt. 1 ) then 
 !         chlshr(mgs)  = (cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlshr(mgs)
 
 
@@ -21316,7 +21316,7 @@ END SUBROUTINE nssl_2mom_driver
             ! tmpdiam = (shedalp+alpha(mgs,lh))*xdia(mgs,lh,1)
             chlshrr(mgs) =  rho0(mgs)*qhlshr(mgs)/(xdn(mgs,lr)*vshdgs(mgs,lhl))  ! into rain 
 
-      ENDIF ! ( lhl > 1 )
+      endif ! ( lhl > 1 )
 
       
       end do
@@ -21353,16 +21353,16 @@ END SUBROUTINE nssl_2mom_driver
 
 ! soaking (when not advected liquid water film with graupel)
 
-        IF ( lvol(lh) .gt. 1 .and. .not. mixedphase) THEN
+        if ( lvol(lh) .gt. 1 .and. .not. mixedphase) then
         ! rescale volumes to maximum density
-         IF ( iwetsoak ) THEN 
+         if ( iwetsoak ) then 
 
          rimdn(mgs,lh) = xdnmx(lh)
          raindn(mgs,lh) = xdnmx(lh)
          vhacw(mgs) = qhacw(mgs)*rho0(mgs)/rimdn(mgs,lh)
          vhacr(mgs) = qhacr(mgs)*rho0(mgs)/raindn(mgs,lh)
 !        IF ( lvol(lh) .gt. 1 .and. wetgrowth(mgs) ) THEN
-         IF ( xdn(mgs,lh) .lt. xdnmx(lh) ) THEN
+         if ( xdn(mgs,lh) .lt. xdnmx(lh) ) then
          ! soak some liquid into the graupel
 !           v1 = xdnmx(lh)*vx(mgs,lh)/(xdn(mgs,lh)*dtp) ! volume available for filling
            v1 = (1. - xdn(mgs,lh)/xdnmx(lh))*vx(mgs,lh)/(dtp) ! volume available for filling
@@ -21372,16 +21372,16 @@ END SUBROUTINE nssl_2mom_driver
            vhsoak(mgs) = Min(v1,v2)
 
            
-         ENDIF
+         endif
          
-         ENDIF
+         endif
 
          vhshdr(mgs) = Min(0.0, rho0(mgs)*qhwet(mgs)/xdnmx(lh) - vhacw(mgs) - vhacr(mgs) )
          
-        ELSEIF ( lvol(lh) .gt. 1  .and. mixedphase ) THEN
+        elseif ( lvol(lh) .gt. 1  .and. mixedphase ) then
 !         vhacw(mgs) = rho0(mgs)*qhacw(mgs)/xdn0(lr)
 !         vhacr(mgs) = rho0(mgs)*qhacr(mgs)/xdn0(lr)
-        ENDIF
+        endif
         
 
       qhdpv(mgs) = 0.0
@@ -21391,17 +21391,17 @@ END SUBROUTINE nssl_2mom_driver
 
 ! collection efficiency modification
 
-      IF ( ehi(mgs) .gt. 0.0 ) THEN
+      if ( ehi(mgs) .gt. 0.0 ) then
         qhaci(mgs) = Min(qimxd(mgs),qhaci0(mgs))  ! effectively sets collection eff to 1
         chaci(mgs) = Min(cimxd(mgs),chaci0(mgs))  ! effectively sets collection eff to 1
-      ENDIF
-      IF ( ehs(mgs) .gt. 0.0 ) THEN
+      endif
+      if ( ehs(mgs) .gt. 0.0 ) then
 !        qhacs(mgs) = Min(qsmxd(mgs),qhacs(mgs)/ehs(mgs))  ! effectively sets collection eff to 1
         qhacs(mgs) = Min(qsmxd(mgs),qhacs0(mgs)) !/ehs(mgs)                   ! divide out the collection efficiency
         chacs(mgs) = Min(csmxd(mgs),chacs0(mgs)) !/ehs(mgs)                   ! divide out the collection efficiency
         ehs(mgs) = ehsmax ! 1.0 ! min(ehsfrac*ehs(mgs),ehsmax)            ! modify it
         qhacs(mgs) = Min(qsmxd(mgs),qhacs(mgs))   ! plug it back in
-      ENDIF
+      endif
 
 ! be sure to catch particles with wet surfaces but not in wet growth to turn off Hallett-Mossop
       wetsfc(mgs) = .true.
@@ -21426,60 +21426,60 @@ END SUBROUTINE nssl_2mom_driver
 
 
 
-        IF ( lvol(lhl) .gt. 1  .and. .not. mixedphase ) THEN
+        if ( lvol(lhl) .gt. 1  .and. .not. mixedphase ) then
 !        IF ( lvol(lhl) .gt. 1 .and. wetgrowthhl(mgs) ) THEN
 
-         IF ( iwetsoak ) THEN 
+         if ( iwetsoak ) then 
 
          rimdn(mgs,lhl) = xdnmx(lhl) 
          raindn(mgs,lhl) = xdnmx(lhl) 
          vhlacw(mgs) = qhlacw(mgs)*rho0(mgs)/rimdn(mgs,lhl)
          vhlacr(mgs) = qhlacr(mgs)*rho0(mgs)/raindn(mgs,lhl)
 
-         IF ( xdn(mgs,lhl) .lt. xdnmx(lhl) ) THEN
+         if ( xdn(mgs,lhl) .lt. xdnmx(lhl) ) then
          ! soak some liquid into the hail
 !           v1 = xdnmx(lhl)*vx(mgs,lhl)/(xdn(mgs,lhl)*dtp) ! volume available for filling
            v1 = (1. - xdn(mgs,lhl)/xdnmx(lhl))*vx(mgs,lhl)/(dtp) ! volume available for filling
 !            tmp = (vx(mgs,lhl)/rho0(mgs))*(xdnmx(lhl) - xdn(mgs,lhl)) ! max mixing ratio of liquid water that can be added
            v2 = rho0(mgs)*qhlwet(mgs)/xdnmx(lhl)  ! volume of frozen accretion
-           IF ( v1 > v2 ) THEN ! all the frozen stuff fits in
+           if ( v1 > v2 ) then ! all the frozen stuff fits in
              vhlsoak(mgs) = v2
-           ELSE  ! fill up the available space
+           else  ! fill up the available space
              vhlsoak(mgs) = v1
-           ENDIF
+           endif
 !           vhlacw(mgs) = 0.0
 !           vhlacr(mgs) = Max( 0.0, v2 - v1 )
-         ELSE
+         else
            vhlsoak(mgs) = 0.0
 !           vhlacw(mgs) = 0.0
 !           vhlacr(mgs) = rho0(mgs)*qhlwet(mgs)/raindn(mgs,lhl)
          
-         ENDIF
+         endif
          
-         ENDIF
+         endif
 
          vhlshdr(mgs) = Min(0.0, rho0(mgs)*qhlwet(mgs)/xdnmx(lhl) - vhlacw(mgs) - vhlacr(mgs) )
 
 
-        ELSEIF ( lvol(lhl) .gt. 1  .and. mixedphase ) THEN
+        elseif ( lvol(lhl) .gt. 1  .and. mixedphase ) then
 !         vhlacw(mgs) = rho0(mgs)*qhlacw(mgs)/xdn0(lr)
 !         vhlacr(mgs) = rho0(mgs)*qhlacr(mgs)/xdn0(lr)
-        ENDIF
+        endif
 
-      IF ( ehli(mgs) .gt. 0.0 ) THEN
+      if ( ehli(mgs) .gt. 0.0 ) then
         qhlaci(mgs) = Min(qimxd(mgs),qhlaci0(mgs))  ! effectively sets collection eff to 1
         chlaci(mgs) = Min(cimxd(mgs),chlaci0(mgs))  ! effectively sets collection eff to 1
-      ENDIF
+      endif
 
 !      IF ( ehls(mgs) .gt. 0.0 ) THEN
 !        qhlacs(mgs) = Min(qsmxd(mgs),qhlacs(mgs)/ehls(mgs))
 !      ENDIF
-      IF ( ehls(mgs) .gt. 0.0 ) THEN
+      if ( ehls(mgs) .gt. 0.0 ) then
         qhlacs(mgs) = Min(qsmxd(mgs),qhlacs0(mgs)) !/ehls(mgs)                   ! divide out the collection efficiency
         chlacs(mgs) = Min(csmxd(mgs),chlacs0(mgs)) !/ehls(mgs)                   ! divide out the collection efficiency
         ehls(mgs) = ehsmax ! 1.0 ! min(ehsfrac*ehs(mgs),ehsmax)            ! modify it
 !        qhlacs(mgs) = Min(qsmxd(mgs),qhlacs(mgs))   ! plug it back in
-      ENDIF
+      endif
 
       
 !      qhlwet(mgs) = 1.0
@@ -21497,15 +21497,15 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! Ice -> graupel conversion
 !
-      DO mgs = 1,ngscnt
+      do mgs = 1,ngscnt
       
       qhcni(mgs) = 0.0
       chcni(mgs) = 0.0
       chcnih(mgs) = 0.0
       vhcni(mgs) = 0.0
       
-      IF ( iglcnvi .ge. 1 ) THEN
-      IF ( temg(mgs) .lt. 273.0 .and. qiacw(mgs) - qidpv(mgs) .gt. 0.0 ) THEN
+      if ( iglcnvi .ge. 1 ) then
+      if ( temg(mgs) .lt. 273.0 .and. qiacw(mgs) - qidpv(mgs) .gt. 0.0 ) then
       
         
         tmp = rimc1*(-((0.5)*(1.e+06)*xdia(mgs,lc,1))   &
@@ -21519,7 +21519,7 @@ END SUBROUTINE nssl_2mom_driver
         
 !        write(0,*)  'rime dens = ',tmp
         
-        IF ( tmp .ge. 200.0 .or. iglcnvi >= 2 ) THEN
+        if ( tmp .ge. 200.0 .or. iglcnvi >= 2 ) then
           r = Max( 0.5*(xdn(mgs,li) + tmp), xdnmn(lh) )
 !          r = Max( r, 400. )
           qhcni(mgs) = (qiacw(mgs) - qidpv(mgs)) ! *float(iglcnvi)
@@ -21528,11 +21528,11 @@ END SUBROUTINE nssl_2mom_driver
           chcnih(mgs) = Min(chcni(mgs), rho0(mgs)*qhcni(mgs)/(r*xvmn(lh)) )
 !          vhcni(mgs) = rho0(mgs)*2.0*qhcni(mgs)/(xdn(mgs,li) + tmp)
           vhcni(mgs) = rho0(mgs)*qhcni(mgs)/r
-        ENDIF
+        endif
       
-      ELSEIF ( iglcnvi == 3 ) THEN
+      elseif ( iglcnvi == 3 ) then
 
-       IF ( temg(mgs) .lt. 273.0 .and. qiacw(mgs)*dtp > 2.*qxmin(lh) .and. gamice73fac*xmas(mgs,li) > xdnmn(lh)*xvmn(lh) ) THEN
+       if ( temg(mgs) .lt. 273.0 .and. qiacw(mgs)*dtp > 2.*qxmin(lh) .and. gamice73fac*xmas(mgs,li) > xdnmn(lh)*xvmn(lh) ) then
       
         
         tmp = rimc1*(-((0.5)*(1.e+06)*xdia(mgs,lc,1))   &
@@ -21548,7 +21548,7 @@ END SUBROUTINE nssl_2mom_driver
         ! convert to particles with the mass of the mass-weighted diameter
       !  massofmwr = gamice73fac*xmas(mgs,li)
         
-        IF ( tmp .ge. xdnmn(lh)  ) THEN
+        if ( tmp .ge. xdnmn(lh)  ) then
           r = Max( 0.5*(xdn(mgs,li) + tmp), xdnmn(lh) )
 !          r = Max( r, 400. )
           qhcni(mgs) = 0.5*qiacw(mgs)
@@ -21556,16 +21556,16 @@ END SUBROUTINE nssl_2mom_driver
           chcnih(mgs) = Min(chcni(mgs), rho0(mgs)*qhcni(mgs)/(r*xvmn(lh)) )
 !          vhcni(mgs) = rho0(mgs)*2.0*qhcni(mgs)/(xdn(mgs,li) + tmp)
           vhcni(mgs) = rho0(mgs)*qhcni(mgs)/r
-        ENDIF
+        endif
       
-      ENDIF
+      endif
 
       
-      ENDIF
-      ENDIF
+      endif
+      endif
       
       
-      ENDDO
+      enddo
       
       
       qhlcnh(:) = 0.0
@@ -21581,43 +21581,43 @@ END SUBROUTINE nssl_2mom_driver
       zhcnhl(:) = 0.0
 
 
-      IF ( lhl .gt. 1  ) THEN
+      if ( lhl .gt. 1  ) then
       
-      IF ( ihlcnh == 1 .or. ihlcnh == 3 ) THEN
+      if ( ihlcnh == 1 .or. ihlcnh == 3 ) then
 
 !
 !  Graupel (h) conversion to hail (hl) based on Milbrandt and Yau 2005b
 !
-      DO mgs = 1,ngscnt
+      do mgs = 1,ngscnt
 
 !        IF ( lhl .gt. 1 .and. ipconc .ge. 5 .and. qx(mgs,lh) .gt. 1.0e-3 .and.
 !     :        xdn(mgs,lh) .gt. 750. .and. qhshr(mgs) .lt. 0.0 .and.
 !     :        xdia(mgs,lh,3) .gt. 1.e-3 ) THEN
-        IF ( hlcnhdia > 0 ) THEN
+        if ( hlcnhdia > 0 ) then
           ltest = xdia(mgs,lh,3) .gt. hlcnhdia  ! test on mean volume diameter
-        ELSE 
+        else 
 !          ltest =  xdia(mgs,lh,1)*(3. + alpha(mgs,lh)) > Abs( hlcnhdia ) ! test on maximum mass diameter
           ltest =  xdia(mgs,lh,1)*(4. + alpha(mgs,lh)) > Abs( hlcnhdia ) ! test on mass-weighted diameter
-        ENDIF
+        endif
 
-         IF ( iusedw == 0 .and. ihlcnh == 1 ) THEN
+         if ( iusedw == 0 .and. ihlcnh == 1 ) then
            dg0(mgs) = -1.
-         ELSE
-         IF (((qhacw(mgs) + qhacr(mgs))*dtp > qxmin(lh) .and. qx(mgs,lh) > hlcnhqmin .and. temg(mgs) .le. tfr-2.0  &
-               .and.  temg(mgs) .gt. dwtempmin ) .or. ( wetgrowth(mgs) .and. qx(mgs,lh) > hlcnhqmin ) ) THEN
+         else
+         if (((qhacw(mgs) + qhacr(mgs))*dtp > qxmin(lh) .and. qx(mgs,lh) > hlcnhqmin .and. temg(mgs) .le. tfr-2.0  &
+               .and.  temg(mgs) .gt. dwtempmin ) .or. ( wetgrowth(mgs) .and. qx(mgs,lh) > hlcnhqmin ) ) then
 !         dw = 0.01*( Exp( -temcg(mgs)/( 1.1e4 * rho0(mgs)*ehw(mgs)*qx(mgs,lc) - 1.3e3*rho0(mgs)*qx(mgs,li) + 1.0 ) ) - 1.0 )
 !         dwr = 0.01*( Exp( -temcg(mgs)/( 1.1e4 * rho0(mgs)*(ehw(mgs)*qx(mgs,lc)+ehr(mgs)*qx(mgs,lr)) - &
 !                1.3e3*rho0(mgs)*qx(mgs,li) + 1.0 ) ) - 1.0 )
             x =   1.1e4 * rho0(mgs)*(ehw(mgs)*qx(mgs,lc)+ehr(mgs)*qx(mgs,lr)) - &
                 1.3e3*rho0(mgs)*qx(mgs,li) + 1.0 
-            IF ( x > 1.e-20 ) THEN
+            if ( x > 1.e-20 ) then
               arg = Min(70.0, (-temcg(mgs)/x )) ! prevent overflow of the exp function in 32 bit
               dwr = 0.01*(exp(arg) - 1.0)
-            ELSE
+            else
               dwr = 1.e30
-            ENDIF
+            endif
           d = dwr
-           IF ( dwr < 0.2 .and. dwr > 0.0 .and. rho0(mgs)*(qx(mgs,lc)+qx(mgs,lr)) > 1.e-4 ) THEN
+           if ( dwr < 0.2 .and. dwr > 0.0 .and. rho0(mgs)*(qx(mgs,lc)+qx(mgs,lr)) > 1.e-4 ) then
                       sqrtrhovt = Sqrt( rhovt(mgs) )
                       fventh = sqrtrhovt*(fpndl(mgs)**(1./3.)) * (fakvisc(mgs))**(-0.5) 
                       fventm = sqrtrhovt*(fschm(mgs)**(1./3.)) * (fakvisc(mgs))**(-0.5)
@@ -21632,31 +21632,31 @@ END SUBROUTINE nssl_2mom_driver
                       h3 = Max(dwehwmin, ehw(mgs))*qx(mgs,lc) 
                       h4 = ehr(mgs)* qx(mgs,lr)
                       ! iterate to find minimum diameter for wet growth. Start with value of dwr
-                      DO n = 1,10
+                      do n = 1,10
                         d = Max(d, 1.e-4)
                         dold = d
                         vth = axx(mgs,lh)*d**bxx(mgs,lh) 
                         x2 = fventh*sqrtrhovt*Sqrt(d*vth)
-                       IF ( x2 > 1.4 ) THEN
+                       if ( x2 > 1.4 ) then
                          ah = 0.78 + 0.308*x2  ! heat ventillation
-                       ELSE
+                       else
                          ah = 1.0 + 0.108*x2**2 ! mass ventillation (Beard and Pruppacher 1971, eq. 9)
-                       ENDIF
+                       endif
 
-                       IF ( .false. ) THEN ! this option includes 'am' separate from ah, which makes only small differences. Otherwise equivalent to second option
+                       if ( .false. ) then ! this option includes 'am' separate from ah, which makes only small differences. Otherwise equivalent to second option
                         x1 = fventm*sqrtrhovt*Sqrt(d*vth)
-                        IF ( x1 > 1.4 ) THEN
+                        if ( x1 > 1.4 ) then
                           am = 0.78 + 0.308*x1 ! mass ventillation (Beard and Pruppacher 1971, eq. 8)
-                        ELSE
+                        else
                           am = 1.0 + 0.108*x1**2 ! mass ventillation (Beard and Pruppacher 1971, eq. 9)
-                        ENDIF
+                        endif
                         
                         d = 8.*denominvdp*( am*felv(mgs)*fwvdf(mgs)*rho0(mgs)*(qvs0 - qx(mgs,lv)) - ah*ftka(mgs)*temcg(mgs)  )/ &
                            (dtp* ( ( Max(0.001,vth - vtxbar(mgs,lc,1))*h3 +                              &
                             Max(0.001,vth - vtxbar(mgs,lr,1))*h4) *rho0(mgs) +               &
                             Max(0.001,vth - vtxbar(mgs,li,1))*h2*denominvdp))
                        
-                        ELSE
+                        else
 
                         ! Based on Farley and Orville (1986), eq. 5-9 but neglecting the Ci*(T0-Ts) term in (8) since we want Ts=T0
                         ! Simplified mass rates as dm_w/dt = pi/4*d**2*(Vh - Vc)*rhoair*qc*ehw, etc.
@@ -21665,156 +21665,156 @@ END SUBROUTINE nssl_2mom_driver
                             Max(0.001,vth - vtxbar(mgs,lr,1))*h4) *rho0(mgs)*denomdp +               &
                             Max(0.001,vth - vtxbar(mgs,li,1))*h2)
                             
-                        ENDIF
-                        IF ( Abs(dold - d)/dold < 0.05 .or. ( n > 3 .and. d > dg0thresh ) ) EXIT
+                        endif
+                        if ( Abs(dold - d)/dold < 0.05 .or. ( n > 3 .and. d > dg0thresh ) ) exit
                         
-                      ENDDO
-              ENDIF
+                      enddo
+              endif
               
               dg0(mgs) = Max( d, dwmin )
-          ELSE
+          else
             dg0(mgs) = dg0thresh + 0.0001
-          ENDIF
+          endif
           
-            IF ( ihlcnh == 3 .and. (qhacw(mgs) + qhacr(mgs))*dtp > qxmin(lh) .and. qx(mgs,lh) > hlcnhqmin &
-                   .and. temg(mgs) .le. tfr-2.0 ) THEN
+            if ( ihlcnh == 3 .and. (qhacw(mgs) + qhacr(mgs))*dtp > qxmin(lh) .and. qx(mgs,lh) > hlcnhqmin &
+                   .and. temg(mgs) .le. tfr-2.0 ) then
            ! set a secondary condition on to capture large graupel that is riming but not in wet growth
                 dg0(mgs) = Min( dg0(mgs), dg0thresh - 0.0001 )
-            ENDIF
+            endif
             
-          ENDIF
+          endif
 
         wtest = (dg0(mgs) > 0.0 .and. dg0(mgs) < dg0thresh )
         
-        IF ( ihlcnh == 1 ) THEN ! .or. iusedw == 0  THEN
+        if ( ihlcnh == 1 ) then ! .or. iusedw == 0  then
         
-        IF ( ( wetgrowth(mgs) .and. (xdn(mgs,lh) .gt. hldnmn .or. lvh < 1 ) .and.  & ! correct this when hail gets turned on
+        if ( ( wetgrowth(mgs) .and. (xdn(mgs,lh) .gt. hldnmn .or. lvh < 1 ) .and.  & ! correct this when hail gets turned on
      &        rimdn(mgs,lh) .gt. 800. .and.   &
-     &        ltest .and. qx(mgs,lh) .gt. hlcnhqmin ) .or. wtest ) THEN ! {
+     &        ltest .and. qx(mgs,lh) .gt. hlcnhqmin ) .or. wtest ) then ! {
 !     :        xdia(mgs,lh,3) .gt. 2.e-3 .and. qx(mgs,lh) .gt. 1.0e-3  THEN ! 0823.2008 erm test
 !        IF ( xdia(mgs,lh,3) .gt. 1.e-3 ) THEN
-        IF ( qhacw(mgs) .gt. 0.0 .and. qhacw(mgs) .gt. qhaci(mgs) .and. temg(mgs) .le. tfr-2.0 ) THEN ! {
+        if ( qhacw(mgs) .gt. 0.0 .and. qhacw(mgs) .gt. qhaci(mgs) .and. temg(mgs) .le. tfr-2.0 ) then ! {
         ! dh0 is the diameter dividing wet growth from dry growth (Ziegler 1985), modified by MY05
 !          dh0 = 0.01*(exp(temcg(mgs)/(1.1e4*(qx(mgs,lc)+qx(mgs,lr)) - 
 !     :           1.3e3*qx(mgs,li) + 1.0e-3 ) ) - 1.0)
-          IF ( wtest ) THEN
+          if ( wtest ) then
             dh0 = dg0(mgs)
-          ELSE
+          else
             x = (1.1e4*(rho0(mgs)*qx(mgs,lc)) - 1.3e3*rho0(mgs)*qx(mgs,li) + 1.0e-3 )
-            IF ( x > 1.e-20 ) THEN
+            if ( x > 1.e-20 ) then
             arg = Min(70.0, (-temcg(mgs)/x )) ! prevent overflow of the exp function in 32 bit
             dh0 = 0.01*(exp(arg) - 1.0)
-            ELSE
+            else
              dh0 = 1.e30
-            ENDIF
-          ENDIF ! wtest
+            endif
+          endif ! wtest
 !          dh0 = Max( dh0, 5.e-3 )
           
 !         IF ( dh0 .gt. 0.0 ) write(0,*) 'dh0 = ',dh0
 !         IF ( dh0 .gt. 1.0e-4 ) THEN
-         IF ( xdia(mgs,lh,3)/dh0 .gt. 0.1 ) THEN !{
+         if ( xdia(mgs,lh,3)/dh0 .gt. 0.1 ) then !{
 !         IF ( xdia(mgs,lh,3) .lt. 20.*dh0 .and. dh0 .lt. 2.0*xdia(mgs,lh,3) ) THEN 
            tmp = qhacw(mgs) + qhacr(mgs) + qhaci(mgs) + qhacs(mgs)
 !           qtmp = Min( 1.0, xdia(mgs,lh,3)/(2.0*dh0) )*(tmp)
            qtmp = Min( 100.0, xdia(mgs,lh,3)/(2.0*dh0) )*(tmp)
            qhlcnh(mgs) = Min(  qxmxd(mgs,lh), qtmp )
            
-           IF ( ipconc .ge. 5 ) THEN !{
+           if ( ipconc .ge. 5 ) then !{
 !           dh0 = Max( xdia(mgs,lh,3), Min( dh0, 5.e-3 ) ) ! do not create hail greater than 5mm diam. unless the graupel is larger
-           IF ( .not. wtest ) dh0 = Min( dh0, 10.e-3 ) ! do not create hail greater than 10mm diam., which is the max graupel size
-           IF ( qx(mgs,lhl) > 0.1e-3 ) dh0 = Max( dh0, xdia(mgs,lhl,3) ) ! when enough hail is established, do not dilute the size
+           if ( .not. wtest ) dh0 = Min( dh0, 10.e-3 ) ! do not create hail greater than 10mm diam., which is the max graupel size
+           if ( qx(mgs,lhl) > 0.1e-3 ) dh0 = Max( dh0, xdia(mgs,lhl,3) ) ! when enough hail is established, do not dilute the size
            chlcnhhl(mgs) = Min( cxmxd(mgs,lh), rho0(mgs)*qhlcnh(mgs)/(pi*xdn(mgs,lh)*dh0**3/6.0) )
 
            r = rho0(mgs)*qhlcnh(mgs)/(xdn(mgs,lh)*xv(mgs,lh))  ! number of graupel particles at mean volume diameter
            chlcnh(mgs) = Max( chlcnhhl(mgs), r )
-           ENDIF !}
+           endif !}
            
            vhlcnh(mgs) = rho0(mgs)*qhlcnh(mgs)/xdn(mgs,lh)
            vhlcnhl(mgs) = rho0(mgs)*qhlcnh(mgs)/Max(xdnmn(lhl), xdn(mgs,lh))
 
-          ENDIF !}
+          endif !}
 
-        ENDIF ! }
-        ENDIF ! }
+        endif ! }
+        endif ! }
         
-        ELSEIF ( ihlcnh == 3 ) THEN !{
+        elseif ( ihlcnh == 3 ) then !{
          
 
-          IF ( wtest  .and. &
-               ( qhacw(mgs)*dtp > qxmin(lh) .and. temg(mgs) .lt. tfr-2. .and. qx(mgs,lh) > hlcnhqmin ) ) THEN
+          if ( wtest  .and. &
+               ( qhacw(mgs)*dtp > qxmin(lh) .and. temg(mgs) .lt. tfr-2. .and. qx(mgs,lh) > hlcnhqmin ) ) then
         ! convert number, mass, and reflectivity for d > dw
-           IF ( ipconc == 5 ) THEN
+           if ( ipconc == 5 ) then
             ! dg0(mgs) = Min( dg0(mgs), hldia1 )
              !dg0(mgs) = hldia1
-           ENDIF
+           endif
            
            ratio = Min( maxratiolu, dg0(mgs)/xdia(mgs,lh,1) )
 
 
            ! mass
             tmp2 = gaminterp(ratio,alpha(mgs,lh),4,1)
-           IF ( ipconc == 5 ) THEN
+           if ( ipconc == 5 ) then
        !      tmp2 = Min( 0.25, tmp2 )
-           ENDIF
+           endif
             qxd1 = qx(mgs,lh)*(tmp2)
             qhlcnh(mgs) = dtpinv*qxd1
             flim = 1.0
 !            tmp3 = Min( dtp*(qfacw(mgs) + qfacr(mgs) ), qxmxd(mgs,lf) )
             tmp3 = qxmxd(mgs,lh)
-            IF (qxd1 > tmp3 ) THEN
+            if (qxd1 > tmp3 ) then
               flim = tmp3/(qxd1)
               qhlcnh(mgs) = flim*qhlcnh(mgs)
-            ENDIF
+            endif
 
             
             
-            IF ( ( qxd1 > qxmin(lhl) .and. ipconc > 5 ) .or. ( qxd1 > 10.*qxmin(lhl) .and. ipconc == 5) ) THEN
+            if ( ( qxd1 > qxmin(lhl) .and. ipconc > 5 ) .or. ( qxd1 > 10.*qxmin(lhl) .and. ipconc == 5) ) then
             
            ! number
             tmp = gaminterp(ratio,alpha(mgs,lh),1,1)
-             IF ( ipconc == 5 ) THEN
+             if ( ipconc == 5 ) then
           !     tmp = Min( 0.2, tmp )
-             ENDIF
+             endif
             cxd1 = flim*cx(mgs,lh)*( tmp)
             chlcnh(mgs) = dtpinv*cxd1
             chlcnhhl(mgs) = chlcnh(mgs)
 
-           IF ( qx(mgs,lhl) > qxmin(lhl) .and. dmhlopt > 0 ) THEN
+           if ( qx(mgs,lhl) > qxmin(lhl) .and. dmhlopt > 0 ) then
              dh0 = rho0(mgs)*qhlcnh(mgs)/chlcnhhl(mgs)
-             IF ( dh0 < xmas(mgs,lhl) ) THEN
+             if ( dh0 < xmas(mgs,lhl) ) then
                ! dh0 = ( qxd1*dh0 + qx(mgs,lhl)*xmas(mgs,lhl))/( qxd1 + qx(mgs,lhl))  ! weighted average
                dh0 = (( qxd1*dh0**(1./3.) + qx(mgs,lhl)*xmas(mgs,lhl)**(1./3.))/( qxd1 + qx(mgs,lhl)))**3  ! weighted average
                chlcnhhl(mgs) = Min( chlcnhhl(mgs), rho0(mgs)*qhlcnh(mgs)/dh0 )
-             ELSE
+             else
 !               dh0 = Max( dh0, xmas(mgs,lhl) ) ! when enough hail is established, do not dilute the size
-             ENDIF
-           ENDIF
+             endif
+           endif
 
 
            ! reflectivity
-           IF ( ipconc >= 6 .and. lzh > 1 .and. lzhl > 1 ) THEN
+           if ( ipconc >= 6 .and. lzh > 1 .and. lzhl > 1 ) then
             tmp3 = gaminterp(ratio,alpha(mgs,lh),11,1)
             zxd1 = flim*zx(mgs,lh)*(tmp3)
             zhlcnh(mgs) = dtpinv*zxd1
-           ELSE
+           else
             zxd1 = 0
-           ENDIF
+           endif
 
-            ELSE
+            else
                qhlcnh(mgs) = 0.0
-            ENDIF
+            endif
 
            vhlcnh(mgs) = rho0(mgs)*qhlcnh(mgs)/xdn(mgs,lh)
            vhlcnhl(mgs) = rho0(mgs)*qhlcnh(mgs)/Max(xdnmn(lhl), xdn(mgs,lh))
            
-           ENDIF
+           endif
 
 
-        ENDIF !}
+        endif !}
       
-      ENDDO
+      enddo
       
-      ELSEIF ( ihlcnh == 2 ) THEN ! 10-ice type conversion 
+      elseif ( ihlcnh == 2 ) then ! 10-ice type conversion 
 
 !
 ! Staka and Mansell (2005) type conversion
@@ -21824,8 +21824,8 @@ END SUBROUTINE nssl_2mom_driver
       
         ! convert number, mass, and reflectivity for d > hldia1,
         ! regardless of wet growth status, but as long as riming > 0
-        DO mgs = 1,ngscnt
-        IF ( qhacw(mgs)*dtp > qxmin(lh) .and. temg(mgs) .lt. tfr-2. .and. qx(mgs,lh) > qxmin(lh) ) THEN
+        do mgs = 1,ngscnt
+        if ( qhacw(mgs)*dtp > qxmin(lh) .and. temg(mgs) .lt. tfr-2. .and. qx(mgs,lh) > qxmin(lh) ) then
            ratio = Min( maxratiolu, hldia1/xdia(mgs,lh,1) )
 
            ! number
@@ -21840,21 +21840,21 @@ END SUBROUTINE nssl_2mom_driver
             qhlcnh(mgs) = dtpinv*qxd1
 
            ! reflectivity
-           IF ( lzh > 1 .and. lzhl > 1 ) THEN
+           if ( lzh > 1 .and. lzhl > 1 ) then
             tmp3 = gaminterp(ratio,alpha(mgs,lh),11,1)
             zxd1 = zx(mgs,lh)*(tmp3)
             zhlcnh(mgs) = dtpinv*zxd1
-           ELSE
+           else
             zxd1 = 0
-           ENDIF
+           endif
            vhlcnh(mgs) = rho0(mgs)*qhlcnh(mgs)/xdn(mgs,lh)
            vhlcnhl(mgs) = rho0(mgs)*qhlcnh(mgs)/Max(xdnmn(lhl), xdn(mgs,lh))
            
-         ENDIF
+         endif
          
-         ENDDO
+         enddo
 !        ENDIF
-      ELSEIF ( ihlcnh == 0 ) THEN
+      elseif ( ihlcnh == 0 ) then
 
       do mgs = 1,ngscnt
 !      qhlcnh(mgs) = 0.0
@@ -21867,11 +21867,11 @@ END SUBROUTINE nssl_2mom_driver
        *( (hldia1**3) + 3.0*(hldia1**2)*xdia(mgs,lh,1)                  &
         + 6.0*(hldia1)*(xdia(mgs,lh,1)**2) + 6.0*(xdia(mgs,lh,1)**3) )
       qhlcnh(mgs) =   min(qhlcnh(mgs),qhmxd(mgs))
-      IF ( ipconc .ge. 5 ) THEN
+      if ( ipconc .ge. 5 ) then
         chlcnh(mgs) = Min( cxmxd(mgs,lh), cx(mgs,lh)*Exp(-hldia1/xdia(mgs,lh,1)))
         chlcnhhl(mgs) = chlcnh(mgs)
 !        chlcnh(mgs) = Min( cxmxd(mgs,lh), rho0(mgs)*qhlcnh(mgs)/(2.0*xmas(mgs,lh) ))
-      ENDIF
+      endif
            vhlcnh(mgs) = rho0(mgs)*qhlcnh(mgs)/xdn(mgs,lh)
            vhlcnhl(mgs) = rho0(mgs)*qhlcnh(mgs)/Max(xdnmn(lhl), xdn(mgs,lh))
       end if
@@ -21880,23 +21880,23 @@ END SUBROUTINE nssl_2mom_driver
       
 !      ENDIF ! true
       
-      ENDIF ! ihlcnh options
+      endif ! ihlcnh options
       
      ! convert low-density hail to graupel
-      IF ( icvhl2h >= 1 ) THEN
-      DO mgs = 1,ngscnt
-        IF (  qx(mgs,lhl) > qxmin(lhl) .and. xdn(mgs,lhl) < 0.5*(xdnmn(lhl) + xdnmx(lhl)) ) THEN
+      if ( icvhl2h >= 1 ) then
+      do mgs = 1,ngscnt
+        if (  qx(mgs,lhl) > qxmin(lhl) .and. xdn(mgs,lhl) < 0.5*(xdnmn(lhl) + xdnmx(lhl)) ) then
           tmp = Min(0.95, 1. - 0.5*(1. + tanh(0.125*(xdn(mgs,lhl) - 1.01*xdnmn(lhl) )) ))
           qhcnhl(mgs) = tmp*qx(mgs,lhl)*dtpinv
           chcnhl(mgs) = cx(mgs,lhl)*qhcnhl(mgs)/qx(mgs,lhl)
           vhcnhl(mgs) = vx(mgs,lhl)*qhcnhl(mgs)/qx(mgs,lhl)
           
-        ENDIF
-      ENDDO
+        endif
+      enddo
       
-      ENDIF
+      endif
       
-      ENDIF ! lhl > 1
+      endif ! lhl > 1
 
   
   
@@ -21904,7 +21904,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! Ziegler snow conversion to graupel
 !
-      DO mgs = 1,ngscnt
+      do mgs = 1,ngscnt
 
       qhcns(mgs) = 0.0
       chcns(mgs) = 0.0
@@ -21915,20 +21915,20 @@ END SUBROUTINE nssl_2mom_driver
       cscnh(mgs) = 0.0
       vscnh(mgs) = 0.0
 
-      IF ( ipconc .ge. 5 ) THEN
+      if ( ipconc .ge. 5 ) then
 
         ! test attempt at converting graupel to snow when not riming but growing by deposition
-        IF ( temg(mgs) < tfr .and. qx(mgs,lh) .gt. qxmin(lh) .and. qhdpv(mgs) > qxmin(lh)*dtpinv  &
-     &       .and. qhacw(mgs) < qxmin(lh)*dtpinv ) THEN
-          IF ( xdn(mgs,lh) < 290. ) THEN
+        if ( temg(mgs) < tfr .and. qx(mgs,lh) .gt. qxmin(lh) .and. qhdpv(mgs) > qxmin(lh)*dtpinv  &
+     &       .and. qhacw(mgs) < qxmin(lh)*dtpinv ) then
+          if ( xdn(mgs,lh) < 290. ) then
 !          qscnh(mgs) = 2.*qhdpv(mgs)
 !          cscnh(mgs) = cx(mgs,lh)*qscnh(mgs)/qx(mgs,lh)
 !          vscnh(mgs) = rho0(mgs)*qscnh(mgs)/xdn(mgs,lh)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 
-        IF ( qx(mgs,ls) .gt. qxmin(ls) .and. qsacw(mgs) .gt. 0.0 ) THEN
+        if ( qx(mgs,ls) .gt. qxmin(ls) .and. qsacw(mgs) .gt. 0.0 ) then
 
 !      DATA VGRA/1.413E-2/  ! this is the volume (cm**3) of a 3mm diam. sphere
 !    vgra = 1.4137e-8 m**3
@@ -21947,7 +21947,7 @@ END SUBROUTINE nssl_2mom_driver
 !      XNH=XNH+DT*DNSCNV
 !      XNS=XNS-DT*DNSCNV
 
-        IF ( iglcnvs .eq. 1 ) THEN  ! Zrnic, Ziegler et al (1993)
+        if ( iglcnvs .eq. 1 ) then  ! Zrnic, Ziegler et al (1993)
 
         dnnet = cscnvis(mgs) + cscnis(mgs) - csacs(mgs)
         dqnet = qscnvi(mgs) + qscni(mgs) + qsacw(mgs) + qsdpv(mgs) + qssbv(mgs)
@@ -21967,10 +21967,10 @@ END SUBROUTINE nssl_2mom_driver
         vhcns(mgs) = rho0(mgs)*qhcns(mgs)/Max(xdn(mgs,ls),xdnmn(lh))
 !        vhcns(mgs) = rho0(mgs)*qhcns(mgs)/Max(xdn(mgs,ls),400.)
 
-        ELSEIF ( iglcnvs .ge. 2  ) THEN  ! treat like ice crystals, i.e., check for rime density (ERM)
+        elseif ( iglcnvs .ge. 2  ) then  ! treat like ice crystals, i.e., check for rime density (ERM)
 
-          IF ( temg(mgs) .lt. 273.0 .and. ( qsacw(mgs) - qsdpv(mgs) .gt. 0.0 .or. &
-              ( iglcnvs >= 3 .and. qsacw(mgs)*dtp > 2.*qxmin(lh) .and. gamsnow73fac*xmas(mgs,ls) > xdnmn(lh)*xvmn(lh)  ) ) ) THEN !{
+          if ( temg(mgs) .lt. 273.0 .and. ( qsacw(mgs) - qsdpv(mgs) .gt. 0.0 .or. &
+              ( iglcnvs >= 3 .and. qsacw(mgs)*dtp > 2.*qxmin(lh) .and. gamsnow73fac*xmas(mgs,ls) > xdnmn(lh)*xvmn(lh)  ) ) ) then !{
 
 
         tmp = rimc1*(-((0.5)*(1.e+06)*xdia(mgs,lc,1))   &
@@ -21985,8 +21985,8 @@ END SUBROUTINE nssl_2mom_driver
 
 !        write(0,*)  'rime dens = ',tmp
 
-        IF ( iglcnvs == 2 ) THEN !{
-        IF ( tmp .ge. 200.0  ) THEN
+        if ( iglcnvs == 2 ) then !{
+        if ( tmp .ge. 200.0  ) then
           r = Max( 0.5*(xdn(mgs,ls) + tmp), xdnmn(lh) )
 !          r = Max( r, 400. )
           qhcns(mgs) = (qsacw(mgs) - qsdpv(mgs))
@@ -21995,14 +21995,14 @@ END SUBROUTINE nssl_2mom_driver
           chcnsh(mgs) = Min(chcns(mgs), rho0(mgs)*qhcns(mgs)/(r*xvmn(lh)) )
 !          vhcni(mgs) = rho0(mgs)*2.0*qhcni(mgs)/(xdn(mgs,li) + tmp)
           vhcns(mgs) = rho0(mgs)*qhcns(mgs)/r
-        ENDIF
+        endif
         
-        ELSEIF ( iglcnvs == 3 ) THEN
+        elseif ( iglcnvs == 3 ) then
  
          ! convert to particles with the mass of the mass-weighted diameter
       !  massofmwr = gamice73fac*xmas(mgs,li)
         
-        IF ( tmp > xdnmn(lh) ) THEN
+        if ( tmp > xdnmn(lh) ) then
           r = Max( 0.5*(xdn(mgs,ls) + tmp), xdnmn(lh) )
 !          r = Max( r, 400. )
           qhcns(mgs) = 0.5*qsacw(mgs)
@@ -22010,25 +22010,25 @@ END SUBROUTINE nssl_2mom_driver
           chcns(mgs) = Min( chcns(mgs), cx(mgs,ls)*qhcns(mgs)/qx(mgs,ls))
           chcnsh(mgs) = Min(chcns(mgs), rho0(mgs)*qhcns(mgs)/(r*xvmn(lh)) )
           vhcns(mgs) = rho0(mgs)*qhcns(mgs)/r
-        ENDIF
+        endif
 
-        ENDIF !}
+        endif !}
 
-      ENDIF !}
+      endif !}
 
-        ENDIF
+        endif
 
 
-        ENDIF
+        endif
 
-       ELSE ! single moment lfo
+       else ! single moment lfo
 
         qhcns(mgs) = 0.001*ehscnv(mgs)*max((qx(mgs,ls)-6.e-4),0.0)
         qhcns(mgs) = min(qhcns(mgs),qxmxd(mgs,ls))
-        IF ( lvol(lh) .ge. 1 ) vhcns(mgs) = rho0(mgs)*qhcns(mgs)/Max(xdn(mgs,ls),400.)
+        if ( lvol(lh) .ge. 1 ) vhcns(mgs) = rho0(mgs)*qhcns(mgs)/Max(xdn(mgs,ls),400.)
 
-       ENDIF
-      ENDDO
+       endif
+      enddo
 !
 !
 !  heat budget for rain---not all rain that collects ice can freeze
@@ -22052,19 +22052,19 @@ END SUBROUTINE nssl_2mom_driver
       qrzmax(mgs) = min(qrztot(mgs), qrzmax(mgs))
       qrzmax(mgs) = min(qx(mgs,lr)*dtpinv, qrzmax(mgs))
 
-      IF ( temcg(mgs) < -30. ) THEN ! allow all to freeze if T < -30 because fwet becomes invalid (negative)
+      if ( temcg(mgs) < -30. ) then ! allow all to freeze if T < -30 because fwet becomes invalid (negative)
         qrzmax(mgs) = qx(mgs,lr)*dtpinv
-      ENDIF
+      endif
 !      qrzmax(mgs) = min(4.*qrmxd(mgs), qrzmax(mgs))
 !
 !  compute the correction factor
 !
 !      IF ( qrztot(mgs) .gt. qxmin(lr) ) THEN
-      IF ( qrztot(mgs) .gt. qrzmax(mgs) .and. qrztot(mgs) .gt. qxmin(lr) ) THEN
+      if ( qrztot(mgs) .gt. qrzmax(mgs) .and. qrztot(mgs) .gt. qxmin(lr) ) then
         qrzfac(mgs) = qrzmax(mgs)/(qrztot(mgs))
-      ELSE
+      else
         qrzfac(mgs) = 1.0
-      ENDIF
+      endif
       qrzfac(mgs) = min(1.0, qrzfac(mgs))
 !
       end do
@@ -22115,49 +22115,49 @@ END SUBROUTINE nssl_2mom_driver
 
       do mgs = 1,ngscnt
 !
-      IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
+      if ( qx(mgs,lr) .gt. qxmin(lr) ) then
 
       qrcev(mgs) =   &
      &  fvce(mgs)*cx(mgs,lr)*rwvent(mgs)*rwcap(mgs)*evapfac
 ! this line to allow condensation on rain:
-      IF ( rcond .eq. 1 ) THEN
+      if ( rcond .eq. 1 ) then
         qrcev(mgs) = min(qrcev(mgs), qxmxd(mgs,lv))
 ! this line to have evaporation only:
-      ELSE
+      else
         qrcev(mgs) = min(qrcev(mgs), 0.0)
-      ENDIF
+      endif
 
       qrcev(mgs) = max(qrcev(mgs), -qrmxd(mgs))
 !      if ( temg(mgs) .lt. 273.15 ) qrcev(mgs) = 0.0
-      IF ( qrcev(mgs) .lt. 0. .and. lnr > 1 ) THEN
+      if ( qrcev(mgs) .lt. 0. .and. lnr > 1 ) then
 !        qrcev(mgs) =   -qrmxd(mgs)
 !        crcev(mgs) = (rho0(mgs)/(xmas(mgs,lr)+1.e-20))*qrcev(mgs)
-        IF ( icrcev == 1 ) THEN
+        if ( icrcev == 1 ) then
           crcev(mgs) = (cx(mgs,lr)/(qx(mgs,lr)))*qrcev(mgs)
-        ELSEIF ( icrcev == 2 ) THEN
+        elseif ( icrcev == 2 ) then
           crcev(mgs) = (cx(mgs,lr)/(qx(mgs,lr)))*qrcev(mgs)*vtxbar(mgs,lr,2)/vtxbar(mgs,lr,1)
-        ELSE
+        else
           crcev(mgs) = 0.0
-        ENDIF
-      ELSE
+        endif
+      else
          crcev(mgs) = 0.0
-      ENDIF
+      endif
 !      if ( temg(mgs) .lt. 273.15 ) crcev(mgs) = 0.0
 !
-      ENDIF
+      endif
 
       end do
 !
 ! evaporation/condensation of wet graupel and snow
 !
-      IF ( lhwlg > 1 ) THEN
+      if ( lhwlg > 1 ) then
       qhcevlg(:) = 0.0
       chcevlg(:) = 0.0
-      ENDIF
-      IF ( lhlwlg > 1 ) THEN
+      endif
+      if ( lhlwlg > 1 ) then
       qhlcevlg(:) = 0.0
       chlcevlg(:) = 0.0
-      ENDIF
+      endif
 
 
 !
@@ -22177,88 +22177,88 @@ END SUBROUTINE nssl_2mom_driver
       do mgs = 1,ngscnt
  
        ltest =  qx(mgs,lh) .gt. qxmin(lh)
-       IF ( lhl > 1 )  ltest =  ltest .or. qx(mgs,lhl) .gt. qxmin(lhl)
+       if ( lhl > 1 )  ltest =  ltest .or. qx(mgs,lhl) .gt. qxmin(lhl)
        
-      IF ( (itype1 .ge. 1 .or. itype2 .ge. 1 )   &
-     &              .and. qx(mgs,lc) .gt. qxmin(lc)) THEN
+      if ( (itype1 .ge. 1 .or. itype2 .ge. 1 )   &
+     &              .and. qx(mgs,lc) .gt. qxmin(lc)) then
       if ( temg(mgs) .ge. 265.15 .and. temg(mgs) .le. 271.15 ) then
-       IF ( ipconc .ge. 2 ) THEN
-        IF ( xv(mgs,lc) .gt. 0.0     &
+       if ( ipconc .ge. 2 ) then
+        if ( xv(mgs,lc) .gt. 0.0     &
      &     .and.  ltest &
 !     .and. itype2 .ge. 2    &
-     &       ) THEN
+     &       ) then
 !
 !  Ziegler et al. 1986 Hallett-Mossop process.  VSTAR = 7.23e-15 (vol of 12micron radius)
 !
-         IF ( alpha(mgs,lc) == 0.0 ) THEN
+         if ( alpha(mgs,lc) == 0.0 ) then
            ex1 = (1./250.)*Exp(-7.23e-15/xv(mgs,lc))
-         ELSE
+         else
            
            ratio = (1. + alpha(mgs,lc))*(7.23e-15)/xv(mgs,lc)
 
-           IF ( usegamxinfcnu ) THEN
+           if ( usegamxinfcnu ) then
             i = Nint(dgami*(1. + alpha(mgs,lc)))
             gcnup1 = gmoi(i)
             ex1 = (1./250.)*Gamxinf(1.+alpha(mgs,lc), ratio)/(gcnup1)
-           ELSE
+           else
              ratio = Min( maxratiolu, ratio )
              tmp = gaminterp(ratio,alpha(mgs,lc),1,1)
              ex1 = (1./250.)*tmp
-           ENDIF
-         ENDIF
-       IF ( itype2 .le. 2 ) THEN
+           endif
+         endif
+       if ( itype2 .le. 2 ) then
          ft = Max(0.0,Min(1.0,-0.11*temcg(mgs)**2 - 1.1*temcg(mgs)-1.7))
-       ELSE
-        IF ( temg(mgs) .ge. 265.15 .and. temg(mgs) .le. 267.15 ) THEN
+       else
+        if ( temg(mgs) .ge. 265.15 .and. temg(mgs) .le. 267.15 ) then
           ft = 0.5
-        ELSEIF (temg(mgs) .ge. 267.15 .and. temg(mgs) .le. 269.15 ) THEN
+        elseif (temg(mgs) .ge. 267.15 .and. temg(mgs) .le. 269.15 ) then
           ft = 1.0
-        ELSEIF (temg(mgs) .ge. 269.15 .and. temg(mgs) .le. 271.15 ) THEN
+        elseif (temg(mgs) .ge. 269.15 .and. temg(mgs) .le. 271.15 ) then
           ft = 0.5
-        ELSE 
+        else 
           ft = 0.0
-        ENDIF
-       ENDIF
+        endif
+       endif
 !        rhoinv = 1./rho0(mgs)
 !        DNSTAR = ex1*cglacw(mgs)
         
-       IF ( ft > 0.0 ) THEN
+       if ( ft > 0.0 ) then
         
-        IF ( itype2 > 0 ) THEN
-         IF ( qx(mgs,lh) .gt. qxmin(lh) .and. (.not. wetsfc(mgs))  ) THEN
+        if ( itype2 > 0 ) then
+         if ( qx(mgs,lh) .gt. qxmin(lh) .and. (.not. wetsfc(mgs))  ) then
           chmul1(mgs) = ft*ex1*chacw(mgs)
 !          chmul1(mgs) = Min( ft*ex1*chacw(mgs), ft*(30.*1.e+06)*rho0(mgs)*qhacw(mgs) ) ! 1.e+6 converts kg to mg; Saunders & Hosseini (2001) average of about 30 crystals per mg
           qhmul1(mgs) = cimas0*chmul1(mgs)*rhoinv(mgs)
-         ENDIF
-         IF ( lhl .gt. 1 ) THEN
-           IF ( qx(mgs,lhl) .gt. qxmin(lhl) .and. (.not. wetsfchl(mgs))  ) THEN
+         endif
+         if ( lhl .gt. 1 ) then
+           if ( qx(mgs,lhl) .gt. qxmin(lhl) .and. (.not. wetsfchl(mgs))  ) then
             chlmul1(mgs) = (ft*ex1*chlacw(mgs))
             qhlmul1(mgs) = cimas0*chlmul1(mgs)*rhoinv(mgs)
-           ENDIF
-         ENDIF
-        ENDIF ! itype2
+           endif
+         endif
+        endif ! itype2
 
-        IF ( itype1 > 0 ) THEN
-         IF ( qx(mgs,lh) .gt. qxmin(lh) .and. (.not. wetsfc(mgs))  ) THEN
+        if ( itype1 > 0 ) then
+         if ( qx(mgs,lh) .gt. qxmin(lh) .and. (.not. wetsfc(mgs))  ) then
           tmp = ft*(3.5e+08)*rho0(mgs)*qhacw(mgs)
           chmul1(mgs) = chmul1(mgs) + tmp
           qhmul1(mgs) = qhmul1(mgs) + cimas0*tmp*rhoinv(mgs)
-         ENDIF
-         IF ( lhl .gt. 1 ) THEN
-           IF ( qx(mgs,lhl) .gt. qxmin(lhl) .and. (.not. wetsfchl(mgs)) ) THEN
+         endif
+         if ( lhl .gt. 1 ) then
+           if ( qx(mgs,lhl) .gt. qxmin(lhl) .and. (.not. wetsfchl(mgs)) ) then
             tmp = ft*(3.5e+08)*rho0(mgs)*qhlacw(mgs)
             chlmul1(mgs) = chlmul1(mgs) + tmp
             qhlmul1(mgs) = qhlmul1(mgs) + cimas0*tmp*rhoinv(mgs)
-           ENDIF
-         ENDIF
-        ENDIF ! itype1
+           endif
+         endif
+        endif ! itype1
 
         
-        ENDIF ! ft
+        endif ! ft
 
-        ENDIF ! xv(mgs,lc) .gt. 0.0 .and.
+        endif ! xv(mgs,lc) .gt. 0.0 .and.
 
-       ELSE ! ipconc .lt. 2
+       else ! ipconc .lt. 2
 !
 !  define the temperature function
 !
@@ -22270,7 +22270,7 @@ END SUBROUTINE nssl_2mom_driver
         fimt1(mgs) = 1.0 -(temg(mgs)-268.15)/2.0
       elseif (temg(mgs) .le. 268.15 .and. temg(mgs) .ge. 265.15 ) then
         fimt1(mgs) = 1.0 +(temg(mgs)-268.15)/3.0
-      ELSE 
+      else 
         fimt1(mgs) = 0.0
       end if
 !
@@ -22282,7 +22282,7 @@ END SUBROUTINE nssl_2mom_driver
         fimt1(mgs) = 1.0
       elseif (temg(mgs) .ge. 269.15 .and. temg(mgs) .le. 271.15 ) then
         fimt1(mgs) = 0.5
-      ELSE 
+      else 
         fimt1(mgs) = 0.0
       end if
 !
@@ -22291,11 +22291,11 @@ END SUBROUTINE nssl_2mom_driver
 !            water accreted by graupel/hail (note converted to MKS units)
 !            3.5e+8 has units of 1/kg
 !
-      IF ( itype1 .ge. 1 ) THEN
+      if ( itype1 .ge. 1 ) then
        fimta(mgs) = (3.5e+08)*rho0(mgs)
-      ELSE
+      else
        fimta(mgs) = 0.0
-      ENDIF
+      endif
 
 !
 !
@@ -22307,7 +22307,7 @@ END SUBROUTINE nssl_2mom_driver
       fimt2(mgs) = 0.0
       xcwmas = xmas(mgs,lc) * 1000.
 !
-      IF ( itype2 .ge. 1 ) THEN
+      if ( itype2 .ge. 1 ) then
       if ( xcwmas.lt.1.26e-9 ) then
         fimt2(mgs) = 0.0
       end if
@@ -22321,7 +22321,7 @@ END SUBROUTINE nssl_2mom_driver
       fimt2(mgs) = min(fimt2(mgs),1.0)
       fimt2(mgs) = max(fimt2(mgs),0.0)
       
-      ENDIF
+      endif
 !
 !     qhmul2 = 0.0
 !     qsmul2 = 0.0
@@ -22333,29 +22333,29 @@ END SUBROUTINE nssl_2mom_driver
 !
 !      cimas0 = (1.0e-12)
 !      cimas0 = 2.5e-10
-      IF ( .not. wetsfc(mgs) ) THEN
+      if ( .not. wetsfc(mgs) ) then
       chmul1(mgs) =  fimt1(mgs)*(fimta(mgs) +   &
      &                           (4.0e-03)*fimt2(mgs))*qhacw(mgs)
-      ENDIF
+      endif
 !
       qhmul1(mgs) =  chmul1(mgs)*(cimas0/rho0(mgs))
 
-         IF ( lhl .gt. 1 ) THEN
-           IF ( qx(mgs,lhl) .gt. qxmin(lhl) .and. (.not. wetsfchl(mgs)) ) THEN
+         if ( lhl .gt. 1 ) then
+           if ( qx(mgs,lhl) .gt. qxmin(lhl) .and. (.not. wetsfchl(mgs)) ) then
             tmp = fimt1(mgs)*(fimta(mgs) +   &
      &                           (4.0e-03)*fimt2(mgs))*qhlacw(mgs)
             chlmul1(mgs) =  tmp
             qhlmul1(mgs) = cimas0*tmp*rhoinv(mgs)
-           ENDIF
-         ENDIF
+           endif
+         endif
 
 !      qsmul1(mgs) =  csmul1(mgs)*(cimas0/rho0(mgs))
 !
-      ENDIF ! ( ipconc .ge. 2 )
+      endif ! ( ipconc .ge. 2 )
       
       end if ! (in temperature range)
       
-      ENDIF ! ( itype1 .eq. 1 .or. itype2 .eq. 1)
+      endif ! ( itype1 .eq. 1 .or. itype2 .eq. 1)
 !
       end do
 !
@@ -22373,9 +22373,9 @@ END SUBROUTINE nssl_2mom_driver
       csmul(:) = 0.0
       qsmul(:) = 0.0
       
-      IF ( isnwfrac /= 0 ) THEN
+      if ( isnwfrac /= 0 ) then
       do mgs = 1,ngscnt
-       IF (temg(mgs) .gt. 265.0) THEN !{
+       if (temg(mgs) .gt. 265.0) then !{
         if (xdia(mgs,ls,1) .gt. 100.e-6 .and. xdia(mgs,ls,1) .lt. 2.0e-3) then  ! equiv diameter 100microns to 2mm
 
         tmp = rhoinv(mgs)*pi*xdn(mgs,ls)*cx(mgs,ls)*(500.e-6)**3
@@ -22385,9 +22385,9 @@ END SUBROUTINE nssl_2mom_driver
         csmul(mgs) = Min( cxmxd(mgs,li), rho0(mgs)*qsmul(mgs)/mfrag )
 
         endif
-       ENDIF !}
+       endif !}
       enddo
-      ENDIF
+      endif
 
 !
 !  frozen rain-rain interaction....
@@ -22435,7 +22435,7 @@ END SUBROUTINE nssl_2mom_driver
       qipipnt(mgs) = 0.0
       cipint(mgs) = 0.0
       ccitmp = 0.0
-      IF ( icenucopt == 1 .or. icenucopt == -10 .or. icenucopt == -11 ) THEN
+      if ( icenucopt == 1 .or. icenucopt == -10 .or. icenucopt == -11 ) then
       if ( ( temg(mgs) .lt. 268.15 .or.  &
 !     : ( imeyers5 .and. temg(mgs) .lt.  273.0) ) .and.    &
      & ( imeyers5 .and. temg(mgs) .lt.  272.0 .and. temgkm2(mgs) .lt. tfr) ) .and.    &
@@ -22447,7 +22447,7 @@ END SUBROUTINE nssl_2mom_driver
      &  (1.0 + fiinit(mgs)*qis(mgs)/tsqr(mgs))
 !      qidsvp(mgs) = dqisdt(mgs)
       idqis = 0
-      if ( ssi(mgs) .gt. 1.0 ) THEN
+      if ( ssi(mgs) .gt. 1.0 ) then
       idqis = 1 
       dzfacp = max( float(kgsp(mgs)-kgs(mgs)), 0.0 )
       dzfacm = max( float(kgs(mgs)-kgsm(mgs)), 0.0 )
@@ -22467,65 +22467,65 @@ END SUBROUTINE nssl_2mom_driver
 !
 !      ciintmx = 1.e9
 !      ciintmx = 1.e9
-      IF ( icenucopt /= -10 ) THEN
+      if ( icenucopt /= -10 ) then
       
-        IF ( lcin > 1 ) THEN
+        if ( lcin > 1 ) then
           ciint(mgs) = Min(ciint(mgs), ccin(mgs)*dtpinv) ! because ciint is a *rate*
           ccin(mgs) = ccin(mgs) - ciint(mgs)*dtp
           qiint(mgs) = ciint(mgs)*cmassin/rho0(mgs)
-        ELSEIF ( lcina > 1 ) THEN
+        elseif ( lcina > 1 ) then
           ciint(mgs) = Max(0.0, Min( ciint(mgs), Min( cnina(mgs), ciintmx ) - cina(mgs) ))
           qiint(mgs) = ciint(mgs)*cmassin/rho0(mgs)
       
-        ELSEIF ( icenucopt == 1 .and. ciint(mgs) .gt. Max(0.0, ciintmx - cx(mgs,li) - ccitmp )*dtpinv  ) THEN
+        elseif ( icenucopt == 1 .and. ciint(mgs) .gt. Max(0.0, ciintmx - cx(mgs,li) - ccitmp )*dtpinv  ) then
           ciint(mgs) = Max(0.0, ciintmx - (cx(mgs,li)) )*dtpinv 
           qiint(mgs) = ciint(mgs)*cmassin/rho0(mgs)
 
-        ELSEIF ( icenucopt == -11 .and. dtp*ciint(mgs) .gt. ( cnina(mgs) - (cx(mgs,li) - ccitmp))) THEN
+        elseif ( icenucopt == -11 .and. dtp*ciint(mgs) .gt. ( cnina(mgs) - (cx(mgs,li) - ccitmp))) then
           ciint(mgs) = Max(0.0,  cnina(mgs) - (cx(mgs,li)+ccitmp)*dtpinv )
           qiint(mgs) = ciint(mgs)*cmassin/rho0(mgs)
 
-        ENDIF
-      ENDIF
+        endif
+      endif
       
       end if
       endif
 
-      ELSEIF ( icenucopt == 2 .or. icenucopt == -1 .or. icenucopt == -2 ) THEN
+      elseif ( icenucopt == 2 .or. icenucopt == -1 .or. icenucopt == -2 ) then
       
-        IF ( ( temg(mgs) .lt. 268.15 .and. ssw(mgs) > 1.0 ) .or. ssi(mgs) > 1.25 ) THEN
-          IF ( lcin > 1 ) THEN
+        if ( ( temg(mgs) .lt. 268.15 .and. ssw(mgs) > 1.0 ) .or. ssi(mgs) > 1.25 ) then
+          if ( lcin > 1 ) then
            ciint(mgs) = Min(cnina(mgs), ccin(mgs))
            ciint(mgs) = Min( ciint(mgs), Max(0.0, ciintmx - (cx(mgs,li) - ccitmp) ) ) ! do not initiate ice beyond concentration of ciintmx
            ccin(mgs) = ccin(mgs) - ciint(mgs)
            ciint(mgs) = ciint(mgs)*dtpinv ! convert total initiation to a rate
-          ELSE
+          else
            ciint(mgs) = Max( 0.0, cnina(mgs) - cina(mgs) )*dtpinv
-          ENDIF
+          endif
           qiint(mgs) = ciint(mgs)*cmassin/rho0(mgs)
 
           fiinit(mgs) = (felv(mgs)**2)/(cp*rw)
           dqisdt(mgs) = (qx(mgs,lv)-qis(mgs))/(1.0 + fiinit(mgs)*qis(mgs)/tsqr(mgs))
           qiint(mgs) = min(qiint(mgs), max(0.25*dqisdt(mgs),0.0))
           ciint(mgs) = qiint(mgs)*rho0(mgs)/cmassin
-        ENDIF
+        endif
       
       
       
-      ELSEIF ( icenucopt == 3 .or. icenucopt == 4 .or. icenucopt == 10 ) THEN
-        IF (  temg(mgs) .lt. 268.15 ) THEN
-          IF ( lcin > 1 ) THEN
+      elseif ( icenucopt == 3 .or. icenucopt == 4 .or. icenucopt == 10 ) then
+        if (  temg(mgs) .lt. 268.15 ) then
+          if ( lcin > 1 ) then
            ciint(mgs) = Min(cnina(mgs), ccin(mgs))
            ciint(mgs) = Min( ciint(mgs), Max(0.0, ciintmx - (cx(mgs,li) + ccitmp) ) ) ! do not initiate ice beyond concentration of ciintmx
            ccin(mgs) = ccin(mgs) - ciint(mgs)
            ciint(mgs) = ciint(mgs)*dtpinv ! convert total initiation to a rate
-          ELSE
+          else
            ciint(mgs) = Max( 0.0, cnina(mgs) - cina(mgs) )*dtpinv
-          ENDIF
+          endif
           qiint(mgs) = ciint(mgs)*cmassin/rho0(mgs)
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 !
       if ( xplate(mgs) .eq. 1 ) then
       qipipnt(mgs) = qiint(mgs)
@@ -22586,9 +22586,9 @@ END SUBROUTINE nssl_2mom_driver
       crshr(mgs) = chshrr(mgs)/rzxh(mgs) + chlshrr(mgs)/rzxhl(mgs)
       
       
-      IF ( ipconc .ge. 3 ) THEN
+      if ( ipconc .ge. 3 ) then
 !       crshr(mgs) = Max(crshr(mgs), rho0(mgs)*qrshr(mgs)/(xdn(mgs,lr)*vr1mm) )
-      ENDIF
+      endif
       end do 
 !
 !
@@ -22598,7 +22598,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !
 !
-      IF ( ipconc .ge. 1 ) THEN
+      if ( ipconc .ge. 1 ) then
 !
 !
 !  concentration production terms
@@ -22629,8 +22629,8 @@ END SUBROUTINE nssl_2mom_driver
 !
 !      IF ( ipconc .ge. 1 ) THEN
 
-      IF ( warmonly < 0.5 ) THEN
-      IF ( ffrzs < 1.0 ) THEN
+      if ( warmonly < 0.5 ) then
+      if ( ffrzs < 1.0 ) then
       do mgs = 1,ngscnt
       pccii(mgs) =   &
      &   il5(mgs)*cicint(mgs)  &
@@ -22657,8 +22657,8 @@ END SUBROUTINE nssl_2mom_driver
       
 
       end do
-      ENDIF ! ffrzs
-      ELSEIF ( warmonly < 0.8 ) THEN
+      endif ! ffrzs
+      elseif ( warmonly < 0.8 ) then
       do mgs = 1,ngscnt
       
 !      qiint(mgs) = 0.0
@@ -22687,19 +22687,19 @@ END SUBROUTINE nssl_2mom_driver
       pccin(mgs) = ciint(mgs)
 
       end do
-      ENDIF ! warmonly
+      endif ! warmonly
 
       
 !      ENDIF ! ( ipconc .ge. 1 )
 !
 !  Cloud water
 !
-      IF ( ipconc .ge. 2 ) THEN
+      if ( ipconc .ge. 2 ) then
       
       do mgs = 1,ngscnt
       pccwi(mgs) =  (0.0) - cwshw(mgs) ! + (1-il5(mgs))*(-cirmlw(mgs))
       
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
       pccwd(mgs) =    &
      &  - cautn(mgs) +   &
      &  il5(mgs)*(-ciacw(mgs)-cwfrz(mgs)-cwctfzp(mgs)   &
@@ -22708,7 +22708,7 @@ END SUBROUTINE nssl_2mom_driver
      &  -cracw(mgs) -csacw(mgs)  -chacw(mgs) - chlacw(mgs)
 
 
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
       pccwd(mgs) =    &
      &  - cautn(mgs) +   &
      &  il5(mgs)*(  &
@@ -22716,7 +22716,7 @@ END SUBROUTINE nssl_2mom_driver
      &  -cwctfzc(mgs)   &
      &   )   &
      &  -cracw(mgs) -chacw(mgs) -chlacw(mgs) 
-      ELSE
+      else
       
 !       tmp3d(igs(mgs),jy,kgs(mgs)) = crcnw(mgs)
 
@@ -22733,16 +22733,16 @@ END SUBROUTINE nssl_2mom_driver
 
       pccwd(mgs) =    &
      &  - cautn(mgs) -cracw(mgs)
-      ENDIF
+      endif
 
 
-      IF ( .false. .and. exwmindiam > 0.0 .and. ccwresv(mgs) > 0.0 ) THEN
+      if ( .false. .and. exwmindiam > 0.0 .and. ccwresv(mgs) > 0.0 ) then
       pccwdacc(mgs) =    &
      &  il5(mgs)*(-ciacw(mgs)  &
      &   )   &
      &  -cracw(mgs) -csacw(mgs)  -chacw(mgs) - chlacw(mgs)
 
-      IF ( -pccwdacc(mgs)*dtp .gt. cx(mgs,lc) - ccwresv(mgs) ) THEN
+      if ( -pccwdacc(mgs)*dtp .gt. cx(mgs,lc) - ccwresv(mgs) ) then
 
        frac = -(cx(mgs,lc) - ccwresv(mgs) )/(pccwdacc(mgs)*dtp)
        pccwdacc(mgs) = -(cx(mgs,lc) - ccwresv(mgs) )*dtpinv
@@ -22753,7 +22753,7 @@ END SUBROUTINE nssl_2mom_driver
         chacw(mgs)   = frac*chacw(mgs)
         cautn(mgs)   = frac*cautn(mgs)
        
-        IF ( lhl .gt. 1 ) chlacw(mgs)   = frac*chlacw(mgs)
+        if ( lhl .gt. 1 ) chlacw(mgs)   = frac*chlacw(mgs)
 
 ! resum
       pccwd(mgs) =    &
@@ -22764,12 +22764,12 @@ END SUBROUTINE nssl_2mom_driver
      &   )   &
      &  -cracw(mgs) -csacw(mgs)  -chacw(mgs) - chlacw(mgs)
 
-      ENDIF
+      endif
 
-      ENDIF
+      endif
 
 
-      IF ( -pccwd(mgs)*dtp .gt. cx(mgs,lc) ) THEN
+      if ( -pccwd(mgs)*dtp .gt. cx(mgs,lc) ) then
 !       write(0,*) 'OUCH! pccwd(mgs)*dtp .gt. ccw(mgs) ',pccwd(mgs),cx(mgs,lc)
 !       write(0,*) 'qc = ',qx(mgs,lc)
 !       write(0,*) -ciacw(mgs)-cwfrzp(mgs)-cwctfzp(mgs)-cwfrzc(mgs)-cwctfzc(mgs)
@@ -22792,23 +22792,23 @@ END SUBROUTINE nssl_2mom_driver
         cautn(mgs)   = frac*cautn(mgs)
        
         pccii(mgs) = pccii(mgs) - (1.-frac)*il5(mgs)*(cwfrzc(mgs)+cwctfzc(mgs))*(1. - ffrzs)
-        IF ( lhl .gt. 1 ) chlacw(mgs)   = frac*chlacw(mgs)
+        if ( lhl .gt. 1 ) chlacw(mgs)   = frac*chlacw(mgs)
 
 !       STOP
-      ENDIF
+      endif
 
       end do
 
-      ENDIF ! ipconc
+      endif ! ipconc
 
 !
 !  Rain
 !
-      IF ( ipconc .ge. 3 ) THEN
+      if ( ipconc .ge. 3 ) then
 
       do mgs = 1,ngscnt
 
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
       pcrwi(mgs) = &
 !     >   cracw(mgs) +    &
      &   crcnw(mgs)   &
@@ -22828,7 +22828,7 @@ END SUBROUTINE nssl_2mom_driver
 !     >  -il5(mgs)*ciracr(mgs)
 
 
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
        pcrwi(mgs) = &
      &   crcnw(mgs)   &
      &  +(1-il5(mgs))*(   &
@@ -22844,7 +22844,7 @@ END SUBROUTINE nssl_2mom_driver
      &  - chlacr(mgs)    &
      &  +crcev(mgs)   &
      &  - cracr(mgs)
-      ELSE
+      else
       pcrwi(mgs) =   &
      &   crcnw(mgs)
       pcrwd(mgs) =   &
@@ -22856,11 +22856,11 @@ END SUBROUTINE nssl_2mom_driver
 !        pcrwd(mgs) = 0.0
 !        qrcnw(mgs) = 0.0
 
-      ENDIF
+      endif
 
 
       frac = 0.0
-      IF ( -pcrwd(mgs)*dtp .gt. cx(mgs,lr) ) THEN
+      if ( -pcrwd(mgs)*dtp .gt. cx(mgs,lr) ) then
 !       write(0,*) 'OUCH! pcrwd(mgs)*dtp .gt. crw(mgs) ',pcrwd(mgs)*dtp,cx(mgs,lr),mgs,igs(mgs),kgs(mgs)
 !       write(0,*) -ciacr(mgs)
 !       write(0,*) -crfrz(mgs)
@@ -22883,19 +22883,19 @@ END SUBROUTINE nssl_2mom_driver
         cracr(mgs) = frac*cracr(mgs)
 
 !       STOP
-      ENDIF
+      endif
 
       end do
 
-      ENDIF
+      endif
 
 
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
 
 !
 !  Snow
 !
-      IF ( ipconc .ge. 4 ) THEN !
+      if ( ipconc .ge. 4 ) then !
 
       do mgs = 1,ngscnt
       pcswi(mgs) =   &
@@ -22903,7 +22903,7 @@ END SUBROUTINE nssl_2mom_driver
      &  + cwfrz2snowfrac*cwfrz(mgs)/cwfrz2snowratio  &
      &  + cscnh(mgs)
       
-      IF (  ffrzs > 0.0 ) THEN
+      if (  ffrzs > 0.0 ) then
        pcswi(mgs) =  pcswi(mgs) + ffrzs* (  &
      &   il5(mgs)*cicint(mgs)   &
      &  +il5(mgs)*(cwfrzc(mgs)+cwctfzc(mgs)   &
@@ -22912,12 +22912,12 @@ END SUBROUTINE nssl_2mom_driver
      &  +chlmul1(mgs)    &
      &  + csplinter(mgs) + csplinter2(mgs)   &
      &  +csmul(mgs) )
-      ENDIF
+      endif
 
       
-      IF ( ess0 < 0.0 ) THEN
+      if ( ess0 < 0.0 ) then
          csacs(mgs) = Max(0.0, csacs(mgs) - (ifrzs)*(crfrzs(mgs) + ciacrs(mgs)))
-      ENDIF
+      endif
       
       pcswd(mgs) = &
 !     :  cracs(mgs)     &
@@ -22929,8 +22929,8 @@ END SUBROUTINE nssl_2mom_driver
      &  - csacs(mgs)
 
       frac = 0.0
-      IF ( imixedphase == 0 ) THEN
-        IF ( cx(mgs,ls) + dtp*(pcswi(mgs) + pcswd(mgs)) < 0.0 ) THEN
+      if ( imixedphase == 0 ) then
+        if ( cx(mgs,ls) + dtp*(pcswi(mgs) + pcswd(mgs)) < 0.0 ) then
          frac = (-cx(mgs,ls) + pcswi(mgs)*dtp)/(pcswd(mgs)*dtp)
          
            pcswd(mgs) = frac*pcswd(mgs)
@@ -22943,8 +22943,8 @@ END SUBROUTINE nssl_2mom_driver
            cssbv(mgs)  = frac*cssbv(mgs) 
            csacs(mgs)  = frac*csacs(mgs)
       
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 
       
@@ -22958,12 +22958,12 @@ END SUBROUTINE nssl_2mom_driver
 
       end do
 
-      ENDIF
+      endif
 
 !
 !  Graupel
 !
-      IF ( ipconc .ge. 5 ) THEN !
+      if ( ipconc .ge. 5 ) then !
       do mgs = 1,ngscnt
       pchwi(mgs) =   &
      &  +(ffrzh*ifrzg*crfrzf(mgs)   &
@@ -22986,7 +22986,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  Hail
 !
-      IF ( lhl .gt. 1 .and. lnhl > 1 ) THEN !
+      if ( lhl .gt. 1 .and. lnhl > 1 ) then !
       do mgs = 1,ngscnt
       pchli(mgs) = (ffrzh*(1.0-ifrzg)*crfrzf(mgs) +il5(mgs)*ffrzh*(1.0-ifiacrg)*(ciacrf(mgs) ))  &
      & + chlcnhhl(mgs) *rzxhlh(mgs)
@@ -22996,9 +22996,9 @@ END SUBROUTINE nssl_2mom_driver
 !     >  + il5(mgs)*chlsbv(mgs)   &
      &  + chlsbv(mgs) - chcnhl(mgs)
       
-      IF ( imixedphase == 0 ) THEN
+      if ( imixedphase == 0 ) then
       frac = 0.0
-      IF ( cx(mgs,lhl) + dtp*(pchli(mgs) + pchld(mgs)) < 0.0 ) THEN
+      if ( cx(mgs,lhl) + dtp*(pchli(mgs) + pchld(mgs)) < 0.0 ) then
         ! rescale depletion
 
          frac = (-cx(mgs,lhl) + pchli(mgs)*dtp)/(pchld(mgs)*dtp)
@@ -23009,22 +23009,22 @@ END SUBROUTINE nssl_2mom_driver
            
          pchld(mgs) = frac*pchld(mgs)
            
-      ENDIF
-      ENDIF
+      endif
+      endif
 
       end do
       
-      ENDIF
+      endif
 !
 
-      ENDIF ! (ipconc .ge. 5 )
+      endif ! (ipconc .ge. 5 )
 
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
 
 !
 !  Graupel
 !
-      IF ( ipconc .ge. 5 ) THEN !
+      if ( ipconc .ge. 5 ) then !
       do mgs = 1,ngscnt
       pchwi(mgs) =   &
      &  +ifrzg*(crfrzf(mgs) ) ! +il5(mgs)*(ciacrf(mgs) ))
@@ -23036,7 +23036,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  Hail
 !
-      IF ( lhl .gt. 1 ) THEN !
+      if ( lhl .gt. 1 ) then !
       do mgs = 1,ngscnt
       pchli(mgs) = (1.0-ifrzg)*(crfrzf(mgs)) & ! +il5(mgs)*(ciacrf(mgs) ))  &
      & + chlcnhhl(mgs) *rzxhl(mgs)/rzxh(mgs)
@@ -23051,11 +23051,11 @@ END SUBROUTINE nssl_2mom_driver
 !      ENDIF
       end do
 
-      ENDIF
+      endif
 
-      ENDIF ! ipconc >= 5
+      endif ! ipconc >= 5
 
-      ENDIF ! warmonly
+      endif ! warmonly
 
 !
 
@@ -23072,7 +23072,7 @@ END SUBROUTINE nssl_2mom_driver
       end do
 !
 !
-      ENDIF ! ( ipconc .ge. 1 )
+      endif ! ( ipconc .ge. 1 )
 !
 !
 !
@@ -23107,20 +23107,20 @@ END SUBROUTINE nssl_2mom_driver
        pqlwlghld(:) = 0.0
        pqlwhli(:) = 0.0
        pqlwhld(:) = 0.0
-       IF ( ipconc > 5 ) THEN
+       if ( ipconc > 5 ) then
        pzhwi(:) = 0.0
        pzhwd(:) = 0.0
        pzrwi(:) = 0.0
        pzrwd(:) = 0.0
        pzhli(:) = 0.0
        pzhld(:) = 0.0
-       ENDIF
+       endif
 
 
 !
 !  Vapor
 !
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
       do mgs = 1,ngscnt
       
 ! NOTE: ANY CHANGES HERE ALSO NEED TO GO INTO THE RESUM FARTHER DOWN!
@@ -23147,7 +23147,7 @@ END SUBROUTINE nssl_2mom_driver
       
       end do
 
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
       do mgs = 1,ngscnt
       pqwvi(mgs) =    &
      &  -Min(0.0, qrcev(mgs)) &
@@ -23161,7 +23161,7 @@ END SUBROUTINE nssl_2mom_driver
      &  -il5(mgs)*qidpv(mgs)  
       end do
 
-      ELSE
+      else
       do mgs = 1,ngscnt
       pqwvi(mgs) =    &
      &  -Min(0.0, qrcev(mgs))
@@ -23169,7 +23169,7 @@ END SUBROUTINE nssl_2mom_driver
      &  -Max(0.0, qrcev(mgs))
       end do
 
-      ENDIF ! warmonly
+      endif ! warmonly
 !
 !  Cloud water
 !
@@ -23177,24 +23177,24 @@ END SUBROUTINE nssl_2mom_driver
 
       pqcwi(mgs) =  (0.0) + qwcnr(mgs) - qwshw(mgs)
 
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
       pqcwd(mgs) =    &
      &  il5(mgs)*(-qiacw(mgs)-qwfrz(mgs)-qwctfz(mgs))   &
      &  -il5(mgs)*(qiihr(mgs))   &
      &  -qracw(mgs) -qsacw(mgs) -qrcnw(mgs) -qhacw(mgs) - qhlacw(mgs)  !&
 !     &  -il5(mgs)*(qwfrzp(mgs))
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
       pqcwd(mgs) =    &
      &  il5(mgs)*(-qiacw(mgs)-qwfrz(mgs)-qwctfz(mgs))   &
      &  -il5(mgs)*(qiihr(mgs))   &
      &  -qracw(mgs) -qrcnw(mgs) -qhacw(mgs) -qhlacw(mgs)
-      ELSE
+      else
       pqcwd(mgs) =    &
      &  -qracw(mgs) - qrcnw(mgs)
-      ENDIF
+      endif
 
 
-      IF ( pqcwd(mgs) .lt. 0.0 .and. -pqcwd(mgs)*dtp .gt. qx(mgs,lc) ) THEN
+      if ( pqcwd(mgs) .lt. 0.0 .and. -pqcwd(mgs)*dtp .gt. qx(mgs,lc) ) then
 
        frac = -Max(0.0,qx(mgs,lc))/(pqcwd(mgs)*dtp)
        pqcwd(mgs) = -qx(mgs,lc)*dtpinv
@@ -23212,24 +23212,24 @@ END SUBROUTINE nssl_2mom_driver
         vhacw(mgs)   = frac*vhacw(mgs)
         qrcnw(mgs)   = frac*qrcnw(mgs)
         qwfrzp(mgs)  = frac*qwfrzp(mgs)
-        IF ( lhl .gt. 1 ) THEN
+        if ( lhl .gt. 1 ) then
           qhlacw(mgs)   = frac*qhlacw(mgs)
           vhlacw(mgs)   = frac*vhlacw(mgs)
-        ENDIF
+        endif
 !        IF ( lzh .gt. 1 ) zhacw(mgs) = frac*zhacw(mgs)
 
 !       STOP
-      ENDIF
+      endif
       
 
       end do
 !
 !  Cloud ice
 !
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
 
       do mgs = 1,ngscnt
-      IF ( ffrzs < 1.0 ) THEN
+      if ( ffrzs < 1.0 ) then
       pqcii(mgs) =     &
      &   il5(mgs)*qicicnt(mgs)    &
      &  +il5(mgs)*((1.0-cwfrz2snowfrac)*qwfrzc(mgs)+qwctfzc(mgs))   &
@@ -23238,7 +23238,7 @@ END SUBROUTINE nssl_2mom_driver
      &  +qhmul1(mgs) + qhlmul1(mgs)   &
      & + qsplinter(mgs) + qsplinter2(mgs)
 !     > + cimas0*nsplinter*(crfrzf(mgs) + crfrz(mgs))/rho0(mgs)
-      ENDIF
+      endif
        
        pqcii(mgs) = pqcii(mgs)*(1.0 - ffrzs) &
      &  +il5(mgs)*qidpv(mgs)    &
@@ -23256,7 +23256,7 @@ END SUBROUTINE nssl_2mom_driver
       end do
 
       
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
 
       do mgs = 1,ngscnt
       pqcii(mgs) =     &
@@ -23286,13 +23286,13 @@ END SUBROUTINE nssl_2mom_driver
 !     &  - qhcni(mgs)
       end do
 
-      ENDIF
+      endif
 !
 !  Rain
 !
 
       do mgs = 1,ngscnt
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
       pqrwi(mgs) =     &
      &   qracw(mgs) + qrcnw(mgs) + Max(0.0, qrcev(mgs))   &
      &  +(1-il5(mgs))*(   &
@@ -23308,7 +23308,7 @@ END SUBROUTINE nssl_2mom_driver
      &  il5(mgs)*(-qiacr(mgs)-qrfrz(mgs))    &
      &  - qsacr(mgs) - qhacr(mgs) - qhlacr(mgs) - qwcnr(mgs)   &
      &  + Min(0.0,qrcev(mgs))
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
       pqrwi(mgs) =     &
      &   qracw(mgs) + qrcnw(mgs) + Max(0.0, qrcev(mgs))   &
      &  +(1-il5(mgs))*(   &
@@ -23321,15 +23321,15 @@ END SUBROUTINE nssl_2mom_driver
      &   - qhacr(mgs)    &
      &   - qhlacr(mgs)    &
      &  + Min(0.0,qrcev(mgs))
-      ELSE
+      else
       pqrwi(mgs) =     &
      &   qracw(mgs) + qrcnw(mgs) + Max(0.0, qrcev(mgs))
       pqrwd(mgs) =  Min(0.0,qrcev(mgs))
-      ENDIF ! warmonly
+      endif ! warmonly
 
 
  !      IF ( pqrwd(mgs) .lt. 0.0 .and. -(pqrwd(mgs) + pqrwi(mgs))*dtp .gt. qx(mgs,lr)  ) THEN
-      IF ( pqrwd(mgs) .lt. 0.0 .and. -(pqrwd(mgs) + pqrwi(mgs))*dtp .gt. qx(mgs,lr)  ) THEN
+      if ( pqrwd(mgs) .lt. 0.0 .and. -(pqrwd(mgs) + pqrwi(mgs))*dtp .gt. qx(mgs,lr)  ) then
 
        frac = (-qx(mgs,lr) + pqrwi(mgs)*dtp)/(pqrwd(mgs)*dtp)
 !       pqrwd(mgs) = -qx(mgs,lr)*dtpinv  + pqrwi(mgs)
@@ -23359,25 +23359,25 @@ END SUBROUTINE nssl_2mom_driver
        qhlcev(mgs)  = frac*qhlcev(mgs)
 
 
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
        pqrwd(mgs) =     &
      &  il5(mgs)*(-qiacr(mgs)-qrfrz(mgs) - qsacr(mgs))    &
      &  - qhacr(mgs) - qhlacr(mgs) - qwcnr(mgs)   &
      &  + Min(0.0,qrcev(mgs))
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
       pqrwd(mgs) =     &
      &  il5(mgs)*(-qrfrz(mgs))    &
      &   - qhacr(mgs)    &
      &   - qhlacr(mgs)    &
      &  + Min(0.0,qrcev(mgs))
-      ELSE
+      else
        pqrwd(mgs) =  Min(0.0,qrcev(mgs))
-      ENDIF ! warmonly
+      endif ! warmonly
 
 !
 ! Resum for vapor since qrcev has changed
 !
-      IF ( qrcev(mgs) .ne. 0.0 ) THEN
+      if ( qrcev(mgs) .ne. 0.0 ) then
        pqwvi(mgs) =    &
      &  -Min(0.0, qrcev(mgs))   &
      &  -Min(0.0, qhcev(mgs))   &
@@ -23397,16 +23397,16 @@ END SUBROUTINE nssl_2mom_driver
      &  -qhdpv(mgs) -qsdpv(mgs) - qhldpv(mgs))   &
      &  -il5(mgs)*qidpv(mgs)  
 
-       ENDIF
+       endif
 
 
 !       STOP
-      ENDIF
+      endif
 
 
       end do
 
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
 
 !
 !  Snow
@@ -23437,8 +23437,8 @@ END SUBROUTINE nssl_2mom_driver
      &  -qsmul(mgs)
       
       
-      IF ( imixedphase == 0 .and. pqswd(mgs) .lt. 0.0  ) THEN
-        IF ( qx(mgs,ls) + dtp*(pqswi(mgs) + pqswd(mgs)) < 0.0 ) THEN
+      if ( imixedphase == 0 .and. pqswd(mgs) .lt. 0.0  ) then
+        if ( qx(mgs,ls) + dtp*(pqswi(mgs) + pqswd(mgs)) < 0.0 ) then
          frac = (-qx(mgs,ls) + pqswi(mgs)*dtp)/(pqswd(mgs)*dtp)
          
            pqswd(mgs) = frac*pqswd(mgs)
@@ -23451,10 +23451,10 @@ END SUBROUTINE nssl_2mom_driver
            qsshr(mgs)  = frac*qsshr(mgs) 
            qssbv(mgs)  = frac*qssbv(mgs) 
            qsmul(mgs)  = frac*qsmul(mgs) 
-           IF ( qscev(mgs) < 0.0 ) qscev(mgs) = frac*qscev(mgs)
+           if ( qscev(mgs) < 0.0 ) qscev(mgs) = frac*qscev(mgs)
 
-        ENDIF
-      ENDIF
+        endif
+      endif
       
       pqcii(mgs) =  pqcii(mgs) &
      &  + (1. - ifrzs)*qrfrzs(mgs) &
@@ -23490,7 +23490,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  Hail
 !
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
 
       do mgs = 1,ngscnt
       pqhli(mgs) =    &
@@ -23507,9 +23507,9 @@ END SUBROUTINE nssl_2mom_driver
      &  + Min(0.0, qhlcev(mgs))   &
      &  -qhlmul1(mgs) - qhcnhl(mgs)
 
-      IF ( imixedphase == 0 ) THEN
+      if ( imixedphase == 0 ) then
       frac = 0.0
-      IF ( qx(mgs,lhl) + dtp*(pqhli(mgs) + pqhld(mgs)) < 0.0 ) THEN
+      if ( qx(mgs,lhl) + dtp*(pqhli(mgs) + pqhld(mgs)) < 0.0 ) then
         ! rescale depletion
 
          frac = (-qx(mgs,lhl) + pqhli(mgs)*dtp)/(pqhld(mgs)*dtp)
@@ -23518,19 +23518,19 @@ END SUBROUTINE nssl_2mom_driver
          qhlsbv(mgs) = frac*qhlsbv(mgs)
          qhcnhl(mgs) = frac*qhcnhl(mgs)
          qhlmul1(mgs) = frac*qhlmul1(mgs)
-         IF ( qhlcev(mgs) < 0.0 ) qhlcev(mgs) = frac*qhlcev(mgs)
+         if ( qhlcev(mgs) < 0.0 ) qhlcev(mgs) = frac*qhlcev(mgs)
            
          pqhld(mgs) = frac*pqhld(mgs)
            
-      ENDIF
-      ENDIF
+      endif
+      endif
 
 
       end do
       
-      ENDIF ! lhl
+      endif ! lhl
 
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
 !
 !  Graupel
 !
@@ -23550,7 +23550,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  Hail
 !
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
 
       do mgs = 1,ngscnt
       pqhli(mgs) =    &
@@ -23568,9 +23568,9 @@ END SUBROUTINE nssl_2mom_driver
 
       end do
 
-      ENDIF ! lhl
+      endif ! lhl
 
-      ENDIF ! warmonly
+      endif ! warmonly
 
 !
 !  Liquid water on snow and graupel 
@@ -23581,8 +23581,8 @@ END SUBROUTINE nssl_2mom_driver
       vhfzh(:) = 0.0
       vhlfzhl(:) = 0.0
 
-      IF ( mixedphase ) THEN
-      ELSE ! set arrays for non-mixedphase graupel
+      if ( mixedphase ) then
+      else ! set arrays for non-mixedphase graupel
       
 !        vhshdr(:) = 0.0
         vhmlr(:) = qhmlr(:) ! not actually volume, but treated as q in rate equation
@@ -23593,7 +23593,7 @@ END SUBROUTINE nssl_2mom_driver
 !        vhlmlr(:) = rho0(:)*qhlmlr(:)/xdn(:,lhl) 
 !        vhlsoak(:) = 0.0
 
-      ENDIF  ! mixedphase
+      endif  ! mixedphase
 
 
 
@@ -23610,23 +23610,23 @@ END SUBROUTINE nssl_2mom_driver
 !      zhshrr(mgs) = 0.0
       zhdsv(mgs) = 0.0
 !      IF ( lf < 1 ) THEN
-      IF ( ffrzh > 0.0 ) THEN
+      if ( ffrzh > 0.0 ) then
       ziacr(mgs) = 0.0
       ziacrf(mgs) = 0.0
-      ENDIF
+      endif
 !      ENDIF
       zhcns(mgs) = 0.0
       zhcni(mgs) = 0.0
       zhacs(mgs) = 0.0
       zhaci(mgs) = 0.0
       
-      ENDDO
+      enddo
 
-      IF ( lzh .gt. 1 ) THEN ! 
+      if ( lzh .gt. 1 ) then ! 
       do mgs = 1,ngscnt
       
       
-      IF ( qx(mgs,lh) .gt. qxmin(lh) .and. cx(mgs,lh) .gt. 0.0 ) THEN
+      if ( qx(mgs,lh) .gt. qxmin(lh) .and. cx(mgs,lh) .gt. 0.0 ) then
           tmp = qx(mgs,lh)/cx(mgs,lh)
           alp = Max( alphamin, alpha(mgs,lh) )
 !          g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
@@ -23636,14 +23636,14 @@ END SUBROUTINE nssl_2mom_driver
            zhaci(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*( tmp ) * qhaci(mgs) )
            zhacs(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*( tmp ) * qhacs(mgs) )
         
-        IF ( .not. mixedphase  .and. ibinhmlr < 1 ) THEN
+        if ( .not. mixedphase  .and. ibinhmlr < 1 ) then
         zhmlr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*tmp * qhmlr(mgs) - tmp**2 * chmlr(mgs)  )
-        ENDIF
+        endif
         
         zhshr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*tmp * qhshr(mgs) - tmp**2 * chshr(mgs)  )
 
 !        IF ( lzr > 0 .and. qhshr(mgs) /= 0.0 .and. chshrr(mgs) /= 0.0 .and. ibinhmlr < 1 ) THEN
-        IF ( lzr > 0 .and. qhshr(mgs) /= 0.0 .and. chshrr(mgs) /= 0.0 ) THEN
+        if ( lzr > 0 .and. qhshr(mgs) /= 0.0 .and. chshrr(mgs) /= 0.0 ) then
 !         IF ( temg(mgs) > tfr + 2.0 ) THEN
 !           zhshrr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( 2.*tmp * qhshr(mgs) - tmp**2 * chshrr(mgs)  )
 !           IF ( zhshrr(mgs) > 0. ) THEN
@@ -23655,34 +23655,34 @@ END SUBROUTINE nssl_2mom_driver
 !          zhshrr(mgs) =  g1shr*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhshr(mgs)**2/ chshrr(mgs)  )
 
 
-         IF ( temg(mgs) >= tfr ) THEN
+         if ( temg(mgs) >= tfr ) then
  !           zhshrr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn0(lr)))**2*( 2.*tmp * qhshr(mgs) - tmp**2 * chshrr(mgs)  )
  !           IF ( zhshrr(mgs) > 0.0 ) THEN
  !             zhshrr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn0(lr)))**2*( 2.*tmp * qhshr(mgs) - tmp**2 * chshr(mgs)  )
  !           ENDIF
-           IF ( (shedalp + alpha(mgs,lh))*xdia(mgs,lh,1) < sheddiam ) THEN ! if not shedding small drops, then use alpha of hail
+           if ( (shedalp + alpha(mgs,lh))*xdia(mgs,lh,1) < sheddiam ) then ! if not shedding small drops, then use alpha of hail
              z1 = g1*(6.0*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhshr(mgs)**2/ chshrr(mgs)  ) 
-           ELSE
+           else
              z1 = g1shr*(6.0*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhshr(mgs)**2/ chshrr(mgs)  ) ! should this be g1shr?
-           ENDIF
+           endif
            zhshrr(mgs) = z1
 !           z1 = g1mlr*(rho0(mgs)/(xdn(mgs,lr)))**2*( qhshr(mgs)**2/ chshrr(mgs)  ) ! should this be g1shr?
 !           zhshrr(mgs) = Max( z1, zhshrr(mgs))
-         ELSE
+         else
           zhshrr(mgs) =  g1shr*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhshr(mgs)**2/ chshrr(mgs)  )
-         ENDIF
+         endif
          
          zhshrr(mgs) = Min( 0.0, zhshrr(mgs) )
-        ENDIF
+        endif
 
-        IF ( zhshr(mgs) > 0.0 ) THEN
+        if ( zhshr(mgs) > 0.0 ) then
           write(0,*) 'Problem with zhshr! zhshr,qhshr,chshr = ',zhshr(mgs),qhshr(mgs),chshr(mgs)
           write(0,*) 'g1,tmp, qx,cx,zx = ',g1,tmp,qx(mgs,lh),cx(mgs,lh),zx(mgs,lh)
           write(0,*) ( 2.*tmp * qhshr(mgs) - tmp**2 * chshr(mgs)  ),  2.*tmp * qhshr(mgs), - tmp**2 * chshr(mgs)
           write(0,*) 'temcg = ',temcg(mgs),'chshr recalc = ',(cx(mgs,lh)/(qx(mgs,lh)+1.e-20))*qhshr(mgs)
           
-          STOP
-        ENDIF
+          stop
+        endif
 
 
 !        zhshr(mgs) =  (xdn0(lr)/(xdn(mgs,lh)))**2*( zx(mgs,lh) * qhshr(mgs) )
@@ -23696,8 +23696,8 @@ END SUBROUTINE nssl_2mom_driver
 !          g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
           g1 = g1x(mgs,lh) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
 
-          IF ( .true. ) THEN  ! {
-          IF ( qhacr(mgs) .gt. 0.0 ) THEN
+          if ( .true. ) then  ! {
+          if ( qhacr(mgs) .gt. 0.0 ) then
 !          zhacr(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( qx(mgs,lh)/cx(mgs,lh)) * qhacr(mgs) )
 
 !          g1r = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
@@ -23708,12 +23708,12 @@ END SUBROUTINE nssl_2mom_driver
 
 !          z = g1*(6.*rho0(mgs)/(pi*1000.))**2*( (qx(mgs,lh)+dtp*qhacr(mgs))**2)/(cx(mgs,lh))
 
-          IF ( z > zx(mgs,lh) ) THEN
+          if ( z > zx(mgs,lh) ) then
 !            zhacr(mgs) = (z - zx(mgs,lh))*dtpinv
-          ELSE
+          else
 !            zhacr(mgs) = 0.0
-          ENDIF
-          ENDIF
+          endif
+          endif
 
 !        zhacr(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( tmp ) * qhacr(mgs) )
 !        zhacr(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( tmp ) * qhacr(mgs) - tmp**2 * chacr(mgs) )
@@ -23721,102 +23721,102 @@ END SUBROUTINE nssl_2mom_driver
 !          alp = Max( 1.0, alpha(mgs,lh)+1. )
 !          g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/
 !     :         ((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
-          IF ( qhacw(mgs) .gt. 0.0 ) THEN
+          if ( qhacw(mgs) .gt. 0.0 ) then
 !          zhacw(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( qx(mgs,lh)/cx(mgs,lh)) * qhacw(mgs) )
           zhacw(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*( qx(mgs,lh)/cx(mgs,lh)) * qhacw(mgs) )
 
 !          z = g1*(6.*rho0(mgs)/(pi*1000.))**2*( (qx(mgs,lh)+dtp*(qhacw(mgs)-qhmul1(mgs)))**2)/(cx(mgs,lh))
-          IF ( z > zx(mgs,lh) ) THEN
+          if ( z > zx(mgs,lh) ) then
 !            zhacw(mgs) = (z - zx(mgs,lh))*dtpinv
-          ENDIF
-          ENDIF
+          endif
+          endif
 
-          ELSE ! } { ! this is not used because of the 'true' above
+          else ! } { ! this is not used because of the 'true' above
 
-          IF ( qhacw(mgs) .gt. 0.0 .or. qhacr(mgs) .gt. 0.0 ) THEN
+          if ( qhacw(mgs) .gt. 0.0 .or. qhacr(mgs) .gt. 0.0 ) then
           z = g1*(6.*rho0(mgs)/(pi*1000.))**2*( (qx(mgs,lh)+dtp*(qhacr(mgs) + qhacw(mgs)-qhmul1(mgs)))**2)/(cx(mgs,lh))
 !          zhacw(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( qx(mgs,lh)/cx(mgs,lh)) * qhacw(mgs) )
-          IF ( z > zx(mgs,lh) ) THEN
+          if ( z > zx(mgs,lh) ) then
             zhacw(mgs) = (z - zx(mgs,lh))*dtpinv
-          ENDIF
-          ENDIF
+          endif
+          endif
 
-          ENDIF ! }
+          endif ! }
 
-          IF ( qhlcnh(mgs) .gt. 0.0 .and. ihlcnh < 2  ) THEN
+          if ( qhlcnh(mgs) .gt. 0.0 .and. ihlcnh < 2  ) then
            zhlcnh(mgs) = g1*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*( tmp ) * qhlcnh(mgs) - tmp**2 * chlcnh(mgs) )
-          ENDIF
-      ENDIF
+          endif
+      endif
 ! qsplinter(mgs)
-      IF ( ffrzh*qiacrf(mgs) .gt. 0.0 .and. cx(mgs,lr) .gt. 0.0 .and. qx(mgs,lr) .gt. qxmin(lr) ) THEN
+      if ( ffrzh*qiacrf(mgs) .gt. 0.0 .and. cx(mgs,lr) .gt. 0.0 .and. qx(mgs,lr) .gt. qxmin(lr) ) then
             tmp = qx(mgs,lr)/cx(mgs,lr)
 !            alp = 3.0
 !            g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
-            IF ( imurain == 3 ) THEN
+            if ( imurain == 3 ) then
             ! note that 3.6476 = (6/pi)**2
             ziacr(mgs) = 3.6476*rho0(mgs)**2*(alpha(mgs,lr)+2.)/(xdn0(lr)**2*(alpha(mgs,lr)+1.))*  &
      &           ( 2.*tmp * qiacrf(mgs) - tmp**2 * ciacrf(mgs)  )
-            ELSE ! imurain == 1 
+            else ! imurain == 1 
             ziacr(mgs) = 3.6476*rho0(mgs)**2*g1x(mgs,lr)/(xdn0(lr)**2)*  &
      &           ( 2.*tmp * qiacrf(mgs) - tmp**2 * ciacrf(mgs)  )
-            ENDIF
+            endif
             ziacr(mgs) = Min( ziacr(mgs), zxmxd(mgs,lr) )
 !            ziacrf(mgs) = (xdn(mgs,lr)/xdn(mgs,lh))**2 * ziacr(mgs)
             ziacrf(mgs) = (xdn(mgs,lr)/xdnmx(lh))**2 * ziacr(mgs)
 !            z = g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*tmp * (qiacrf(mgs) - qsplinter(mgs)) - tmp**2 * ciacrf(mgs)  )
 !            ziacrf(mgs) = Min(  ziacrf(mgs), z )
-      ENDIF
+      endif
       
       
       
-      IF ( ffrzh*qrfrzf(mgs) .gt. 0.0 .and. cx(mgs,lr) .gt. 0.0 ) THEN
+      if ( ffrzh*qrfrzf(mgs) .gt. 0.0 .and. cx(mgs,lr) .gt. 0.0 ) then
             tmp = qx(mgs,lr)/cx(mgs,lr)
 !            alp = 3.0
 !            g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
-            IF ( imurain == 3 ) THEN
+            if ( imurain == 3 ) then
             zrfrz(mgs) = 3.6476*rho0(mgs)**2*(alpha(mgs,lr)+2.)/(xdn0(lr)**2*(alpha(mgs,lr)+1.)) * &
      &         ( 2.*tmp * qrfrzf(mgs) - tmp**2 * crfrzf(mgs)  )
             zrfrzf(mgs) = (xdn(mgs,lr)/xdn(mgs,lh))**2 * zrfrz(mgs)
-            ELSEIF ( imurain == 1 .and. ibiggopt /= 2 ) THEN
+            elseif ( imurain == 1 .and. ibiggopt /= 2 ) then
 !            zrfrz(mgs) = 3.6476*rho0(mgs)**2*g1x(mgs,lr)/(xdn0(lr)**2) * &
 !     &         ( 2.*tmp * qrfrzf(mgs) - tmp**2 * crfrz(mgs)  )
             zrfrz(mgs) = 3.6476*rho0(mgs)**2*g1x(mgs,lr)/(xdn0(lr)**2) * &
      &         ( 2.*tmp * qrfrz(mgs) - tmp**2 * crfrz(mgs)  )
             zrfrzf(mgs) = 3.6476*rho0(mgs)**2*g1x(mgs,lr)/(rhofrz**2) * &
      &         ( 2.*tmp * qrfrzf(mgs) - tmp**2 * crfrzf(mgs)  )
-            ENDIF
+            endif
             zrfrz(mgs) = Min( zrfrz(mgs), Max(0.4,qrfrz(mgs)/qx(mgs,lr))*zx(mgs,lr)*dtpinv )
 !            zrfrzf(mgs) = (xdn(mgs,lr)/xdn(mgs,lh))**2 * zrfrz(mgs)
 !            zrfrzf(mgs) = (xdn(mgs,lr)/xdnmx(lh))**2 * zrfrz(mgs)
 !            z = g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*tmp * (qrfrzf(mgs)-qsplinter2(mgs)) - tmp**2 * crfrzf(mgs)  )
 !             zrfrzf(mgs) = Min(  zrfrzf(mgs), z )
       ! change this to be alpha=0?
-      ENDIF
+      endif
       
-      IF ( lhl > 1 .and. qhcnhl(mgs) .gt. 0.0 ) THEN
+      if ( lhl > 1 .and. qhcnhl(mgs) .gt. 0.0 ) then
         tmp = qx(mgs,lhl)/cx(mgs,lhl)
         zhcnhl(mgs) = g1x(mgs,lhl)*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*( tmp ) * qhcnhl(mgs) - tmp**2 * chcnhl(mgs) )
         
-      ENDIF
+      endif
       
-      IF ( qhcns(mgs) > 0.0 .and. chcns(mgs) > 0.0 .and. cx(mgs,ls) > cxmin .and. vhcns(mgs) > 0 ) THEN
+      if ( qhcns(mgs) > 0.0 .and. chcns(mgs) > 0.0 .and. cx(mgs,ls) > cxmin .and. vhcns(mgs) > 0 ) then
         tmp = qx(mgs,ls)/cx(mgs,ls)
         r = rho0(mgs)*qhcns(mgs)/vhcns(mgs) ! density of new graupel particles
-        IF ( imusnow == 3 ) THEN
+        if ( imusnow == 3 ) then
         zhcns(mgs) = 3.6476*rho0(mgs)**2*(alpha(mgs,ls)+2.)/(r**2*(alpha(mgs,ls)+1.)) * &
      &         ( 2.*tmp * qhcns(mgs) - tmp**2 * chcns(mgs)  )
-        ELSE
-         write(0,*) 'Value of imusnow not valid. Must be 3 (fix me for =1). imusnow = ',imusnow
-        STOP
-        ENDIF
-      ENDIF
+        else
+         write(0,*) 'value of imusnow not valid. Must be 3 (fix me for =1). imusnow = ',imusnow
+        stop
+        endif
+      endif
 
-      IF ( qhcni(mgs) > 0.0 .and. chcni(mgs) > 0.0 .and. cx(mgs,li) > cxmin .and. vhcni(mgs) > 0 ) THEN
+      if ( qhcni(mgs) > 0.0 .and. chcni(mgs) > 0.0 .and. cx(mgs,li) > cxmin .and. vhcni(mgs) > 0 ) then
         tmp = qx(mgs,li)/cx(mgs,li)
         r = rho0(mgs)*qhcni(mgs)/vhcni(mgs) ! density of new graupel particles
         zhcni(mgs) = 3.6476*rho0(mgs)**2*(alpha(mgs,li)+2.)/(r**2*(alpha(mgs,li)+1.)) * &
      &         ( 2.*tmp * qhcni(mgs) - tmp**2 * chcni(mgs)  )
-      ENDIF
+      endif
  
 
       pzhwi(mgs) =   &
@@ -23839,12 +23839,12 @@ END SUBROUTINE nssl_2mom_driver
      &  - il5(mgs)*zhlcnh(mgs)
 
 
-           IF ( igs(mgs) == 44 .and. kgs(mgs) == 23 .or. dtp*( pqhwi(mgs) + pqhwd(mgs) ) > qxmin(lh) ) THEN
+           if ( igs(mgs) == 44 .and. kgs(mgs) == 23 .or. dtp*( pqhwi(mgs) + pqhwd(mgs) ) > qxmin(lh) ) then
 !             write(0,*)  'i,k,time = ',igs(mgs),kgs(mgs),time_real
 !             write(0,*) 'pzhwi,d = ',pzhwi(mgs),pzhwd(mgs),dtp*( pzhwi(mgs) + pzhwd(mgs) ),zx(mgs,lh)
 !             write(0,*) 'pqhwi,d = ',pqhwi(mgs),pqhwd(mgs),dtp*( pqhwi(mgs) + pqhwd(mgs) ),qx(mgs,lh)
 !             write(0,*) 'pchwi,d = ',pchwi(mgs),pchwd(mgs),dtp*( pchwi(mgs) + pchwd(mgs) ),cx(mgs,lh)
-           ENDIF
+           endif
 
 
 !        IF ( zhcnhl(mgs) < 0.0 ) THEN
@@ -23858,7 +23858,7 @@ END SUBROUTINE nssl_2mom_driver
 
       if (ndebug .gt. 0 .and. my_rank>=0 ) write(0,*) my_rank, 'end graupel reflectivity'
       
-      ENDIF
+      endif
 
 !
 !  Hail reflectivity
@@ -23870,54 +23870,54 @@ END SUBROUTINE nssl_2mom_driver
       zhlacr(mgs) = 0.0
       zhlacw(mgs) = 0.0
       
-      ENDDO
+      enddo
 
-      IF ( lzhl .gt. 1 .or. ( lzr > 1 .and. lnhl > 1 ) ) THEN ! also run for 2-moment hail for 3-moment rain sources
+      if ( lzhl .gt. 1 .or. ( lzr > 1 .and. lnhl > 1 ) ) then ! also run for 2-moment hail for 3-moment rain sources
 
       if (ndebug .gt. 0 .and. my_rank>=0 ) write(0,*) my_rank, 'hail reflectivity'
 
       do mgs = 1,ngscnt
       
-      IF ( qx(mgs,lhl) .gt. qxmin(lhl) .and. cx(mgs,lhl) .gt. 0.0 ) THEN
+      if ( qx(mgs,lhl) .gt. qxmin(lhl) .and. cx(mgs,lhl) .gt. 0.0 ) then
           tmp = qx(mgs,lhl)/cx(mgs,lhl)
           alp = Max( alphamin, alpha(mgs,lhl) )
 !          g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
           g1 = g1x(mgs,lhl) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
         
-        IF ( .not. mixedphase .and. qhlmlr(mgs) /= 0.0 .and. chlmlr(mgs) /= 0.0 .and. ibinhlmlr < 1 ) THEN
+        if ( .not. mixedphase .and. qhlmlr(mgs) /= 0.0 .and. chlmlr(mgs) /= 0.0 .and. ibinhlmlr < 1 ) then
          zhlmlr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*tmp * qhlmlr(mgs) - tmp**2 * chlmlr(mgs)  )
-        ENDIF
+        endif
         
         zhlshr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*tmp * qhlshr(mgs) - tmp**2 * chlshr(mgs)  )
-        IF ( lzr > 1 .and. qhlshr(mgs) /= 0.0 .and. chlshrr(mgs) /= 0.0 ) THEN
-         IF ( temg(mgs) >= tfr ) THEN
+        if ( lzr > 1 .and. qhlshr(mgs) /= 0.0 .and. chlshrr(mgs) /= 0.0 ) then
+         if ( temg(mgs) >= tfr ) then
  !           zhlshrr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn0(lr)))**2*( 2.*tmp * qhlshr(mgs) - tmp**2 * chlshrr(mgs)  )
  !           IF ( zhlshrr(mgs) > 0.0 ) THEN
  !             zhlshrr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn0(lr)))**2*( 2.*tmp * qhlshr(mgs) - tmp**2 * chlshr(mgs)  )
  !           ENDIF
-           IF ( (shedalp + alpha(mgs,lhl))*xdia(mgs,lhl,1) < sheddiam ) THEN ! if not shedding small drops, then use alpha of hail
+           if ( (shedalp + alpha(mgs,lhl))*xdia(mgs,lhl,1) < sheddiam ) then ! if not shedding small drops, then use alpha of hail
              z1 = g1*(6.0*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhlshr(mgs)**2/ chlshrr(mgs)  ) 
-           ELSE
+           else
              z1 = g1shr*(6.0*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhlshr(mgs)**2/ chlshrr(mgs)  ) ! should this be g1shr?
-           ENDIF
+           endif
            zhlshrr(mgs) = z1
 !           z1 = g1mlr*(rho0(mgs)/(xdn(mgs,lr)))**2*( qhlshr(mgs)**2/ chlshrr(mgs)  ) ! should this be g1shr?
 !           zhlshrr(mgs) = Max( z1, zhlshrr(mgs))
-         ELSE
+         else
           zhlshrr(mgs) =  g1shr*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhlshr(mgs)**2/ chlshrr(mgs)  )
-         ENDIF
+         endif
 
           zhlshrr(mgs) = Min( 0.0, zhlshrr(mgs) )
-        ENDIF
+        endif
 
-        IF ( zhlshr(mgs) > 0.0 ) THEN
+        if ( zhlshr(mgs) > 0.0 ) then
           write(0,*) 'Problem with zhlshr! zhlshr,qhlshr,chlshr = ',zhlshr(mgs),qhlshr(mgs),chlshr(mgs)
           write(0,*) 'g1,tmp, qx,cx,zx = ',g1,tmp,qx(mgs,lhl),cx(mgs,lhl),zx(mgs,lhl)
           write(0,*) ( 2.*tmp * qhlshr(mgs) - tmp**2 * chlshr(mgs)  ),  2.*tmp * qhlshr(mgs), - tmp**2 * chlshr(mgs)
           write(0,*) 'temcg = ',temcg(mgs),'chlshr recalc = ',(cx(mgs,lhl)/(qx(mgs,lhl)+1.e-20))*qhlshr(mgs)
           
-          STOP
-        ENDIF
+          stop
+        endif
 !        zhlshr(mgs) = Min( 0.0, zhlshr(mgs) )
 
 !        zhlshr(mgs) =  (xdn0(lr)/(xdn(mgs,lhl)))**2*( zx(mgs,lhl) * qhlshr(mgs) )
@@ -23931,8 +23931,8 @@ END SUBROUTINE nssl_2mom_driver
 !          g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
           g1 = g1x(mgs,lhl) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
 
-          IF ( .true. ) THEN ! {
-          IF ( qhlacr(mgs) .gt. 0.0 ) THEN
+          if ( .true. ) then ! {
+          if ( qhlacr(mgs) .gt. 0.0 ) then
 !          z = g1*(6.*rho0(mgs)/(pi*1000.))**2*( (qx(mgs,lhl)+dtp*qhlacr(mgs))**2)/(cx(mgs,lhl))
           zhlacr(mgs) =  g1*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*( tmp ) * qhlacr(mgs) )
 !          zhlacr(mgs) = Min( zxmxd(mgs,lr), zhlacr(mgs) )
@@ -23942,12 +23942,12 @@ END SUBROUTINE nssl_2mom_driver
 !          ELSE
 !            zhlacr(mgs) = 0.0
 !          ENDIF
-          ENDIF
+          endif
 
 !        zhacr(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( tmp ) * qhacr(mgs) )
 !        zhacr(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( tmp ) * qhacr(mgs) - tmp**2 * chacr(mgs) )
 
-          IF ( qhlacw(mgs) .gt. 0.0 ) THEN
+          if ( qhlacw(mgs) .gt. 0.0 ) then
           alp = Max( 3.0, alpha(mgs,lhl)+1. )
           g1 = (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
           
@@ -23959,24 +23959,24 @@ END SUBROUTINE nssl_2mom_driver
 !            zhlacw(mgs) = (z - zx(mgs,lhl))*dtpinv
 !          ENDIF
           g1 = g1x(mgs,lhl) ! (6.0 + alp)*(5.0 + alp)*(4.0 + alp)/((3.0 + alp)*(2.0 + alp)*(1.0 + alp))
-          ENDIF
+          endif
           
-          ELSE ! }  .false. {
+          else ! }  .false. {
 
-          IF ( qhlacw(mgs) .gt. 0.0 .or. qhlacr(mgs) .gt. 0.0 ) THEN
+          if ( qhlacw(mgs) .gt. 0.0 .or. qhlacr(mgs) .gt. 0.0 ) then
           z = g1*(6.*rho0(mgs)/(pi*1000.))**2*( (qx(mgs,lhl)+dtp*(qhlacr(mgs) + qhlacw(mgs)-qhlmul1(mgs)))**2)/(cx(mgs,lhl))
 !          zhlacw(mgs) =  g1*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*( qx(mgs,lhl)/cx(mgs,lhl)) * qhlacw(mgs) )
-          IF ( z > zx(mgs,lhl) ) THEN
+          if ( z > zx(mgs,lhl) ) then
             zhlacw(mgs) = (z - zx(mgs,lhl))*dtpinv
-          ENDIF
-          ENDIF
+          endif
+          endif
           
-          ENDIF ! }
+          endif ! }
         
-      ENDIF
+      endif
 ! qsplinter(mgs)
       
-      IF ( lzhl > 1 ) THEN
+      if ( lzhl > 1 ) then
       pzhli(mgs) = ffrzh*(((1.0-ifrzg)*zrfrzf(mgs)   &
      & +il5(mgs)*(1.0-ifiacrg)*ziacrf(mgs) )) &
      &  + il5(mgs)*zhlcnh(mgs)   &
@@ -23992,30 +23992,30 @@ END SUBROUTINE nssl_2mom_driver
      &  + Min( 0.0, zhldsv(mgs) )
       
 
-       IF ( .not. ( -1.0 < pzhli(mgs) .and. pzhli(mgs) < 1.e20 ) ) THEN
+       if ( .not. ( -1.0 < pzhli(mgs) .and. pzhli(mgs) < 1.e20 ) ) then
          write(iunit,*) 'Problem with pzhli!'
          write(iunit,*) 'zhlcnh,zhlacw,zhlacr,zhldsv = ',zhlcnh(mgs),zhlacw(mgs),zhlacr(mgs),zhldsv(mgs)
-       ENDIF
+       endif
 
-       IF ( .not. ( -1.0e20 < pzhld(mgs) .and. pzhld(mgs) < 1. ) ) THEN
+       if ( .not. ( -1.0e20 < pzhld(mgs) .and. pzhld(mgs) < 1. ) ) then
          write(iunit,*) 'Problem with pzhld!'
          write(iunit,*) 'zhlmlr,zhlshr,zhldsv = ',zhlmlr(mgs),zhlshr(mgs),zhldsv(mgs)
-       ENDIF
+       endif
        
-      ENDIF ! lzhl > 1
+      endif ! lzhl > 1
       
       end do
       
-      ENDIF
+      endif
 
 !
 !  rain reflectivity
 !
       if (ndebug .gt. 0 ) write(0,*) 'WARMZIEG: dbg = 11'
 
-      IF ( lzr .gt. 1 ) THEN ! 
+      if ( lzr .gt. 1 ) then ! 
        
-        DO mgs = 1,ngscnt
+        do mgs = 1,ngscnt
         
         zracw(mgs) = 0.0
         zracr(mgs) = 0.0
@@ -24027,32 +24027,32 @@ END SUBROUTINE nssl_2mom_driver
 !        zsmlr(mgs) = 0.0
         zsmlrr(mgs) = 0.0
 
-        IF ( qx(mgs,ls) .gt. qxmin(ls) .and. ( csmlr(mgs) /= 0.0 .or. csshr(mgs) /= 0.0 .or. &
-              csmlrr(mgs) /= 0.0 .or. csshrr(mgs) /= 0.0) ) THEN !{
+        if ( qx(mgs,ls) .gt. qxmin(ls) .and. ( csmlr(mgs) /= 0.0 .or. csshr(mgs) /= 0.0 .or. &
+              csmlrr(mgs) /= 0.0 .or. csshrr(mgs) /= 0.0) ) then !{
          tmp = qx(mgs,ls)/cx(mgs,ls)
          g1 = 36.*(xnu(ls)+2.0)/((xnu(ls)+1.0)*pi**2)
-        IF ( .not. mixedphase ) THEN
+        if ( .not. mixedphase ) then
 !          zsmlr(mgs) =  (xdn(mgs,ls)/xdn(mgs,lr))**2*g1*(rho0(mgs)/(xdn(mgs,ls)))**2* &
 !     &                 ( 2.*tmp * qsmlr(mgs) - tmp**2 * csmlr(mgs)  )
 
-          IF ( csmlrr(mgs) /= 0.0 ) THEN
+          if ( csmlrr(mgs) /= 0.0 ) then
             z1 = g1smlr*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qsmlr(mgs)**2/ csmlrr(mgs)  )
             zsmlrr(mgs) = z1
-          ENDIF
-        ENDIF
+          endif
+        endif
         
 !        zsshr(mgs) =  (xdn(mgs,ls)/xdn(mgs,lr))**2*g1*(rho0(mgs)/(xdn(mgs,ls)))**2*  &
 !     &                 ( 2.*tmp * qsshr(mgs) - tmp**2 * csshr(mgs)  )
 
-         IF ( csshrr(mgs) /= 0.0 ) THEN
+         if ( csshrr(mgs) /= 0.0 ) then
           z1 = g1smlr*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qsshr(mgs)**2/ csshrr(mgs)  )
           zsshrr(mgs) = z1
-         ENDIF
+         endif
         
-        ENDIF !}
+        endif !}
         
-        IF ( .not. mixedphase ) THEN !{
-          IF ( zhmlr(mgs) < 0.0 .and. chmlrr(mgs) /= 0.0 .and. ibinhmlr == 0 ) THEN !{
+        if ( .not. mixedphase ) then !{
+          if ( zhmlr(mgs) < 0.0 .and. chmlrr(mgs) /= 0.0 .and. ibinhmlr == 0 ) then !{
           tmp = qx(mgs,lh)/cx(mgs,lh)
 !          zhmlrr(mgs) =  Min(0.0, (xdn(mgs,lh)/xdn(mgs,lr))**2 * &
 !     &       g1x(mgs,lh)*(6.*rho0(mgs)/(pi*xdn(mgs,lh)))**2*( 2.*tmp * qhmlr(mgs) - tmp**2 * chmlrr(mgs)  ) )
@@ -24060,20 +24060,20 @@ END SUBROUTINE nssl_2mom_driver
 !            IF ( zhmlrr(mgs) >= 0. ) THEN
 !              zhmlrr(mgs) =  (xdn(mgs,lh)/xdn(mgs,lr))**2 * zhmlr(mgs)
 !            ENDIF
-           IF ( (shedalp + alpha(mgs,lh))*xdia(mgs,lh,1) < sheddiam ) THEN ! if not shedding small drops, then use alpha of graupel
+           if ( (shedalp + alpha(mgs,lh))*xdia(mgs,lh,1) < sheddiam ) then ! if not shedding small drops, then use alpha of graupel
              z1 = g1x(mgs,lh)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhmlr(mgs)**2/ chmlrr(mgs)  ) 
-           ELSE ! assume drops are shed off, so use either alpha for shedding or graupel alpha, whichever gives the lower g-factor (i.e., larger alpha)
+           else ! assume drops are shed off, so use either alpha for shedding or graupel alpha, whichever gives the lower g-factor (i.e., larger alpha)
              z1 = Min(g1x(mgs,lh),g1shr)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhmlr(mgs)**2/ chmlrr(mgs)  )
-           ENDIF
+           endif
            zhmlrr(mgs) = z1
 !           z1 = g1mlr*(rho0(mgs)/(xdn(mgs,lr)))**2*( qhmlr(mgs)**2/ chmlrr(mgs)  ) 
 !           zhmlrr(mgs) = Max( z1, zhmlrr(mgs))
-          ENDIF !}
+          endif !}
 
 
 !          zhshrr(mgs) =  (xdn(mgs,lh)/xdn(mgs,lr))**2 * zhshr(mgs)
 
-         IF ( lhl > 1 .and. qhlmlr(mgs) /= 0 .and. ibinhlmlr == 0) THEN
+         if ( lhl > 1 .and. qhlmlr(mgs) /= 0 .and. ibinhlmlr == 0) then
           tmp = qx(mgs,lhl)/cx(mgs,lhl)
 !          zhlmlrr(mgs) =  Min(0.0, (xdn(mgs,lhl)/xdn(mgs,lr))**2 * &
 !     &       g1x(mgs,lhl)*(6.*rho0(mgs)/(pi*xdn(mgs,lhl)))**2*( 2.*tmp * qhlmlr(mgs) - tmp**2 * chlmlrr(mgs)  ) )
@@ -24082,35 +24082,35 @@ END SUBROUTINE nssl_2mom_driver
 !           zhlmlrr(mgs) =  (xdn(mgs,lhl)/xdn(mgs,lr))**2 * zhlmlr(mgs)
 !          ENDIF
 
-           IF ( (shedalp + alpha(mgs,lhl))*xdia(mgs,lhl,1) < sheddiam ) THEN ! if not shedding small drops, then use alpha of hail
+           if ( (shedalp + alpha(mgs,lhl))*xdia(mgs,lhl,1) < sheddiam ) then ! if not shedding small drops, then use alpha of hail
              z1 = g1x(mgs,lhl)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhlmlr(mgs)**2/ chlmlrr(mgs)  ) 
-           ELSE ! assume drops are shed off, so use either alpha for shedding or graupel alpha, whichever gives the lower g-factor (i.e., larger alpha)
+           else ! assume drops are shed off, so use either alpha for shedding or graupel alpha, whichever gives the lower g-factor (i.e., larger alpha)
              z1 = Min(g1x(mgs,lhl),g1shr)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhlmlr(mgs)**2/ chlmlrr(mgs)  )
 !             z1 = g1shr*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( qhlmlr(mgs)**2/ chlmlrr(mgs)  )
-           ENDIF
+           endif
            zhlmlrr(mgs) = z1
 
 !           z1 = g1mlr*(rho0(mgs)/(xdn(mgs,lr)))**2*( qhlmlr(mgs)**2/ chlmlrr(mgs)  )
 !           zhlmlrr(mgs) = Max( z1, zhlmlrr(mgs))
 !         zhlmlr(mgs) =
 !          zhlshrr(mgs) =  (xdn(mgs,lhl)/xdn(mgs,lr))**2 * zhlshr(mgs)
-         ENDIF
+         endif
          
-         ENDIF ! }
+         endif ! }
 
-        IF ( qx(mgs,lr) .gt. qxmin(lr) .and. cx(mgs,lr) .gt. 0.0 ) THEN
+        if ( qx(mgs,lr) .gt. qxmin(lr) .and. cx(mgs,lr) .gt. 0.0 ) then
 
           tmp = qx(mgs,lr)/cx(mgs,lr)
           g1 = g1x(mgs,lr) ! 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
 
 
-        IF ( qracw(mgs) > 0.0 .and. cx(mgs,lr) > 0.0 ) THEN
+        if ( qracw(mgs) > 0.0 .and. cx(mgs,lr) > 0.0 ) then
          zracw(mgs) =  g1x(mgs,lr)*(6.*rho0(mgs)/(pi*1000.))**2*( 2.*tmp * qracw(mgs) )
-        ENDIF
+        endif
         
-        IF ( cracr(mgs) > 0.0 .and. cx(mgs,lr) > 0.0  ) THEN
+        if ( cracr(mgs) > 0.0 .and. cx(mgs,lr) > 0.0  ) then
          zracr(mgs) =  g1x(mgs,lr)*(6.*rho0(mgs)/(pi*1000.))**2*( tmp**2 * cracr(mgs) )
-        ENDIF
+        endif
 
         qtmp = qrcev(mgs)
         ctmp = crcev(mgs)
@@ -24121,10 +24121,10 @@ END SUBROUTINE nssl_2mom_driver
         zrcev(mgs) = g1x(mgs,lr)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*( 2.*( tmp ) * qtmp - tmp**2 * ctmp )
 
         
-        IF (  iferwisventr == 2 ) THEN
+        if (  iferwisventr == 2 ) then
           vent1 = Min(0.0, (12./(pii*xdn(mgs,lr)))*xdia(mgs,lr,1)**3*fvce(mgs)*rwcap(mgs)*rwventz(mgs))
           zrcev(mgs) = Max( zrcev(mgs), vent1 )
-        ENDIF
+        endif
 !        IF ( ny == 2 .and. igs(mgs) == 20 ) THEN
 !          write(0,*) 'k,zrcevold,new,maxdep : ',kgs(mgs),zrcev(mgs),vent1,-zxmxd(mgs,lr),alpha(mgs,lr),cx(mgs,lr)
 !        ENDIF
@@ -24133,22 +24133,22 @@ END SUBROUTINE nssl_2mom_driver
 !        ENDIF
         zrcev(mgs) = Max( zrcev(mgs), -zxmxd(mgs,lr) )
 
-        IF ( qhacr(mgs) > 0.0 ) THEN 
+        if ( qhacr(mgs) > 0.0 ) then 
           zrach(mgs) =  g1x(mgs,lr)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2* &
      &     ( 2.*( qx(mgs,lr)/cx(mgs,lr)) * qhacr(mgs) - tmp**2 * chacr(mgs) )
           zrach(mgs) = Min( zrach(mgs), zxmxd(mgs,lr) )
          
-         ENDIF
+         endif
 
-        IF ( lhl > 1 .and. qhlacr(mgs) > 0.0 ) THEN 
+        if ( lhl > 1 .and. qhlacr(mgs) > 0.0 ) then 
           zrachl(mgs) = g1x(mgs,lr)*(6.*rho0(mgs)/(pi*xdn(mgs,lr)))**2*   &
      &     ( 2.*( qx(mgs,lr)/cx(mgs,lr)) * qhlacr(mgs) - tmp**2 * chlacr(mgs) )
           zrachl(mgs) = Min( zrachl(mgs), zxmxd(mgs,lr) )
-         ENDIF
+         endif
 
 
         
-        ENDIF
+        endif
 
          pzrwi(mgs) = zrcnw(mgs) + zracw(mgs) + zracr(mgs) &
      &    + Max( 0.,zrcev(mgs) )  &
@@ -24168,21 +24168,21 @@ END SUBROUTINE nssl_2mom_driver
      &    - il5(mgs)*(ziacr(mgs) ) 
 
 
-         IF ( zx(mgs,lr) + dtp*(pzrwi(mgs)+pzrwd(mgs))  <= 0.0  &
-              .and. qx(mgs,lr) > qxmin(lr) ) THEN
+         if ( zx(mgs,lr) + dtp*(pzrwi(mgs)+pzrwd(mgs))  <= 0.0  &
+              .and. qx(mgs,lr) > qxmin(lr) ) then
            pzrwd(mgs) =  -zx(mgs,lr)*dtpinv - pzrwi(mgs)
-         ENDIF
+         endif
 
-        ENDDO
+        enddo
 
-      ENDIF
+      endif
 
 
 
 !
 !  Snow volume
 !
-      IF ( lvol(ls) .gt. 1 ) THEN
+      if ( lvol(ls) .gt. 1 ) then
       do mgs = 1,ngscnt
 !      pvswi(mgs) = rho0(mgs)*( pqswi(mgs) )/xdn0(ls)
 
@@ -24211,12 +24211,12 @@ END SUBROUTINE nssl_2mom_driver
 !aps     >   + rho0(mgs)*qsshr(mgs)/xdn(mgs,lr)
 !aps      ENDIF
 
-      ENDIF
+      endif
 !
 !  Graupel volume
 !
-      IF ( lvol(lh) .gt. 1 ) THEN
-      DO mgs = 1,ngscnt
+      if ( lvol(lh) .gt. 1 ) then
+      do mgs = 1,ngscnt
 !      pvhwi(mgs) = rho0(mgs)*( (pqhwi(mgs) )/xdn0(lh) )
 
 !      pvhwi(mgs) = rho0(mgs)*( (pqhwi(mgs) - il5(mgs)*qrfrzf(mgs) )/xdn0(lh) !
@@ -24252,21 +24252,21 @@ END SUBROUTINE nssl_2mom_driver
 !     >  + rho0(mgs)*qhshr(mgs)/xdn(mgs,lh) !xdn(mgs,lr)
 !      ENDIF
 
-       IF ( lzh > 1 .and. qx(mgs,lh) > qxmin(lh) ) THEN
+       if ( lzh > 1 .and. qx(mgs,lh) > qxmin(lh) ) then
 !       Calculate change in reflectivity due to density changes
 
         xdn_new = rho0(mgs)*(qx(mgs,lh) + dtp*(pqhwi(mgs) + pqhwd(mgs) ))/   &
      &   (vx(mgs,lh) + dtp*(pvhwi(mgs) + pvhwd(mgs))  )
 
-           IF ( mixedphase ) THEN 
-             IF ( qxw(mgs,lh) .gt. 0.0 ) THEN
+           if ( mixedphase ) then 
+             if ( qxw(mgs,lh) .gt. 0.0 ) then
                dnmx = xdnmx(lr)
-             ELSE
+             else
                dnmx = xdnmx(lh)
-             ENDIF
-           ELSE
+             endif
+           else
              dnmx = xdnmx(lh)
-           ENDIF
+           endif
 
         xdn_new = Max( Min( xdn_new, dnmx ), xdnmn(lh) )
         
@@ -24278,8 +24278,8 @@ END SUBROUTINE nssl_2mom_driver
         pzhwd(mgs) = pzhwd(mgs) + Min(0.0, zhwdn(mgs))
         
        
-       ENDIF
-      IF ( .false. .and. ny .eq. 2 .and. kgs(mgs) .eq. 9 .and. igs(mgs) .eq. 19 ) THEN
+       endif
+      if ( .false. .and. ny .eq. 2 .and. kgs(mgs) .eq. 9 .and. igs(mgs) .eq. 19 ) then
 
       write(iunit,*)
       write(iunit,*)   'Graupel at ',igs(mgs),kgs(mgs)
@@ -24326,12 +24326,12 @@ END SUBROUTINE nssl_2mom_driver
       write(iunit,*)  ciacrf(mgs)
 
 
-      ENDIF
+      endif
 
 
-      ENDDO
+      enddo
 
-      ENDIF
+      endif
 !
 !
 !
@@ -24339,9 +24339,9 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  Hail volume
 !
-      IF ( lhl .gt. 1 ) THEN
-      IF ( lvol(lhl) .gt. 1 ) THEN
-      DO mgs = 1,ngscnt
+      if ( lhl .gt. 1 ) then
+      if ( lvol(lhl) .gt. 1 ) then
+      do mgs = 1,ngscnt
 
       pvhli(mgs) = rho0(mgs)*(   &
      &  + (  il5(mgs)*(((1.0-ifiacrg)*ffrzh*qracif(mgs))/rhofrz  + qhldpv(mgs) )   &
@@ -24361,21 +24361,21 @@ END SUBROUTINE nssl_2mom_driver
      &   + rho0(mgs)*(1-il5(mgs))*vhlmlr(mgs)/xdn(mgs,lhl)  &
      &   + vhlshdr(mgs) - vhlsoak(mgs)
 
-       IF ( lzhl > 1 .and. qx(mgs,lhl) > qxmin(lhl) ) THEN
+       if ( lzhl > 1 .and. qx(mgs,lhl) > qxmin(lhl) ) then
 !       Calculate change in reflectivity due to density changes
 
         xdn_new = rho0(mgs)*(qx(mgs,lhl) + dtp*(pqhli(mgs) + pqhld(mgs) ))/   &
      &   (vx(mgs,lhl) + dtp*(pvhli(mgs) + pvhld(mgs))  )
         
-           IF ( mixedphase ) THEN 
-             IF ( qxw(mgs,lhl) .gt. 0.0 ) THEN
+           if ( mixedphase ) then 
+             if ( qxw(mgs,lhl) .gt. 0.0 ) then
                dnmx = xdnmx(lr)
-             ELSE
+             else
                dnmx = xdnmx(lhl)
-             ENDIF
-           ELSE
+             endif
+           else
              dnmx = xdnmx(lhl)
-           ENDIF
+           endif
         xdn_new = Max( Min( xdn_new, dnmx ), xdnmn(lhl) )
         
         drhodt = (xdn_new - xdn(mgs,lhl))*dtpinv
@@ -24386,12 +24386,12 @@ END SUBROUTINE nssl_2mom_driver
         pzhld(mgs) = pzhld(mgs) + Min(0.0, zhldn(mgs))
         
        
-       ENDIF
+       endif
 
-      ENDDO
+      enddo
       
-      ENDIF
-      ENDIF
+      endif
+      endif
 
 
       if ( ndebug .ge. 1 ) then
@@ -24410,7 +24410,7 @@ END SUBROUTINE nssl_2mom_driver
 
       
       
-      ENDDO
+      enddo
       
       do mgs = 1,ngscnt
 
@@ -24434,7 +24434,7 @@ END SUBROUTINE nssl_2mom_driver
       write(iunit,*)  'cidia,cwdia,qcmxd: ', xdia(mgs,li,1),xdia(mgs,lc,1),qcmxd(mgs)
       write(iunit,*)  'snow: ',qx(mgs,ls),cx(mgs,ls),swvent(mgs),vtxbar(mgs,ls,1),xdia(mgs,ls,1)
       write(iunit,*)  'graupel: ',qx(mgs,lh),cx(mgs,lh),hwvent(mgs),vtxbar(mgs,lh,1),xdia(mgs,lh,1)
-      IF ( lhl .gt. 1 ) write(iunit,*)  'hail: ',qx(mgs,lhl),cx(mgs,lhl),hlvent(mgs),vtxbar(mgs,lhl,1),xdia(mgs,lhl,1)
+      if ( lhl .gt. 1 ) write(iunit,*)  'hail: ',qx(mgs,lhl),cx(mgs,lhl),hlvent(mgs),vtxbar(mgs,lhl,1),xdia(mgs,lhl,1)
 
 
       write(iunit,*)  'li: ',xdia(mgs,li,1),xdia(mgs,li,2),xmas(mgs,li),qx(mgs,li),   &
@@ -24460,7 +24460,7 @@ END SUBROUTINE nssl_2mom_driver
      &  + pqhli(mgs) + pqhld(mgs)
 
       write(iunit,*) 'total = ',tmp
-      write(iunit,*) 'END OF OUTPUT OF SOURCE AND SINK'
+      write(iunit,*) 'end OF OUTPUT OF SOURCE AND SINK'
 
 !
 !  print production terms
@@ -24671,7 +24671,7 @@ END SUBROUTINE nssl_2mom_driver
 !  Balance and checks for continuity.....within machine precision...
 !
 !
-      write(iunit,*) 'END OF OUTPUT OF SOURCE AND SINK'
+      write(iunit,*) 'end OF OUTPUT OF SOURCE AND SINK'
       write(iunit,*) 'PTOTAL',ptotal(mgs)
 !
       end if ! ptotal out of bounds or NaN
@@ -24685,7 +24685,7 @@ END SUBROUTINE nssl_2mom_driver
 !  latent heating from phase changes (except qcw, qci cond, and evap)
 !
       do mgs = 1,ngscnt
-      IF ( warmonly < 0.5 ) THEN
+      if ( warmonly < 0.5 ) then
       pfrz(mgs) =    &
      &  (1-il5(mgs))*   &
      &  (qhmlr(mgs)+    &
@@ -24726,7 +24726,7 @@ END SUBROUTINE nssl_2mom_driver
      &  + qhldpv(mgs)    &
      &  + qidpv(mgs)  )   & 
      &  +il5(mgs)*(qiint(mgs))
-      ELSEIF ( warmonly < 0.8 ) THEN
+      elseif ( warmonly < 0.8 ) then
       pfrz(mgs) =    &
      &  (1-il5(mgs))*   &
      &  (qhmlr(mgs)+qhlmlr(mgs))   & !+qhmlh(mgs))   &
@@ -24747,11 +24747,11 @@ END SUBROUTINE nssl_2mom_driver
      &  +il5(mgs)*(qiint(mgs))
       pvap(mgs) =    &
      &   qrcev(mgs) + qhcev(mgs) + qhlcev(mgs) + qfcev(mgs) 
-      ELSE
+      else
       pfrz(mgs) = 0.0
       psub(mgs) = 0.0
       pvap(mgs) = qrcev(mgs)
-      ENDIF ! warmonly
+      endif ! warmonly
       ptem(mgs) =    &
      &  (1./pi0(mgs))*   &
      &  (felfcp(mgs)*pfrz(mgs)   &
@@ -24759,11 +24759,11 @@ END SUBROUTINE nssl_2mom_driver
      &  +felvcp(mgs)*pvap(mgs))
       thetap(mgs) = thetap(mgs) + dtp*ptem(mgs)
       ptem2(mgs) = ptem(mgs)
-      IF ( eqtset > 2 ) THEN
+      if ( eqtset > 2 ) then
         pipert(mgs) = pipert(mgs) + (felfpi(mgs)*pfrz(mgs)   &
      &  +felspi(mgs)*psub(mgs)    &
      &  +felvpi(mgs)*pvap(mgs))*dtp
-      ENDIF
+      endif
       end do
 
 
@@ -24789,42 +24789,42 @@ END SUBROUTINE nssl_2mom_driver
       qx(mgs,lh) = qx(mgs,lh) +    &
      &   dtp*(pqhwi(mgs)+pqhwd(mgs))
 
-      IF ( lhl .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
       qx(mgs,lhl) = qx(mgs,lhl) +    &
      &   dtp*(pqhli(mgs)+pqhld(mgs))
-      ENDIF
+      endif
 
 
       end do
 
 ! sum sources for particle volume
 
-      IF ( ldovol ) THEN
+      if ( ldovol ) then
 
       do mgs = 1,ngscnt
 
-      IF ( lvol(ls) .gt. 1 ) THEN
+      if ( lvol(ls) .gt. 1 ) then
       vx(mgs,ls) = vx(mgs,ls) +    &
      &   dtp*(pvswi(mgs)+pvswd(mgs))
-      ENDIF
+      endif
 
-      IF ( lvol(lh) .gt. 1 ) THEN
+      if ( lvol(lh) .gt. 1 ) then
       vx(mgs,lh) = vx(mgs,lh) +    &
      &   dtp*(pvhwi(mgs)+pvhwd(mgs))
 !     >   rho0(mgs)*dtp*(pqhwi(mgs)+pqhwd(mgs))/xdn0(lh)
-      ENDIF
+      endif
 
-      IF ( lhl .gt. 1 ) THEN
-      IF ( lvol(lhl) .gt. 1 ) THEN
+      if ( lhl .gt. 1 ) then
+      if ( lvol(lhl) .gt. 1 ) then
       vx(mgs,lhl) = vx(mgs,lhl) +    &
      &   dtp*(pvhli(mgs)+pvhld(mgs))
 !     >   rho0(mgs)*dtp*(pqhwi(mgs)+pqhwd(mgs))/xdn0(lh)
-      ENDIF
-      ENDIF
+      endif
+      endif
 
-      ENDDO
+      enddo
 
-      ENDIF  ! ldovol
+      endif  ! ldovol
 
 !
 !
@@ -24836,51 +24836,51 @@ END SUBROUTINE nssl_2mom_driver
       cx(mgs,li) = cx(mgs,li) +   &
      &   dtp*(pccii(mgs)+pccid(mgs)) 
       cina(mgs) = cina(mgs) + pccin(mgs)*dtp
-      IF ( ipconc .ge. 2 ) THEN
+      if ( ipconc .ge. 2 ) then
       cx(mgs,lc) = cx(mgs,lc) +   &
      &   dtp*(pccwi(mgs)+pccwd(mgs))
-      ENDIF
-      IF ( ipconc .ge. 3 ) THEN
+      endif
+      if ( ipconc .ge. 3 ) then
       cx(mgs,lr) = cx(mgs,lr) +   &
      &   dtp*(pcrwi(mgs)+pcrwd(mgs))
-      ENDIF
-      IF ( ipconc .ge. 4 ) THEN
+      endif
+      if ( ipconc .ge. 4 ) then
       cx(mgs,ls) = cx(mgs,ls) +   &
      &   dtp*(pcswi(mgs)+pcswd(mgs))
-      ENDIF
-      IF ( ipconc .ge. 5 ) THEN
+      endif
+      if ( ipconc .ge. 5 ) then
       cx(mgs,lh) = cx(mgs,lh) +    &
      &   dtp*(pchwi(mgs)+pchwd(mgs))
-       IF ( lhl .gt. 1 ) THEN
+       if ( lhl .gt. 1 ) then
         cx(mgs,lhl) = cx(mgs,lhl) +    &
      &     dtp*(pchli(mgs)+pchld(mgs))
 
 
         
         
-       ENDIF
-      ENDIF
-      IF ( ipconc .ge. 6 ) THEN
-       IF ( lzr .gt. 1 ) THEN
+       endif
+      endif
+      if ( ipconc .ge. 6 ) then
+       if ( lzr .gt. 1 ) then
        zx(mgs,lr) = zx(mgs,lr) +    &
      &   dtp*(pzrwi(mgs)+pzrwd(mgs))
-       ENDIF
-       IF ( lzs .gt. 1 ) THEN
+       endif
+       if ( lzs .gt. 1 ) then
        zx(mgs,ls) = zx(mgs,ls) +    &
      &   dtp*(pzswi(mgs)+pzswd(mgs))
-       ENDIF
-       IF ( lzh .gt. 1 ) THEN
+       endif
+       if ( lzh .gt. 1 ) then
        zx(mgs,lh) = zx(mgs,lh) +    &
      &   dtp*(pzhwi(mgs)+pzhwd(mgs))
-       ENDIF
-       IF ( lzhl .gt. 1 ) THEN
+       endif
+       if ( lzhl .gt. 1 ) then
         zx(mgs,lhl) = zx(mgs,lhl) +    &
      &     dtp*(pzhli(mgs)+pzhld(mgs))
 !      IF ( pchli(mgs) .ne. 0. .or. pchld(mgs) .ne. 0 ) THEN
 !       write(0,*) 'dr: cx,pchli,pchld = ', cx(mgs,lhl),pchli(mgs),pchld(mgs), igs(mgs),kgs(mgs)
 !      ENDIF
-       ENDIF
-      ENDIF
+       endif
+      endif
       end do
       end if
 
@@ -24923,9 +24923,9 @@ END SUBROUTINE nssl_2mom_driver
       ptem(mgs) =  ptem(mgs) +   &
      &  (1./pi0(mgs))*   &
      &  felfcp(mgs)*(- qitmp(mgs)*dtpinv)  
-      IF ( eqtset > 2 ) THEN
+      if ( eqtset > 2 ) then
         pipert(mgs) = pipert(mgs) - (felfpi(mgs)*qitmp(mgs))
-      ENDIF
+      endif
       pmlt(mgs) = pmlt(mgs) - qitmp(mgs)*dtpinv
       scx(mgs,lc) = scx(mgs,lc) + scx(mgs,li)
       thetap(mgs) = thetap(mgs) -   &
@@ -24950,7 +24950,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  homogeneous freezing of cloud water
 !
-      IF ( warmonly < 0.8 ) THEN
+      if ( warmonly < 0.8 ) then
 
       do mgs = 1,ngscnt
       qcwtmp(mgs) = qx(mgs,lc)
@@ -24975,11 +24975,11 @@ END SUBROUTINE nssl_2mom_driver
       if( ( ( temg(mgs) .lt. thnuc + 0.) .or. (temg(mgs) .lt. thnuc + 2. .and. ibfc >= 3) ) .and.    &
      &  qx(mgs,lc) .gt. 0.0 .and. (ipconc < 2 .or. ibfc == 0 .or. ibfc == 2)) then
 
-      IF ( ibfc >= 3 ) THEN
+      if ( ibfc >= 3 ) then
         frac = Max( 0.25, Min( 1., ((thnuc + 2.) - temg(mgs) )/4.0 ) )
-      ELSEIF ( ibfc /= 2 .or. ipconc < 2 ) THEN
+      elseif ( ibfc /= 2 .or. ipconc < 2 ) then
         frac = Max( 0.25, Min( 1., ((thnuc + 1.) - temg(mgs) )/4.0 ) )
-      ELSE
+      else
           volt = exp( 16.2 + 1.0*temcg(mgs) )* 1.0e-6 !  Ts == -temcg ; volt comes from the fit in Fig. 1 in Bigg 1953 
                                                ! for mean temperature for freezing: -ln (V) = a*Ts - b
                                                ! volt is given in cm**3, so factor of 1.e-6 to convert to m**3
@@ -24991,49 +24991,49 @@ END SUBROUTINE nssl_2mom_driver
                                                        ! sure that cwfrz and qwfrz are consistent and prevents 
                                                        ! spurious creation of ice crystals.
       
-      ENDIF
+      endif
       qtmp = frac*qx(mgs,lc)
 
-      IF ( ibfc == 4 .and. lis >= 1 ) THEN
+      if ( ibfc == 4 .and. lis >= 1 ) then
         qx(mgs,lis) = qx(mgs,lis) + qtmp
-      ELSE
+      else
         qx(mgs,li) = qx(mgs,li) + qtmp ! qx(mgs,lc)
-      ENDIF
+      endif
       pfrz(mgs) = pfrz(mgs) + qtmp*dtpinv
       ptem(mgs) =  ptem(mgs) +   &
      &  (1./pi0(mgs))*   &
      &  felfcp(mgs)*(qtmp*dtpinv)  
 
-      IF ( eqtset > 2 ) THEN
+      if ( eqtset > 2 ) then
         pipert(mgs) = pipert(mgs) + felfpi(mgs)*qtmp
-      ENDIF
+      endif
 
 !      IF ( lvol(li) .gt. 1 ) vx(mgs,li) = vx(mgs,li) + rho0(mgs)*qx(mgs,lc)/xdn0(li)
-      IF ( lvol(li) .gt. 1 ) vx(mgs,li) = vx(mgs,li) + rho0(mgs)*qtmp/xdn0(li)
+      if ( lvol(li) .gt. 1 ) vx(mgs,li) = vx(mgs,li) + rho0(mgs)*qtmp/xdn0(li)
 
-      IF ( ipconc .ge. 2 ) THEN
+      if ( ipconc .ge. 2 ) then
         ctmp = frac*cx(mgs,lc)
 !        cx(mgs,li) = cx(mgs,li) + cx(mgs,lc)
-        IF ( ibfc == 4 .and. lis >= 1 ) THEN
+        if ( ibfc == 4 .and. lis >= 1 ) then
           cx(mgs,lis) = cx(mgs,lis) + ctmp
-        ELSE
+        else
           cx(mgs,li) = cx(mgs,li) + ctmp
-        ENDIF
-      ELSE ! (ipconc .lt. 2 )
+        endif
+      else ! (ipconc .lt. 2 )
         ctmp = 0.0
-        IF ( t9(igs(mgs),jgs,kgs(mgs)-1) .gt. qx(mgs,lc) ) THEN
+        if ( t9(igs(mgs),jgs,kgs(mgs)-1) .gt. qx(mgs,lc) ) then
            qtmp = frac*t9(igs(mgs),jgs,kgs(mgs)-1)  
 
 !           cx(mgs,lc) = cx(mgs,lc)*qx(mgs,lc)*rho0(mgs)/qtmp
            ctmp = cx(mgs,lc)*qx(mgs,lc)*rho0(mgs)/qtmp
-        ELSE
+        else
            cx(mgs,lc) = Max(0.0,wvel(mgs))*dtp*cwccn   &
      &      /gz(igs(mgs),jgs,kgs(mgs))
           cx(mgs,lc) = cwccn
-        ENDIF
+        endif
 
-       IF ( ipconc .ge. 1 ) cx(mgs,li) = Min(ccimx, cx(mgs,li) + cx(mgs,lc))
-      ENDIF
+       if ( ipconc .ge. 1 ) cx(mgs,li) = Min(ccimx, cx(mgs,li) + cx(mgs,lc))
+      endif
 
       sctmp = frac*scx(mgs,lc)
 !      scx(mgs,li) = scx(mgs,li) + scx(mgs,lc)
@@ -25051,7 +25051,7 @@ END SUBROUTINE nssl_2mom_driver
       end if
       end do
 
-      ENDIF ! warmonly
+      endif ! warmonly
 !
 !      do mgs = 1,ngscnt
 !      qwfzi(mgs) = (qcwtmp(mgs)-qx(mgs,lc))*dtpinv   ! Not used?? (ERM)
@@ -25061,8 +25061,8 @@ END SUBROUTINE nssl_2mom_driver
 !
       qcond(:) = 0.0
       
-      IF ( ipconc .le. 1 .and.  lwsm6 ) THEN ! Explicit cloud condensation/evaporation (Rutledge and Hobbs 1983)
-       DO mgs = 1,ngscnt
+      if ( ipconc .le. 1 .and.  lwsm6 ) then ! Explicit cloud condensation/evaporation (Rutledge and Hobbs 1983)
+       do mgs = 1,ngscnt
 
         qcwtmp(mgs) = qx(mgs,lc)
         theta(mgs) = thetap(mgs) + theta0(mgs)
@@ -25077,25 +25077,25 @@ END SUBROUTINE nssl_2mom_driver
 
         qvs(mgs) = pqs(mgs)*tabqvs(ltemq)
 
-        IF ( ( qvap(mgs) > qvs(mgs) .or. qx(mgs,lc) > qxmin(lc) ) .and. temg(mgs) > tfrh ) THEN
+        if ( ( qvap(mgs) > qvs(mgs) .or. qx(mgs,lc) > qxmin(lc) ) .and. temg(mgs) > tfrh ) then
           tmp = (qvap(mgs) - qvs(mgs))/(1. + qvs(mgs)*felv(mgs)**2/(cp*rw*temg(mgs)**2) )
           qcond(mgs) = Min( Max( 0.0, tmp ), (qvap(mgs)-qvs(mgs)) )
-          IF ( qx(mgs,lc) > qxmin(lc) .and. tmp < 0.0 ) THEN ! evaporation
+          if ( qx(mgs,lc) > qxmin(lc) .and. tmp < 0.0 ) then ! evaporation
             qcond(mgs) = Max( tmp, -qx(mgs,lc) )
-          ENDIF
+          endif
           qwvp(mgs) = qwvp(mgs) - qcond(mgs)
           qvap(mgs) = qvap(mgs) - qcond(mgs)
           qx(mgs,lc) = Max( 0.0, qx(mgs,lc) + qcond(mgs) )
           thetap(mgs) = thetap(mgs) + felvcp(mgs)*qcond(mgs)/(pi0(mgs))
           
-        ENDIF
+        endif
         
-        ENDDO
+        enddo
       
-      ENDIF
+      endif
       
       
-      IF ( ipconc .le. 1 .and. .not. lwsm6 ) THEN
+      if ( ipconc .le. 1 .and. .not. lwsm6 ) then
 !      IF ( ipconc .le. 1  ) THEN
       
       do mgs = 1,ngscnt
@@ -25173,28 +25173,28 @@ END SUBROUTINE nssl_2mom_driver
 !  who found the bug in the 3-ICE code
 !      qwvp(mgs) = max(qwvp(mgs), 0.0)
       qitmp(mgs) = qx(mgs,li)
-      IF ( qitmp(mgs) .ge. qxmin(li) ) THEN
+      if ( qitmp(mgs) .ge. qxmin(li) ) then
         fcci(mgs) = qx(mgs,li)/(qitmp(mgs))
-      ELSE
+      else
         fcci(mgs) = 1.0
-      ENDIF
+      endif
       qx(mgs,lc) = qx(mgs,lc) + dqcw(mgs)
       qx(mgs,li) = qx(mgs,li) + dqci(mgs) * fcci(mgs)
       thetap(mgs) = thetap(mgs) +   &
      &  1./pi0(mgs)*   &
      &  (felvcp(mgs)*dqcw(mgs) +felscp(mgs)*dqci(mgs))
 
-      IF ( eqtset > 2 ) THEN
+      if ( eqtset > 2 ) then
         pipert(mgs) = pipert(mgs)   &
      &  +(felspi(mgs)*dqci(mgs)    &
      &  +felvpi(mgs)*dqcw(mgs))*dtp
-      ENDIF
+      endif
 
       end if  ! dqwv(mgs) .lt. 0. (end of evap/sublim)
 !
 ! condensation/deposition
 !
-      IF ( dqwv(mgs) .ge. 0. ) THEN
+      if ( dqwv(mgs) .ge. 0. ) then
       
 !      write(iunit,*) 'satadj: mgs,iter = ',mgs,itertd,dqwv(mgs),qss(mgs),qx(mgs,lv),qx(mgs,lc)
 !
@@ -25214,25 +25214,25 @@ END SUBROUTINE nssl_2mom_driver
        gamss = (felvcp(mgs)*fracl(mgs) + felscp(mgs)*fraci(mgs))   &
      &      / (pi0(mgs))
 !
-      IF ( temg(mgs) .lt. tfr ) then
-        IF (qx(mgs,lc) .ge. 0.0 .and. qitmp(mgs) .le. qxmin(li) ) then
+      if ( temg(mgs) .lt. tfr ) then
+        if (qx(mgs,lc) .ge. 0.0 .and. qitmp(mgs) .le. qxmin(li) ) then
          dqvcnd(mgs) = dqwv(mgs)/(1. + fcqv1(mgs)*qss(mgs)/   &
      &  ((temg(mgs)-cbw)**2))
-        END IF
-        IF ( qx(mgs,lc) .eq. 0.0 .and. qitmp(mgs) .gt. qxmin(li) ) then
+        end if
+        if ( qx(mgs,lc) .eq. 0.0 .and. qitmp(mgs) .gt. qxmin(li) ) then
           dqvcnd(mgs) = dqwv(mgs)/(1. + fcqv2(mgs)*qss(mgs)/   &
      &  ((temg(mgs)-cbi)**2))
-        END IF
-        IF ( qx(mgs,lc) .gt. 0.0 .and. qitmp(mgs) .gt. qxmin(li) ) then
+        end if
+        if ( qx(mgs,lc) .gt. 0.0 .and. qitmp(mgs) .gt. qxmin(li) ) then
          cdw = caw*pi0(mgs)*tfrcbw/((temg(mgs)-cbw)**2)
          cdi = cai*pi0(mgs)*tfrcbi/((temg(mgs)-cbi)**2)
          denom1 = qx(mgs,lc) + qitmp(mgs)
          denom2 = 1.0 + gamss*   &
      &    (qx(mgs,lc)*qvs(mgs)*cdw + qitmp(mgs)*qis(mgs)*cdi) / denom1
          dqvcnd(mgs) =  dqwv(mgs) / denom2
-        END IF 
+        end if 
 
-      ENDIF  !  temg(mgs) .lt. tfr
+      endif  !  temg(mgs) .lt. tfr
 !
       if ( temg(mgs) .ge. tfr ) then
       dqvcnd(mgs) = dqwv(mgs)/(1. + fcqv1(mgs)*qss(mgs)/   &
@@ -25241,11 +25241,11 @@ END SUBROUTINE nssl_2mom_driver
 !
       delqci1=qx(mgs,li)
 !
-      IF ( qitmp(mgs) .gt. qxmin(li) ) THEN
+      if ( qitmp(mgs) .gt. qxmin(li) ) then
         fcci(mgs) = qx(mgs,li)/(qitmp(mgs))
-      ELSE
+      else
         fcci(mgs) = 1.0
-      ENDIF
+      endif
 !
       dqcw(mgs) = dqvcnd(mgs)*fracl(mgs)
       dqci(mgs) = dqvcnd(mgs)*fraci(mgs)
@@ -25254,11 +25254,11 @@ END SUBROUTINE nssl_2mom_driver
      &   (felvcp(mgs)*dqcw(mgs) + felscp(mgs)*dqci(mgs))   &
      & / (pi0(mgs))
 
-      IF ( eqtset > 2 ) THEN
+      if ( eqtset > 2 ) then
         pipert(mgs) = pipert(mgs) + (0   &
      &  +felspi(mgs)*dqci(mgs)    &
      &  +felvpi(mgs)*dqcw(mgs))*dtp
-      ENDIF
+      endif
 
       qwvp(mgs) = qwvp(mgs) - ( dqvcnd(mgs) )
       qx(mgs,lc) = qx(mgs,lc) + dqcw(mgs)
@@ -25269,7 +25269,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !      delqci(mgs) =  dqci(mgs)*fcci(mgs)
 !
-      END IF !  dqwv(mgs) .ge. 0.
+      end if !  dqwv(mgs) .ge. 0.
       end do
 !
       do mgs = 1,ngscnt
@@ -25317,7 +25317,7 @@ END SUBROUTINE nssl_2mom_driver
 !
       end do
 
-     ENDIF ! ( ipconc .le. 1 )
+     endif ! ( ipconc .le. 1 )
 
 !
 !  spread the growth owing to vapor diffusion onto the
@@ -25340,34 +25340,34 @@ END SUBROUTINE nssl_2mom_driver
 !
 ! Load the save arrays
 !
-      IF ( numproc > 1 ) THEN
-      DO mgs = 1,ngscnt
+      if ( numproc > 1 ) then
+      do mgs = 1,ngscnt
        dv = dx1*dy1*gz(igs(mgs),1,kgs(mgs))
-       IF ( ipconc > 2 ) THEN
+       if ( ipconc > 2 ) then
        thproc(kzbeg-1+kgs(mgs),1) = thproc(kzbeg-1+kgs(mgs),1) + crfrzf(mgs)*dtp*dv
-       ELSE
+       else
        thproc(kzbeg-1+kgs(mgs),1) = thproc(kzbeg-1+kgs(mgs),1) + qrfrzf(mgs)*rho0(mgs)*dtp*dv
-       ENDIF
+       endif
        thproc(kzbeg-1+kgs(mgs),2) = thproc(kzbeg-1+kgs(mgs),2) + il5(mgs)*ciacrf(mgs)*dtp*dv
        thproc(kzbeg-1+kgs(mgs),3) = thproc(kzbeg-1+kgs(mgs),3) + chcnsh(mgs)*dtp*dv
        thproc(kzbeg-1+kgs(mgs),4) = thproc(kzbeg-1+kgs(mgs),4) + chcnih(mgs)*dtp*dv
-       IF (  qhacw(mgs)+qhacr(mgs) > 0.0 .and. temg(mgs) < tfr ) THEN
+       if (  qhacw(mgs)+qhacr(mgs) > 0.0 .and. temg(mgs) < tfr ) then
        thproc(kzbeg-1+kgs(mgs),5) = thproc(kzbeg-1+kgs(mgs),5) + (qhacw(mgs)+qhacr(mgs)+qhshr(mgs))*rho0(mgs)*dtp*dv
-       ENDIF
+       endif
        thproc(kzbeg-1+kgs(mgs),6) = thproc(kzbeg-1+kgs(mgs),6) + qracw(mgs)*rho0(mgs)*dtp*dv
        thproc(kzbeg-1+kgs(mgs),7) = thproc(kzbeg-1+kgs(mgs),7) + qrcnw(mgs)*rho0(mgs)*dtp*dv
-       IF ( qhacw(mgs) > 0.0 .and. temg(mgs) < tfr ) THEN
+       if ( qhacw(mgs) > 0.0 .and. temg(mgs) < tfr ) then
        thproc(kzbeg-1+kgs(mgs),8) = thproc(kzbeg-1+kgs(mgs),8) + (vhacw(mgs)+vhacr(mgs)+vhshdr(mgs))*dtp*dv
 !       thproc(kzbeg-1+kgs(mgs),8) = thproc(kzbeg-1+kgs(mgs),8) + qhacw(mgs)*rho0(mgs)/rimdn(mgs,lh)*dtp*dv
-       ENDIF
+       endif
        thproc(kzbeg-1+kgs(mgs),9) = thproc(kzbeg-1+kgs(mgs),9) + pi0(mgs)*ptem(mgs)*dtp*dv  ! latent heating -- mult by pi0 to get T rather than theta
        thproc(kzbeg-1+kgs(mgs),10) = thproc(kzbeg-1+kgs(mgs),10) +  &
      &                             ( chmul1(mgs) + chlmul1(mgs)  )*dtp*dv
-       IF ( lf > 1 ) THEN
-       ELSE
+       if ( lf > 1 ) then
+       else
        thproc(kzbeg-1+kgs(mgs),11) = thproc(kzbeg-1+kgs(mgs),11) +  &
      &                             ( csplinter(mgs) + csplinter2(mgs) )*dtp*dv
-       ENDIF
+       endif
        thproc(kzbeg-1+kgs(mgs),12) = thproc(kzbeg-1+kgs(mgs),12) + qrfrzf(mgs)*rho0(mgs)*dtp*dv
        thproc(kzbeg-1+kgs(mgs),13) = thproc(kzbeg-1+kgs(mgs),13) + il5(mgs)*qiacrf(mgs)*rho0(mgs)*dtp*dv ! mass of rain freezing by ice crystal capture
        thproc(kzbeg-1+kgs(mgs),14) = thproc(kzbeg-1+kgs(mgs),14) + crcnw(mgs)*dtp*dv    ! rain drop prod. by autoconv.
@@ -25388,45 +25388,45 @@ END SUBROUTINE nssl_2mom_driver
        thproc(kzbeg-1+kgs(mgs),25) = thproc(kzbeg-1+kgs(mgs),25) + qhmlr(mgs)*rho0(mgs)*dv  ! melting rate
        thproc(kzbeg-1+kgs(mgs),26) = thproc(kzbeg-1+kgs(mgs),26) + qhlmlr(mgs)*rho0(mgs)*dv  ! melting rate
 
-       IF (  qhlacw(mgs)+qhlacr(mgs) > 0.0 .and. temg(mgs) < tfr ) THEN
+       if (  qhlacw(mgs)+qhlacr(mgs) > 0.0 .and. temg(mgs) < tfr ) then
         thproc(kzbeg-1+kgs(mgs),27) = thproc(kzbeg-1+kgs(mgs),27) + (qhlacw(mgs)+qhlacr(mgs)+qhlshr(mgs))*rho0(mgs)*dtp*dv
         thproc(kzbeg-1+kgs(mgs),28) = thproc(kzbeg-1+kgs(mgs),28) + (qhlacw(mgs))*rho0(mgs)*dtp*dv
         thproc(kzbeg-1+kgs(mgs),29) = thproc(kzbeg-1+kgs(mgs),29) + (qhlacr(mgs))*rho0(mgs)*dtp*dv
-       ENDIF
+       endif
 
-       IF ( temg(mgs) < tfr ) THEN
+       if ( temg(mgs) < tfr ) then
         thproc(kzbeg-1+kgs(mgs),30) = thproc(kzbeg-1+kgs(mgs),30) + (qhacw(mgs))*rho0(mgs)*dtp*dv
         thproc(kzbeg-1+kgs(mgs),31) = thproc(kzbeg-1+kgs(mgs),31) + (qhacr(mgs))*rho0(mgs)*dtp*dv
-       ENDIF
+       endif
 
        thproc(kzbeg-1+kgs(mgs),32) = thproc(kzbeg-1+kgs(mgs),32) + qhlcnh(mgs)*rho0(mgs)*dtp*dv ! graupel mass conversion to hail
 
-       IF ( ihrn > 0 ) THEN
+       if ( ihrn > 0 ) then
        thproc(kzbeg-1+kgs(mgs),33) = thproc(kzbeg-1+kgs(mgs),33) + ciihr(mgs)*dtp*dv ! contact freezing of droplets
-       ELSE
-       IF ( qwctfz(mgs)*dtp >= qxmin(li) ) THEN
+       else
+       if ( qwctfz(mgs)*dtp >= qxmin(li) ) then
        thproc(kzbeg-1+kgs(mgs),33) = thproc(kzbeg-1+kgs(mgs),33) + cwctfz(mgs)*dtp*dv ! contact freezing of droplets
-       ENDIF
-       ENDIF
+       endif
+       endif
        thproc(kzbeg-1+kgs(mgs),34) = thproc(kzbeg-1+kgs(mgs),34) + pevap(mgs)*rho0(mgs)*dv ! rain evaporation rate
-       IF ( qiint(mgs)*dtp >= qxmin(li) ) THEN
+       if ( qiint(mgs)*dtp >= qxmin(li) ) then
        thproc(kzbeg-1+kgs(mgs),35) = thproc(kzbeg-1+kgs(mgs),35) + ciint(mgs)*dtp*dv ! primary ice initiation
-       ENDIF
-       IF ( lf > 1 ) THEN
-       ELSE
+       endif
+       if ( lf > 1 ) then
+       else
           thproc(kzbeg-1+kgs(mgs),38) = thproc(kzbeg-1+kgs(mgs),38) + (vhacw(mgs)+vhacr(mgs)+vhshdr(mgs))*dtp*dv
-        ENDIF
-      IF ( lhl > 1 ) THEN
+        endif
+      if ( lhl > 1 ) then
         thproc(kzbeg-1+kgs(mgs),36) = thproc(kzbeg-1+kgs(mgs),36) + chlcnhhl(mgs)*dtp*dv
           thproc(kzbeg-1+kgs(mgs),37) = thproc(kzbeg-1+kgs(mgs),37) + (vhlacw(mgs)+vhlacr(mgs)+vhlshdr(mgs))*dtp*dv
-       ELSE
-         IF ( lf > 1 ) THEN 
-         ELSE
+       else
+         if ( lf > 1 ) then 
+         else
            thproc(kzbeg-1+kgs(mgs),36) = thproc(kzbeg-1+kgs(mgs),36) + (pchwi(mgs))*dtp*dv
            thproc(kzbeg-1+kgs(mgs),39) = thproc(kzbeg-1+kgs(mgs),39) + (pchwd(mgs))*dtp*dv
            thproc(kzbeg-1+kgs(mgs),37) = thproc(kzbeg-1+kgs(mgs),37) + (chmlr(mgs))*dtp*dv
-         ENDIF
-       ENDIF
+         endif
+       endif
 
 !        IF ( numproc >= 44 ) THEN
           thproc(kzbeg-1+kgs(mgs),42) = thproc(kzbeg-1+kgs(mgs),42) - qhshr(mgs)*dtp*dv
@@ -25444,8 +25444,8 @@ END SUBROUTINE nssl_2mom_driver
 !     &  +felscp(mgs)*psub(mgs)    &
 !     &  +felvcp(mgs)*pvap(mgs))
 
-      ENDDO
-      ENDIF
+      enddo
+      endif
 
 
 ! Sample code for using the axtra array to load microphysical rates or quantities for output
@@ -25473,26 +25473,26 @@ END SUBROUTINE nssl_2mom_driver
      &  theta0(mgs) + thetap(mgs) 
       an(igs(mgs),jy,kgs(mgs),lv) = qwvp(mgs) + qv0(mgs) !
 
-      IF ( eqtset > 2 ) THEN
+      if ( eqtset > 2 ) then
         p2(igs(mgs),jy,kgs(mgs)) = pipert(mgs)
-      ENDIF
+      endif
 !
       
-      DO il = lc,lhab
-        IF ( ido(il) .eq. 1 ) THEN
-        IF ( lf > 1 .and. il == lf ) THEN 
+      do il = lc,lhab
+        if ( ido(il) .eq. 1 ) then
+        if ( lf > 1 .and. il == lf ) then 
            lfsave(mgs,1) = an(igs(mgs),jy,kgs(mgs),il)
            lfsave(mgs,2) = qx(mgs,il)
-        ENDIF
+        endif
          an(igs(mgs),jy,kgs(mgs),il) = qx(mgs,il) +   &
      &     min( an(igs(mgs),jy,kgs(mgs),il), 0.0 )
          qx(mgs,il) = an(igs(mgs),jy,kgs(mgs),il)
-        ENDIF
-      ENDDO
+        endif
+      enddo
 
-      IF ( lcina > 1 ) THEN
+      if ( lcina > 1 ) then
         an(igs(mgs),jy,kgs(mgs),lcina) = cina(mgs)
-      ENDIF
+      endif
 
 
 
@@ -25502,46 +25502,46 @@ END SUBROUTINE nssl_2mom_driver
 !  6th moments
 !
 
-      IF ( ipconc .ge. 6 ) THEN
-       DO il = lr,lhab
-        IF ( lz(il) .gt. 1 ) THEN
-        IF ( lf > 1 .and. il == lf ) THEN 
+      if ( ipconc .ge. 6 ) then
+       do il = lr,lhab
+        if ( lz(il) .gt. 1 ) then
+        if ( lf > 1 .and. il == lf ) then 
            lfsave(mgs,3) = an(igs(mgs),jy,kgs(mgs),lz(il))
            lfsave(mgs,4) = zx(mgs,il)
-        ENDIF
+        endif
 
          an(igs(mgs),jy,kgs(mgs),lz(il)) = zx(mgs,il) +   &
      &     min( an(igs(mgs),jy,kgs(mgs),lz(il)), 0.0 )
          zx(mgs,il) = an(igs(mgs),jy,kgs(mgs),lz(il))
          
-        ENDIF
-       ENDDO
+        endif
+       enddo
        
-      ENDIF
+      endif
 !
       end do
 !
 
       if ( ipconc .ge. 1 ) then
-      DO il = lc,lhab !{
+      do il = lc,lhab !{
 
 !        write(0,*) 'limiter loop: il,ipc,lz: ',il,ipc(il),lz(il),ipconc
 
-       IF ( ipconc .ge. ipc(il) .and. ido(il) > 0 ) THEN ! {
+       if ( ipconc .ge. ipc(il) .and. ido(il) > 0 ) then ! {
 
-         IF (  ipconc .ge. 4 .and. ipc(il) .ge. 1 ) THEN ! {
+         if (  ipconc .ge. 4 .and. ipc(il) .ge. 1 ) then ! {
 
 !            write(0,*) 'MY limiter: il,ipc,lz: ',il,ipc(il),lz(il),lr,lzr
 !            STOP
 
-          IF ( lz(il) <= 1 .or. ioldlimiter == 1 ) THEN ! { { is a two-moment category so dont worry about reflectivity
+          if ( lz(il) <= 1 .or. ioldlimiter == 1 ) then ! { { is a two-moment category so dont worry about reflectivity
           
 
-           DO mgs = 1,ngscnt
-            IF ( qx(mgs,il) .le. 0.0 ) THEN
+           do mgs = 1,ngscnt
+            if ( qx(mgs,il) .le. 0.0 ) then
               cx(mgs,il) = 0.0
-            ELSE !{
-              IF ( cx(mgs,il) .gt. cxmin ) THEN !{
+            else !{
+              if ( cx(mgs,il) .gt. cxmin ) then !{
 !              xv(mgs,il) = rho0(mgs)*qx(mgs,il)/(xdn(mgs,il)*Max(1.0e-9,cx(mgs,il)))
 !              xv(mgs,il) = rho0(mgs)*qx(mgs,il)/(xdn(mgs,il)*Max(cxmin,cx(mgs,il)))
                 xv(mgs,il) = rho0(mgs)*qx(mgs,il)/(xdn(mgs,il)*cx(mgs,il))
@@ -25551,83 +25551,83 @@ END SUBROUTINE nssl_2mom_driver
 !              ENDIF
 
                ! 8/26/2015 erm: apply imaxdiaopt for 2-moment also
-               IF ( imaxdiaopt == 1 .or. il == lc .or. il == li .or. (il == lr .and. imurain == 3) .or. &
-     &              (il == ls .and. imusnow == 3 ) ) THEN
+               if ( imaxdiaopt == 1 .or. il == lc .or. il == li .or. (il == lr .and. imurain == 3) .or. &
+     &              (il == ls .and. imusnow == 3 ) ) then
                  xvbarmax = xvmx(il)
-               ELSEIF ( imaxdiaopt == 2 ) THEN ! test against maximum mass diameter
+               elseif ( imaxdiaopt == 2 ) then ! test against maximum mass diameter
                  xvbarmax = xvmx(il) /((3. + alpha(mgs,il))**3/((3. + alpha(mgs,il))*(2. + alpha(mgs,il))*(1. + alpha(mgs,il))))
-               ELSEIF ( imaxdiaopt == 3 ) THEN ! test against mass-weighted diameter
+               elseif ( imaxdiaopt == 3 ) then ! test against mass-weighted diameter
                  xvbarmax = xvmx(il) /((4. + alpha(mgs,il))**3/((3. + alpha(mgs,il))*(2. + alpha(mgs,il))*(1. + alpha(mgs,il))))
-               ELSE
+               else
                  xvbarmax = xvmx(il)
-               ENDIF
+               endif
 
                tmp = 1.0
-               IF ( il == ls ) THEN
+               if ( il == ls ) then
                  xvbarmax = xvbarmax*Max(1.,100./Min(100.,xdn(mgs,ls)))
-               ENDIF
+               endif
                
-               IF ( xv(mgs,il) .lt. xvmn(il) .or. xv(mgs,il) .gt. xvbarmax ) THEN
+               if ( xv(mgs,il) .lt. xvmn(il) .or. xv(mgs,il) .gt. xvbarmax ) then
                 xv(mgs,il) = Min( xvbarmax, xv(mgs,il) )
                 xv(mgs,il) = Max( xvmn(il), xv(mgs,il) )
                 cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xv(mgs,il)*xdn(mgs,il))
-               ENDIF
+               endif
               
-             ENDIF !}
+             endif !}
 
 !              IF ( lhl .gt. 1 .and. il .eq. lhl ) THEN
 !               write(0,*) 'dr: xv,cx,= ',xv(mgs,il),cx(mgs,il)
 !              ENDIF
 
-            ENDIF !}
-           ENDDO ! mgs
+            endif !}
+           enddo ! mgs
           
-          ELSE ! } { is three-moment, so have to adjust Z if size is too large
-           IF ( il == lr .and. imurain == 3 ) THEN ! { { RAIN
+          else ! } { is three-moment, so have to adjust Z if size is too large
+           if ( il == lr .and. imurain == 3 ) then ! { { RAIN
 
 !          rdmx = 
 !          rdmn = 
 
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
           
 
-         IF ( iresetmoments == 1 .or. iresetmoments == il  ) THEN
-         IF ( zx(mgs,lr) <= zxmin ) THEN
+         if ( iresetmoments == 1 .or. iresetmoments == il  ) then
+         if ( zx(mgs,lr) <= zxmin ) then
            qx(mgs,lv) = qx(mgs,lv) + qx(mgs,il)
            qx(mgs,lr) = 0.0
            cx(mgs,lr) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),lr)
            an(igs(mgs),jgs,kgs(mgs),lr) = qx(mgs,lr)
            an(igs(mgs),jgs,kgs(mgs),ln(lr)) = cx(mgs,lr)
-         ELSEIF ( cx(mgs,lr) <= cxmin ) THEN
+         elseif ( cx(mgs,lr) <= cxmin ) then
            qx(mgs,lv) = qx(mgs,lv) + qx(mgs,il)
            zx(mgs,lr) = 0.0
            qx(mgs,lr) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),lr)
            an(igs(mgs),jgs,kgs(mgs),lr) = qx(mgs,lr)
            an(igs(mgs),jgs,kgs(mgs),lz(lr)) = zx(mgs,lr)
-         ENDIF
-         ENDIF
+         endif
+         endif
          
-         IF ( qx(mgs,lr) .gt. qxmin(lr) ) THEN
+         if ( qx(mgs,lr) .gt. qxmin(lr) ) then
 
         xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xdn(mgs,lr)*Max(1.0e-11,cx(mgs,lr)))
-        IF ( xv(mgs,lr) .gt. xvmx(lr) ) THEN
+        if ( xv(mgs,lr) .gt. xvmx(lr) ) then
 !          xv(mgs,lr) = xvmx(lr)
 !          cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmx(lr)*xdn(mgs,lr))
-        ELSEIF ( xv(mgs,lr) .lt. xvmn(lr) ) THEN
+        elseif ( xv(mgs,lr) .lt. xvmn(lr) ) then
           xv(mgs,lr) = xvmn(lr)
           cx(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(xvmn(lr)*xdn(mgs,lr))
-        ENDIF
+        endif
 
-          IF ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) THEN
+          if ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) then
 !  have mass and reflectivity but no concentration, so set concentration, using default alpha
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             z   = zx(mgs,il)
             qr  = qx(mgs,il)
             cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z*xdn(mgs,lr)**2)
 !            an(igs(mgs),jgs,kgs(mgs),ln(il)) = zx(mgs,il)
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > 0.0 ) then
 !  have mass and concentration but no reflectivity, so set reflectivity, using default alpha
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             chw = cx(mgs,il)
@@ -25635,7 +25635,7 @@ END SUBROUTINE nssl_2mom_driver
             zx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(xdn(mgs,lr)**2*chw)
             an(igs(mgs),jgs,kgs(mgs),lz(lr)) = zx(mgs,lr)
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) then
 !   How did this happen?
          ! set values according to dBZ of -10, or Z = 0.1
 !              0.1 = 1.e18*0.224*an(ix,jy,kz,lzh)*(hwdn/rwdn)**2
@@ -25647,9 +25647,9 @@ END SUBROUTINE nssl_2mom_driver
                qr  = qx(mgs,il)
                cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/(z*1000.*1000)
                an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-          ENDIF
+          endif
         
-          IF ( zx(mgs,lr) > 0.0 ) THEN
+          if ( zx(mgs,lr) > 0.0 ) then
             xv(mgs,lr) = rho0(mgs)*qx(mgs,lr)/(1000.*cx(mgs,lr))
             vr = xv(mgs,lr)
            qr = qx(mgs,lr)
@@ -25660,37 +25660,37 @@ END SUBROUTINE nssl_2mom_driver
 !           rd = z*(pi/6.*1000.)**2/xv
 
 ! determine shape parameter alpha by iteration
-           IF ( z .gt. 0.0 ) THEN
+           if ( z .gt. 0.0 ) then
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
-           DO i = 1,20
-            IF ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) EXIT
+           do i = 1,20
+            if ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) exit
              alpha(mgs,lr) = Max( rnumin, Min( rnumax, alp ) )
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
              alp = Max( rnumin, Min( rnumax, alp ) )
-           ENDDO
+           enddo
 
 ! check for artificial breakup (rain larger than allowed max size)
-        IF (  xv(mgs,il) .gt. xvmx(il) .or. (ioldlimiter == 2 .and. xv(mgs,il) .gt. xvmx(il)/8.) ) THEN
+        if (  xv(mgs,il) .gt. xvmx(il) .or. (ioldlimiter == 2 .and. xv(mgs,il) .gt. xvmx(il)/8.) ) then
           tmp = cx(mgs,il)
 !            write(0,*) 'MY limiter: xv: ',xv(mgs,il), xv(mgs,il)/(xvmx(il)/8.)
 !            STOP
-          IF ( ioldlimiter == 2 ) THEN ! MY-style active breakup
+          if ( ioldlimiter == 2 ) then ! MY-style active breakup
             x = (6.*rho0(mgs)*qx(mgs,il)/(pi*xdn(mgs,il)*cx(mgs,il)))**(1./3.)
             x1 = Max(0.0e-3, x - 3.0e-3)
             x2 = Max(0.5, x/6.0e-3)
             x3 = x2**3
             cx(mgs,il) = cx(mgs,il)*Max((1.+2.222e3*x1**2), x3)
             xv(mgs,il) = xv(mgs,il)/Max((1.+2.222e3*x1**2), x3)
-          ELSE ! simple cutoff 
+          else ! simple cutoff 
             xv(mgs,il) = Min( xvmx(il), Max( xvmn(il),xv(mgs,il) ) )
             xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
             cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
-          ENDIF
+          endif
             !xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
             !cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
           
           
-          IF ( tmp < cx(mgs,il) ) THEN ! breakup
+          if ( tmp < cx(mgs,il) ) then ! breakup
 
             g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
             zx(mgs,il) = zx(mgs,il) + g1*(rho0(mgs)/xdn(mgs,il))**2*( (qx(mgs,il)/tmp)**2 * (tmp-cx(mgs,il)) )
@@ -25704,84 +25704,84 @@ END SUBROUTINE nssl_2mom_driver
 
 ! determine shape parameter alpha by iteration
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
-           DO i = 1,20
-            IF ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) EXIT
+           do i = 1,20
+            if ( Abs(alp - alpha(mgs,lr)) .lt. 0.01 ) exit
              alpha(mgs,lr) = Max( rnumin, Min( rnumax, alp ) )
            alp = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/(z*pi**2) - 1.
              alp = Max( rnumin, Min( rnumax, alp ) )
-           ENDDO
+           enddo
 
             
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !
 ! Check whether the shape parameter is at or less than the minimum, and if it is, reset the 
 ! concentration or reflectivity to match (prevents reflectivity from being out of balance with Q and N)
 !
               g1 = 36.*(alpha(mgs,lr)+2.0)/((alpha(mgs,lr)+1.0)*pi**2)
-           IF ( .true. .and. (alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax) ) THEN
+           if ( .true. .and. (alpha(mgs,il) <= rnumin .or. alp == rnumin .or. alp == rnumax) ) then
 
-            IF ( rescale_high_alpha .and. alp >= rnumax - 0.01  ) THEN  ! reset c at high alpha to prevent growth in Z
+            if ( rescale_high_alpha .and. alp >= rnumax - 0.01  ) then  ! reset c at high alpha to prevent growth in Z
               cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z*(1./(xdn(mgs,il)))**2
               an(igs(mgs),jy,kgs(mgs),ln(il)) = cx(mgs,il)
             
-            ELSEIF ( rescale_low_alphar .and. alp <= rnumin ) THEN
+            elseif ( rescale_low_alphar .and. alp <= rnumin ) then
              z  = 36.*(alpha(mgs,lr)+2.0)*nrx*vr**2/((alpha(mgs,lr)+1.0)*pi**2)
              zx(mgs,il) = z
              an(igs(mgs),jy,kgs(mgs),lz(il)) = zx(mgs,il)
-            ENDIF
-           ENDIF
+            endif
+           endif
            
 
            
-           ENDIF
-          ENDIF
+           endif
+          endif
           
-          ENDIF
+          endif
           
-          ENDDO
+          enddo
 !        CALL cld_cpu('Z-MOMENT-1r')  
            
            
-           ELSEIF ( il == lh .or. il == lhl .or. il == lf .or. (il == lr .and. imurain == 1 )) THEN ! } { Rain, GRAUPEL OR HAIL
+           elseif ( il == lh .or. il == lhl .or. il == lf .or. (il == lr .and. imurain == 1 )) then ! } { Rain, GRAUPEL OR HAIL
 
         
         
-        DO mgs = 1,ngscnt
+        do mgs = 1,ngscnt
 
-        IF ( lf > 1 .and. il == lf ) THEN 
+        if ( lf > 1 .and. il == lf ) then 
            lfsave(mgs,5) = an(igs(mgs),jy,kgs(mgs),ln(il))
            lfsave(mgs,6) = cx(mgs,il)
-        ENDIF
+        endif
         
-        IF ( il == lhl .and. lnhlf > 1 ) THEN
-          IF ( cx(mgs,lhl) > cxmin ) THEN
+        if ( il == lhl .and. lnhlf > 1 ) then
+          if ( cx(mgs,lhl) > cxmin ) then
             frac = chxf(mgs,lhl)/cx(mgs,lhl)
-          ELSE
+          else
             frac = 0.0
-          ENDIF
-        ENDIF
+          endif
+        endif
 
-        IF ( il == lh .and. lnhf > 1 ) THEN
-          IF ( cx(mgs,lh) > cxmin ) THEN
+        if ( il == lh .and. lnhf > 1 ) then
+          if ( cx(mgs,lh) > cxmin ) then
             frach = chxf(mgs,lh)/cx(mgs,lh)
-          ELSE
+          else
             frach = 0.0
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 
 
-         IF ( iresetmoments == 1 .or. iresetmoments == il .or. iresetmoments == -1  ) THEN ! { .or. qx(mgs,il) <= qxmin(il) 
-         IF ( zx(mgs,il) <= zxmin ) THEN !  .and. qx(mgs,il) > 0.05e-3 
+         if ( iresetmoments == 1 .or. iresetmoments == il .or. iresetmoments == -1  ) then ! { .or. qx(mgs,il) <= qxmin(il) 
+         if ( zx(mgs,il) <= zxmin ) then !  .and. qx(mgs,il) > 0.05e-3 
 !!            write(91,*) 'zx=0; qx,cx = ',1000.*qx(mgs,il),cx(mgs,il)
            qx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
-         ELSEIF ( iresetmoments == -1 .and. qx(mgs,il) < qxmin(il) ) THEN
+         elseif ( iresetmoments == -1 .and. qx(mgs,il) < qxmin(il) ) then
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
@@ -25791,22 +25791,22 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
          
-         ELSEIF ( cx(mgs,il) <= cxmin .and. iresetmoments /= -1 ) THEN !  .and. qx(mgs,il) > 0.05e-3  
+         elseif ( cx(mgs,il) <= cxmin .and. iresetmoments /= -1 ) then !  .and. qx(mgs,il) > 0.05e-3  
            qx(mgs,lv) = qx(mgs,lv) + qx(mgs,il)
            zx(mgs,il) = 0.0
            qx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-         ENDIF
-         ELSE
-            IF ( zx(mgs,il) < 0.0 ) THEN !  .and. qx(mgs,il) > 0.05e-3 
+         endif
+         else
+            if ( zx(mgs,il) < 0.0 ) then !  .and. qx(mgs,il) > 0.05e-3 
                zx(mgs,il) = 0.0
-             ENDIF
-         ENDIF !}
+             endif
+         endif !}
 
 
-         IF (  zx(mgs,il) <= zxmin .and. cx(mgs,il) <= cxmin ) THEN
+         if (  zx(mgs,il) <= zxmin .and. cx(mgs,il) <= cxmin ) then
            zx(mgs,il) = 0.0
            cx(mgs,il) = 0.0
            an(igs(mgs),jgs,kgs(mgs),lv) = an(igs(mgs),jgs,kgs(mgs),lv) + an(igs(mgs),jgs,kgs(mgs),il)
@@ -25814,20 +25814,20 @@ END SUBROUTINE nssl_2mom_driver
            an(igs(mgs),jgs,kgs(mgs),il) = qx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),ln(il)) = cx(mgs,il)
            an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
-         ENDIF
+         endif
         
-        IF ( qx(mgs,il) .gt. qxmin(il) ) THEN !{
+        if ( qx(mgs,il) .gt. qxmin(il) ) then !{
 
         xv(mgs,il) = rho0(mgs)*qx(mgs,il)/(xdn(mgs,il)*Max(1.0e-9,cx(mgs,il)))
         xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
 
-        IF ( xv(mgs,il) .lt. xvmn(il) ) THEN
+        if ( xv(mgs,il) .lt. xvmn(il) ) then
           xv(mgs,il) = Min( xvmx(il), Max( xvmn(il),xv(mgs,il) ) )
           xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
           cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
-        ENDIF
+        endif
 
-          IF ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) THEN !{
+          if ( zx(mgs,il) > 0.0 .and. cx(mgs,il) <= 0.0 ) then !{
 !  have mass and reflectivity but no concentration, so set concentration, using default alpha
             g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
@@ -25837,7 +25837,7 @@ END SUBROUTINE nssl_2mom_driver
             cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(6.*qr)**2/(z*(pi*xdn(mgs,il))**2)
 
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) > 0.0 ) then
 !  have mass and concentration but no reflectivity, so set reflectivity, using default alpha
 !            g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
 !     &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
@@ -25850,7 +25850,7 @@ END SUBROUTINE nssl_2mom_driver
             zx(mgs,il) = Max(zxmin*1.1, g1*dn(igs(mgs),jy,kgs(mgs))**2*(6*qr)**2/(chw*(pi*xdn(mgs,il))**2) )
             an(igs(mgs),jgs,kgs(mgs),lz(il)) = zx(mgs,il)
 
-           ELSEIF ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) THEN
+           elseif ( zx(mgs,il) <= zxmin .and. cx(mgs,il) <= 0.0 ) then
 !   How did this happen?
          ! set values according to dBZ of -10, or Z = 0.1
 !              0.1 = 1.e18*0.224*an(ix,jy,kz,lzh)*(hwdn/rwdn)**2
@@ -25870,13 +25870,13 @@ END SUBROUTINE nssl_2mom_driver
                
 !               write(0,*) 'GS: moment problem! reset il,c,z,q = ',il,cx(mgs,il),zx(mgs,il),qx(mgs,il)
                
-           ELSE
+           else
           ! have all valid moments, so find shape parameter
           chw = cx(mgs,il)
           qr  = qx(mgs,il)
           z   = zx(mgs,il)
 
-          IF ( zx(mgs,il) .gt. 0. ) THEN !{
+          if ( zx(mgs,il) .gt. 0. ) then !{
            
 !            rdi = z*(pi/6.*1000.)**2*chw/((rho0(mgs)*qr)**2)
             rdi = z*(pi/6.*xdn(mgs,il))**2*chw/((rho0(mgs)*qr)**2)
@@ -25886,9 +25886,9 @@ END SUBROUTINE nssl_2mom_driver
            alp = (6.0+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/   &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
 !           print*,'kz, alp, alpha(mgs,il) = ',kz,alp,alpha(mgs,il),rdi,z,xv
-           DO i = 1,10
+           do i = 1,10
 !            IF ( 100.*Abs(alp - alpha(mgs,il))/(Abs(alpha(mgs,il))+1.e-5) .lt. 1. ) EXIT
-             IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+             if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
 !             alp = 1.e18*(6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/
 !     :            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
@@ -25896,18 +25896,18 @@ END SUBROUTINE nssl_2mom_driver
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
 !           print*,'i,alp = ',i,alp
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
+           enddo
 
 
 ! check for artificial breakup (graupel/hail larger than allowed max size)
-        IF (  xv(mgs,il) .gt. xvmx(il) ) THEN !{
+        if (  xv(mgs,il) .gt. xvmx(il) ) then !{
           tmp = cx(mgs,il)
 
 
           xv(mgs,il) = Min( xvmx(il), Max( xvmn(il),xv(mgs,il) ) )
           xmas(mgs,il) = xv(mgs,il)*xdn(mgs,il)
           cx(mgs,il) = rho0(mgs)*qx(mgs,il)/(xmas(mgs,il))
-          IF ( tmp < cx(mgs,il) ) THEN ! breakup
+          if ( tmp < cx(mgs,il) ) then ! breakup
             g1 = 36.*(6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il))*pi**2)
              zx(mgs,il) = zx(mgs,il) + g1*(rho0(mgs)/xdn(mgs,il))**2*( (qx(mgs,il)/tmp)**2 * (tmp-cx(mgs,il)) )
@@ -25920,17 +25920,17 @@ END SUBROUTINE nssl_2mom_driver
             rdi = z*(pi/6.*xdn(mgs,il))**2*chw/((rho0(mgs)*qr)**2)
             alp = (6.0+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/   &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
-           DO i = 1,10
-             IF ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) EXIT
+           do i = 1,10
+             if ( Abs(alp - alpha(mgs,il)) .lt. 0.01 ) exit
              alpha(mgs,il) = Max( alphamin, Min( alphamax, alp ) )
              alp = (6.+alpha(mgs,il))*(5.0+alpha(mgs,il))*(4.0+alpha(mgs,il))/   &
      &            ((3.0+alpha(mgs,il))*(2.0+alpha(mgs,il))*rdi) - 1.0
              alp = Max( alphamin, Min( alphamax, alp ) )
-           ENDDO
+           enddo
 
             
-          ENDIF
-        ENDIF !}
+          endif
+        endif !}
 
 !
 ! Check whether the shape parameter is at or less than the minimum, and if it is, reset the 
@@ -25939,79 +25939,79 @@ END SUBROUTINE nssl_2mom_driver
              g1 = (6.0 + alpha(mgs,il))*(5.0 + alpha(mgs,il))*(4.0 + alpha(mgs,il))/ &
      &            ((3.0 + alpha(mgs,il))*(2.0 + alpha(mgs,il))*(1.0 + alpha(mgs,il)))
  
-           IF ( ( lrescalelow(il) .or. rescale_high_alpha ) .and.  &
-     &          ( alpha(mgs,il) <= alphamin .or. alp == alphamin .or. alp == alphamax ) ) THEN !{
+           if ( ( lrescalelow(il) .or. rescale_high_alpha ) .and.  &
+     &          ( alpha(mgs,il) <= alphamin .or. alp == alphamin .or. alp == alphamax ) ) then !{
 
-            IF ( rescale_high_alpha .and. alp >= alphamax - 0.01  ) THEN  ! reset c at high alpha to prevent growth in Z
+            if ( rescale_high_alpha .and. alp >= alphamax - 0.01  ) then  ! reset c at high alpha to prevent growth in Z
               cx(mgs,il) = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z*(6./(pi*xdn(mgs,il)))**2
               an(igs(mgs),jy,kgs(mgs),ln(il)) = cx(mgs,il)
             
-            ELSEIF ( lrescalelow(il) .and. alp <= alphamin .and. .not. (il == lh .and. icvhl2h > 0 ) .and. &
-                     .not. ( il == lr .and. .not. rescale_low_alphar ) ) THEN ! alpha = alphamin, so reset Z to prevent growth in C
+            elseif ( lrescalelow(il) .and. alp <= alphamin .and. .not. (il == lh .and. icvhl2h > 0 ) .and. &
+                     .not. ( il == lr .and. .not. rescale_low_alphar ) ) then ! alpha = alphamin, so reset Z to prevent growth in C
              
              wtest = .false.
-             IF ( irescalerainopt == 0 ) THEN
+             if ( irescalerainopt == 0 ) then
                wtest = .false.
-             ELSEIF ( irescalerainopt == 1 ) THEN
+             elseif ( irescalerainopt == 1 ) then
                wtest = qx(mgs,lc) > qxmin(lc) 
-             ELSEIF ( irescalerainopt == 2 ) THEN
+             elseif ( irescalerainopt == 2 ) then
                wtest = qx(mgs,lc) > qxmin(lc) .and. wvel(mgs) < rescale_wthresh
-             ELSEIF ( irescalerainopt == 3 ) THEN
+             elseif ( irescalerainopt == 3 ) then
                wtest = temcg(mgs) > rescale_tempthresh .and. qx(mgs,lc) > qxmin(lc) .and. wvel(mgs) < rescale_wthresh
-             ENDIF
+             endif
              
-             IF ( il == lr .and. ( wtest .or. .not. rescale_low_alphar ) ) THEN
+             if ( il == lr .and. ( wtest .or. .not. rescale_low_alphar ) ) then
              ! certain situations where rain number is adjusted instead of Z. Helps avoid rain being 'zapped' by autoconverted 
              ! drops (i.e., favor preserving Z when alpha tries to go negative)
              chw = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z*(6./(pi*xdn(mgs,il)))**2 ! g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/z1
              cx(mgs,il) = chw
              an(igs(mgs),jy,kgs(mgs),ln(il)) = chw
-             ELSE
+             else
              ! Usual resetting of reflectivity moment to force consisntency between Q, N, Z, and alpha when alpha = alphamin
              z1 = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/chw
              z  = z1*(6./(pi*xdn(mgs,il)))**2
              zx(mgs,il) = z
              an(igs(mgs),jy,kgs(mgs),lz(il)) = z
-             ENDIF
+             endif
 
 !             z1 = g1*dn(igs(mgs),jy,kgs(mgs))**2*(qr)*qr/chw
 !             z  = z1*(6./(pi*xdn(mgs,il)))**2
 !             zx(mgs,il) = z
 !             an(igs(mgs),jy,kgs(mgs),lz(il)) = z
-            ENDIF
+            endif
 
-           ENDIF !}
+           endif !}
           
           
-           ENDIF !}
+           endif !}
           
            
-           ENDIF ! !}
+           endif ! !}
  
           
           
-          ENDIF !}
+          endif !}
 
 ! #if !defined( COMMAS ) && !defined( 1 )
-        IF ( lzr > 1 ) THEN
+        if ( lzr > 1 ) then
           alpha2d(igs(mgs),kgs(mgs),1) = alpha(mgs,lr)
-        ENDIF
-        IF ( lzh > 1 ) THEN
+        endif
+        if ( lzh > 1 ) then
           alpha2d(igs(mgs),kgs(mgs),2) = alpha(mgs,lh)
-        ENDIF
-        IF ( lzhl > 1 ) THEN
+        endif
+        if ( lzhl > 1 ) then
           alpha2d(igs(mgs),kgs(mgs),3) = alpha(mgs,lhl)
-        ENDIF
+        endif
 ! #endif
 
-        IF ( il == lhl .and. lnhlf > 1 ) THEN
+        if ( il == lhl .and. lnhlf > 1 ) then
         ! update chxf in case cx has changed
           chxf(mgs,lhl) = frac*cx(mgs,lhl)
-        ENDIF
-        IF ( il == lh .and. lnhf > 1 ) THEN
+        endif
+        if ( il == lh .and. lnhf > 1 ) then
         ! update chxf in case cx has changed
           chxf(mgs,lh) = frach*cx(mgs,lh)
-        ENDIF
+        endif
 
 
 !      IF ( lf > 0 .and. il == lf .and. kgs(mgs) <= 20 .and. ( cx(mgs,lf) + dtp*( pcfwi(mgs) + pcfwd(mgs) ) > 200. .or. cx(mgs,lf) > 400. )) THEN
@@ -26021,7 +26021,7 @@ END SUBROUTINE nssl_2mom_driver
 !      
 !      ENDIF
         
-        ENDDO ! mgs
+        enddo ! mgs
 
 !         CALL cld_cpu('Z-DELABK')  
         
@@ -26031,74 +26031,74 @@ END SUBROUTINE nssl_2mom_driver
         
  
            
-           ENDIF ! } }
+           endif ! } }
 
-          ENDIF ! }}
-          ENDIF ! }
+          endif ! }}
+          endif ! }
 
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
 
-            IF ( il == lh ) THEN
-            IF ( lnhf > 1 ) THEN ! number of graupel from frozen drops
+            if ( il == lh ) then
+            if ( lnhf > 1 ) then ! number of graupel from frozen drops
               an(igs(mgs),jy,kgs(mgs),lnhf) = Max( chxf(mgs,lh), 0.0)
-            ENDIF
-            ENDIF
+            endif
+            endif
 
-            IF ( il == lhl ) THEN
+            if ( il == lhl ) then
             
-            IF ( lnhlf > 1 ) THEN ! number of hail from frozen drops
+            if ( lnhlf > 1 ) then ! number of hail from frozen drops
 !              an(igs(mgs),jy,kgs(mgs),lnhlf) = Min( cx(mgs,lhl), Max( chxf(mgs,lhl), 0.0) )
               an(igs(mgs),jy,kgs(mgs),lnhlf) = Max( chxf(mgs,lhl), 0.0)
-            ENDIF
-            ENDIF
+            endif
+            endif
             an(igs(mgs),jy,kgs(mgs),ln(il)) = Max(cx(mgs,il), 0.0)
-          ENDDO
-        ENDIF ! }
-      ENDDO ! il }
+          enddo
+        endif ! }
+      enddo ! il }
 
-      IF ( lcin > 1 ) THEN
+      if ( lcin > 1 ) then
       do mgs = 1,ngscnt
         an(igs(mgs),jy,kgs(mgs),lcin) = Max(0.0, ccin(mgs))
       end do
-      ENDIF
+      endif
 
-      IF ( ipconc .ge. 2 ) THEN
+      if ( ipconc .ge. 2 ) then
       do mgs = 1,ngscnt
-        IF ( lss > 1 ) THEN
+        if ( lss > 1 ) then
           an(igs(mgs),jy,kgs(mgs),lss) = Max(0.0, ssmax(mgs) )
-        ENDIF
+        endif
 
-        IF ( lccn > 1 ) THEN
+        if ( lccn > 1 ) then
           an(igs(mgs),jy,kgs(mgs),lccn) = Max(0.0, ccnc(mgs) )
-        ENDIF
+        endif
       end do
-      ENDIF
+      endif
       
-      ELSEIF ( ipconc .eq. 0 .and. lni .gt. 1 ) THEN
+      elseif ( ipconc .eq. 0 .and. lni .gt. 1 ) then
       
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
             an(igs(mgs),jy,kgs(mgs),lni) = Max(cx(mgs,li), 0.0)
-          ENDDO
+          enddo
 
 
       end if
 
-      IF ( ldovol ) THEN
+      if ( ldovol ) then
 
-       DO il = li,lhab
+       do il = li,lhab
 
-        IF ( lvol(il) .ge. 1 ) THEN
+        if ( lvol(il) .ge. 1 ) then
 
-          DO mgs = 1,ngscnt
+          do mgs = 1,ngscnt
 
            an(igs(mgs),jy,kgs(mgs),lvol(il)) = Max( 0.0, vx(mgs,il) )
-          ENDDO
+          enddo
           
-        ENDIF
+        endif
       
-       ENDDO
+       enddo
       
-      ENDIF
+      endif
 !
 !
 !
@@ -26149,4 +26149,4 @@ END SUBROUTINE nssl_2mom_driver
 !
 
 
-END MODULE module_mp_nssl_2mom
+end module module_mp_nssl_2mom

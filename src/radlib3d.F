@@ -1,11 +1,11 @@
-  MODULE radlib3d_module
+  module radlib3d_module
 
   implicit none
 
   private
   public :: coeff,terp1,expmn,deledd,sagpol
 
-  CONTAINS
+  contains
 !
 !
 !##################################################################
@@ -24,7 +24,7 @@
 !##################################################################
 !
 
-SUBROUTINE coeff(n,x,f,w,iop,INT,wk)
+subroutine coeff(n,x,f,w,iop,INT,wk)
 !
 !-----------------------------------------------------------------------
 !
@@ -50,20 +50,20 @@ SUBROUTINE coeff(n,x,f,w,iop,INT,wk)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: n
-  INTEGER :: iop(2)
+  integer :: n
+  integer :: iop(2)
 
-  REAL :: x(n),f(n),w(n),wk(n,4)
+  real :: x(n),f(n),w(n),wk(n,4)
 
-  INTEGER :: i
-  INTEGER :: i1,i2, ii,ii1, in,INT
-  INTEGER :: j0,j1,j2,j3,j4
-  INTEGER :: jm,mk
-  INTEGER :: ml,nn
+  integer :: i
+  integer :: i1,i2, ii,ii1, in,INT
+  integer :: j0,j1,j2,j3,j4
+  integer :: jm,mk
+  integer :: ml,nn
 
-  REAL :: a12,a13,a14,a23,a24,a34, b2,y2
+  real :: a12,a13,a14,a23,a24,a34, b2,y2
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
@@ -73,57 +73,57 @@ SUBROUTINE coeff(n,x,f,w,iop,INT,wk)
 !
   ii(i)=(i-1)*INT+1
   j0=1
-  DO i=2,n
+  do i=2,n
     jm=j0
     j0=j0+INT
     wk(i,1)=x(i)-x(i-1)
     wk(i,2)=(f(j0)-f(jm))/wk(i,1)
     wk(i,3)=wk(i,1)/6.
     wk(i,1)=wk(i,1)/3.
-  END DO
+  end do
   nn=n
   mk=iop(1)
   ml=iop(2)
 !  GO TO (102,103,104,105) ,mk
 !  obsolescent feature correction by WYH
-  SELECT CASE (mk)
-  CASE (1)
-    GO TO 102
-  CASE (2)
-    GO TO 103
-  CASE (3)
-    GO TO 104
-  CASE (4)
-    GO TO 105
-  CASE DEFAULT
+  select case (mk)
+  case (1)
+    go to 102
+  case (2)
+    go to 103
+  case (3)
+    go to 104
+  case (4)
+    go to 105
+  case DEFAULT
 !   Do nothing
-  END SELECT
+  end select
 ! end of correction by wyh.
 
-  102 CONTINUE
+  102 continue
   wk(2,2)=wk(3,2)-wk(2,2)-wk(2,3)*w(1)
   wk(2,3)=0.
   wk(2,1)=wk(2,1)+wk(3,1)
   i1=2
   nn=nn-1
-  GO TO 106
-  103 CONTINUE
+  go to 106
+  103 continue
   wk(1,2)=wk(2,2)-w(1)
   wk(2,2)=wk(3,2)-wk(2,2)
   wk(1,3)=0.
   wk(1,1)=wk(2,1)
   wk(2,1)=wk(2,1)+wk(3,1)
   i1=1
-  GO TO 106
-  104 CONTINUE
+  go to 106
+  104 continue
   y2=wk(2,2)
   b2=wk(2,1)
   wk(2,2)=wk(3,2)-wk(2,2)
   wk(2,1)=wk(3,1)+wk(2,1)
   i1=2
   nn=nn-1
-  GO TO 106
-  105 CONTINUE
+  go to 106
+  105 continue
   a12=x(1)-x(2)
   a13=x(1)-x(3)
   a14=x(1)-x(4)
@@ -137,50 +137,50 @@ SUBROUTINE coeff(n,x,f,w,iop,INT,wk)
   w(1)=(1./a12+1./a13+1./a14)*f(j1)-                                    &
        a13*a14/(a12*a23*a24)*f(j2)+a12*a14/(a13*a23*a34)*f(j3)-         &
        a12*a13/(a14*a24*a34)*f(j4)
-  GO TO 103
-  106 CONTINUE
+  go to 103
+  106 continue
   i2=n-2
-  DO i=3,i2
+  do i=3,i2
     wk(i,2)=wk(i+1,2)-wk(i,2)
     wk(i,1)=wk(i+1,1)+wk(i,1)
-  END DO
+  end do
   in=ii(n)
 !  GO TO (108,109,110,111) ,ml
 !  obsolescent feature correction by WYH
-  SELECT CASE (ml)
-  CASE (1)
-    GO TO 108
-  CASE (2)
-    GO TO 109
-  CASE (3)
-    GO TO 110
-  CASE (4)
-    GO TO 111
-  CASE DEFAULT
+  select case (ml)
+  case (1)
+    go to 108
+  case (2)
+    go to 109
+  case (3)
+    go to 110
+  case (4)
+    go to 111
+  case DEFAULT
 !   Do nothing
-  END SELECT
+  end select
 ! end of correction by WYH
 
-  108 CONTINUE
+  108 continue
   wk(n-1,2)=wk(n,2)-wk(n-1,2)-wk(n,3)*w(in)
   wk(n,3)=0.
   wk(n-1,1)=wk(n-1,1)+wk(n,1)
   nn=nn-1
-  GO TO 112
-  109 CONTINUE
+  go to 112
+  109 continue
   wk(n-1,2)=wk(n,2)-wk(n-1,2)
   wk(n,2)=-wk(n,2)+w(in)
   wk(n-1,1)=wk(n-1,1)+wk(n,1)
   wk(1,4)=0.
-  GO TO 112
-  110 CONTINUE
+  go to 112
+  110 continue
   wk(n-1,2)=wk(n,2)-wk(n-1,2)
   wk(n,2)=y2-wk(n,2)
   wk(n-1,1)=wk(n-1,1)+wk(n,1)
   wk(n,1)=wk(n,1)+b2
   wk(1,4)=wk(2,3)
-  GO TO 112
-  111 CONTINUE
+  go to 112
+  111 continue
   a12=x(n)-x(n-1)
   a13=x(n)-x(n-2)
   a14=x(n)-x(n-3)
@@ -194,28 +194,28 @@ SUBROUTINE coeff(n,x,f,w,iop,INT,wk)
   w(in)=(1./a12+1./a13+1./a14)*f(j1)-                                   &
         a13*a14/(a12*a23*a24)*f(j2)+a12*a14/(a13*a23*a34)*f(j3)-        &
         a12*a13/(a14*a24*a34)*f(j4)
-  GO TO 109
-  112 CONTINUE
+  go to 109
+  112 continue
   ii1=ii(i1)
-  CALL trip (nn,wk(i1,3),wk(i1,1),wk(i1+1,3),wk(i1,2),w(ii1),INT)
+  call trip (nn,wk(i1,3),wk(i1,1),wk(i1+1,3),wk(i1,2),w(ii1),INT)
 !  GO TO (114,114,113,114) ,mk
 !  obsolescent feature correction by WYH
-  SELECT CASE (mk)
-  CASE (1,2,4)
-    GO TO 114
-  CASE (3)
-    GO TO 113
-  CASE DEFAULT
+  select case (mk)
+  case (1,2,4)
+    go to 114
+  case (3)
+    go to 113
+  case DEFAULT
 !   Do nothing
-  END SELECT
+  end select
 ! end of correction by wyh
 
-  113 CONTINUE
+  113 continue
   w(1)=w(in)
-  114 CONTINUE
+  114 continue
 
-  RETURN
-END SUBROUTINE coeff
+  return
+end subroutine coeff
 !
 !
 !##################################################################
@@ -234,7 +234,7 @@ END SUBROUTINE coeff
 !##################################################################
 !
 
-SUBROUTINE terp1(n,x,f,w,y,INT,tab,itab)
+subroutine terp1(n,x,f,w,y,INT,tab,itab)
 !
 !-----------------------------------------------------------------------
 !
@@ -265,16 +265,16 @@ SUBROUTINE terp1(n,x,f,w,y,INT,tab,itab)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: n
-  INTEGER :: INT
-  INTEGER :: itab(3)
+  integer :: n
+  integer :: INT
+  integer :: itab(3)
 
-  REAL :: x(n),f(n),w(n),tab(3)
+  real :: x(n),f(n),w(n),tab(3)
 
-  INTEGER :: i
-  REAL :: y
+  integer :: i
+  real :: y
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
@@ -282,11 +282,11 @@ SUBROUTINE terp1(n,x,f,w,y,INT,tab,itab)
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
-  CALL search (y,x,n,i)
-  CALL interp (n,x,f,w,y,i,INT,tab,itab)
+  call search (y,x,n,i)
+  call interp (n,x,f,w,y,i,INT,tab,itab)
 
-  RETURN
-END SUBROUTINE terp1
+  return
+end subroutine terp1
 !
 !
 !##################################################################
@@ -305,7 +305,7 @@ END SUBROUTINE terp1
 !##################################################################
 !
 
-SUBROUTINE trip(n,a,b,c,y,z,INT)
+subroutine trip(n,a,b,c,y,z,INT)
 !
 !-----------------------------------------------------------------------
 !
@@ -328,19 +328,19 @@ SUBROUTINE trip(n,a,b,c,y,z,INT)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: n
+  integer :: n
 
-  REAL :: a(n),b(n),c(n),y(n),z(n)
+  real :: a(n),b(n),c(n),y(n),z(n)
 
-  INTEGER :: INT
+  integer :: INT
 
-  INTEGER :: ii, ik, in, inm
-  INTEGER :: i,j,k
-  INTEGER :: nm1, nm2
+  integer :: ii, ik, in, inm
+  integer :: i,j,k
+  integer :: nm1, nm2
 
-  REAL :: bn, yn, v, den
+  real :: bn, yn, v, den
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
@@ -356,7 +356,7 @@ SUBROUTINE trip(n,a,b,c,y,z,INT)
   a(1)=a(1)/b(1)
   b(1)=c(1)/b(1)
   nm2=n-2
-  DO j=2,nm2
+  do j=2,nm2
     den=b(j)-a(j)*b(j-1)
     b(j)=c(j)/den
     y(j)=(y(j)-a(j)*y(j-1))/den
@@ -364,7 +364,7 @@ SUBROUTINE trip(n,a,b,c,y,z,INT)
     bn=bn-v*a(j-1)
     yn=yn-v*y(j-1)
     v=-v*b(j-1)
-  END DO
+  end do
   den=b(n-1)-a(n-1)*b(n-2)
   b(n-1)=(c(n-1)-a(n-1)*a(n-2))/den
   y(n-1)=(y(n-1)-a(n-1)*y(n-2))/den
@@ -376,14 +376,14 @@ SUBROUTINE trip(n,a,b,c,y,z,INT)
   inm=ii(nm1)
   z(in)=(yn-v*y(nm1))/(bn-v*b(nm1))
   z(inm)=y(nm1)-b(nm1)*z(in)
-  DO j=2,nm1
+  do j=2,nm1
     k=n-j
     ik=ii(k)
     z(ik)=y(k)-b(k)*z(ik+INT)-a(k)*z(in)
-  END DO
+  end do
 
-  RETURN
-END SUBROUTINE trip
+  return
+end subroutine trip
 !
 !
 !##################################################################
@@ -402,7 +402,7 @@ END SUBROUTINE trip
 !##################################################################
 !
 
-SUBROUTINE search(xbar,x,n,i)
+subroutine search(xbar,x,n,i)
 !
 !-----------------------------------------------------------------------
 !
@@ -425,16 +425,16 @@ SUBROUTINE search(xbar,x,n,i)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: i,n
+  integer :: i,n
 
-  REAL :: x(n)
-  REAL :: xbar
+  real :: x(n)
+  real :: xbar
 
-  INTEGER :: k,m,nm1
+  integer :: k,m,nm1
 
-  REAL :: b
+  real :: b
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
@@ -444,32 +444,32 @@ SUBROUTINE search(xbar,x,n,i)
 !
   b = .69314718
 
-  IF(xbar > x(2)) GO TO 101
+  if(xbar > x(2)) go to 101
   i=1
-  RETURN
+  return
 
-  101 CONTINUE
-  IF(xbar < x(n-1)) GO TO 102
+  101 continue
+  if(xbar < x(n-1)) go to 102
   i=n-1
-  RETURN
+  return
 
-  102 CONTINUE
+  102 continue
   m=INT((ALOG(FLOAT(n)))/b)
   i=2**m
-  IF(i >= n) i=i/2
+  if(i >= n) i=i/2
   k=i
   nm1=n-1
-  103 CONTINUE
+  103 continue
   k=k/2
-  IF(xbar >= x(i)) GO TO 104
+  if(xbar >= x(i)) go to 104
   i=i-k
-  GO TO 103
-  104 CONTINUE
-  IF(xbar <= x(i+1)) RETURN
+  go to 103
+  104 continue
+  if(xbar <= x(i+1)) return
   i=MIN0(i+k,nm1)
-  GO TO 103
+  go to 103
 
-END SUBROUTINE search
+end subroutine search
 !
 !
 !##################################################################
@@ -488,7 +488,7 @@ END SUBROUTINE search
 !##################################################################
 !
 
-SUBROUTINE interp(n,x,f,w,y,i,INT,tab,itab)
+subroutine interp(n,x,f,w,y,i,INT,tab,itab)
 !
 !-----------------------------------------------------------------------
 !
@@ -511,14 +511,14 @@ SUBROUTINE interp(n,x,f,w,y,i,INT,tab,itab)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  INTEGER :: n
-  INTEGER :: i, i0, ii, INT, ip
+  integer :: n
+  integer :: i, i0, ii, INT, ip
 
-  INTEGER :: itab(3)
-  REAL :: x(n),f(n),w(n),tab(3)
-  REAL :: a,b,c, fl0,flk,flp, y
+  integer :: itab(3)
+  real :: x(n),f(n),w(n),tab(3)
+  real :: a,b,c, fl0,flk,flp, y
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 !
@@ -532,21 +532,21 @@ SUBROUTINE interp(n,x,f,w,y,i,INT,tab,itab)
   fl0=y-x(i)
   i0=ii(i)
   ip=i0+INT
-  IF(itab(1) /= 1) GO TO 102
+  if(itab(1) /= 1) go to 102
   a=(w(i0)*flp**3+w(ip)*fl0**3)/(6.*flk)
   b=(f(ip)/flk-w(ip)*flk/6.)*fl0
   c=(f(i0)/flk-w(i0)*flk/6.)*flp
   tab(1)=a+b+c
-  102 IF(itab(2) /= 1) GO TO 104
+  102 if(itab(2) /= 1) go to 104
   a=(w(ip)*fl0**2-w(i0)*flp**2)/(2.*flk)
   b=(f(ip)-f(i0))/flk
   c=(w(i0)-w(ip))*flk/6.
   tab(2)=a+b+c
-  104 IF(itab(3) /= 1) GO TO 106
+  104 if(itab(3) /= 1) go to 106
   tab(3)=(w(i0)*flp+w(ip)*fl0)/flk
 
-  106 RETURN
-END SUBROUTINE interp
+  106 return
+end subroutine interp
 !
 !##################################################################
 !##################################################################
@@ -564,7 +564,7 @@ END SUBROUTINE interp
 !##################################################################
 !
 
-  REAL FUNCTION expmn(fin)
+  real function expmn(fin)
 !
 !-----------------------------------------------------------------------
 !
@@ -597,16 +597,16 @@ END SUBROUTINE interp
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  REAL :: one, expmin
-  PARAMETER (one=1.0, expmin=-10.0)
+  real :: one, expmin
+  parameter (one=1.0, expmin=-10.0)
 
-  REAL :: e1,e2,e3,e4
-  PARAMETER (e1=1.0,        e2=-2.507213E-1)
-  PARAMETER (e3=2.92732E-2, e4=-3.827800E-3)
+  real :: e1,e2,e3,e4
+  parameter (e1=1.0,        e2=-2.507213E-1)
+  parameter (e3=2.92732E-2, e4=-3.827800E-3)
 
-  REAL :: fin, tmp
+  real :: fin, tmp
 !!!  REAL :: expmn
 !
 !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -620,8 +620,8 @@ END SUBROUTINE interp
   expmn = expmn * expmn
   expmn = one / (expmn * expmn)
 
-  RETURN
-  END FUNCTION expmn
+  return
+  end function expmn
 !
 !
 !##################################################################
@@ -640,7 +640,7 @@ END SUBROUTINE interp
 !##################################################################
 !
 
-SUBROUTINE deledd(tau,ssc,g0,csm,rr,tt,td)
+subroutine deledd(tau,ssc,g0,csm,rr,tt,td)
 !
 !-----------------------------------------------------------------------
 !
@@ -695,23 +695,23 @@ SUBROUTINE deledd(tau,ssc,g0,csm,rr,tt,td)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  REAL :: zero,one,two,three,four,fourth,seven,thresh
-  PARAMETER (one =1., three=3.)
-  PARAMETER (two =2., seven=7.)
-  PARAMETER (four=4., fourth=.25)
-  PARAMETER (zero=0., thresh=1.e-8)
+  real :: zero,one,two,three,four,fourth,seven,thresh
+  parameter (one =1., three=3.)
+  parameter (two =2., seven=7.)
+  parameter (four=4., fourth=.25)
+  parameter (zero=0., thresh=1.e-8)
 
 !-----input parameters
-  REAL :: tau,ssc,g0,csm
+  real :: tau,ssc,g0,csm
 
 !-----output parameters
-  REAL :: rr,tt,td
+  real :: rr,tt,td
 
 !-----temporary parameters
 
-  REAL :: zth,ff,xx,taup,sscp,gp,gm1,gm2,gm3,akk,alf1,alf2,             &
+  real :: zth,ff,xx,taup,sscp,gp,gm1,gm2,gm3,akk,alf1,alf2,             &
        all,bll,st7,st8,cll,dll,fll,ell,st1,st2,st3,st4
 
 !!!  REAL, EXTERNAL :: expmn
@@ -753,13 +753,13 @@ SUBROUTINE deledd(tau,ssc,g0,csm,rr,tt,td)
   st8 = one + xx
   st3 = st7 * st8
 
-  IF (ABS(st3) < thresh) THEN
+  if (ABS(st3) < thresh) then
     zth = zth + 0.001
     xx  = akk * zth
     st7 = one - xx
     st8 = one + xx
     st3 = st7 * st8
-  END IF
+  end if
 
 !  extinction of the direct beam transmission
 
@@ -805,8 +805,8 @@ SUBROUTINE deledd(tau,ssc,g0,csm,rr,tt,td)
   rr = MAX(rr,zero)
   tt = MAX(tt,zero)
 
-  RETURN
-END SUBROUTINE deledd
+  return
+end subroutine deledd
 !
 !
 !##################################################################
@@ -825,7 +825,7 @@ END SUBROUTINE deledd
 !##################################################################
 !
 
-SUBROUTINE sagpol(tau,ssc,g0,rll,tll)
+subroutine sagpol(tau,ssc,g0,rll,tll)
 !
 !-----------------------------------------------------------------------
 !
@@ -875,22 +875,22 @@ SUBROUTINE sagpol(tau,ssc,g0,rll,tll)
 !
 !-----------------------------------------------------------------------
 !
-  IMPLICIT NONE
+  implicit none
 
-  REAL :: one,three,four
-  PARAMETER (one=1., three=3., four=4.)
-
-!-----output parameters:
-
-  REAL :: tau,ssc,g0
+  real :: one,three,four
+  parameter (one=1., three=3., four=4.)
 
 !-----output parameters:
 
-  REAL :: rll,tll
+  real :: tau,ssc,g0
+
+!-----output parameters:
+
+  real :: rll,tll
 
 !-----temporary arrays
 
-  REAL :: xx,uuu,ttt,emt,up1,um1,st1
+  real :: xx,uuu,ttt,emt,up1,um1,st1
 
 !-----function
 
@@ -913,8 +913,8 @@ SUBROUTINE sagpol(tau,ssc,g0,rll,tll)
   rll = up1*um1*(one-emt*emt)*st1
   tll = uuu*four*emt         *st1
 
-  RETURN
-END SUBROUTINE sagpol
+  return
+end subroutine sagpol
 
 
-  END MODULE radlib3d_module
+  end module radlib3d_module

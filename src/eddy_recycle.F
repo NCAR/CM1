@@ -45,7 +45,7 @@
 
     integer, parameter :: tscalefac = 10.0
 
-  CONTAINS
+  contains
 
 !-----------------------------------------------------------------------
 
@@ -176,7 +176,7 @@
 #else
         ! MPI version:
 
-        IF( myi.eq.1 )THEN
+        if( myi.eq.1 )then
 
           if( wuirb.ge.1 )then
             do k=1,krecy
@@ -247,12 +247,12 @@
 
           endif
 
-        ENDIF
+        endif
 
     !---------------------------------------------------------------------------
     !  step 2: communicate data (MPI only)
 
-        IF( myi.eq.1 )THEN
+        if( myi.eq.1 )then
 
           ! left-most processor receives data, collects, then sends
           ! I am left-most proc in this row:
@@ -280,7 +280,7 @@
             endif
           enddo
 
-        ELSE
+        else
 
           ! I am NOT left-most proc in this row:
           ! send my data to left-most proc (if applicable):
@@ -304,11 +304,11 @@
             call send_recywe(wircs,nj  ,krecy  ,recywe(1,1,1,qrecy),0 ,0 ,0 ,q3d(ib,jb,kb,nqv),timavg(ibta,jbta,kbta,qtav),dum1(ib,jb,kb),proc,8016,recy_cap,cm0,wircs1)
           endif
 
-        ENDIF
+        endif
 
       !-------------------------------------------------------------------------
 
-        IF( myi.eq.1 )THEN
+        if( myi.eq.1 )then
 
           ! loop through all procs in this row:
           ! send data to procs in injection region:
@@ -335,7 +335,7 @@
           enddo
 
 
-        ELSE
+        else
 
           ! receive from left-most proc (if applicable):
           proc = (myj-1)*nodex
@@ -358,7 +358,7 @@
             call recv_injwe(wiris,nj  ,krecy  ,recywe(1,1,1,qrecy),proc,8036,dum1(ib,jb,kb),wiris1,wirisb)
           endif
 
-        ENDIF
+        endif
 
       !-------------------------------------------------------------------------
 
@@ -487,7 +487,7 @@
 #else
         ! MPI version:
 
-        IF( myi.eq.1 )THEN
+        if( myi.eq.1 )then
 
           if( euirb.ge.1 )then
             do k=1,krecy
@@ -558,12 +558,12 @@
 
           endif
 
-        ENDIF
+        endif
 
     !---------------------------------------------------------------------------
     !  step 2: communicate data (MPI only)
 
-        IF( myi.eq.1 )THEN
+        if( myi.eq.1 )then
 
           ! left-most processor receives data, collects, then sends
           ! I am left-most proc in this row:
@@ -591,7 +591,7 @@
             endif
           enddo
 
-        ELSE
+        else
 
           ! I am NOT left-most proc in this row:
           ! send my data to left-most proc (if applicable):
@@ -615,11 +615,11 @@
             call send_recywe(eircs,nj  ,krecy  ,recywe(1,1,1,qrecy),0 ,0 ,0 ,q3d(ib,jb,kb,nqv),timavg(ibta,jbta,kbta,qtav),dum1(ib,jb,kb),proc,8116,recy_cap,cm0,eircs1)
           endif
 
-        ENDIF
+        endif
 
       !-------------------------------------------------------------------------
 
-        IF( myi.eq.1 )THEN
+        if( myi.eq.1 )then
 
           ! loop through all procs in this row:
           ! send data to procs in injection region:
@@ -646,7 +646,7 @@
           enddo
 
 
-        ELSE
+        else
 
           ! receive from left-most proc (if applicable):
           proc = (myj-1)*nodex
@@ -669,7 +669,7 @@
             call recv_injwe(eiris,nj  ,krecy  ,recywe(1,1,1,qrecy),proc,8136,dum1(ib,jb,kb),eiris1,eirisb)
           endif
 
-        ENDIF
+        endif
 
       !-------------------------------------------------------------------------
 
@@ -710,7 +710,7 @@
     integer :: i,j,k,ii
     real :: tem,tscale,rts
 
-    IF( tiris1.ge.1 )THEN
+    if( tiris1.ge.1 )then
 
       if( adapt_dt.eq.1 )then
 !!!        tscale = max( tscale0 , 4.0*adtlast )
@@ -720,7 +720,7 @@
       endif
       rts = 1.0/tscale
 
-    IF( cm1setup.eq.4 )THEN
+    if( cm1setup.eq.4 )then
       do k=1+ks,krecy
         tem = max( 0.0 , min( 1.0 , 1.0-(zz(1,1,k)-0.9*recy_depth)/(0.1*recy_depth)  )  )
         do j=1,nj+js
@@ -733,7 +733,7 @@
         enddo
         enddo
       enddo
-    ELSE
+    else
       do k=1+ks,krecy
         tem = max( 0.0 , min( 1.0 , 1.0-(zz(1,1,k)-0.9*recy_depth)/(0.1*recy_depth)  )  )
         do j=1,nj+js
@@ -744,7 +744,7 @@
         enddo
         enddo
       enddo
-    ENDIF
+    endif
 
     if( is.eq.0 .and. js.eq.0 .and. ks.eq.0 )then
       if( cm1setup.eq.4 )then
@@ -762,7 +762,7 @@
       endif
     endif
 
-    ENDIF
+    endif
 
     end subroutine recy_tendencywe
 
@@ -1006,7 +1006,7 @@
 #else
         ! MPI version:
 
-        IF( myj.eq.1 )THEN
+        if( myj.eq.1 )then
 
           if( svjrb.ge.1 )then
             do k=1,krecy
@@ -1077,12 +1077,12 @@
 
           endif
 
-        ENDIF
+        endif
 
     !---------------------------------------------------------------------------
     !  step 2: communicate data (MPI only)
 
-        IF( myj.eq.1 )THEN
+        if( myj.eq.1 )then
 
           ! south-most processor receives data, collects, then sends
           ! I am south-most proc in this column:
@@ -1110,7 +1110,7 @@
             endif
           enddo
 
-        ELSE
+        else
 
           ! I am NOT south-most proc in this column: 
           ! send my data to south-most proc (if applicable):
@@ -1134,11 +1134,11 @@
             call send_recysn(ni  ,sjrcs,krecy  ,recysn(1,1,1,qrecy),0 ,0 ,0 ,q3d(ib,jb,kb,nqv),timavg(ibta,jbta,kbta,qtav),dum1(ib,jb,kb),proc,8216,recy_cap,cm0,sjrcs1)
           endif
 
-        ENDIF
+        endif
 
       !-------------------------------------------------------------------------
 
-        IF( myj.eq.1 )THEN
+        if( myj.eq.1 )then
 
           ! loop through all procs in this column:
           ! send data to procs in injection region:
@@ -1165,7 +1165,7 @@
           enddo
 
 
-        ELSE
+        else
 
           ! receive from south-most proc (if applicable):
           proc = (myi-1)
@@ -1188,7 +1188,7 @@
             call recv_injsn(ni  ,sjris,krecy  ,recysn(1,1,1,qrecy),proc,8236,dum1(ib,jb,kb),sjris1,sjrisb)
           endif
 
-        ENDIF
+        endif
 
       !-------------------------------------------------------------------------
 
@@ -1317,7 +1317,7 @@
 #else
         ! MPI version:
 
-        IF( myj.eq.1 )THEN
+        if( myj.eq.1 )then
 
           if( nvjrb.ge.1 )then
             do k=1,krecy
@@ -1388,12 +1388,12 @@
 
           endif
 
-        ENDIF
+        endif
 
     !---------------------------------------------------------------------------
     !  step 2: communicate data (MPI only)
 
-        IF( myj.eq.1 )THEN
+        if( myj.eq.1 )then
 
           ! south-most processor receives data, collects, then sends
           ! I am south-most proc in this column:
@@ -1421,7 +1421,7 @@
             endif
           enddo
 
-        ELSE
+        else
 
           ! I am NOT south-most proc in this column: 
           ! send my data to south-most proc (if applicable):
@@ -1445,11 +1445,11 @@
             call send_recysn(ni  ,njrcs,krecy  ,recysn(1,1,1,qrecy),0 ,0 ,0 ,q3d(ib,jb,kb,nqv),timavg(ibta,jbta,kbta,qtav),dum1(ib,jb,kb),proc,8316,recy_cap,cm0,njrcs1)
           endif
 
-        ENDIF
+        endif
 
       !-------------------------------------------------------------------------
 
-        IF( myj.eq.1 )THEN
+        if( myj.eq.1 )then
 
           ! loop through all procs in this column:
           ! send data to procs in injection region:
@@ -1476,7 +1476,7 @@
           enddo
 
 
-        ELSE
+        else
 
           ! receive from south-most proc (if applicable):
           proc = (myi-1)
@@ -1499,7 +1499,7 @@
             call recv_injsn(ni  ,njris,krecy  ,recysn(1,1,1,qrecy),proc,8336,dum1(ib,jb,kb),njris1,njrisb)
           endif
 
-        ENDIF
+        endif
 
       !-------------------------------------------------------------------------
 
@@ -1540,7 +1540,7 @@
     integer :: i,j,k,jj
     real :: tem,tscale,rts
 
-    IF( tjris1.ge.1 )THEN
+    if( tjris1.ge.1 )then
 
       if( adapt_dt.eq.1 )then
 !!!        tscale = max( tscale0 , 4.0*adtlast )
@@ -1550,7 +1550,7 @@
       endif
       rts = 1.0/tscale
 
-    IF( cm1setup.eq.4 )THEN
+    if( cm1setup.eq.4 )then
       do k=1+ks,krecy
         tem = max( 0.0 , min( 1.0 , 1.0-(zz(1,1,k)-0.9*recy_depth)/(0.1*recy_depth)  )  )
         do j=tjris1,tjris2
@@ -1563,7 +1563,7 @@
         enddo
         enddo
       enddo
-    ELSE
+    else
       do k=1+ks,krecy
         tem = max( 0.0 , min( 1.0 , 1.0-(zz(1,1,k)-0.9*recy_depth)/(0.1*recy_depth)  )  )
         do j=tjris1,tjris2
@@ -1574,7 +1574,7 @@
         enddo
         enddo
       enddo
-    ENDIF
+    endif
 
     if( is.eq.0 .and. js.eq.0 .and. ks.eq.0 )then
       if( cm1setup.eq.4 )then
@@ -1592,7 +1592,7 @@
       endif
     endif
 
-    ENDIF
+    endif
 
     end subroutine recy_tendencysn
 
@@ -1756,7 +1756,7 @@
 
 
       dorecyew:  &
-      IF( do_recycle_w .or. do_recycle_e )THEN
+      if( do_recycle_w .or. do_recycle_e )then
 
       ! ........  capture zone info  ........ !
 
@@ -1995,7 +1995,7 @@
         irecywe = wiri  + 1
         jrecywe =  nj   + 1
 
-      ENDIF  dorecyew
+      endif  dorecyew
 
 
       !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
@@ -2004,7 +2004,7 @@
 
 
       dorecysn:  &
-      IF( do_recycle_s .or. do_recycle_n )THEN
+      if( do_recycle_s .or. do_recycle_n )then
 
       ! ........  capture zone info  ........ !
 
@@ -2243,7 +2243,7 @@
         irecysn =  ni   + 1
         jrecysn = sjri  + 1
 
-      ENDIF  dorecysn
+      endif  dorecysn
 
 
       !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
@@ -2361,7 +2361,7 @@
             fooi(123) = myi
             fooi(124) = myj
 
-        IF( myid.eq.0 )THEN
+        if( myid.eq.0 )then
 
           open(unit=10,file='recycle.info',status='unknown')
 
@@ -2427,11 +2427,11 @@
           close(unit=10)
 
 #ifdef MPI
-        ELSE
+        else
             call mpi_send(foor  ,10 ,MPI_REAL   ,0,8001,MPI_COMM_WORLD,ierr)
             call mpi_send(fooi  ,125,MPI_INTEGER,0,8003,MPI_COMM_WORLD,ierr)
 #endif
-        ENDIF
+        endif
 
         deallocate( foor )
         deallocate( fooi )

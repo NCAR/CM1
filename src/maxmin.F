@@ -1,6 +1,6 @@
-  MODULE maxmin_module
+  module maxmin_module
 
-  CONTAINS
+  contains
 
       subroutine maxmin(izz,jzz,kzz,f,nstat,rstat,kmin,kmax,amax,amin)
       use input
@@ -225,4 +225,4 @@
 
       end subroutine maxmin2d
 
-  END MODULE maxmin_module
+  end module maxmin_module

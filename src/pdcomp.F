@@ -1,11 +1,11 @@
-  MODULE pdcomp_module
+  module pdcomp_module
 
   implicit none
 
   private
   public :: pidcomp
 
-  CONTAINS
+  contains
 
       subroutine pidcomp(dt,xh,rxh,arh1,arh2,uh,xf,rxf,arf1,arf2,uf,vh,vf,          &
                          gz,rgz,gzu,gzv,mh,rmh,mf,rmf,rds,rdsf,c1,c2,f2d,wprof,     &
@@ -68,7 +68,7 @@
       !--------------------------------------------------------------!
       ! buoyancy pressure:
 
-        IF( imoist.eq.1 )THEN
+        if( imoist.eq.1 )then
           ! buoyancy (with moisture terms):
 
           !$omp parallel do default(shared)  &
@@ -118,7 +118,7 @@
             !---
           enddo
 
-        ELSE
+        else
           ! buoyancy (dry):
 
           !$omp parallel do default(shared)  &
@@ -144,7 +144,7 @@
             !---
           enddo
 
-        ENDIF
+        endif
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -268,7 +268,7 @@
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           ! store perturbation u,v in uten1,vten1 arrays:
           do j=jb,je
           do i=ib,ie+1
@@ -282,21 +282,21 @@
             vten1(i,j,k)=v3d(i,j,k)-v0(i,j,k)
           enddo
           enddo
-          IF(k.eq.1)THEN
+          if(k.eq.1)then
             do j=0,nj+1
             do i=0,ni+1
               rrw(i,j,   1) = 0.0
               rrw(i,j,nk+1) = 0.0
             enddo
             enddo
-          ELSE
+          else
             do j=0,nj+1
             do i=0,ni+1
               rrw(i,j,k)=rf0(1,1,k)*w3d(i,j,k)
             enddo
             enddo
-          ENDIF
-        ENDDO
+          endif
+        enddo
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -366,7 +366,7 @@
       !--------------------------------------------------------------!
       ! Coriolis pressure:
 
-      IF( icor.eq.1 )THEN
+      if( icor.eq.1 )then
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -413,10 +413,10 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
       !--------------------------------------------------------------!
 
       end subroutine pidcomp
 
-  END MODULE pdcomp_module
+  end module pdcomp_module

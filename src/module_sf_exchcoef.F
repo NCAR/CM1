@@ -1,20 +1,20 @@
 !  This MODULE holds the routines that calculate air-sea exchange coefficients 
 
-MODULE module_sf_exchcoef
-CONTAINS
+module module_sf_exchcoef
+contains
 
-  SUBROUTINE znot_m_v1(uref,znotm)
-  IMPLICIT NONE
+  subroutine znot_m_v1(uref,znotm)
+  implicit none
 
 ! uref(m/s)   :   Reference level wind
 ! znotm(meter):   Roughness scale for momentum
 ! Author      :  Biju Thomas on 02/07/2014
 !
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znotm
-    REAL             :: bs0, bs1, bs2, bs3, bs4, bs5, bs6
-    REAL             :: cf0, cf1, cf2, cf3, cf4, cf5, cf6
+    real, intent(in) :: uref
+    real, intent(out):: znotm
+    real             :: bs0, bs1, bs2, bs3, bs4, bs5, bs6
+    real             :: cf0, cf1, cf2, cf3, cf4, cf5, cf6
 
 
     bs0 = -8.367276172397277e-12
@@ -34,31 +34,31 @@ CONTAINS
     cf6 = 0.0406766967657759
 
 
-    IF ( uref .LE. 5.0 ) THEN
+    if ( uref .LE. 5.0 ) then
       znotm = (0.0185 / 9.8*(7.59e-4*uref**2+2.46e-2*uref)**2)
-    ELSEIF (uref .GT. 5.0 .AND. uref .LT. 10.0) THEN
+    elseif (uref .GT. 5.0 .AND. uref .LT. 10.0) then
       znotm =.00000235*(uref**2 - 25 ) + 3.805129199617346e-05
-    ELSEIF ( uref .GE. 10.0  .AND. uref .LT. 60.0) THEN
+    elseif ( uref .GE. 10.0  .AND. uref .LT. 60.0) then
       znotm = bs6 + bs5*uref + bs4*uref**2 + bs3*uref**3 + bs2*uref**4 +  &
               bs1*uref**5 + bs0*uref**6
-    ELSE
+    else
       znotm = cf6 + cf5*uref + cf4*uref**2 + cf3*uref**3 + cf2*uref**4 +  &
               cf1*uref**5 + cf0*uref**6
 
-    END IF
+    end if
 
-  END SUBROUTINE znot_m_v1
+  end subroutine znot_m_v1
         
-  SUBROUTINE znot_m_v0(uref,znotm)
-  IMPLICIT NONE
+  subroutine znot_m_v0(uref,znotm)
+  implicit none
 
 ! uref(m/s)   :   Reference level wind
 ! znotm(meter):   Roughness scale for momentum
 ! Author      :  Biju Thomas on 02/07/2014
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znotm 
-    REAL             :: yz, y1, y2, y3, y4
+    real, intent(in) :: uref
+    real, intent(out):: znotm 
+    real             :: yz, y1, y2, y3, y4
 
     yz =  0.0001344
     y1 =  3.015e-05
@@ -66,31 +66,31 @@ CONTAINS
     y3 = -3.567e-08
     y4 =  2.046e-10
 
-    IF ( uref .LT. 12.5 ) THEN
+    if ( uref .LT. 12.5 ) then
        znotm  = (0.0185 / 9.8*(7.59e-4*uref**2+2.46e-2*uref)**2)
-    ELSE IF ( uref .GE. 12.5 .AND. uref .LT. 30.0 ) THEN
+    else if ( uref .GE. 12.5 .AND. uref .LT. 30.0 ) then
        znotm = (0.0739793 * uref -0.58)/1000.0
-    ELSE
+    else
        znotm = yz + uref*y1 + uref**2*y2 + uref**3*y3 + uref**4*y4
-    END IF
+    end if
 
-  END SUBROUTINE znot_m_v0
+  end subroutine znot_m_v0
 
 
-  SUBROUTINE znot_t_v1(uref,znott)
-  IMPLICIT NONE
+  subroutine znot_t_v1(uref,znott)
+  implicit none
 
 ! uref(m/s)   :   Reference level wind
 ! znott(meter):   Roughness scale for temperature/moisture
 ! Author      :  Biju Thomas on 02/07/2014
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znott
-    REAL             :: to0, to1, to2, to3
-    REAL             :: tr0, tr1, tr2, tr3
-    REAL             :: tn0, tn1, tn2, tn3, tn4, tn5
-    REAL             :: ta0, ta1, ta2, ta3, ta4, ta5, ta6
-    REAL             :: tt0, tt1, tt2, tt3, tt4, tt5, tt6, tt7
+    real, intent(in) :: uref
+    real, intent(out):: znott
+    real             :: to0, to1, to2, to3
+    real             :: tr0, tr1, tr2, tr3
+    real             :: tn0, tn1, tn2, tn3, tn4, tn5
+    real             :: ta0, ta1, ta2, ta3, ta4, ta5, ta6
+    real             :: tt0, tt1, tt2, tt3, tt4, tt5, tt6, tt7
 
 
     tr0 = 6.451939325286488e-08
@@ -127,57 +127,57 @@ CONTAINS
     ta5 = -1.1228628619105638
     ta6 = 17.358026773905973
 
-    IF ( uref .LE. 7.0 ) THEN
+    if ( uref .LE. 7.0 ) then
       znott = (0.0185 / 9.8*(7.59e-4*uref**2+2.46e-2*uref)**2)
-    ELSEIF ( uref  .GE. 7.0 .AND. uref .LT. 12.5 ) THEN
+    elseif ( uref  .GE. 7.0 .AND. uref .LT. 12.5 ) then
       znott =  tr3 + tr2*uref + tr1*uref**2 + tr0*uref**3
-    ELSEIF ( uref  .GE. 12.5 .AND. uref .LT. 15.0 ) THEN
+    elseif ( uref  .GE. 12.5 .AND. uref .LT. 15.0 ) then
       znott =  to3 + to2*uref + to1*uref**2 + to0*uref**3
-    ELSEIF ( uref .GE. 15.0  .AND. uref .LT. 30.0) THEN
+    elseif ( uref .GE. 15.0  .AND. uref .LT. 30.0) then
       znott =  tn5 + tn4*uref + tn3*uref**2 + tn2*uref**3 + tn1*uref**4 +   &
                                                        tn0*uref**5
-    ELSEIF ( uref .GE. 30.0  .AND. uref .LT. 60.0) THEN
+    elseif ( uref .GE. 30.0  .AND. uref .LT. 60.0) then
       znott = tt7 + tt6*uref + tt5*uref**2  + tt4*uref**3 + tt3*uref**4 +   &
              tt2*uref**5 + tt1*uref**6 + tt0*uref**7
-    ELSE
+    else
       znott =  ta6 + ta5*uref + ta4*uref**2  + ta3*uref**3 + ta2*uref**4 +  &
               ta1*uref**5 + ta0*uref**6
-    END IF
+    end if
 
-  END SUBROUTINE znot_t_v1
+  end subroutine znot_t_v1
         
-  SUBROUTINE znot_t_v0(uref,znott)
-  IMPLICIT NONE
+  subroutine znot_t_v0(uref,znott)
+  implicit none
 
 ! uref(m/s)   :   Reference level wind
 ! znott(meter):   Roughness scale for temperature/moisture
 ! Author      :  Biju Thomas on 02/07/2014
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znott 
+    real, intent(in) :: uref
+    real, intent(out):: znott 
 
-    IF ( uref .LT. 7.0 ) THEN
+    if ( uref .LT. 7.0 ) then
        znott = (0.0185 / 9.8*(7.59e-4*uref**2+2.46e-2*uref)**2)
-    ELSE
+    else
        znott = (0.2375*exp(-0.5250*uref) + 0.0025*exp(-0.0211*uref))*0.01
-    END IF
+    end if
 
-  END SUBROUTINE znot_t_v0
+  end subroutine znot_t_v0
 
 
-  SUBROUTINE znot_t_v2(uu,znott)
-  IMPLICIT NONE
+  subroutine znot_t_v2(uu,znott)
+  implicit none
 
 ! uu in MKS
 ! znott in m
 ! Biju Thomas on 02/12/2015
 !
 
-    REAL, INTENT(IN) :: uu
-    REAL, INTENT(OUT):: znott
-    REAL             :: ta0, ta1, ta2, ta3, ta4, ta5, ta6
-    REAL             :: tb0, tb1, tb2, tb3, tb4, tb5, tb6
-    REAL             :: tt0, tt1, tt2, tt3, tt4, tt5, tt6
+    real, intent(in) :: uu
+    real, intent(out):: znott
+    real             :: ta0, ta1, ta2, ta3, ta4, ta5, ta6
+    real             :: tb0, tb1, tb2, tb3, tb4, tb5, tb6
+    real             :: tt0, tt1, tt2, tt3, tt4, tt5, tt6
 
     ta0 = 2.51715926619e-09
     ta1 = -1.66917514012e-07
@@ -204,23 +204,23 @@ CONTAINS
     tt5 = -0.000367207751936
     tt6 = 0.00357204479347
 
-    IF ( uu .LE. 7.0 ) THEN
+    if ( uu .LE. 7.0 ) then
        znott = (0.0185 / 9.8*(7.59e-4*uu**2+2.46e-2*uu)**2)
-    ELSEIF ( uu  .GE. 7.0 .AND. uu .LT. 15. ) THEN
+    elseif ( uu  .GE. 7.0 .AND. uu .LT. 15. ) then
        znott = ta6 + ta5*uu + ta4*uu**2  + ta3*uu**3 + ta2*uu**4 +     &
                ta1*uu**5 + ta0*uu**6
-    ELSEIF ( uu .GE. 15.0  .AND. uu .LT. 60.0) THEN
+    elseif ( uu .GE. 15.0  .AND. uu .LT. 60.0) then
        znott = tb6 + tb5*uu + tb4*uu**2 + tb3*uu**3 + tb2*uu**4 +      & 
                tb1*uu**5 + tb0*uu**6
-    ELSE
+    else
        znott = tt6 + tt5*uu + tt4*uu**2  + tt3*uu**3 + tt2*uu**4 +    &
                tt1*uu**5 + tt0*uu**6
-    END IF
+    end if
 
-  END SUBROUTINE znot_t_v2
+  end subroutine znot_t_v2
 
-  SUBROUTINE znot_m_v6(uref,znotm)
-  IMPLICIT NONE
+  subroutine znot_m_v6(uref,znotm)
+  implicit none
 ! Calculate areodynamical roughness over water with input 10-m wind
 ! For low-to-moderate winds, try to match the Cd-U10 relationship from COARE V3.5 (Edson et al. 2013)
 ! For high winds, try to fit available observational data
@@ -231,12 +231,12 @@ CONTAINS
 ! znotm(meter):   areodynamical roughness scale over water
 !
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znotm
-    REAL             :: p13, p12, p11, p10
-    REAL             :: p25, p24, p23, p22, p21, p20
-    REAL             :: p35, p34, p33, p32, p31, p30
-    REAL             :: p40
+    real, intent(in) :: uref
+    real, intent(out):: znotm
+    real             :: p13, p12, p11, p10
+    real             :: p25, p24, p23, p22, p21, p20
+    real             :: p35, p34, p33, p32, p31, p30
+    real             :: p40
 
     p13 = -1.296521881682694e-02
     p12 =  2.855780863283819e-01
@@ -271,10 +271,10 @@ CONTAINS
       print*, 'Wrong input uref value:',uref
     endif
 
-  END SUBROUTINE znot_m_v6
+  end subroutine znot_m_v6
 
-  SUBROUTINE znot_t_v6(uref,znott)
-  IMPLICIT NONE
+  subroutine znot_t_v6(uref,znott)
+  implicit none
 ! Calculate scalar roughness over water with input 10-m wind
 ! For low-to-moderate winds, try to match the Ck-U10 relationship from COARE algorithm
 ! For high winds, try to retain the Ck-U10 relationship of FY2015 HWRF
@@ -285,16 +285,16 @@ CONTAINS
 ! znott(meter):   scalar roughness scale over water
 !
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znott
+    real, intent(in) :: uref
+    real, intent(out):: znott
 
-    REAL             :: p00
-    REAL             :: p15, p14, p13, p12, p11, p10
-    REAL             :: p25, p24, p23, p22, p21, p20
-    REAL             :: p35, p34, p33, p32, p31, p30
-    REAL             :: p45, p44, p43, p42, p41, p40
-    REAL             :: p56, p55, p54, p53, p52, p51, p50
-    REAL             :: p60
+    real             :: p00
+    real             :: p15, p14, p13, p12, p11, p10
+    real             :: p25, p24, p23, p22, p21, p20
+    real             :: p35, p34, p33, p32, p31, p30
+    real             :: p45, p44, p43, p42, p41, p40
+    real             :: p56, p55, p54, p53, p52, p51, p50
+    real             :: p60
 
     p00 =  1.100000000000000e-04
 
@@ -354,10 +354,10 @@ CONTAINS
       print*, 'Wrong input uref value:',uref
     endif
 
-  END SUBROUTINE znot_t_v6
+  end subroutine znot_t_v6
 
-  SUBROUTINE znot_m_v7(uref,znotm)
-  IMPLICIT NONE
+  subroutine znot_m_v7(uref,znotm)
+  implicit none
 ! Calculate areodynamical roughness over water with input 10-m wind
 ! For low-to-moderate winds, try to match the Cd-U10 relationship from COARE V3.5 (Edson et al. 2013)
 ! For high winds, try to fit available observational data
@@ -369,12 +369,12 @@ CONTAINS
 ! znotm(meter):   areodynamical roughness scale over water
 !
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znotm
-    REAL             :: p13, p12, p11, p10
-    REAL             :: p25, p24, p23, p22, p21, p20
-    REAL             :: p35, p34, p33, p32, p31, p30
-    REAL             :: p40
+    real, intent(in) :: uref
+    real, intent(out):: znotm
+    real             :: p13, p12, p11, p10
+    real             :: p25, p24, p23, p22, p21, p20
+    real             :: p35, p34, p33, p32, p31, p30
+    real             :: p40
 
     p13 = -1.296521881682694e-02
     p12 =  2.855780863283819e-01
@@ -409,10 +409,10 @@ CONTAINS
       print*, 'Wrong input uref value:',uref
     endif
 
-  END SUBROUTINE znot_m_v7
+  end subroutine znot_m_v7
 
-  SUBROUTINE znot_t_v7(uref,znott)
-  IMPLICIT NONE
+  subroutine znot_t_v7(uref,znott)
+  implicit none
 ! Calculate scalar roughness over water with input 10-m wind
 ! For low-to-moderate winds, try to match the Ck-U10 relationship from COARE algorithm
 ! For high winds, try to retain the Ck-U10 relationship of FY2015 HWRF
@@ -424,16 +424,16 @@ CONTAINS
 ! znott(meter):   scalar roughness scale over water
 !
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znott
+    real, intent(in) :: uref
+    real, intent(out):: znott
 
-    REAL             :: p00
-    REAL             :: p15, p14, p13, p12, p11, p10
-    REAL             :: p25, p24, p23, p22, p21, p20
-    REAL             :: p35, p34, p33, p32, p31, p30
-    REAL             :: p45, p44, p43, p42, p41, p40
-    REAL             :: p56, p55, p54, p53, p52, p51, p50
-    REAL             :: p60
+    real             :: p00
+    real             :: p15, p14, p13, p12, p11, p10
+    real             :: p25, p24, p23, p22, p21, p20
+    real             :: p35, p34, p33, p32, p31, p30
+    real             :: p45, p44, p43, p42, p41, p40
+    real             :: p56, p55, p54, p53, p52, p51, p50
+    real             :: p60
 
     p00 =  1.100000000000000e-04
 
@@ -493,10 +493,10 @@ CONTAINS
       print*, 'Wrong input uref value:',uref
     endif
 
-  END SUBROUTINE znot_t_v7
+  end subroutine znot_t_v7
 
-  SUBROUTINE znot_m_v8(uref,znotm)
-  IMPLICIT NONE
+  subroutine znot_m_v8(uref,znotm)
+  implicit none
 ! Calculate areodynamical roughness over water with input 10-m wind
 ! For low-to-moderate winds, try to match the Cd-U10 relationship from COARE V3.5 (Edson et al. 2013)
 ! For high winds, try to fit available observational data
@@ -509,12 +509,12 @@ CONTAINS
 ! znotm(meter):   areodynamical roughness scale over water
 !
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znotm
-    REAL             :: p13, p12, p11, p10
-    REAL             :: p25, p24, p23, p22, p21, p20
-    REAL             :: p35, p34, p33, p32, p31, p30
-    REAL             :: p40
+    real, intent(in) :: uref
+    real, intent(out):: znotm
+    real             :: p13, p12, p11, p10
+    real             :: p25, p24, p23, p22, p21, p20
+    real             :: p35, p34, p33, p32, p31, p30
+    real             :: p40
 
     p13 = -1.296521881682694e-02
     p12 =  2.855780863283819e-01
@@ -549,10 +549,10 @@ CONTAINS
       print*, 'Wrong input uref value:',uref
     endif
 
-  END SUBROUTINE znot_m_v8
+  end subroutine znot_m_v8
 
-  SUBROUTINE znot_t_v8(uref,znott)
-  IMPLICIT NONE
+  subroutine znot_t_v8(uref,znott)
+  implicit none
 ! Calculate scalar roughness over water with input 10-m wind
 ! For low-to-moderate winds, try to match the Ck-U10 relationship from COARE algorithm
 ! For high winds, try to retain the Ck-U10 relationship of FY2015 HWRF
@@ -565,16 +565,16 @@ CONTAINS
 ! znott(meter):   scalar roughness scale over water
 !
 
-    REAL, INTENT(IN) :: uref
-    REAL, INTENT(OUT):: znott
+    real, intent(in) :: uref
+    real, intent(out):: znott
 
-    REAL             :: p00
-    REAL             :: p15, p14, p13, p12, p11, p10
-    REAL             :: p25, p24, p23, p22, p21, p20
-    REAL             :: p35, p34, p33, p32, p31, p30
-    REAL             :: p45, p44, p43, p42, p41, p40
-    REAL             :: p56, p55, p54, p53, p52, p51, p50
-    REAL             :: p60
+    real             :: p00
+    real             :: p15, p14, p13, p12, p11, p10
+    real             :: p25, p24, p23, p22, p21, p20
+    real             :: p35, p34, p33, p32, p31, p30
+    real             :: p45, p44, p43, p42, p41, p40
+    real             :: p56, p55, p54, p53, p52, p51, p50
+    real             :: p60
 
     p00 =  1.100000000000000e-04
 
@@ -634,19 +634,19 @@ CONTAINS
       print*, 'Wrong input uref value:',uref
     endif
 
-  END SUBROUTINE znot_t_v8
+  end subroutine znot_t_v8
 
-   SUBROUTINE znot_wind10m(w10m,znott,znotm,icoef_sf)
-   IMPLICIT NONE
+   subroutine znot_wind10m(w10m,znott,znotm,icoef_sf)
+   implicit none
 
 ! w10m(m/s)   :   10-m wind speed
 ! znott(meter):   Roughness scale for temperature/moisture, zt
 ! znotm(meter):   Roughness scale for momentum, z0
 ! Author      :  Weiguo Wang on 02/24/2016
 !            convert from icoef=0,1,2 to have 10m level cd, ch match obs
-     REAL, INTENT(IN) :: w10m
-     INTEGER, INTENT(IN) :: icoef_sf
-     REAL, INTENT(OUT):: znott, znotm
+     real, intent(in) :: w10m
+     integer, intent(in) :: icoef_sf
+     real, intent(out):: znott, znotm
 
      real :: zm,zt,windmks, zlev,z10, tmp, zlevt, aaa, zm1,zt1
         zlev=20.0
@@ -721,7 +721,7 @@ CONTAINS
               call  znot_m_v8(windmks,zm1)
               call  znot_t_v8(windmks,zt1)
            else
-             CALL wrf_error_fatal('icoef_sf must be one of 0,1,2,3,4,5,6,7,8')
+             call wrf_error_fatal('icoef_sf must be one of 0,1,2,3,4,5,6,7,8')
 
           endif
           znott=zt1
@@ -729,5 +729,5 @@ CONTAINS
 
   end subroutine znot_wind10m
 
-END MODULE module_sf_exchcoef
+end module module_sf_exchcoef
 

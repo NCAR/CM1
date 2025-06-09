@@ -7,7 +7,7 @@
     integer :: kmaxib
 
 
-  CONTAINS
+  contains
 
 !-----------------------------------------------------------------------
 
@@ -72,7 +72,7 @@
 
     !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
 
-      IF( ib_init.eq.1 )THEN
+      if( ib_init.eq.1 )then
 
         !  standard nh mountain wave case:
 
@@ -86,11 +86,11 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
     !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
 
-      IF( ib_init.eq.2 )THEN
+      if( ib_init.eq.2 )then
 
         !  2D block for tests of advection scheme:
 
@@ -110,11 +110,11 @@
           enddo
         endif
 
-      ENDIF
+      endif
 
     !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
 
-      IF( ib_init.eq.3 )THEN
+      if( ib_init.eq.3 )then
 
         ! multiple cubes
 
@@ -131,15 +131,15 @@
         enddo
       enddo
 
-      ENDIF
+      endif
 
     !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
 
-    IF( ib_init.eq.4 )THEN
+    if( ib_init.eq.4 )then
 
       ! Martinuzzi and Tropea (1993, JFE) wind tunnel channel case:
 
-    IF( ny.eq.1 )THEN
+    if( ny.eq.1 )then
       do j=jb,je
       do i=ib,ie
         if( abs(xh(i)-(minx+0.50*(maxx-minx)) ).le.(0.25*maxz) )then
@@ -147,9 +147,9 @@
         endif
       enddo
       enddo
-    ELSEIF( nx.eq.1 )THEN
+    elseif( nx.eq.1 )then
       stop 12321
-    ELSE
+    else
       do j=jb,je
       do i=ib,ie
         if( abs(xh(i)-(minx+0.50*(maxx-minx)) ).le.(0.25*maxz) .and.  &
@@ -158,13 +158,13 @@
         endif
       enddo
       enddo
-    ENDIF
+    endif
 
-    ENDIF
+    endif
 
     !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
 
-    IF( ib_init.eq.5 )THEN
+    if( ib_init.eq.5 )then
 
       ! cube in center of domain:
 
@@ -174,7 +174,7 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
     !c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c-c
 
@@ -231,7 +231,7 @@
       if(dowr) write(outfile,*) '    kmaxib    = ',kmaxib
       if(dowr) write(outfile,*)
 
-      IF( kmaxib .gt. (nk-3) )THEN
+      if( kmaxib .gt. (nk-3) )then
         if(myid.eq.0)then
         print *
         print *,'  nk     = ',nk
@@ -244,7 +244,7 @@
         call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
         call stopcm1
-      ENDIF
+      endif
 
       deallocate( zsfoo )
 
@@ -359,7 +359,7 @@
 !!!    stop 4444
 
     doib:  &
-    IF( do_ib )THEN
+    if( do_ib )then
 
 !!!      if( myid.eq.0 ) print *,'  top_cd,side_cd = ',top_cd,side_cd
 
@@ -504,7 +504,7 @@
       enddo
       enddo
 
-    ENDIF  doib
+    endif  doib
 
 !!!  ENDIF
 
@@ -715,7 +715,7 @@
     integer :: i,j,k
     logical :: doit
 
-    DO k=1,kmaxib
+    do k=1,kmaxib
       do j=jb,je
       do i=ib,ie-1
         if( bndy(i,j,k) .and. ( .not. bndy(i+1,j,k) ) )then
@@ -726,8 +726,8 @@
         endif
       enddo
       enddo
-    ENDDO
-    DO k=1,kmaxib
+    enddo
+    do k=1,kmaxib
       do j=jb,je
       do i=ib+1,ie
         if( bndy(i,j,k) .and. ( .not. bndy(i-1,j,k) ) )then
@@ -738,8 +738,8 @@
         endif
       enddo
       enddo
-    ENDDO
-    DO k=1,kmaxib
+    enddo
+    do k=1,kmaxib
       do j=jb,je-1
       do i=ib,ie
         if( bndy(i,j,k) .and. ( .not. bndy(i,j+1,k) ) )then
@@ -750,8 +750,8 @@
         endif
       enddo
       enddo
-    ENDDO
-    DO k=1,kmaxib
+    enddo
+    do k=1,kmaxib
       do j=jb+1,je
       do i=ib,ie
         if( bndy(i,j,k) .and. ( .not. bndy(i,j-1,k) ) )then
@@ -762,7 +762,7 @@
         endif
       enddo
       enddo
-    ENDDO
+    enddo
 
       end subroutine ib_flx_init
 
@@ -795,9 +795,9 @@
     doit = .true.
 !!!    if( doit )then
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
-    DO k=1,(kmaxib-1)
+    do k=1,(kmaxib-1)
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -872,12 +872,12 @@
         !---------------------------------------
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
 
     if( doit )then
-    DO k=1,(kmaxib-1)
+    do k=1,(kmaxib-1)
       do j=1,nj+1
       !dir$ vector always
       do i=0,ni+1
@@ -948,13 +948,13 @@
         !---------------------------------------
       enddo
       enddo
-    ENDDO
+    enddo
     endif
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
 
     if( doit )then
-    DO k=1,(kmaxib-1)
+    do k=1,(kmaxib-1)
       do j=0,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -1025,13 +1025,13 @@
         !---------------------------------------
       enddo
       enddo
-    ENDDO
+    enddo
     endif
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
   if( doit )then
-    DO k=1,(kmaxib-1)
+    do k=1,(kmaxib-1)
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -1138,10 +1138,10 @@
         !---------------------------------------
       enddo
       enddo
-    ENDDO
+    enddo
   endif
 
-  ENDIF
+  endif
 
 !!!    endif
 
@@ -1177,9 +1177,9 @@
     doit = .true.
 !!!    if( doit )then
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
-    DO k=1,(kmaxib-1)
+    do k=1,(kmaxib-1)
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -1254,12 +1254,12 @@
         !---------------------------------------
       enddo
       enddo
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
 
     if( doit )then
-    DO k=1,(kmaxib-1)
+    do k=1,(kmaxib-1)
       do j=1,nj+1
       !dir$ vector always
       do i=0,ni+1
@@ -1330,13 +1330,13 @@
         !---------------------------------------
       enddo
       enddo
-    ENDDO
+    enddo
     endif
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
 
     if( doit )then
-    DO k=1,(kmaxib-1)
+    do k=1,(kmaxib-1)
       do j=0,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -1407,13 +1407,13 @@
         !---------------------------------------
       enddo
       enddo
-    ENDDO
+    enddo
     endif
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
   if( doit )then
-    DO k=1,(kmaxib-1)
+    do k=1,(kmaxib-1)
       do j=1,nj+1
       !dir$ vector always
       do i=1,ni+1
@@ -1520,10 +1520,10 @@
         !---------------------------------------
       enddo
       enddo
-    ENDDO
+    enddo
   endif
 
-  ENDIF
+  endif
 
 !!!    endif
 
@@ -1551,7 +1551,7 @@
     integer :: i,j,k,i1,i2,j1,j2,kval
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
     do j=1,nj
     !dir$ vector always
@@ -1578,7 +1578,7 @@
     enddo
     enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1623,7 +1623,7 @@
     enddo
     enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -1668,7 +1668,7 @@
     enddo
     enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
     do j=1,nj
     !dir$ vector always
@@ -1697,7 +1697,7 @@
     enddo
     enddo
 
-  ENDIF
+  endif
 
     end subroutine ib_lwr_flx
 
@@ -1724,7 +1724,7 @@
     integer :: i,j,k,i1,i2,j1,j2,kval
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
     do j=1,nj
     !dir$ vector always
@@ -1751,7 +1751,7 @@
     enddo
     enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -1796,7 +1796,7 @@
     enddo
     enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -1841,7 +1841,7 @@
     enddo
     enddo
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
     do j=1,nj
     !dir$ vector always
@@ -1870,7 +1870,7 @@
     enddo
     enddo
 
-  ENDIF
+  endif
 
     end subroutine ib_lwr_weno
 

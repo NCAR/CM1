@@ -1,4 +1,4 @@
-  MODULE interp_routines
+  module interp_routines
 
   implicit none
 
@@ -17,7 +17,7 @@
     !-----------------------------------------------------!
 
 
-  CONTAINS
+  contains
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -47,14 +47,14 @@
 !ccccccccccccccccccccccccccccccccccc
 !  s-staggered variable:
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
   pdefs:  &
   if( pdefweno.eq.1 )then
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k,s1,s2,s3,s4,s5,bmax,doit)
-    DO j=1,nj
+    do j=1,nj
       do k=3,nk-1
       !dir$ vector always
       do i=1,ni
@@ -74,13 +74,13 @@
         doit = .false.
         bmax = max(abs(s1),abs(s2),abs(s3),abs(s4),abs(s5))
         if( bmax.gt.bmin ) doit = .true.
-        IF( k.eq.3 .and. rrw(i,j,k).gt.0.0 ) doit = .false.
-        IF( k.eq.(nk-1) .and. rrw(i,j,k).lt.0.0 ) doit = .false.
-        IF(doit)THEN
+        if( k.eq.3 .and. rrw(i,j,k).gt.0.0 ) doit = .false.
+        if( k.eq.(nk-1) .and. rrw(i,j,k).lt.0.0 ) doit = .false.
+        if(doit)then
           dumz(i,j,k) = weno5(s1,s2,s3,s4,s5,weps)
-        ELSE
+        else
           dumz(i,j,k) = 0.0
-        ENDIF
+        endif
       enddo
       enddo
 
@@ -126,14 +126,14 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
   !--------------------------------------!
   else  pdefs
 
     !$omp parallel do default(shared)   &
     !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
       do k=4,nk-2
       !dir$ vector always
       do i=1,ni
@@ -191,14 +191,14 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
   endif  pdefs
 
 !ccccccccccccccccccccccccccccccccccc
 !  u-staggered variable:
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -215,7 +215,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2
       !dir$ vector always
@@ -281,12 +281,12 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 !ccccccccccccccccccccccccccccccccccc
 !  v-staggered variable:
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -303,7 +303,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=4,nk-2
       !dir$ vector always
@@ -369,16 +369,16 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 !ccccccccccccccccccccccccccccccccccc
 !  w-staggered variable:
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-2
       !dir$ vector always
@@ -440,11 +440,11 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 !ccccccccccccccccccccccccccccccccccc
 
-  ENDIF
+  endif
 
     end subroutine vinterp_weno5
 
@@ -466,11 +466,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: wbar,cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2
       !dir$ vector always
@@ -527,9 +527,9 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -546,7 +546,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2
       !dir$ vector always
@@ -612,10 +612,10 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -632,7 +632,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=4,nk-2
       !dir$ vector always
@@ -698,14 +698,14 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,wbar)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-2
       !dir$ vector always
@@ -767,9 +767,9 @@
         endif
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vinterp_flx5
 
@@ -791,11 +791,11 @@
     integer :: i,j,k,i1,i2,j1,j2
     real :: cc1,cc2
 
-  IF( stag.eq.1 )THEN
+  if( stag.eq.1 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2
       !dir$ vector always
@@ -818,9 +818,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.2 )THEN
+  elseif( stag.eq.2 )then
     ! u-staggered:
 
       if(ibw.eq.1)then
@@ -837,7 +837,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,cc1,cc2)
-    DO j=1,nj
+    do j=1,nj
 
       do k=4,nk-2
       !dir$ vector always
@@ -862,9 +862,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ELSEIF( stag.eq.3 )THEN
+  elseif( stag.eq.3 )then
     ! v-staggered:
 
       if(ibs.eq.1)then
@@ -881,7 +881,7 @@
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,cc1,cc2)
-    DO j=j1,j2
+    do j=j1,j2
 
       do k=4,nk-2
       !dir$ vector always
@@ -906,14 +906,14 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
 
-  ELSEIF( stag.eq.4 )THEN
+  elseif( stag.eq.4 )then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-    DO j=1,nj
+    do j=1,nj
 
       do k=3,nk-2
       !dir$ vector always
@@ -936,9 +936,9 @@
       enddo
       enddo
 
-    ENDDO
+    enddo
 
-  ENDIF
+  endif
 
     end subroutine vinterp_flx6
 
@@ -1084,4 +1084,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------------------------------
 
-  END MODULE interp_routines
+  end module interp_routines

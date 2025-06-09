@@ -1,11 +1,11 @@
-  MODULE radiation_module
+  module radiation_module
 
   implicit none
 
   private
   public :: radiation_driver
 
-  CONTAINS
+  contains
 
       subroutine radiation_driver(mtime,radtim,dt,rbufsz,xh,yh,xf,yf,zf,rmh,c1,c2,     &
                    swten,lwten,swtenc,lwtenc,cldfra,o30,thraten,                       &
@@ -116,7 +116,7 @@
         !-----     Goddard scheme     ----!
 
       rad_opt:  &
-      IF( radopt.eq.1 )THEN
+      if( radopt.eq.1 )then
 
         ! just to be sure:
         call setradwrk(nir,njr,nkr)
@@ -130,7 +130,7 @@
           if(dowr) write(outfile,*) '  Calculating radiation tendency:'
           if(timestats.ge.1) time_rad=time_rad+mytime()
           call bcs(prs)
-          CALL zenangl( ni,nj,      zf(1,1,1),    &
+          call zenangl( ni,nj,      zf(1,1,1),    &
                 rad2d(1,1,ncosz), rad2d(1,1,ncosss), radsw,              &
                 dum1(1,1,1),dum1(1,1,2),dum1(1,1,3),dum1(1,1,4),        &
                 dum2(1,1,1),dum2(1,1,2),dum2(1,1,3),dum2(1,1,4),        &
@@ -191,8 +191,8 @@
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,albedo,albedoz,frac_snowcover,tema)
-  DO j=1,nj
-    DO i=1,ni
+  do j=1,nj
+    do i=1,ni
 
       ! let's just use MM5/WRF value, instead:
       albedo = albd(i,j)
@@ -226,8 +226,8 @@
       rad2d(i,j,nrsuvbm) = albedo
       rad2d(i,j,nrsuvdf) = albedo
 
-    END DO
-  END DO
+    end do
+  end do
           ! big OpenMP parallelization loop:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,ptprt,pprt,qv,qc,qr,qi,qs,qh,cvr,appi,o31,        &
@@ -284,7 +284,7 @@
            rhostr(1) = rho0s(i,j)
             doirrad = .true.
             dosorad = .true.
-          CALL radtrns(nir,njr,nkr, rbufsz, 0,myid,dx,dy,            &
+          call radtrns(nir,njr,nkr, rbufsz, 0,myid,dx,dy,            &
                  ib,ie,jb,je,kb,ke,xh,yh,prs0s(i,j),olr(i,j),dsr(i,j),  &  ! MS add olr,dsr
                  ptprt,pprt,qv,qc,qr,qi,qs,qh,cvr,                      &
                  ptbar,pbar,appi,o31,rhostr, tsk(i,j), zpp ,                                 &
@@ -311,7 +311,7 @@
 
         !-----     RRTMG scheme     ----!
 
-      ELSEIF( radopt.eq.2 )THEN  rad_opt
+      elseif( radopt.eq.2 )then  rad_opt
 
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
@@ -534,7 +534,7 @@
           xlong = ctrlon
           xlat  = ctrlat
 
-     CALL radconst(XTIME,DECLIN,SOLCON,JULIAN,               &
+     call radconst(XTIME,DECLIN,SOLCON,JULIAN,               &
                    DEGRAD,DPD                                )
 
 !!!    print *,'  xtime,declin,solcon = ',xtime,declin,solcon
@@ -546,7 +546,7 @@
                       julian,tfoo,gmt, &
                       declin,degrad,xlong,xlat,coszen,hrang)
 
-        IF( testcase.eq.8 )THEN
+        if( testcase.eq.8 )then
           ! Bretherton et al 2005 (fixed values):
           solcon = 650.83
           coszen = cos(50.5*pi/180.0)
@@ -554,7 +554,7 @@
 !!!          solcon = 551.58
 !!!          coszen = cos(42.05*pi/180.0)
 !!!          albd = 0.07
-        ENDIF
+        endif
 
         if( nstep.le.1 .and. myid.eq.0 )then
           print *,'  solcon = ',solcon
@@ -591,7 +591,7 @@
       !       qi is stored in dum9
       !       qc is stored in dum10
 
-        CALL cal_cldfra1(CLDFRA=CLDFRA,                                             &
+        call cal_cldfra1(CLDFRA=CLDFRA,                                             &
                   QV=qa(ib,jb,kb,nqv),QC=dum10,QI=dum9,QS=dum7,                     &
                    F_QV=F_QV,F_QC=F_QC,F_QI=F_QI,F_QS=F_QS,t_phy=dum3,p_phy=prs,    &
                    mp_physics=mp_physics,cldfra1_flag=cldfra1_flag,                 &
@@ -609,31 +609,31 @@
         if( ipbl.eq.4 .or. ipbl.eq.5 )then
         if( imoist.eq.1 )then
            if( myid.eq.0 ) print *,'  ... icloud_bl in radiation_driver ... '
-           IF ( icloud_bl > 0 ) THEN
-              IF (nstep .NE. 1) THEN
-                 DO k = 1,nk
-                 DO j = 1,nj
-                 DO i = 1,ni
+           if ( icloud_bl > 0 ) then
+              if (nstep .NE. 1) then
+                 do k = 1,nk
+                 do j = 1,nj
+                 do i = 1,ni
                     CLDFRA(i,j,k)=CLDFRA_BL(i,j,k)
-                 ENDDO
-                 ENDDO
-                 ENDDO
-              ENDIF
+                 enddo
+                 enddo
+                 enddo
+              endif
 
-              DO k = 1,nk
-              DO j = 1,nj
-              DO i = 1,ni
-                 IF (dum10(i,j,k) < 1.E-6 .AND. CLDFRA_BL(i,j,k) > 0.001) THEN
+              do k = 1,nk
+              do j = 1,nj
+              do i = 1,ni
+                 if (dum10(i,j,k) < 1.E-6 .AND. CLDFRA_BL(i,j,k) > 0.001) then
                      dum10(i,j,k)=dum10(i,j,k) + QC_BL(i,j,k)*CLDFRA_BL(i,j,k)
-                 ENDIF
-                 IF (dum9(i,j,k) < 1.E-8 .AND. CLDFRA_BL(i,j,k) > 0.001) THEN
+                 endif
+                 if (dum9(i,j,k) < 1.E-8 .AND. CLDFRA_BL(i,j,k) > 0.001) then
                     dum9(i,j,k)=dum9(i,j,k) + QI_BL(i,j,k)*CLDFRA_BL(i,j,k)
-                 ENDIF
-              ENDDO
-              ENDDO
-              ENDDO
+                 endif
+              enddo
+              enddo
+              enddo
 
-           ENDIF
+           endif
         endif
         endif
         endif
@@ -646,7 +646,7 @@
       !       qc is stored in dum10
 
              if(myid.eq.0) print *,'  rrtmg_lwrad '
-             CALL RRTMG_LWRAD(                                      &
+             call RRTMG_LWRAD(                                      &
                   RTHRATENLW=lwten,lwtenc=lwtenc,                   &
                   LWUPT=LWUPT,LWUPTC=LWUPTC,                        &
                   LWDNT=LWDNT,LWDNTC=LWDNTC,                        &
@@ -703,7 +703,7 @@
       !       qc is stored in dum10
 
              if(myid.eq.0) print *,'  rrtmg_swrad '
-             CALL RRTMG_SWRAD(                                         &
+             call RRTMG_SWRAD(                                         &
                      RTHRATENSW=swten,swtenc=swtenc,                   &
                      SWUPT=SWUPT,SWUPTC=SWUPTC,                        &
                      SWDNT=SWDNT,SWDNTC=SWDNTC,                        &
@@ -745,7 +745,7 @@
 
             if( nstep.le.1 .and. myid.eq.0 ) print *,'  co2 = ',co2out
 
-        IF( eqtset.eq.2 )THEN
+        if( eqtset.eq.2 )then
           ! for Bryan-Fritsch equation set:
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k,rcvm)
@@ -763,15 +763,15 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
 
-      ENDIF  rad_opt
+      endif  rad_opt
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
       ! cm1r21.1: added thraten array
 
-      IF( eqtset.eq.1 )THEN
+      if( eqtset.eq.1 )then
         ! traditional equation set (pressure is constant):
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -783,7 +783,7 @@
         enddo
         enddo
         enddo
-      ELSEIF( eqtset.eq.2 )THEN
+      elseif( eqtset.eq.2 )then
         ! Bryan-Fritsch equation set (mass is constant):
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -795,7 +795,7 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !cc   end radiation  ccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -817,17 +817,17 @@
 !BOP
 ! !IROUTINE: radconst - compute radiation terms
 ! !INTERFAC:
-   SUBROUTINE radconst(XTIME,DECLIN,SOLCON,JULIAN,                   &
+   subroutine radconst(XTIME,DECLIN,SOLCON,JULIAN,                   &
                        DEGRAD,DPD                                    )
 !---------------------------------------------------------------------
-   USE module_wrf_error
-   IMPLICIT NONE
+   use module_wrf_error
+   implicit none
 !---------------------------------------------------------------------
 
 ! !ARGUMENTS:
-   REAL, INTENT(IN   )      ::       DEGRAD,DPD,XTIME,JULIAN
-   REAL, INTENT(OUT  )      ::       DECLIN,SOLCON
-   REAL                     ::       OBECL,SINOB,SXLONG,ARG,  &
+   real, intent(in   )      ::       DEGRAD,DPD,XTIME,JULIAN
+   real, intent(out  )      ::       DECLIN,SOLCON
+   real                     ::       OBECL,SINOB,SXLONG,ARG,  &
                                      DECDEG,DJUL,RJUL,ECCFAC
 !
 ! !DESCRIPTION:
@@ -846,8 +846,8 @@
         
 !-----CALCULATE LONGITUDE OF THE SUN FROM VERNAL EQUINOX:
         
-   IF(JULIAN.GE.80.)SXLONG=DPD*(JULIAN-80.)
-   IF(JULIAN.LT.80.)SXLONG=DPD*(JULIAN+285.)
+   if(JULIAN.GE.80.)SXLONG=DPD*(JULIAN-80.)
+   if(JULIAN.LT.80.)SXLONG=DPD*(JULIAN+285.)
    SXLONG=SXLONG*DEGRAD
    ARG=SINOB*SIN(SXLONG)
    DECLIN=ASIN(ARG)
@@ -859,7 +859,7 @@
           COS(2*RJUL)+0.000077*SIN(2*RJUL)
    SOLCON=1370.*ECCFAC
    
-   END SUBROUTINE radconst
+   end subroutine radconst
 
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
@@ -867,7 +867,7 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
 
 
-   SUBROUTINE calc_coszen(ims,ime,jms,jme,its,ite,jts,jte,  &
+   subroutine calc_coszen(ims,ime,jms,jme,its,ite,jts,jte,  &
                           julian,xtime,gmt, &
                           declin,degrad,xlon,xlat,coszen,hrang)
        ! Added Equation of Time correction : jararias, 2013/08/10
@@ -898,7 +898,7 @@
           enddo
        enddo
 
-   END SUBROUTINE calc_coszen
+   end subroutine calc_coszen
 
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
@@ -915,33 +915,33 @@
 !!     (see Hong et al., 1998)
 !!     (modified by Ferrier, Feb '02)
 !
-   SUBROUTINE cal_cldfra1(CLDFRA, QV, QC, QI, QS,                    &
+   subroutine cal_cldfra1(CLDFRA, QV, QC, QI, QS,                    &
                          F_QV, F_QC, F_QI, F_QS, t_phy, p_phy,       &
                          F_ICE_PHY,F_RAIN_PHY,                       &
                          mp_physics, cldfra1_flag,                   &
           ids,ide, jds,jde, kds,kde,                                 &
           ims,ime, jms,jme, kms,kme,                                 &
           its,ite, jts,jte, kts,kte                                  )
-     USE module_state_description, ONLY : KFCUPSCHEME, KFETASCHEME       !wig, CuP 4-Fb-2008 !BSINGH - For WRFCuP scheme
+     use module_state_description, ONLY : KFCUPSCHEME, KFETASCHEME       !wig, CuP 4-Fb-2008 !BSINGH - For WRFCuP scheme
 
 #if (HWRF == 1)
-   USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT, ETAMP_HWRF 
+   use module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT, ETAMP_HWRF 
 #else
-   USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT
+   use module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT
 #endif
 !---------------------------------------------------------------------
-   IMPLICIT NONE
+   implicit none
 !---------------------------------------------------------------------
-   INTEGER,  INTENT(IN   )   ::           ids,ide, jds,jde, kds,kde, &
+   integer,  intent(in   )   ::           ids,ide, jds,jde, kds,kde, &
                                           ims,ime, jms,jme, kms,kme, &
                                           its,ite, jts,jte, kts,kte
 
 !
-   INTEGER, DIMENSION( ims:ime, jms:jme , kms:kme ), INTENT(OUT  ) :: cldfra1_flag
-   REAL, DIMENSION( ims:ime, jms:jme , kms:kme ), INTENT(OUT  ) ::    &
+   integer, dimension( ims:ime, jms:jme , kms:kme ), intent(out  ) :: cldfra1_flag
+   real, dimension( ims:ime, jms:jme , kms:kme ), intent(out  ) ::    &
                                                              CLDFRA
 
-   REAL, DIMENSION( ims:ime, jms:jme , kms:kme ), INTENT(IN   ) ::    &
+   real, dimension( ims:ime, jms:jme , kms:kme ), intent(in   ) ::    &
                                                                  QV, &
                                                                  QI, &
                                                                  QC, &
@@ -952,29 +952,29 @@
 !                                                          F_ICE_PHY, &
 !                                                         F_RAIN_PHY
 
-   REAL, DIMENSION( ims:ime, jms:jme , kms:kme ),                     &
-         OPTIONAL,                                                   &
-         INTENT(IN   ) ::                                            &
+   real, dimension( ims:ime, jms:jme , kms:kme ),                     &
+         optional,                                                   &
+         intent(in   ) ::                                            &
                                                           F_ICE_PHY, &
                                                          F_RAIN_PHY
-   LOGICAL,OPTIONAL,INTENT(IN) :: F_QC,F_QI,F_QV,F_QS
-   INTEGER :: mp_physics
+   logical,optional,intent(in) :: F_QC,F_QI,F_QV,F_QS
+   integer :: mp_physics
 
 !  REAL thresh
-   INTEGER:: i,j,k
-   REAL    :: RHUM, tc, esw, esi, weight, qvsw, qvsi, qvs_weight, QIMID, QWMID, QCLD, DENOM, ARG, SUBSAT
+   integer:: i,j,k
+   real    :: RHUM, tc, esw, esi, weight, qvsw, qvsi, qvs_weight, QIMID, QWMID, QCLD, DENOM, ARG, SUBSAT
 
-   REAL    ,PARAMETER :: ALPHA0=100., GAMMA=0.49, QCLDMIN=1.E-12,    &
+   real    ,parameter :: ALPHA0=100., GAMMA=0.49, QCLDMIN=1.E-12,    &
                                         PEXP=0.25, RHGRID=1.0
-   REAL    , PARAMETER ::  SVP1=0.6112
-   REAL    , PARAMETER ::  SVP2=17.67
-   REAL    , PARAMETER ::  SVPI2=21.8745584
-   REAL    , PARAMETER ::  SVP3=29.65
-   REAL    , PARAMETER ::  SVPI3=7.66
-   REAL    , PARAMETER ::  SVPT0=273.15
-   REAL    , PARAMETER ::  r_d = 287.04
-   REAL    , PARAMETER ::  r_v = 461.5
-   REAL    , PARAMETER ::  ep_2=r_d/r_v
+   real    , parameter ::  SVP1=0.6112
+   real    , parameter ::  SVP2=17.67
+   real    , parameter ::  SVPI2=21.8745584
+   real    , parameter ::  SVP3=29.65
+   real    , parameter ::  SVPI3=7.66
+   real    , parameter ::  SVPT0=273.15
+   real    , parameter ::  r_d = 287.04
+   real    , parameter ::  r_v = 461.5
+   real    , parameter ::  ep_2=r_d/r_v
 ! !DESCRIPTION:
 ! Compute cloud fraction from input ice and cloud water fields
 ! if provided.
@@ -1018,51 +1018,51 @@
 
   !$omp parallel do default(shared)  &
   !$omp private(i,j,k,tc,esw,esi,qvsw,qvsi,qcld,weight,qimid,qwmid,qvs_weight,rhum,subsat,denom,arg)
-    DO k = kts,kte
-    DO j = jts,jte
-    DO i = its,ite
+    do k = kts,kte
+    do j = jts,jte
+    do i = its,ite
       tc         = t_phy(i,j,k) - SVPT0
       esw     = 1000.0 * SVP1 * EXP( SVP2  * tc / ( t_phy(i,j,k) - SVP3  ) )
       esi     = 1000.0 * SVP1 * EXP( SVPI2 * tc / ( t_phy(i,j,k) - SVPI3 ) )
       QVSW = EP_2 * esw / ( p_phy(i,j,k) - esw )
       QVSI = EP_2 * esi / ( p_phy(i,j,k) - esi )
 
-      ifouter: IF ( PRESENT(F_QI) .and. PRESENT(F_QC) .and. PRESENT(F_QS) ) THEN
+      ifouter: if ( PRESENT(F_QI) .and. PRESENT(F_QC) .and. PRESENT(F_QS) ) then
 
 ! mji - For MP options 2, 4, 6, 7, 8, etc. (qc = liquid, qi = ice, qs = snow)
-         IF ( F_QI .and. F_QC .and. F_QS) THEN
+         if ( F_QI .and. F_QC .and. F_QS) then
             QCLD = QI(i,j,k)+QC(i,j,k)+QS(i,j,k)
-            IF (QCLD .LT. QCLDMIN) THEN
+            if (QCLD .LT. QCLDMIN) then
                weight = 0.
-            ELSE
+            else
                weight = (QI(i,j,k)+QS(i,j,k)) / QCLD
-            ENDIF
-         ENDIF
+            endif
+         endif
 
 ! for P3, mp option 50 or 51
-         IF ( F_QI .and. F_QC .and. .not. F_QS) THEN
+         if ( F_QI .and. F_QC .and. .not. F_QS) then
             QCLD = QI(i,j,k)+QC(i,j,k)
-            IF (QCLD .LT. QCLDMIN) THEN
+            if (QCLD .LT. QCLDMIN) then
                weight = 0.
-            ELSE
+            else
                weight = (QI(i,j,k)) / QCLD
-            ENDIF
-         ENDIF
+            endif
+         endif
 
 ! mji - For MP options 1 and 3, (qc only)
 !  For MP=1, qc = liquid, for MP=3, qc = liquid or ice depending on temperature
-         IF ( F_QC .and. .not. F_QI .and. .not. F_QS ) THEN
+         if ( F_QC .and. .not. F_QI .and. .not. F_QS ) then
             QCLD = QC(i,j,k)
-            IF (QCLD .LT. QCLDMIN) THEN
+            if (QCLD .LT. QCLDMIN) then
                weight = 0.
-            ELSE
+            else
                if (t_phy(i,j,k) .gt. 273.15) weight = 0.
                if (t_phy(i,j,k) .le. 273.15) weight = 1.
-            ENDIF
-         ENDIF
+            endif
+         endif
 
 ! mji - For MP option 5; (qc = liquid, qs = ice)
-         IF ( F_QC .and. .not. F_QI .and. F_QS .and. PRESENT(F_ICE_PHY) ) THEN
+         if ( F_QC .and. .not. F_QI .and. F_QS .and. PRESENT(F_ICE_PHY) ) then
 
 ! Mixing ratios of cloud water & total ice (cloud ice + snow).
 ! Mixing ratios of rain are not considered in this scheme.
@@ -1079,37 +1079,37 @@
 !    only cloud water + cloud ice + snow
 !
            QCLD=QWMID+QIMID
-           IF (QCLD .LT. QCLDMIN) THEN
+           if (QCLD .LT. QCLDMIN) then
               weight = 0.
-           ELSE
+           else
               weight = F_ICE_PHY(i,j,k)
-           ENDIF
-         ENDIF
+           endif
+         endif
 !BSF - For HWRF MP option; (qc = liquid, qi = cloud ice+snow)
 !         IF ( F_QC .and. F_QI .and. .not. F_QS ) THEN
 #if (HWRF == 1)
-         IF ( mp_physics .eq. FER_MP_HIRES .or. &
+         if ( mp_physics .eq. FER_MP_HIRES .or. &
 	      mp_physics .eq. FER_MP_HIRES_ADVECT .or. &
-	      mp_physics .eq. ETAMP_HWRF) THEN
+	      mp_physics .eq. ETAMP_HWRF) then
 #else
-         IF ( mp_physics .eq. FER_MP_HIRES .or. &
-              mp_physics==fer_mp_hires_advect) THEN
+         if ( mp_physics .eq. FER_MP_HIRES .or. &
+              mp_physics==fer_mp_hires_advect) then
 #endif
            QIMID = QI(i,j,k)     !- total ice (cloud ice + snow)
            QWMID = QC(i,j,k)     !- cloud water
            QCLD=QWMID+QIMID      !- cloud water + total ice
-           IF (QCLD .LT. QCLDMIN) THEN
+           if (QCLD .LT. QCLDMIN) then
               weight = 0.
-           ELSE
+           else
               weight = QIMID/QCLD
               if (tc<-40.) weight=1.
-           ENDIF
-         ENDIF
+           endif
+         endif
 
-      ELSE
+      else
          CLDFRA(i,j,k)=0.
 
-      ENDIF ifouter !  IF ( F_QI .and. F_QC .and. F_QS)
+      endif ifouter !  if ( F_QI .and. F_QC .and. F_QS)
 
 
       QVS_WEIGHT = (1-weight)*QVSW + weight*QVSI
@@ -1118,20 +1118,20 @@
 !--- Determine cloud fraction (modified from original algorithm)
 !
       cldfra1_flag(i,j,k) = 0
-      IF (QCLD .LT. QCLDMIN) THEN
+      if (QCLD .LT. QCLDMIN) then
 !
 !--- Assume zero cloud fraction if there is no cloud mixing ratio
 !
         CLDFRA(i,j,k)=0.
         cldfra1_flag(i,j,k) = 1
-      ELSEIF(RHUM.GE.RHGRID)THEN
+      elseif(RHUM.GE.RHGRID)then
 !
 !--- Assume cloud fraction of unity if near saturation and the cloud
 !    mixing ratio is at or above the minimum threshold
 !
         CLDFRA(i,j,k)=1.
         cldfra1_flag(i,j,k) = 2
-      ELSE
+      else
          cldfra1_flag(i,j,k) = 3
 !
 !--- Adaptation of original algorithm (Randall, 1994; Zhao, 1995)
@@ -1146,14 +1146,14 @@
 !!              ARG=-1000*QCLD/(RHUM-RHGRID)
 !!              ARG=MAX(ARG, ARGMIN)
 !!              CLDFRA(i,j,k)=(RHUM/RHGRID)*(1.-EXP(ARG))
-        IF (CLDFRA(i,j,k) .LT. .01) CLDFRA(i,j,k)=0.
+        if (CLDFRA(i,j,k) .LT. .01) CLDFRA(i,j,k)=0.
            
-     ENDIF          !--- End IF (QCLD .LT. QCLDMIN) ...     
-    ENDDO          !--- End DO i
-    ENDDO          !--- End DO k
-    ENDDO          !--- End DO j
+     endif          !--- end if (QCLD .LT. QCLDMIN) ...     
+    enddo          !--- end do i
+    enddo          !--- end do k
+    enddo          !--- end do j
 
-   END SUBROUTINE cal_cldfra1
+   end subroutine cal_cldfra1
 
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
@@ -1161,4 +1161,4 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc!
 
 
-  END MODULE radiation_module
+  end module radiation_module

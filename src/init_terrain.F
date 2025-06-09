@@ -1,8 +1,8 @@
-  MODULE init_terrain_module
+  module init_terrain_module
 
   implicit none
 
-  CONTAINS
+  contains
 
       subroutine init_terrain(xh,uh,xf,uf,yh,vh,yf,vf,rds,sigma,rdsf,sigmaf,  &
                               zh,zf,zs,gz,rgz,gzu,rgzu,gzv,rgzv,         &
@@ -64,7 +64,7 @@
 !  itern = 1
 !  bell-shaped  (eg, Durran and Klemp, 1983, MWR, pg 2341)
 
-        IF(itern.eq.1)THEN
+        if(itern.eq.1)then
 
           hh =      400.0              ! max. height (m)
           aa =     1000.0              ! half width (m)
@@ -80,7 +80,7 @@
 !  itern = 2
 !  Schaer case  (eg, Klemp et al, 2003, MWR, pg 1229)
 
-        ELSEIF(itern.eq.2)THEN
+        elseif(itern.eq.2)then
 
           do j=jb,je
           do i=ib,ie
@@ -93,7 +93,7 @@
 !  itern = 3
 !  Doernbrack et al, 2005, ASL, pg 118
 
-        ELSEIF(itern.eq.3)THEN
+        elseif(itern.eq.3)then
 
           hh =      500.0     ! max. height (m)
           aa =    20000.0     ! half width (m)
@@ -111,14 +111,14 @@
 !  itern = 4
 !  read from GrADS file "perts.dat"
 
-        ELSEIF(itern.eq.4)THEN
+        elseif(itern.eq.4)then
 
           ! 170313:  zs_all array stores terrain for the entire domain
           allocate( zs_all(nx,ny) )
 
           ! only processor 0 reads file:
 
-          IF( myid.eq.0 )THEN
+          if( myid.eq.0 )then
 
             open(unit=73,file='perts.dat',status='old',   &
                  form='unformatted',access='direct',recl=4*nx*ny)
@@ -127,7 +127,7 @@
 
             close(unit=73)
 
-          ENDIF
+          endif
 
 #ifdef MPI
           ! communicate data to all processors:
@@ -140,9 +140,9 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               zs(i,j) = zs_all(ii,jj)
-            ENDIF
+            endif
           enddo
           enddo
 
@@ -151,7 +151,7 @@
 
 !----------------------------------------------------------
 
-        ENDIF
+        endif
 
 !--------------------------------------------------------------
 !  DO NOT CHANGE ANYTHING BELOW HERE !
@@ -302,4 +302,4 @@
       end subroutine init_terrain
 
 
-  END MODULE init_terrain_module
+  end module init_terrain_module

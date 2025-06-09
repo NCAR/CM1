@@ -1,11 +1,11 @@
 !WRF:MODEL_LAYER:PHYSICS
 !
-MODULE module_sf_oml
+module module_sf_oml
 
-CONTAINS
+contains
 
 !----------------------------------------------------------------
-   SUBROUTINE OCEANML(tml,t0ml,hml,h0ml,huml,hvml,ust,u_phy,v_phy, &
+   subroutine OCEANML(tml,t0ml,hml,h0ml,huml,hvml,ust,u_phy,v_phy, &
                       tmoml,f,g,oml_gamma,                         &
                       OML_RELAXATION_TIME,                         &
                       XLAND,HFX,LH,TSK,GSW,GLW,EMISS,              &
@@ -15,7 +15,7 @@ CONTAINS
                       its,ite, jts,jte, kts,kte                    )
 
 !----------------------------------------------------------------
-   IMPLICIT NONE
+   implicit none
 !----------------------------------------------------------------
 !
 !  SUBROUTINE OCEANML CALCULATES THE SEA SURFACE TEMPERATURE (TSK)
@@ -44,46 +44,46 @@ CONTAINS
 !-- DT          time step (second)
 !-- G           acceleration due to gravity
 
-   INTEGER,  INTENT(IN   )   ::     ids,ide, jds,jde, kds,kde,  &
+   integer,  intent(in   )   ::     ids,ide, jds,jde, kds,kde,  &
                                     ims,ime, jms,jme, kms,kme,  &
                                     its,ite, jts,jte, kts,kte
 
-   REAL,     INTENT(IN   )   ::     DELTSM, STBOLT
-   REAL,    INTENT(IN) ::  OML_RELAXATION_TIME
+   real,     intent(in   )   ::     DELTSM, STBOLT
+   real,    intent(in) ::  OML_RELAXATION_TIME
 
-   REAL,    DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(IN   )    ::                          EMISS, &
+   real,    dimension( ims:ime, jms:jme )                     , &
+            intent(in   )    ::                          EMISS, &
                                                          XLAND, &
                                                            GSW, &
                                                            GLW, &
                                                            HFX, &
                                                             LH
 
-   REAL,    DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(INOUT)    ::                            TSK
+   real,    dimension( ims:ime, jms:jme )                     , &
+            intent(inout)    ::                            TSK
 
-   REAL,    DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) ::     &
+   real,    dimension( ims:ime, jms:jme ), intent(inout) ::     &
                                     TML,T0ML,HML,H0ML,HUML,HVML
 
-   REAL,    DIMENSION( ims:ime, jms:jme, kms:kme ), INTENT(IN   ) ::     &
+   real,    dimension( ims:ime, jms:jme, kms:kme ), intent(in   ) ::     &
                                              U_PHY,V_PHY
 
-   REAL,    DIMENSION( ims:ime, jms:jme ), INTENT(IN   ) ::     &
+   real,    dimension( ims:ime, jms:jme ), intent(in   ) ::     &
                                              UST, F, TMOML
 
-   REAL,    INTENT(IN   )   ::     G
-   REAL,    INTENT(IN   )   ::     OML_GAMMA
+   real,    intent(in   )   ::     G
+   real,    intent(in   )   ::     OML_GAMMA
 
 ! LOCAL VARS
 
-   INTEGER ::  I,J
+   integer ::  I,J
 
-   DO J=jts,jte
+   do J=jts,jte
 
 !!!      CALL wrf_debug( 100, 'Call OML' )
-         DO i=its,ite
-            IF (XLAND(I,J).GT.1.5) THEN
-               CALL OML1D(I,J,TML(i,j),T0ML(i,j),HML(i,j),H0ML(i,j),           &
+         do i=its,ite
+            if (XLAND(I,J).GT.1.5) then
+               call OML1D(I,J,TML(i,j),T0ML(i,j),HML(i,j),H0ML(i,j),           &
                           HUML(i,j),HVML(i,j),TSK(i,j),HFX(i,j),               &
                           LH(i,j),GSW(i,j),GLW(i,j),TMOML(i,j),                &
                           U_PHY(i,j,kts),V_PHY(i,j,kts),UST(i,j),F(i,j),       &
@@ -92,15 +92,15 @@ CONTAINS
                           ids,ide, jds,jde, kds,kde,                           &
                           ims,ime, jms,jme, kms,kme,                           &
                           its,ite, jts,jte, kts,kte                            )
-            ENDIF
-         ENDDO
+            endif
+         enddo
 
-   ENDDO
+   enddo
 
-   END SUBROUTINE OCEANML
+   end subroutine OCEANML
 
 !----------------------------------------------------------------
-   SUBROUTINE OML1D(I,J,TML,T0ML,H,H0,HUML,                              &
+   subroutine OML1D(I,J,TML,T0ML,H,H0,HUML,                              &
                     HVML,TSK,HFX,                                        &
                     LH,GSW,GLW,TMOML,                                    &
                     UAIR,VAIR,UST,F,EMISS,STBOLT,G,DT,OML_GAMMA,         &
@@ -110,7 +110,7 @@ CONTAINS
                     its,ite, jts,jte, kts,kte                            )
 
 !----------------------------------------------------------------
-   IMPLICIT NONE
+   implicit none
 !----------------------------------------------------------------
 !
 !  SUBROUTINE OCEANML CALCULATES THE SEA SURFACE TEMPERATURE (TSK) 
@@ -142,23 +142,23 @@ CONTAINS
 !                        HUML and HVML to 0; value <=0 means no relaxation
 !
 !----------------------------------------------------------------
-   INTEGER, INTENT(IN   )    ::      I, J
-   INTEGER, INTENT(IN   )    ::      ids,ide, jds,jde, kds,kde, &
+   integer, intent(in   )    ::      I, J
+   integer, intent(in   )    ::      ids,ide, jds,jde, kds,kde, &
                                      ims,ime, jms,jme, kms,kme, &
                                      its,ite, jts,jte, kts,kte
 
-   REAL,    INTENT(INOUT)    :: TML, H, HUML, HVML, TSK
+   real,    intent(inout)    :: TML, H, HUML, HVML, TSK
 
-   REAL,    INTENT(IN   )    :: T0ML, H0, HFX, LH, GSW, GLW,        &
+   real,    intent(in   )    :: T0ML, H0, HFX, LH, GSW, GLW,        &
                                 UAIR, VAIR, UST, F, EMISS, TMOML
 
-   REAL,    INTENT(IN) :: STBOLT, G, DT, OML_GAMMA, OML_RELAXATION_TIME
+   real,    intent(in) :: STBOLT, G, DT, OML_GAMMA, OML_RELAXATION_TIME
 
 ! Local
-   REAL :: rhoair, rhowater, Gam, alp, BV2, A1, A2, B2, u, v, wspd, &
+   real :: rhoair, rhowater, Gam, alp, BV2, A1, A2, B2, u, v, wspd, &
            hu1, hv1, hu2, hv2, taux, tauy, tauxair, tauyair, q, hold, &
            hsqrd, thp, cwater, ust2
-   CHARACTER(LEN=120) :: time_series
+   character(LEN=120) :: time_series
 
       hu1=huml
       hv1=hvml
@@ -257,77 +257,77 @@ CONTAINS
 !        CALL wrf_message ( TRIM(time_series) )
 !     end if
 
-   END SUBROUTINE OML1D
+   end subroutine OML1D
 
 !================================================================
-   SUBROUTINE omlinit(outfile,oml_hml0, tsk,                   &
+   subroutine omlinit(outfile,oml_hml0, tsk,                   &
                       tml,t0ml,hml,h0ml,huml,hvml,tmoml,       &
                       allowed_to_read, start_of_simulation,    &
                       ids,ide, jds,jde, kds,kde,               &
                       ims,ime, jms,jme, kms,kme,               &
                       its,ite, jts,jte, kts,kte                )
 !----------------------------------------------------------------
-   IMPLICIT NONE
+   implicit none
 !----------------------------------------------------------------
-   INTEGER, INTENT(IN   )    ::      outfile
-   LOGICAL , INTENT(IN)      ::      allowed_to_read
-   LOGICAL , INTENT(IN)      ::      start_of_simulation
-   INTEGER, INTENT(IN   )    ::      ids,ide, jds,jde, kds,kde, &
+   integer, intent(in   )    ::      outfile
+   logical , intent(in)      ::      allowed_to_read
+   logical , intent(in)      ::      start_of_simulation
+   integer, intent(in   )    ::      ids,ide, jds,jde, kds,kde, &
                                      ims,ime, jms,jme, kms,kme, &
                                      its,ite, jts,jte, kts,kte
 
-   REAL,    DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(IN)    ::                               TSK
+   real,    dimension( ims:ime, jms:jme )                     , &
+            intent(in)    ::                               TSK
 
-   REAL,    DIMENSION( ims:ime, jms:jme )                     , &
-            INTENT(INOUT)    ::     TML, T0ML, HML, H0ML, HUML, HVML, TMOML
-   REAL   , INTENT(IN   )    ::     oml_hml0
+   real,    dimension( ims:ime, jms:jme )                     , &
+            intent(inout)    ::     TML, T0ML, HML, H0ML, HUML, HVML, TMOML
+   real   , intent(in   )    ::     oml_hml0
 
 !  LOCAR VAR
 
-   INTEGER                   ::      L,J,I,itf,jtf
-   CHARACTER*1024 message
+   integer                   ::      L,J,I,itf,jtf
+   character*1024 message
 
 !----------------------------------------------------------------
  
    itf=min0(ite,ide-1)
    jtf=min0(jte,jde-1)
 
-   IF(start_of_simulation) THEN
-     DO J=jts,jtf
-     DO I=its,itf
+   if(start_of_simulation) then
+     do J=jts,jtf
+     do I=its,itf
        TML(I,J)=TSK(I,J)
        T0ML(I,J)=TSK(I,J)
-     ENDDO
-     ENDDO
-     IF (oml_hml0 .gt. 0.) THEN
+     enddo
+     enddo
+     if (oml_hml0 .gt. 0.) then
 !!!        WRITE(message,*)'Initializing OML with HML0 = ', oml_hml0
 !!!        CALL wrf_debug (0, TRIM(message))
 !!!        write(outfile,*) 'Initializing OML with HML0 = ', oml_hml0
-        DO J=jts,jtf
-        DO I=its,itf
+        do J=jts,jtf
+        do I=its,itf
           HML(I,J)=oml_hml0
           H0ML(I,J)=HML(I,J)
           HUML(I,J)=0.
           HVML(I,J)=0.
           TMOML(I,J)=TSK(I,J)-5.
-        ENDDO
-        ENDDO
-     ELSE
+        enddo
+        enddo
+     else
 !!!        WRITE(message,*)'Initializing OML with real HML0, h(1,1) = ', h0ml(1,1)
 !!!        CALL wrf_debug (0, TRIM(message))
 !!!        write(outfile,*) 'Initializing OML with real HML0, h(1,1) = ', h0ml(1,1)
         stop 34543
-        DO J=jts,jtf
-        DO I=its,itf
+        do J=jts,jtf
+        do I=its,itf
           HML(I,J)=H0ML(I,J)
 ! fill in near coast area with SST: 200 K was set as missing value in ocean pre-processing code
-          IF(TMOML(I,J).GT.200. .and. TMOML(I,J).LE.201.) TMOML(I,J)=TSK(I,J)
-        ENDDO
-        ENDDO
-     ENDIF
-   ENDIF
+          if(TMOML(I,J).GT.200. .and. TMOML(I,J).LE.201.) TMOML(I,J)=TSK(I,J)
+        enddo
+        enddo
+     endif
+   endif
 
-   END SUBROUTINE omlinit
+   end subroutine omlinit
 !-------------------------------------------------------------------          
-END MODULE module_sf_oml
+end module module_sf_oml

@@ -2285,7 +2285,7 @@
  logical:: melti
  logical,dimension(kts:kte):: l_qr,l_qs,l_qg
 
- INTEGER:: i,k,k_0,kbot,n
+ integer:: i,k,k_0,kbot,n
 
  real(kind=kind_phys),parameter:: R=287.
  real(kind=kind_phys):: temp_c

@@ -1,12 +1,12 @@
 !----------------------------------------------------------------------
 !
-      MODULE MODULE_SF_MYJSFC
+      module MODULE_SF_MYJSFC
 !
 !----------------------------------------------------------------------
 !
-      USE MODULE_MODEL_CONSTANTS
+      use MODULE_MODEL_CONSTANTS
 #ifdef DM_PARALLEL
-      USE MODULE_DM, ONLY : WRF_DM_MAXVAL
+      use MODULE_DM, ONLY : WRF_DM_MAXVAL
 #endif
 !
 !----------------------------------------------------------------------
@@ -20,24 +20,24 @@
 !
 !----------------------------------------------------------------------
 !
-      INTEGER :: ITRMX=5 ! Iteration count for sfc layer computations
+      integer :: ITRMX=5 ! Iteration count for sfc layer computations
 !
-      REAL,PARAMETER :: VKARMAN=0.4
-      REAL,PARAMETER :: CAPA=R_D/CP,ELOCP=2.72E6/CP,RCAP=1./CAPA
-      REAL,PARAMETER :: GOCP02=G/CP*2.,GOCP10=G/CP*10.
+      real,parameter :: VKARMAN=0.4
+      real,parameter :: CAPA=R_D/CP,ELOCP=2.72E6/CP,RCAP=1./CAPA
+      real,parameter :: GOCP02=G/CP*2.,GOCP10=G/CP*10.
 !      REAL,PARAMETER :: EPSU2=1.E-4,EPSUST=0.07,EPSZT=1.E-5
 !	ECMWF sets lower limit on ln(Z0h)=-20 --> EPSZT=2.e-9
-      REAL,PARAMETER :: EPSU2=1.E-6,EPSUST=1.e-9,EPSZT=1.E-28
-      REAL,PARAMETER :: A2S=17.2693882,A3S=273.16,A4S=35.86
-      REAL,PARAMETER :: SEAFC=0.98,PQ0SEA=PQ0*SEAFC
-      REAL,PARAMETER :: BETA=1./273.,EXCML=0.0001,EXCMS=0.0001  &
+      real,parameter :: EPSU2=1.E-6,EPSUST=1.e-9,EPSZT=1.E-28
+      real,parameter :: A2S=17.2693882,A3S=273.16,A4S=35.86
+      real,parameter :: SEAFC=0.98,PQ0SEA=PQ0*SEAFC
+      real,parameter :: BETA=1./273.,EXCML=0.0001,EXCMS=0.0001  &
      &                 ,GLKBR=10.,GLKBS=30.,PI=3.1415926               &
      &                 ,QVISC=2.1E-5,RIC=0.505,SMALL=0.35              &
      &                 ,SQPR=0.84,SQSC=0.84,SQVISC=258.2,TVISC=2.1E-5  &
      &                 ,USTC=0.7,USTR=0.225,VISC=1.5E-5,FH=1.01        &
      &                 ,WWST=1.2,ZTFC=1.,TOPOFAC=9.0e-6
 !
-      REAL,PARAMETER :: BTG=BETA*G,CZIV=SMALL*GLKBS                    &
+      real,parameter :: BTG=BETA*G,CZIV=SMALL*GLKBS                    &
      &                 ,GRRS=GLKBR/GLKBS                               &
      &                 ,RTVISC=1./TVISC,RVISC=1./VISC                  &
      &                 ,ZQRZT=SQSC/SQPR                                &
@@ -50,21 +50,21 @@
      &                 ,RQVISC=1./QVISC                                &
      &                 ,USTFC=0.018/G                                  &
      &                 ,WWST2=WWST*WWST
-      REAL    , PARAMETER ::  OZO=1.59E-5
+      real    , parameter ::  OZO=1.59E-5
 !
 !----------------------------------------------------------------------
-      INTEGER, PARAMETER :: KZTM=10001,KZTM2=KZTM-2
+      integer, parameter :: KZTM=10001,KZTM2=KZTM-2
 !
-      REAL :: DZETA1,DZETA2,FH01,FH02,ZTMAX1,ZTMAX2,ZTMIN1,ZTMIN2
+      real :: DZETA1,DZETA2,FH01,FH02,ZTMAX1,ZTMAX2,ZTMIN1,ZTMIN2
 !
-      REAL,DIMENSION(KZTM) :: PSIH1,PSIH2,PSIM1,PSIM2
-!
-!----------------------------------------------------------------------
-!
-CONTAINS
+      real,dimension(KZTM) :: PSIH1,PSIH2,PSIM1,PSIM2
 !
 !----------------------------------------------------------------------
-      SUBROUTINE MYJSFC(ITIMESTEP,HT,DZ                                &
+!
+contains
+!
+!----------------------------------------------------------------------
+      subroutine MYJSFC(ITIMESTEP,HT,DZ                                &
      &                 ,PMID,PINT,TH,T,QV,QC,U,V,Q2                    &
      &                 ,TSK,QSFC,THZ0,QZ0,UZ0,VZ0                      &
      &                 ,LOWLYR,XLAND,IVGTYP,ISURBAN,IZ0TLND            &
@@ -81,59 +81,59 @@ CONTAINS
      &                 ,ITS,ITE,JTS,JTE,KTS,KTE)
 !----------------------------------------------------------------------
 !
-      IMPLICIT NONE
+      implicit none
 !
 !----------------------------------------------------------------------
-      INTEGER,INTENT(IN) :: IDS,IDE,JDS,JDE,KDS,KDE                    &
+      integer,intent(in) :: IDS,IDE,JDS,JDE,KDS,KDE                    &
      &                     ,IMS,IME,JMS,JME,KMS,KME                    &
      &                     ,ITS,ITE,JTS,JTE,KTS,KTE
 !
-      INTEGER,INTENT(IN) :: ITIMESTEP
+      integer,intent(in) :: ITIMESTEP
 !
-      INTEGER,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: LOWLYR
+      integer,dimension(IMS:IME,JMS:JME),intent(in) :: LOWLYR
 !
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: HT,MAVAIL,TSK      &
+      real,dimension(IMS:IME,JMS:JME),intent(in) :: HT,MAVAIL,TSK      &
      &                                             ,XLAND,Z0BASE
 !
-      REAL,DIMENSION(IMS:IME,KMS:KME,JMS:JME),INTENT(IN) :: DZ         &
+      real,dimension(IMS:IME,KMS:KME,JMS:JME),intent(in) :: DZ         &
      &                                                     ,PMID,PINT  &
      &                                                     ,Q2,QC,QV   &
      &                                                     ,T,TH       &
      &                                                     ,U,V
-      INTEGER,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: IVGTYP
-      INTEGER,                           INTENT(IN) :: ISURBAN
-      INTEGER,                           INTENT(IN) :: IZ0TLND
+      integer,dimension(IMS:IME,JMS:JME),intent(in) :: IVGTYP
+      integer,                           intent(in) :: ISURBAN
+      integer,                           intent(in) :: IZ0TLND
 !
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(OUT) :: FLX_LH,HFX,PSHLTR &
+      real,dimension(IMS:IME,JMS:JME),intent(out) :: FLX_LH,HFX,PSHLTR &
      &                                              ,QFX,Q10,QSHLTR    &
      &                                              ,TH10,TSHLTR,T02   &
      &                                              ,U10,V10,TH02,Q02  &
      &                                              ,U10E,V10E
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(OUT) :: psim,psih,fm,fhh,z0out
+      real,dimension(IMS:IME,JMS:JME),intent(out) :: psim,psih,fm,fhh,z0out
       logical, intent(in) :: usemyjpbl
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN)    :: rhosfc
+      real,dimension(IMS:IME,JMS:JME),intent(in)    :: rhosfc
       integer, optional, intent(in) :: isftcflx
 !
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(INOUT) :: AKHS,AKMS       &
+      real,dimension(IMS:IME,JMS:JME),intent(inout) :: AKHS,AKMS       &
      &                                                ,PBLH,QSFC
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(OUT)   :: RIB
+      real,dimension(IMS:IME,JMS:JME),intent(out)   :: RIB
 !
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(INOUT) :: QZ0,RMOL,THZ0   &
+      real,dimension(IMS:IME,JMS:JME),intent(inout) :: QZ0,RMOL,THZ0   &
      &                                                ,USTAR,UZ0,VZ0   &
      &                                                ,ZNT
 !
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(OUT) :: CHS,CHS2,CQS2     &
+      real,dimension(IMS:IME,JMS:JME),intent(out) :: CHS,CHS2,CQS2     &
      &                                              ,CPM,CT,FLHC,FLQC  &
      &                                              ,QGH
 !
-      REAL,INTENT(IN) :: P1000mb
+      real,intent(in) :: P1000mb
 !----------------------------------------------------------------------
 !***
 !***  LOCAL VARIABLES
 !***
-      INTEGER :: I,J,K,KFLIP,LMH,LPBL,NTSD
+      integer :: I,J,K,KFLIP,LMH,LPBL,NTSD
 !
-      REAL :: A,APESFC,B,BTGX,CWMLOW                                   &
+      real :: A,APESFC,B,BTGX,CWMLOW                                   &
      &       ,DQDT,DTDIF,DTDT,DUDT,DVDT                                &
      &       ,FIS                                                      &
      &       ,P02P,P10P,PLOW,PSFC,PTOP,QLOW,QS02,QS10                  &
@@ -141,17 +141,17 @@ CONTAINS
      &       ,T02P,T10P,TEM,TH02P,TH10P,THLOW,THELOW,THM               &
      &       ,TLOW,TZ0,ULOW,VLOW,ZSL
 !
-      REAL,DIMENSION(KTS:KTE) :: CWMK,PK,Q2K,QK,THEK,THK,TK,UK,VK
+      real,dimension(KTS:KTE) :: CWMK,PK,Q2K,QK,THEK,THK,TK,UK,VK
 !
-      REAL,DIMENSION(KTS:KTE-1) :: EL,ELM
+      real,dimension(KTS:KTE-1) :: EL,ELM
 !
-      REAL,DIMENSION(KTS:KTE+1) :: ZHK
+      real,dimension(KTS:KTE+1) :: ZHK
 !
-      REAL,DIMENSION(ITS:ITE,JTS:JTE) :: THSK
+      real,dimension(ITS:ITE,JTS:JTE) :: THSK
 !
-      REAL,DIMENSION(ITS:ITE,KTS:KTE+1,JTS:JTE) :: ZINT
+      real,dimension(ITS:ITE,KTS:KTE+1,JTS:JTE) :: ZINT
 !
-      REAL,DIMENSION(ITS:ITE,JTS:JTE) :: pblsave
+      real,dimension(ITS:ITE,JTS:JTE) :: pblsave
 !
 !----------------------------------------------------------------------
 !**********************************************************************
@@ -160,16 +160,16 @@ CONTAINS
 !***  MAKE PREPARATIONS
 !
 !----------------------------------------------------------------------
-      DO J=JTS,JTE
-      DO K=KTS,KTE+1
-      DO I=ITS,ITE
+      do J=JTS,JTE
+      do K=KTS,KTE+1
+      do I=ITS,ITE
         ZINT(I,K,J)=0.
-      ENDDO
-      ENDDO
-      ENDDO
+      enddo
+      enddo
+      enddo
 !
-      DO J=JTS,JTE
-      DO I=ITS,ITE
+      do J=JTS,JTE
+      do I=ITS,ITE
         ZINT(I,KTE+1,J)=HT(I,J)     ! Z at bottom of lowest sigma layer
         pblsave(i,j) = PBLH(I,J)
         PBLH(I,J)=-1.
@@ -180,50 +180,50 @@ CONTAINS
 !!!!!!  ZINT(I,KTE+1,J)=1.E-4       ! Z of bottom of lowest eta layer
 !!!!!!  ZHK(KTE+1)=1.E-4            ! Z of bottom of lowest eta layer
 !
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 !
-      DO J=JTS,JTE
-      DO K=KTE,KTS,-1
+      do J=JTS,JTE
+      do K=KTE,KTS,-1
         KFLIP=KTE+1-K
-        DO I=ITS,ITE
+        do I=ITS,ITE
           ZINT(I,K,J)=ZINT(I,K+1,J)+DZ(I,KFLIP,J)
-        ENDDO
-      ENDDO
-      ENDDO
+        enddo
+      enddo
+      enddo
 !
       NTSD=ITIMESTEP
 !
 #if ( NMM_CORE == 1 )
      if(NTSD+1.eq.1) then
 #else
-     IF(NTSD==1)THEN
+     if(NTSD==1)then
 #endif
 !tgs       IF(NTSD==1)THEN
-        DO J=JTS,JTE
-        DO I=ITS,ITE
+        do J=JTS,JTE
+        do I=ITS,ITE
           USTAR(I,J)=0.1
           FIS=HT(I,J)*G
           SM=XLAND(I,J)-1.
 !!!       Z0(I,J)=SM*Z0SEA+(1.-SM)*(Z0(I,J)*Z0MAX+FIS*FCM+Z0LAND)
 !!!       ZNT(I,J)=SM*Z0SEA+(1.-SM)*(ZNT(I,J)*Z0MAX+FIS*FCM+Z0LAND)
-        ENDDO
-        ENDDO
-      ENDIF
+        enddo
+        enddo
+      endif
 !
 !!!!  IF(NTSD==1)THEN
-        DO J=JTS,JTE
-        DO I=ITS,ITE
+        do J=JTS,JTE
+        do I=ITS,ITE
           CT(I,J)=0.
-        ENDDO
-        ENDDO
+        enddo
+        enddo
 !!!!  ENDIF
 !
 !----------------------------------------------------------------------
-        setup_integration:  DO J=JTS,JTE
+        setup_integration:  do J=JTS,JTE
 !----------------------------------------------------------------------
 !
-        DO I=ITS,ITE
+        do I=ITS,ITE
 !
 !***  LOWEST LAYER ABOVE GROUND MUST BE FLIPPED
 !
@@ -243,7 +243,7 @@ CONTAINS
 !***  AND FLIP DIRECTION SINCE MYJ SCHEME
 !***  COUNTS DOWNWARD FROM THE DOMAIN'S TOP
 !
-          DO K=KTE,KTS,-1
+          do K=KTE,KTS,-1
             KFLIP=KTE+1-K
             THK(K)=TH(I,KFLIP,J)
             TK(K)=T(I,KFLIP,J)
@@ -258,25 +258,25 @@ CONTAINS
 !
             ZHK(K)=ZINT(I,K,J)
 !
-          ENDDO
+          enddo
           ZHK(KTE+1)=HT(I,J)          ! Z at bottom of lowest sigma layer
 !
-          DO K=KTE,KTS,-1
+          do K=KTE,KTS,-1
             KFLIP=KTE+1-K
             UK(K)=U(I,KFLIP,J)
             VK(K)=V(I,KFLIP,J)
-          ENDDO
+          enddo
 !
 !***  FIND THE HEIGHT OF THE PBL
 !
         if( usemyjpbl )then
           LPBL=LMH
-          DO K=LMH-1,1,-1
-            IF(Q2K(K)<=EPSQ2*FH) THEN
+          do K=LMH-1,1,-1
+            if(Q2K(K)<=EPSQ2*FH) then
               LPBL=K
-              GO TO 110
-            ENDIF
-          ENDDO
+              go to 110
+            endif
+          enddo
 !
           LPBL=1
 !
@@ -311,7 +311,7 @@ CONTAINS
 #if ( NMM_CORE == 1 )
      if(NTSD+1.eq.1) then
 #else
-     IF(NTSD==1)THEN
+     if(NTSD==1)then
 #endif
 !       if(itimestep.le.1) then
           TZ0=TSK(I,J)
@@ -319,7 +319,7 @@ CONTAINS
           TZ0=THZ0(I,J)*APESFC
        endif
 !
-          CALL SFCDIF(NTSD,SEAMASK,THSK(I,J),QSFC(I,J),PSFC            &
+          call SFCDIF(NTSD,SEAMASK,THSK(I,J),QSFC(I,J),PSFC            &
      &               ,UZ0(I,J),VZ0(I,J),TZ0,TSK(I,J),THZ0(I,J),QZ0(I,J)         &
      &               ,USTAR(I,J),ZNT(I,J),Z0BASE(I,J),CT(I,J),RMOL(I,J) &
      &               ,AKMS(I,J),AKHS(I,J),RIB(I,J),PBLH(I,J),MAVAIL(I,J) &
@@ -360,21 +360,21 @@ CONTAINS
           QS02=PQ0/P02P*EXP(A2*(T02P-A3)/(T02P-A4))
           QS10=PQ0/P10P*EXP(A2*(T10P-A3)/(T10P-A4))
 !
-          IF(QSHLTR(I,J)>QS02)QSHLTR(I,J)=QS02
-          IF(Q10   (I,J)>QS10)Q10   (I,J)=QS10
+          if(QSHLTR(I,J)>QS02)QSHLTR(I,J)=QS02
+          if(Q10   (I,J)>QS10)Q10   (I,J)=QS10
           Q02(I,J)=QSHLTR(I,J)/(1.-QSHLTR(I,J))
 !----------------------------------------------------------------------
 !
-        ENDDO
+        enddo
 !
 !----------------------------------------------------------------------
-      ENDDO setup_integration
+      enddo setup_integration
 !----------------------------------------------------------------------
 
-      END SUBROUTINE MYJSFC
+      end subroutine MYJSFC
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !----------------------------------------------------------------------
-      SUBROUTINE SFCDIF(NTSD,SEAMASK,THS,QS,PSFC                       &
+      subroutine SFCDIF(NTSD,SEAMASK,THS,QS,PSFC                       &
      &                 ,UZ0,VZ0,TZ0,TSK,THZ0,QZ0                       &
      &                 ,USTAR,Z0,Z0BASE,CT,RLMO,AKMS,AKHS,RIB,PBLH,WETM &
      &                 ,VEGTYP,ISURBAN,IZ0TLND                         &
@@ -394,46 +394,46 @@ CONTAINS
 !     ****************************************************************
 !----------------------------------------------------------------------
 !
-      IMPLICIT NONE
+      implicit none
 !
 !----------------------------------------------------------------------
-      INTEGER,INTENT(IN) :: IDS,IDE,JDS,JDE,KDS,KDE                    &
+      integer,intent(in) :: IDS,IDE,JDS,JDE,KDS,KDE                    &
      &                     ,IMS,IME,JMS,JME,KMS,KME                    &
      &                     ,ITS,ITE,JTS,JTE,KTS,KTE,i,j
 !
-      INTEGER,INTENT(IN) :: NTSD
+      integer,intent(in) :: NTSD
 !
-      REAL,INTENT(IN) :: CWMLOW,PBLH,PLOW,QLOW,PSFC,SEAMASK,ZSFC       &
+      real,intent(in) :: CWMLOW,PBLH,PLOW,QLOW,PSFC,SEAMASK,ZSFC       &
      &                  ,THELOW,THLOW,THS,TSK,TLOW,TZ0,ULOW,VLOW,WETM,ZSL  &
      &                  ,Z0BASE
-      INTEGER, INTENT(IN) :: VEGTYP, ISURBAN, IZ0TLND
+      integer, intent(in) :: VEGTYP, ISURBAN, IZ0TLND
 !
-      REAL,INTENT(OUT) :: CHS,CHS2,CPM,CQS2,CT,FLHC,FLQC,FLX_LH,HFX    &
+      real,intent(out) :: CHS,CHS2,CPM,CQS2,CT,FLHC,FLQC,FLX_LH,HFX    &
      &                   ,PSHLTR,Q02,Q10,QFX,QGH,RIB,RLMO              &
      &                   ,TH02,TH10,U10,V10,U10E,V10E
-      REAL,INTENT(OUT) :: psim,psih,fm,fhh,z0out
-      REAL,INTENT(IN)  :: rhosfc
+      real,intent(out) :: psim,psih,fm,fhh,z0out
+      real,intent(in)  :: rhosfc
       integer, optional, intent(in) :: isftcflx
 !
-      REAL,INTENT(INOUT) :: AKHS,AKMS,QZ0,THZ0,USTAR,UZ0,VZ0,Z0,QS
+      real,intent(inout) :: AKHS,AKMS,QZ0,THZ0,USTAR,UZ0,VZ0,Z0,QS
 !----------------------------------------------------------------------
 !***
 !***  LOCAL VARIABLES
 !***
-      INTEGER :: ITR,K
+      integer :: ITR,K
 !
-      REAL :: A,B,BTGH,BTGX,CXCHL,CXCHS,CZETMAX,DTHV,DU2,ELFC,FCT      &
+      real :: A,B,BTGH,BTGX,CXCHL,CXCHS,CZETMAX,DTHV,DU2,ELFC,FCT      &
      &       ,HLFLX,HSFLX,HV,PSH02,PSH10,PSHZ,PSHZL,PSM10,PSMZ,PSMZL   &
      &       ,RDZ,RDZT,RLMA,RLMN,RLMP                                  &
      &       ,RLOGT,RLOGU,RWGH,RZ,RZST,RZSU,SIMH,SIMM,TEM,THM          &
      &       ,UMFLX,USTARK,VMFLX,WGHT,WGHTT,WGHTQ,WSTAR2               &
      &       ,X,XLT,XLT4,XLU,XLU4,XT,XT4,XU,XU4,ZETALT,ZETALU          &
      &       ,ZETAT,ZETAU,ZQ,ZSLT,ZSLU,ZT,ZU,TOPOTERM,ZZIL
-      REAL :: CZIL,ZILFC
+      real :: CZIL,ZILFC
 !
 !***  DIAGNOSTICS
 !
-      REAL :: AKHS02,AKHS10,AKMS02,AKMS10,EKMS10,QSAT10,QSAT2          &
+      real :: AKHS02,AKHS10,AKMS02,AKMS10,EKMS10,QSAT10,QSAT2          &
      &       ,RLNT02,RLNT10,RLNU10,SIMH02,SIMH10,SIMM10,T02,T10        &
      &       ,TERM1,RLOW,WSTAR,XLT02,XLT024,XLT10            &
      &       ,XLT104,XLU10,XLU104,XU10,XU104,ZT02,ZT10,ZTAT02,ZTAT10   &
@@ -450,11 +450,11 @@ CONTAINS
       BTGX=G/THLOW
       ELFC=VKARMAN*BTGX
 !
-      IF(PBLH>1000.)THEN
+      if(PBLH>1000.)then
         BTGH=BTGX*PBLH
-      ELSE
+      else
         BTGH=BTGX*1000.
-      ENDIF
+      endif
 !
 !----------------------------------------------------------------------
 !
@@ -462,17 +462,17 @@ CONTAINS
 !
 !----------------------------------------------------------------------
 !
-      IF(SEAMASK>0.5)THEN
+      if(SEAMASK>0.5)then
 !
 !----------------------------------------------------------------------
-        DO ITR=1,ITRMX
+        do ITR=1,ITRMX
 !----------------------------------------------------------------------
           Z0=MAX(USTFC*USTAR*USTAR,1.59E-5)
 
         !----------
         ! GHB, 200621: level-off roughness length at high wind speeds:
-          IF ( PRESENT(ISFTCFLX) ) THEN
-             IF ( ISFTCFLX.NE.0 ) THEN
+          if ( PRESENT(ISFTCFLX) ) then
+             if ( ISFTCFLX.NE.0 ) then
                 ZW  = MIN((USTAR/1.06)**(0.3),1.0)
                 ZN1 = 0.011*USTAR*USTAR/G + OZO
                 ZN2 = 10.*exp(-9.5*USTAR**(-.3333)) + &
@@ -482,28 +482,28 @@ CONTAINS
 !!!                Z0=MAX(Z0,1.27e-7)
                 ! keep this from orig myjsfc (see above):
                 Z0=MAX(Z0,1.59E-5)
-             ENDIF
-          ENDIF
+             endif
+          endif
         !----------
 !
 !***  VISCOUS SUBLAYER, JANJIC MWR 1994
 !
 !----------------------------------------------------------------------
-          IF(USTAR<USTC)THEN
+          if(USTAR<USTC)then
 !----------------------------------------------------------------------
 !
-            IF(USTAR<USTR)THEN
+            if(USTAR<USTR)then
 !
 #if ( NMM_CORE == 1 )
      if(NTSD+1.eq.1) then
 #else
-     IF(NTSD==1)THEN
+     if(NTSD==1)then
 #endif
 !tgs              IF(NTSD==1)THEN
                 AKMS=CXCHS
                 AKHS=CXCHS
                 QS=QLOW
-              ENDIF
+              endif
 !
               ZU=FZU1*SQRT(SQRT(Z0*USTAR*RVISC))/USTAR
               WGHT=AKMS*ZU*RVISC
@@ -519,19 +519,19 @@ CONTAINS
 #if ( NMM_CORE == 1 )
      if(NTSD+1>1) then
 #else
-     IF(NTSD>1)THEN
+     if(NTSD>1)then
 #endif
 !tgs              IF(NTSD>1)THEN
                 THZ0=((WGHTT*THLOW+THS)/(WGHTT+1.)+THZ0)*0.5
                 QZ0=((WGHTQ*QLOW+QS)/(WGHTQ+1.)+QZ0)*0.5
-              ELSE
+              else
                 THZ0=(WGHTT*THLOW+THS)/(WGHTT+1.)
                 QZ0=(WGHTQ*QLOW+QS)/(WGHTQ+1.)
-              ENDIF
+              endif
 !
-            ENDIF
+            endif
 !
-            IF(USTAR>=USTR.AND.USTAR<USTC)THEN
+            if(USTAR>=USTR.AND.USTAR<USTC)then
               ZU=Z0
               UZ0=0.
               VZ0=0.
@@ -544,20 +544,20 @@ CONTAINS
 #if ( NMM_CORE == 1 )
      if(NTSD+1>1) then
 #else
-     IF(NTSD>1)THEN
+     if(NTSD>1)then
 #endif
 
 !tgs              IF(NTSD>1)THEN
                 THZ0=((WGHTT*THLOW+THS)/(WGHTT+1.)+THZ0)*0.5
                 QZ0=((WGHTQ*QLOW+QS)/(WGHTQ+1.)+QZ0)*0.5
-              ELSE
+              else
                 THZ0=(WGHTT*THLOW+THS)/(WGHTT+1.)
                 QZ0=(WGHTQ*QLOW+QS)/(WGHTQ+1.)
-              ENDIF
+              endif
 !
-            ENDIF
+            endif
 !----------------------------------------------------------------------
-          ELSE
+          else
 !----------------------------------------------------------------------
             ZU=Z0
             UZ0=0.
@@ -572,7 +572,7 @@ CONTAINS
      &         *EXP(A2S*(TSK-A3S)/(TSK-A4S)) 
             QZ0=QS
 !----------------------------------------------------------------------
-          ENDIF
+          endif
 !----------------------------------------------------------------------
           TEM=(TLOW+TZ0)*0.5
           THM=(THELOW+THZ0)*0.5
@@ -628,14 +628,14 @@ CONTAINS
 !
             RZ=(ZETAU-ZTMIN1)/DZETA1
             K=INT(RZ)
-            RDZT=RZ-REAL(K)
+            RDZT=RZ-real(K)
             K=MIN(K,KZTM2)
             K=MAX(K,0)
             PSMZ=(PSIM1(K+2)-PSIM1(K+1))*RDZT+PSIM1(K+1)
 !
             RZ=(ZETALU-ZTMIN1)/DZETA1
             K=INT(RZ)
-            RDZT=RZ-REAL(K)
+            RDZT=RZ-real(K)
             K=MIN(K,KZTM2)
             K=MAX(K,0)
         ! this appears to be psim(z/L)
@@ -647,14 +647,14 @@ CONTAINS
 !
             RZ=(ZETAT-ZTMIN1)/DZETA1
             K=INT(RZ)
-            RDZT=RZ-REAL(K)
+            RDZT=RZ-real(K)
             K=MIN(K,KZTM2)
             K=MAX(K,0)
             PSHZ=(PSIH1(K+2)-PSIH1(K+1))*RDZT+PSIH1(K+1)
 !
             RZ=(ZETALT-ZTMIN1)/DZETA1
             K=INT(RZ)
-            RDZT=RZ-REAL(K)
+            RDZT=RZ-real(K)
             K=MIN(K,KZTM2)
             K=MAX(K,0)
             PSHZL=(PSIH1(K+2)-PSIH1(K+1))*RDZT+PSIH1(K+1)
@@ -672,18 +672,18 @@ CONTAINS
 !***  BELJAARS CORRECTION FOR USTAR
 !----------------------------------------------------------------------
 !
-            IF(DTHV<=0.)THEN                                           !zj
+            if(DTHV<=0.)then                                           !zj
               WSTAR2=WWST2*ABS(BTGH*AKHS*DTHV)**(2./3.)                !zj
-            ELSE                                                       !zj
+            else                                                       !zj
               WSTAR2=0.                                                !zj
-            ENDIF                                                      !zj
+            endif                                                      !zj
             USTAR=MAX(SQRT(AKMS*SQRT(DU2+WSTAR2)),EPSUST)
 !
 !----------------------------------------------------------------------
 !         ENDIF  !  End of turbulent branch
 !----------------------------------------------------------------------
 !
-        ENDDO  !  End of the iteration loop over sea points
+        enddo  !  end of the iteration loop over sea points
 !
 !----------------------------------------------------------------------
 !
@@ -691,12 +691,12 @@ CONTAINS
 !
 !----------------------------------------------------------------------
 !
-      ELSE
+      else
 !
 !----------------------------------------------------------------------
-        IF(NTSD==1)THEN
+        if(NTSD==1)then
           QS=QLOW
-        ENDIF
+        endif
 !
         ZU=Z0
         UZ0=0.
@@ -759,21 +759,21 @@ CONTAINS
 !         CZETMAX = 20.
           CZETMAX = 10.
 ! stable
-          IF(DTHV>0.)THEN
+          if(DTHV>0.)then
 !            ZZIL=ZILFC*TOPOTERM
-            IF (RIB<RIC) THEN
+            if (RIB<RIC) then
               ZZIL=ZILFC*(1.0+(RIB/RIC)*(RIB/RIC)*CZETMAX)
-            ELSE
+            else
               ZZIL=ZILFC*(1.0+CZETMAX)
-            ENDIF
+            endif
 ! unstable
-          ELSE
+          else
             ZZIL=ZILFC
-          ENDIF
+          endif
 !
 !----------------------------------------------------------------------
 !
-          land_point_iteration: DO ITR=1,ITRMX
+          land_point_iteration: do ITR=1,ITRMX
 !
 !----------------------------------------------------------------------
 !***  ZILITINKEVITCH FIX FOR ZT
@@ -806,14 +806,14 @@ CONTAINS
 !
             RZ=(ZETAU-ZTMIN2)/DZETA2
             K=INT(RZ)
-            RDZT=RZ-REAL(K)
+            RDZT=RZ-real(K)
             K=MIN(K,KZTM2)
             K=MAX(K,0)
             PSMZ=(PSIM2(K+2)-PSIM2(K+1))*RDZT+PSIM2(K+1)
 !
             RZ=(ZETALU-ZTMIN2)/DZETA2
             K=INT(RZ)
-            RDZT=RZ-REAL(K)
+            RDZT=RZ-real(K)
             K=MIN(K,KZTM2)
             K=MAX(K,0)
         ! this appears to be psim(z/L)
@@ -825,14 +825,14 @@ CONTAINS
 !
             RZ=(ZETAT-ZTMIN2)/DZETA2
             K=INT(RZ)
-            RDZT=RZ-REAL(K)
+            RDZT=RZ-real(K)
             K=MIN(K,KZTM2)
             K=MAX(K,0)
             PSHZ=(PSIH2(K+2)-PSIH2(K+1))*RDZT+PSIH2(K+1)
 !
             RZ=(ZETALT-ZTMIN2)/DZETA2
             K=INT(RZ)
-            RDZT=RZ-REAL(K)
+            RDZT=RZ-real(K)
             K=MIN(K,KZTM2)
             K=MAX(K,0)
             PSHZL=(PSIH2(K+2)-PSIH2(K+1))*RDZT+PSIH2(K+1)
@@ -849,23 +849,23 @@ CONTAINS
 !***  BELJAARS CORRECTION FOR USTAR
 !----------------------------------------------------------------------
 !
-            IF(DTHV<=0.)THEN                                           !zj
+            if(DTHV<=0.)then                                           !zj
               WSTAR2=WWST2*ABS(BTGH*AKHS*DTHV)**(2./3.)                !zj
-            ELSE                                                       !zj
+            else                                                       !zj
               WSTAR2=0.                                                !zj
-            ENDIF                                                      !zj
+            endif                                                      !zj
 !
             USTAR=MAX(SQRT(AKMS*SQRT(DU2+WSTAR2)),EPSUST)
 !
 !----------------------------------------------------------------------
-          ENDDO land_point_iteration
+          enddo land_point_iteration
 !----------------------------------------------------------------------
 !
 !       ENDIF  !  End of turbulant branch over land
 !
 !----------------------------------------------------------------------
 !
-      ENDIF  !  End of land/sea branch
+      endif  !  end of land/sea branch
 !
 !----------------------------------------------------------------------
 !***  COUNTERGRADIENT FIX
@@ -925,7 +925,7 @@ CONTAINS
 !***  SEA
 !----------------------------------------------------------------------
 !
-        IF(SEAMASK>0.5)THEN
+        if(SEAMASK>0.5)then
 !
 !----------------------------------------------------------------------
           ZTAU10=MIN(MAX(ZTAU10,ZTMIN1),ZTMAX1)
@@ -934,7 +934,7 @@ CONTAINS
 !----------------------------------------------------------------------
           RZ=(ZTAU10-ZTMIN1)/DZETA1
           K=INT(RZ)
-          RDZT=RZ-REAL(K)
+          RDZT=RZ-real(K)
           K=MIN(K,KZTM2)
           K=MAX(K,0)
           PSM10=(PSIM1(K+2)-PSIM1(K+1))*RDZT+PSIM1(K+1)
@@ -943,7 +943,7 @@ CONTAINS
 !
           RZ=(ZTAT02-ZTMIN1)/DZETA1
           K=INT(RZ)
-          RDZT=RZ-REAL(K)
+          RDZT=RZ-real(K)
           K=MIN(K,KZTM2)
           K=MAX(K,0)
           PSH02=(PSIH1(K+2)-PSIH1(K+1))*RDZT+PSIH1(K+1)
@@ -952,7 +952,7 @@ CONTAINS
 !
           RZ=(ZTAT10-ZTMIN1)/DZETA1
           K=INT(RZ)
-          RDZT=RZ-REAL(K)
+          RDZT=RZ-real(K)
           K=MIN(K,KZTM2)
           K=MAX(K,0)
           PSH10=(PSIH1(K+2)-PSIH1(K+1))*RDZT+PSIH1(K+1)
@@ -967,7 +967,7 @@ CONTAINS
 !***  LAND
 !----------------------------------------------------------------------
 !
-        ELSE
+        else
 !
 !----------------------------------------------------------------------
           ZTAU10=MIN(MAX(ZTAU10,ZTMIN2),ZTMAX2)
@@ -976,7 +976,7 @@ CONTAINS
 !----------------------------------------------------------------------
           RZ=(ZTAU10-ZTMIN2)/DZETA2
           K=INT(RZ)
-          RDZT=RZ-REAL(K)
+          RDZT=RZ-real(K)
           K=MIN(K,KZTM2)
           K=MAX(K,0)
           PSM10=(PSIM2(K+2)-PSIM2(K+1))*RDZT+PSIM2(K+1)
@@ -985,7 +985,7 @@ CONTAINS
 !
           RZ=(ZTAT02-ZTMIN2)/DZETA2
           K=INT(RZ)
-          RDZT=RZ-REAL(K)
+          RDZT=RZ-real(K)
           K=MIN(K,KZTM2)
           K=MAX(K,0)
           PSH02=(PSIH2(K+2)-PSIH2(K+1))*RDZT+PSIH2(K+1)
@@ -994,7 +994,7 @@ CONTAINS
 !
           RZ=(ZTAT10-ZTMIN2)/DZETA2
           K=INT(RZ)
-          RDZT=RZ-REAL(K)
+          RDZT=RZ-real(K)
           K=MIN(K,KZTM2)
           K=MAX(K,0)
           PSH10=(PSIH2(K+2)-PSIH2(K+1))*RDZT+PSIH2(K+1)
@@ -1005,7 +1005,7 @@ CONTAINS
           AKHS02=MAX(USTARK/SIMH02,CXCHL)
           AKHS10=MAX(USTARK/SIMH10,CXCHL)
 !----------------------------------------------------------------------
-        ENDIF
+        endif
 !----------------------------------------------------------------------
 !     ENDIF
 !----------------------------------------------------------------------
@@ -1016,17 +1016,17 @@ CONTAINS
 !***  BE CERTAIN THAT THE 2-M THETA AND 10-M THETA ARE BRACKETED BY
 !***  THE VALUES OF THZ0 AND THLOW.
 !
-      IF(THLOW>THZ0.AND.(TH02<THZ0.OR.TH02>THLOW).OR.                  &
-         THLOW<THZ0.AND.(TH02>THZ0.OR.TH02<THLOW))THEN
+      if(THLOW>THZ0.AND.(TH02<THZ0.OR.TH02>THLOW).OR.                  &
+         THLOW<THZ0.AND.(TH02>THZ0.OR.TH02<THLOW))then
            TH02=THZ0+2.*RDZ*(THLOW-THZ0)
-      ENDIF
+      endif
 !
       TH10=HSFLX/AKHS10+THZ0
 !
-      IF(THLOW>THZ0.AND.(TH10<THZ0.OR.TH10>THLOW).OR.                  &
-         THLOW<THZ0.AND.(TH10>THZ0.OR.TH10<THLOW))THEN
+      if(THLOW>THZ0.AND.(TH10<THZ0.OR.TH10>THLOW).OR.                  &
+         THLOW<THZ0.AND.(TH10>THZ0.OR.TH10<THLOW))then
            TH10=THZ0+10.*RDZ*(THLOW-THZ0)
-      ENDIF
+      endif
 !
       Q02 =HLFLX/AKHS02+QZ0
       Q10 =HLFLX/AKHS10+QZ0
@@ -1041,7 +1041,7 @@ CONTAINS
       U10E=U10
       V10E=V10
 !
-      IF(SEAMASK<0.5)THEN
+      if(SEAMASK<0.5)then
 
 !1st        ZUUZ=MIN(0.5*ZU,0.1)
 !1st        ZU=MAX(0.1*ZU,ZUUZ)
@@ -1063,7 +1063,7 @@ CONTAINS
 
         RZ=(ZTAU10-ZTMIN2)/DZETA2
         K=INT(RZ)
-        RDZT=RZ-REAL(K)
+        RDZT=RZ-real(K)
         K=MIN(K,KZTM2)
         K=MAX(K,0)
         PSM10=(PSIM2(K+2)-PSIM2(K+1))*RDZT+PSIM2(K+1)
@@ -1073,7 +1073,7 @@ CONTAINS
         U10E=UMFLX/EKMS10+UZ0
         V10E=VMFLX/EKMS10+VZ0
 
-      ENDIF
+      endif
 !
 !     U10=U10E
 !     V10=V10E
@@ -1118,43 +1118,43 @@ CONTAINS
 !      ENDIF
 !----------------------------------------------------------------------
 !
-      END SUBROUTINE SFCDIF
+      end subroutine SFCDIF
 !
 !----------------------------------------------------------------------
-      SUBROUTINE MYJSFCINIT(LOWLYR,USTAR,Z0                            &
+      subroutine MYJSFCINIT(LOWLYR,USTAR,Z0                            &
      &                     ,SEAMASK,XICE,IVGTYP,RESTART                &
      &                     ,ALLOWED_TO_READ                            &
      &                     ,IDS,IDE,JDS,JDE,KDS,KDE                    &
      &                     ,IMS,IME,JMS,JME,KMS,KME                    &
      &                     ,ITS,ITE,JTS,JTE,KTS,KTE)
 !----------------------------------------------------------------------
-      IMPLICIT NONE
+      implicit none
 !----------------------------------------------------------------------
-      LOGICAL,INTENT(IN) :: RESTART,ALLOWED_TO_READ
+      logical,intent(in) :: RESTART,ALLOWED_TO_READ
 !
-      INTEGER,INTENT(IN) :: IDS,IDE,JDS,JDE,KDS,KDE                    &
+      integer,intent(in) :: IDS,IDE,JDS,JDE,KDS,KDE                    &
      &                     ,IMS,IME,JMS,JME,KMS,KME                    &
      &                     ,ITS,ITE,JTS,JTE,KTS,KTE
 !
-      INTEGER,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: IVGTYP
+      integer,dimension(IMS:IME,JMS:JME),intent(in) :: IVGTYP
 !
-      INTEGER,DIMENSION(IMS:IME,JMS:JME),INTENT(INOUT) :: LOWLYR
+      integer,dimension(IMS:IME,JMS:JME),intent(inout) :: LOWLYR
 !
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: SEAMASK,XICE
+      real,dimension(IMS:IME,JMS:JME),intent(in) :: SEAMASK,XICE
 !
-      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(INOUT) :: USTAR,Z0
+      real,dimension(IMS:IME,JMS:JME),intent(inout) :: USTAR,Z0
 !
-      REAL,DIMENSION(0:30) :: VZ0TBL
-      REAL,DIMENSION(0:30) :: VZ0TBL_24
+      real,dimension(0:30) :: VZ0TBL
+      real,dimension(0:30) :: VZ0TBL_24
 !
-      INTEGER :: I,IDUM,IRECV,J,JDUM,K,ITF,JTF,KTF,MAXGBL_IVGTYP       &
+      integer :: I,IDUM,IRECV,J,JDUM,K,ITF,JTF,KTF,MAXGBL_IVGTYP       &
      &,          MAXLOC_IVGTYP,MPI_COMM_COMP
 !
 !     INTEGER :: MPI_INTEGER,MPI_MAX
 !
-      REAL :: SM,X,ZETA1,ZETA2,ZRNG1,ZRNG2
+      real :: SM,X,ZETA1,ZETA2,ZRNG1,ZRNG2
 !
-      REAL :: PIHF=3.1415926/2.,EPS=1.E-6
+      real :: PIHF=3.1415926/2.,EPS=1.E-6
 !----------------------------------------------------------------------
       VZ0TBL=                                                          &
      &  (/0.,                                                          &
@@ -1178,59 +1178,59 @@ CONTAINS
 !
 !***  FOR NOW, ASSUME SIGMA MODE FOR LOWEST MODEL LAYER
 !
-      DO J=JTS,JTF
-      DO I=ITS,ITF
+      do J=JTS,JTF
+      do I=ITS,ITF
         LOWLYR(I,J)=1
 !       USTAR(I,J)=EPSUST
-      ENDDO
-      ENDDO
+      enddo
+      enddo
 !----------------------------------------------------------------------
 #if (NMM_CORE == 1)
 !
-      IF(.NOT.RESTART)THEN
+      if(.NOT.RESTART)then
 !       CALL WRF_GET_DM_COMMUNICATOR(MPI_COMM_COMP)
 !       MAXLOC_IVGTYP=MAXVAL(IVGTYP)
 !       CALL MPI_ALLREDUCE(MAXLOC_IVGTYP,MAXGBL_IVGTYP,1,MPI_INTEGER   &
 !    &,                    MPI_MAX,MPI_COMM_COMP,IRECV)
         MAXGBL_IVGTYP=MAXVAL(IVGTYP)
 #ifdef DM_PARALLEL
-        CALL WRF_DM_MAXVAL(MAXGBL_IVGTYP,IDUM,JDUM)
+        call WRF_DM_MAXVAL(MAXGBL_IVGTYP,IDUM,JDUM)
 #endif
 !
-        IF (MAXGBL_IVGTYP<13) THEN
-          DO J=JTS,JTE
-          DO I=ITS,ITE
+        if (MAXGBL_IVGTYP<13) then
+          do J=JTS,JTE
+          do I=ITS,ITE
             SM=SEAMASK(I,J)-1.
-            IF(SM+XICE(I,J)<0.5)THEN
+            if(SM+XICE(I,J)<0.5)then
               Z0(I,J)=VZ0TBL(IVGTYP(I,J))
-            ENDIF
-          ENDDO
-          ENDDO
+            endif
+          enddo
+          enddo
 !
-        ELSE
+        else
 !
-          DO J=JTS,JTE
-          DO I=ITS,ITE
+          do J=JTS,JTE
+          do I=ITS,ITE
             SM=SEAMASK(I,J)-1.
-            IF(SM+XICE(I,J)<0.5)THEN
+            if(SM+XICE(I,J)<0.5)then
               Z0(I,J)=VZ0TBL_24(IVGTYP(I,J))
-            ENDIF
-          ENDDO
-          ENDDO
+            endif
+          enddo
+          enddo
 !
-        ENDIF ! Vegtype check
+        endif ! Vegtype check
 !
-      ENDIF ! Restart check
+      endif ! Restart check
 
 #endif
 !----------------------------------------------------------------------
-      IF(.NOT.RESTART)THEN
-        DO J=JTS,JTE
-        DO I=ITS,ITF
+      if(.NOT.RESTART)then
+        do J=JTS,JTE
+        do I=ITS,ITF
           USTAR(I,J)=0.1
-        ENDDO
-        ENDDO
-      ENDIF
+        enddo
+        enddo
+      endif
 !----------------------------------------------------------------------
 !
 !***  COMPUTE SURFACE LAYER INTEGRAL FUNCTIONS
@@ -1261,13 +1261,13 @@ CONTAINS
       ZETA1=ZTMIN1
       ZETA2=ZTMIN2
 !
-      DO K=1,KZTM
+      do K=1,KZTM
 !
 !----------------------------------------------------------------------
 !***  UNSTABLE RANGE
 !----------------------------------------------------------------------
 !
-        IF(ZETA1<0.)THEN
+        if(ZETA1<0.)then
 !
 !----------------------------------------------------------------------
 !***  PAULSON 1970 FUNCTIONS
@@ -1281,7 +1281,7 @@ CONTAINS
 !***  STABLE RANGE
 !----------------------------------------------------------------------
 !
-        ELSE
+        else
 !
 !----------------------------------------------------------------------
 !***  PAULSON 1970 FUNCTIONS
@@ -1297,13 +1297,13 @@ CONTAINS
           PSIH1(K)=0.7*ZETA1+0.75*ZETA1*(6.-0.35*ZETA1)*EXP(-0.35*ZETA1)
 !----------------------------------------------------------------------
 !
-        ENDIF
+        endif
 !
 !----------------------------------------------------------------------
 !***  UNSTABLE RANGE
 !----------------------------------------------------------------------
 !
-        IF(ZETA2<0.)THEN
+        if(ZETA2<0.)then
 !
 !----------------------------------------------------------------------
 !***  PAULSON 1970 FUNCTIONS
@@ -1317,7 +1317,7 @@ CONTAINS
 !***  STABLE RANGE
 !----------------------------------------------------------------------
 !
-        ELSE
+        else
 !
 !----------------------------------------------------------------------
 !***  PAULSON 1970 FUNCTIONS
@@ -1334,27 +1334,27 @@ CONTAINS
           PSIH2(K)=0.7*ZETA2+0.75*ZETA2*(6.-0.35*ZETA2)*EXP(-0.35*ZETA2)
 !----------------------------------------------------------------------
 !
-        ENDIF
+        endif
 !
 !----------------------------------------------------------------------
-        IF(K==KZTM)THEN
+        if(K==KZTM)then
           ZTMAX1=ZETA1
           ZTMAX2=ZETA2
-        ENDIF
+        endif
 !
         ZETA1=ZETA1+DZETA1
         ZETA2=ZETA2+DZETA2
 !----------------------------------------------------------------------
-      ENDDO
+      enddo
 !----------------------------------------------------------------------
       ZTMAX1=ZTMAX1-EPS
       ZTMAX2=ZTMAX2-EPS
 !----------------------------------------------------------------------
 !
-      END SUBROUTINE MYJSFCINIT
+      end subroutine MYJSFCINIT
 !
 !----------------------------------------------------------------------
 !
-      END MODULE MODULE_SF_MYJSFC
+      end module MODULE_SF_MYJSFC
 !
 !----------------------------------------------------------------------

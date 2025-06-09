@@ -1,11 +1,11 @@
-  MODULE sound_module
+  module sound_module
 
   implicit none
 
   private
   public :: sound
 
-  CONTAINS
+  contains
 
       subroutine sound( dt,xh,arh1,arh2,uh,ruh,xf,uf,yh,vh,rvh,yf,vf,     &
                         rds,sigma,rdsf,sigmaf,zh,mh,rmh,c1,c2,mf,zf,      &
@@ -81,7 +81,7 @@
       beta=1.0-alph
       asq=alph*alph
 
-    IF( nrkmax.eq.3 )THEN
+    if( nrkmax.eq.3 )then
       if(nrk.eq.1)then
 !!!        nloop=1
 !!!        dts=dt/3.
@@ -98,9 +98,9 @@
         nloop=nsound
         dts=dt/nsound
       endif
-    ELSE
+    else
       stop 97392
-    ENDIF
+    endif
 
 !!!      print *,'  nloop,dts,dttmp = ',nloop,dts,nloop*dts
 
@@ -116,7 +116,7 @@
 !---------------------------------------------------------------------
 !  Arrays for vertically implicit solver
 
-      IF(.not.terrain_flag)THEN
+      if(.not.terrain_flag)then
 
         ! without terrain:
         ! "s" velocities ARE NOT coupled with reference density
@@ -142,7 +142,7 @@
           enddo
         enddo
 
-      ELSE
+      else
 
         ! with terrain:
         ! "s" velocities ARE coupled with reference density
@@ -159,24 +159,24 @@
             pk1(i,j,k) = tem2*rf0(i,j,k  )*( +c1(i,j,k  )*piadv(i,j,k-1)+(c2(i,j,k  )-1.0)*piadv(i,j,k) )
           enddo
           enddo
-          IF( k.ge.2 )THEN
+          if( k.ge.2 )then
             tem1 = dts*rds(k)*cp
             do j=1,nj
             do i=1,ni
               mm(i,j,k) = tem1*(c2(i,j,k)*thv(i,j,k)+c1(i,j,k)*thv(i,j,k-1))*gz(i,j)
             enddo
             enddo
-          ELSE
+          else
             do j=1,nj
             do i=1,ni
               dum3(i,j,1)=0.0
               dum3(i,j,nk+1)=0.0
             enddo
             enddo
-          ENDIF
+          endif
         enddo
 
-      ENDIF
+      endif
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -252,7 +252,7 @@
 !-----------------------------------------------------------------------
 !  Begin small steps:
 
-      small_step_loop:  DO N=1,NLOOP
+      small_step_loop:  do N=1,NLOOP
 
         if(timestats.ge.1) time_sound=time_sound+mytime()
 
@@ -271,35 +271,35 @@
 !-----------------------------------------------------------------------
 !  Open boundary conditions:
 
-        IF(wbc.eq.2.and.ibw.eq.1)THEN
+        if(wbc.eq.2.and.ibw.eq.1)then
           ! west open bc tendency:
           call   ssopenbcw(uh,rds,sigma,rdsf,sigmaf,gz,rgzu,gx,radbcw,dum1,u3d,uten,dts)
-        ENDIF
-        IF(ebc.eq.2.and.ibe.eq.1)THEN
+        endif
+        if(ebc.eq.2.and.ibe.eq.1)then
           ! east open bc tendency:
           call   ssopenbce(uh,rds,sigma,rdsf,sigmaf,gz,rgzu,gx,radbce,dum1,u3d,uten,dts)
-        ENDIF
+        endif
 
-        IF(roflux.eq.1)THEN
+        if(roflux.eq.1)then
           call restrict_openbc_we(rvh,rmh,rho0,u3d)
-        ENDIF
+        endif
 
 !-----
 
-      IF(axisymm.eq.0)THEN
-        IF(sbc.eq.2.and.ibs.eq.1)THEN
+      if(axisymm.eq.0)then
+        if(sbc.eq.2.and.ibs.eq.1)then
           ! south open bc tendency:
           call   ssopenbcs(vh,rds,sigma,rdsf,sigmaf,gz,rgzv,gy,radbcs,dum1,v3d,vten,dts)
-        ENDIF
-        IF(nbc.eq.2.and.ibn.eq.1)THEN
+        endif
+        if(nbc.eq.2.and.ibn.eq.1)then
           ! north open bc tendency:
           call   ssopenbcn(vh,rds,sigma,rdsf,sigmaf,gz,rgzv,gy,radbcn,dum1,v3d,vten,dts)
-        ENDIF
+        endif
 
-        IF(roflux.eq.1)THEN
+        if(roflux.eq.1)then
           call restrict_openbc_sn(ruh,rmh,rho0,v3d)
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -315,9 +315,9 @@
 
 !-----
 
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid without terrain:
 
         tem1 = rdx*cp*0.5
@@ -338,11 +338,11 @@
           enddo
         enddo
 
-        IF( do_ib )THEN
+        if( do_ib )then
           call zero_out_uv(bndy,kbdy,u3d,v3d)
-        ENDIF
+        endif
 
-      ELSE
+      else
         ! axisymmetric grid:
 
         tem1 = rdx*cp*0.5
@@ -359,9 +359,9 @@
           enddo
         enddo
 
-      ENDIF
+      endif
 
-    ELSE
+    else
 
         ! Cartesian grid with terrain:
 
@@ -407,49 +407,49 @@
           enddo
         enddo
 
-    ENDIF
+    endif
 
 !----------------------------------------------
 !  convergence forcing:
 
-        IF( convinit.eq.1 )THEN
-          IF( rtime.le.convtime .and. nx.gt.1 )THEN
+        if( convinit.eq.1 )then
+          if( rtime.le.convtime .and. nx.gt.1 )then
             call convinitu(myid,ib,ie,jb,je,kb,ke,ni,nj,nk,ibw,ibe,   &
                            zdeep,lamx,lamy,xcent,ycent,aconv,    &
                            xf,yh,zh,u0,u3d)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !----------------------------------------------
 
-      IF(axisymm.eq.0)THEN
+      if(axisymm.eq.0)then
         ! Cartesian grid:
 
 !----------------------------------------------
 !  convergence forcing:
 
-        IF( convinit.eq.1 )THEN
-          IF( rtime.le.convtime .and. ny.gt.1 )THEN
+        if( convinit.eq.1 )then
+          if( rtime.le.convtime .and. ny.gt.1 )then
             call convinitv(myid,ib,ie,jb,je,kb,ke,ni,nj,nk,ibs,ibn,   &
                            zdeep,lamx,lamy,xcent,ycent,aconv,    &
                            xh,yf,zh,v0,v3d)
-          ENDIF
-        ENDIF
+          endif
+        endif
 
 !----------------------------------------------
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !-----------------------------------------------------------------------
 !  get terms for horiz div (terrain only):
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
         ! Cartesian grid with terrain:
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           do j=1,nj
           do i=1,ni+1
             dum1(i,j,k)=u3d(i,j,k)*rgzu(i,j)
@@ -460,10 +460,10 @@
             dum2(i,j,k)=v3d(i,j,k)*rgzv(i,j)
           enddo
           enddo
-        ENDDO
+        enddo
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,r1,r2)
-        DO k=2,nk
+        do k=2,nk
           r2 = (sigmaf(k)-sigma(k-1))*rds(k)
           r1 = 1.0-r2
           do j=1,nj
@@ -475,8 +475,8 @@
                             )*(sigmaf(k)-zt)*gz(i,j)*rzt
           enddo
           enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -486,14 +486,14 @@
       temx = dts*0.5*rdx
       temy = dts*0.5*rdy
 
-    IF(axisymm.eq.0)THEN
+    if(axisymm.eq.0)then
 
-      IF(.not.terrain_flag)THEN
+      if(.not.terrain_flag)then
         ! Cartesian grid without terrain:
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,div,u1,u2,v1,v2,w1,w2)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           div = (u3d(i+1,j,k)-u3d(i,j,k))*rdx*uh(i)  &
@@ -508,15 +508,15 @@
                      +w3d(i,j,k+1)*(pk2(i,j,k)-qk(i,j,k)) )
         enddo
         enddo
-        ENDDO
+        enddo
 
-      ELSE
+      else
         ! Cartesian grid with terrain:
         ! (note: see below for advection)
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,div,u1,u2,v1,v2,w1,w2)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           div = gz(i,j)*( ( (dum1(i+1,j,k)-dum1(i,j,k))*rdx*uh(i)    &
@@ -531,16 +531,16 @@
               +beta*( -qk(i,j,k)*(w2-w1) )
         enddo
         enddo
-        ENDDO
+        enddo
 
-      ENDIF
+      endif
 
-    ELSE
+    else
         ! axisymmetric grid:
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,div,u1,u2,v1,v2,w1,w2)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           div = (arh2(i)*u3d(i+1,j,k)-arh1(i)*u3d(i,j,k))*rdx*uh(i)
@@ -554,9 +554,9 @@
                      +w3d(i,j,k+1)*(pk2(i,j,k)-qk(i,j,k)) )
         enddo
         enddo
-        ENDDO
+        enddo
 
-    ENDIF
+    endif
 
       if(timestats.ge.1) time_sound=time_sound+mytime()
 
@@ -565,10 +565,10 @@
 !  updraft nudging:
 
 
-      IF( wnudge.eq.1 )THEN
+      if( wnudge.eq.1 )then
         !  updraft nudging tendency:
         !  here in sound.F, add to fwk array:
-        IF( (mtime+dt).le.t2_wnudge )THEN
+        if( (mtime+dt).le.t2_wnudge )then
           if(n.eq.1)then
             do k=2,nk
             do j=1,nj
@@ -586,8 +586,8 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ENDIF
+        endif
+      endif
 
 
 !-----------------------------------------------------------------------
@@ -595,13 +595,13 @@
 !-----------------------------------------------------------------------
 !  advection for terrain:
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
         ! Cartesian grid with terrain:
         call bcwsfc(gz,dzdx,dzdy,u3d,v3d,w3d)
         ! Cartesian grid with terrain:
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
           do j=1,nj
           do i=1,ni+1
             dum1(i,j,k)=0.5*(rho0(i-1,j,k)+rho0(i,j,k))*dum1(i,j,k)
@@ -612,10 +612,10 @@
             dum2(i,j,k)=0.5*(rho0(i,j-1,k)+rho0(i,j,k))*dum2(i,j,k)
           enddo
           enddo
-        ENDDO
+        enddo
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,r1,r2)
-        DO k=2,nk
+        do k=2,nk
           r2 = (sigmaf(k)-sigma(k-1))*rds(k)
           r1 = 1.0-r2
           do j=1,nj
@@ -628,12 +628,12 @@
                             )*(sigmaf(k)-zt)*gz(i,j)*rzt * rrf0(i,j,k)
           enddo
           enddo
-        ENDDO
+        enddo
         temx = dts*0.5*rdx
         temy = dts*0.5*rdy
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,u1,u2,v1,v2,w1,w2)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           u2 = temx*dum1(i+1,j,k)*uh(i)
@@ -650,8 +650,8 @@
                     +( w1*pk1(i,j,k)+w2*pk2(i,j,k) )
         enddo
         enddo
-        ENDDO
-      ENDIF
+        enddo
+      endif
 
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -729,9 +729,9 @@
 
         enddo
 
-      IF( do_ib )THEN
+      if( do_ib )then
           call zero_out_w(bndy,kbdy,w3d)
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -739,12 +739,12 @@
 !  get new pp,th
 
 
-      IF(.not.terrain_flag)THEN
+      if(.not.terrain_flag)then
         ! without terrain:
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,w1,w2)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           !-----
@@ -758,14 +758,14 @@
           !-----
         enddo
         enddo
-        ENDDO
+        enddo
 
-      ELSE
+      else
         ! with terrain:
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,w1,w2)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj
         do i=1,ni
           !-----
@@ -784,22 +784,22 @@
           !-----
         enddo
         enddo
-        ENDDO
+        enddo
 
-      ENDIF
+      endif
 
-        IF( n.lt.nloop )THEN
+        if( n.lt.nloop )then
           if(timestats.ge.1) time_sound=time_sound+mytime()
           call bcp(ppd)
-        ENDIF
+        endif
 #ifdef MPI
-        IF( n.ne.1 )THEN
+        if( n.ne.1 )then
           if(timestats.ge.1) time_sound=time_sound+mytime()
           call comm_1p_end2(reqs_p)
-        ENDIF
-        IF( n.lt.nloop )THEN
+        endif
+        if( n.lt.nloop )then
           call comm_1p_start(ppd,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
-        ENDIF
+        endif
 #endif
 
 !--------------------------------------------------------------------
@@ -808,7 +808,7 @@
       if( n.lt.nloop )then
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj+1
         do i=1,ni+1
           rru(i,j,k)=rru(i,j,k)+u3d(i,j,k)
@@ -816,12 +816,12 @@
           rrw(i,j,k)=rrw(i,j,k)+w3d(i,j,k)
         enddo
         enddo
-        ENDDO
+        enddo
       else
         tavg = 1.0/float(nloop)
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
-        DO k=1,nk
+        do k=1,nk
         do j=1,nj+1
         do i=1,ni+1
           rru(i,j,k)=(rru(i,j,k)+u3d(i,j,k))*tavg
@@ -829,17 +829,17 @@
           rrw(i,j,k)=(rrw(i,j,k)+w3d(i,j,k)*alph)*tavg
         enddo
         enddo
-        ENDDO
+        enddo
       endif
 
 !--------------------------------------------------------------------
 
-      ENDDO  small_step_loop
+      enddo  small_step_loop
 
 !  end of small steps
 !--------------------------------------------------------------------
 
-      IF( nrk.eq.nrkmax )THEN
+      if( nrk.eq.nrkmax )then
         ! pressure tendency term: save for next timestep:
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k)
@@ -850,10 +850,10 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
       if(timestats.ge.1) time_sound=time_sound+mytime()
 
 
       end subroutine sound
 
-  END MODULE sound_module
+  end module sound_module

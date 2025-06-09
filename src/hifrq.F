@@ -1,4 +1,4 @@
-  MODULE hifrq_module
+  module hifrq_module
 
   implicit none
 
@@ -10,7 +10,7 @@
 
   integer :: ncid,wloop
 
-  CONTAINS
+  contains
 
 !-------------------------------------------------------------------------------
 !
@@ -242,7 +242,7 @@
 
       if( myid.eq.0 ) print *,'  nwriteh = ',nwriteh
 
-      IF( output_format.eq.1 )THEN
+      if( output_format.eq.1 )then
 
         ! grads-format
 
@@ -261,7 +261,7 @@
 
         wloopmax = 1
 
-      ELSEIF( output_format.eq.2 )THEN
+      elseif( output_format.eq.2 )then
 
         ! netcdf-format
 #ifdef NETCDF
@@ -277,7 +277,7 @@
         wloopmax = 2
 
 #endif
-      ELSE
+      else
 
         print *
         print *,'  output_format = ',output_format
@@ -286,12 +286,12 @@
         print *
         call stopcm1
 
-      ENDIF
+      endif
 
     !---------------------------------------------------------------------------
 
   bigwloop:  &
-  DO wloop = 1 , wloopmax
+  do wloop = 1 , wloopmax
 
       if( myid.eq.0 ) print *,'  wloop = ',wloop
 
@@ -315,7 +315,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 )THEN
+    if( imoist.eq.1 )then
 
       nvar = nvar+1
       varname(nvar) = 'rain'
@@ -325,11 +325,11 @@
 
       call writehf(1,rain(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 .and. nrain.ge.2 )THEN
+    if( imoist.eq.1 .and. nrain.ge.2 )then
 
       nvar = nvar+1
       varname(nvar) = 'rain2'
@@ -339,11 +339,11 @@
 
       call writehf(1,rain(ib,jb,2),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 .and. cuparam.ge.1 )THEN
+    if( imoist.eq.1 .and. cuparam.ge.1 )then
 
       nvar = nvar+1
       varname(nvar) = 'raincv'
@@ -353,11 +353,11 @@
 
       call writehf(1,raincv(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 .and. cuparam.ge.1 .and. nrain.ge.2 )THEN
+    if( imoist.eq.1 .and. cuparam.ge.1 .and. nrain.ge.2 )then
 
       nvar = nvar+1
       varname(nvar) = 'raincv2'
@@ -367,11 +367,11 @@
 
       call writehf(1,raincv(ib,jb,2),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 )THEN
+    if( imoist.eq.1 )then
 
       nvar = nvar+1
       varname(nvar) = 'prate'
@@ -381,7 +381,7 @@
 
       call writehf(1,prate,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -395,7 +395,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 )THEN
+    if( imoist.eq.1 )then
       nvar = nvar+1
       varname(nvar) = 'qvflux'
       vardesc(nvar) = 'surface water vapor mixing ratio flux'
@@ -403,11 +403,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,qvflux,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'hfx'
       vardesc(nvar) = 'surface sensible heat flux'
@@ -415,11 +415,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,hfx,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'qfx'
       vardesc(nvar) = 'surface latent heat flux'
@@ -427,11 +427,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,qfx,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'u10'
     if( imove.eq.1 )then
@@ -443,11 +443,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,u10,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'v10'
     if( imove.eq.1 )then
@@ -459,11 +459,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,v10,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
   !---------------------------------------------------------------------
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
 
     ! radial and tangential velocity:
     doit = .true.
@@ -517,13 +517,13 @@
     endif
     endif  docylsfc
 
-    ENDIF
+    endif
 
   !---------------------------------------------------------------------
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 't2'
       vardesc(nvar) = 'diagnostic 2m temperature'
@@ -531,11 +531,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,t2,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'q2'
       vardesc(nvar) = 'diagnostic 2m mixing ratio'
@@ -543,11 +543,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,q2,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'ust'
       vardesc(nvar) = 'friction velocity (u star)'
@@ -555,11 +555,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,ust,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'stau'
       vardesc(nvar) = 'surface stress'
@@ -567,11 +567,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,stau,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'znt'
       vardesc(nvar) = 'surface roughness length'
@@ -579,11 +579,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,znt,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sfcmodel.ge.1 )THEN
+    if( sfcmodel.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'psfc'
       vardesc(nvar) = 'surface pressure'
@@ -591,7 +591,7 @@
       varlvls(nvar) = 0
 
       call writehf(1,psfc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -607,7 +607,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( output_dbz.eq.1 .and. qd_dbz.ge.1 )THEN
+    if( output_dbz.eq.1 .and. qd_dbz.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'cref'
       vardesc(nvar) = 'composite reflectivity'
@@ -629,11 +629,11 @@
       enddo
 
       call writehf(1,dum1(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 )THEN
+    if( imoist.eq.1 )then
       ! water paths, precipitable water:
 
       do j=1,nj
@@ -746,7 +746,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( (cm1setup.eq.2.or.cm1setup.eq.4) .and. horizturb.eq.1 )THEN
+    if( (cm1setup.eq.2.or.cm1setup.eq.4) .and. horizturb.eq.1 )then
       nvar = nvar+1
       varname(nvar) = 'tlh'
       vardesc(nvar) = 'horiz lengthscale for turbulence scheme'
@@ -754,15 +754,15 @@
       varlvls(nvar) = 0
 
       call writehf(1,tlh,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'lwupt'
       vardesc(nvar) = 'lw flux, upward, top of atmosphere (OLR)'
@@ -770,11 +770,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,lwupt,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'lwdnt'
       vardesc(nvar) = 'lw flux, downward, top of atmosphere'
@@ -782,11 +782,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,lwdnt,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'lwupb'
       vardesc(nvar) = 'lw flux, upward, bottom of atmosphere'
@@ -794,11 +794,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,lwupb,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'lwdnb'
       vardesc(nvar) = 'lw flux, downward, bottom of atmosphere'
@@ -806,11 +806,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,lwdnb,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'swupt'
       vardesc(nvar) = 'sw flux, upward, top of atmosphere'
@@ -818,11 +818,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,swupt,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'swdnt'
       vardesc(nvar) = 'sw flux, downward, top of atmosphere'
@@ -830,11 +830,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,swdnt,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'swupb'
       vardesc(nvar) = 'sw flux, upward, bottom of atmosphere'
@@ -842,11 +842,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,swupb,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'swdnb'
       vardesc(nvar) = 'sw flux, downward, bottom of atmosphere'
@@ -854,11 +854,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,swdnb,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'lwuptc'
       vardesc(nvar) = 'lw flux, upward, top of atmosphere - clear sky'
@@ -866,11 +866,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,lwuptc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'lwdntc'
       vardesc(nvar) = 'lw flux, downward, top of atmosphere - clear sky'
@@ -878,11 +878,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,lwdntc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'lwupbc'
       vardesc(nvar) = 'lw flux, upward, bottom of atmosphere - clear sky'
@@ -890,11 +890,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,lwupbc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'lwdnbc'
       vardesc(nvar) = 'lw flux, downward, bottom of atmosphere - clear sky'
@@ -902,11 +902,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,lwdnbc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'swuptc'
       vardesc(nvar) = 'sw flux, upward, top of atmosphere - clear sky'
@@ -914,11 +914,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,swuptc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'swdntc'
       vardesc(nvar) = 'sw flux, downward, top of atmosphere - clear sky'
@@ -926,11 +926,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,swdntc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'swupbc'
       vardesc(nvar) = 'sw flux, upward, bottom of atmosphere - clear sky'
@@ -938,11 +938,11 @@
       varlvls(nvar) = 0
 
       call writehf(1,swupbc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( radopt.eq.2 )THEN
+    if( radopt.eq.2 )then
       nvar = nvar+1
       varname(nvar) = 'swdnbc'
       vardesc(nvar) = 'sw flux, downward, bottom of atmosphere - clear sky'
@@ -950,12 +950,12 @@
       varlvls(nvar) = 0
 
       call writehf(1,swdnbc,dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
     doit = .false.
-    IF( doit )THEN
+    if( doit )then
       nvar = nvar+1
       varname(nvar) = 'wa500'
       vardesc(nvar) = 'vertical velocity at 500 mb'
@@ -980,13 +980,13 @@
           enddo
 
       call writehf(1,dum1(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
     domse = .false.
 
-    IF( domse .and. imoist.eq.1 )THEN
+    if( domse .and. imoist.eq.1 )then
 
       !$omp parallel do default(shared)  &
       !$omp private(i,j)
@@ -1133,7 +1133,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -1315,7 +1315,7 @@
 
     endif
 
-    ENDIF  docyl
+    endif  docyl
 
   !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
@@ -1341,7 +1341,7 @@
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( imoist.eq.1 .and. nqv.ge.1 )THEN
+    if( imoist.eq.1 .and. nqv.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'qv'
       vardesc(nvar) = 'water vapor mixing ratio'
@@ -1358,11 +1358,11 @@
       enddo
 
       call writehf(nlevels,dum1(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( output_dbz.eq.1 .and. qd_dbz.ge.1 )THEN
+    if( output_dbz.eq.1 .and. qd_dbz.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'dbz'
       vardesc(nvar) = 'reflectivity'
@@ -1379,11 +1379,11 @@
       enddo
 
       call writehf(nlevels,dum1(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sgsmodel.eq.1 .or. sgsmodel.eq.4 )THEN
+    if( sgsmodel.eq.1 .or. sgsmodel.eq.4 )then
       nvar = nvar+1
       varname(nvar) = 'tke'
       vardesc(nvar) = 'tke'
@@ -1400,11 +1400,11 @@
       enddo
 
       call writehf(nlevels,dum1(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( sgsmodel.ge.1 .or. horizturb.ge.1 )THEN
+    if( sgsmodel.ge.1 .or. horizturb.ge.1 )then
       nvar = nvar+1
       varname(nvar) = 'kmh'
       vardesc(nvar) = 'kmh'
@@ -1421,11 +1421,11 @@
       enddo
 
       call writehf(nlevels,dum1(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
-    IF( ipbl.eq.4 .or. ipbl.eq.5 )THEN
+    if( ipbl.eq.4 .or. ipbl.eq.5 )then
       nvar = nvar+1
       varname(nvar) = 'qke'
       vardesc(nvar) = 'twice TKE from MYNN'
@@ -1442,7 +1442,7 @@
       enddo
 
       call writehf(nlevels,dum1(ib,jb,1),dat1,dat2,dat3,reqt,orec,nvar,varname,vardesc,varunit,myi1p,myi2p,myj1p,myj2p)
-    ENDIF
+    endif
 
       !c-c-c-c-c-c-c-c-c-c
 
@@ -1452,13 +1452,13 @@
     !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     ! close output file:
 
-    id0:  IF( myid.eq.0 )THEN
+    id0:  if( myid.eq.0 )then
 
 !-------------------------------------------------------------------
 !  grads format
 
     of2:  &
-    IF( output_format.eq.1 )THEN
+    if( output_format.eq.1 )then
 
         do i=1,maxstring
           string(i:i) = ' '
@@ -1550,16 +1550,16 @@
 ! netcdf format
 
 #ifdef NETCDF
-    ELSEIF( output_format.eq.2 )THEN  of2
+    elseif( output_format.eq.2 )then  of2
 
       call       writehifrq_nc(wloop,nlevels,nvar,varmax,varname,vardesc,varunit,varlvls,ncid,xhref,yhref,sigma,klev,zlev,mtime,dat2(1,1),dat2(1,2),dum1(ib,jb,kb))
 
 #endif
-    ENDIF  of2
+    endif  of2
 
-    ENDIF  id0
+    endif  id0
 
-  ENDDO  bigwloop
+  enddo  bigwloop
 
       if( myid.eq.0 ) print *
       if( myid.eq.0 ) print *,'  ... Leaving writeout_hifrq '
@@ -1597,7 +1597,7 @@
 
     if(myid.eq.0) print *,nvar,trim(varname(nvar))
 
-    DO k = 1 , nout
+    do k = 1 , nout
 
       call gather(var(ib,jb,k),dat1(1,1),dat2(1,1),dat3(1,1,0),reqt,myi1p,myi2p,myj1p,myj2p)
 
@@ -1621,7 +1621,7 @@
 
       endif
 
-    ENDDO
+    enddo
 
   endif
 
@@ -1677,7 +1677,7 @@
 #else
       !-------------------- MPI section --------------------!
 
-      IF(myid.ne.nodeleader)THEN
+      if(myid.ne.nodeleader)then
         ! ordinary processor ... send data to nodeleader:
 !$omp parallel do default(shared)   &
 !$omp private(i,j)
@@ -1689,13 +1689,13 @@
         call MPI_ISEND(dat1(1,1),d3is*d3js,MPI_REAL,nodeleader,tag,MPI_COMM_WORLD,reqs,ierr)
         call MPI_WAIT(reqs,MPI_STATUS_IGNORE,ierr)
         ! DONE, ordinary processors
-      ELSE
+      else
         ! begin nodeleader section:
           ! start receives from all other processors on a node:
           do proc=myid+1,myid+(ppnode-1)
             call MPI_IRECV(dat3(1,1,proc),d3is*d3js,MPI_REAL,proc,tag,MPI_COMM_WORLD,reqt(proc-myid),ierr)
           enddo
-        IF(myid.ne.0)THEN
+        if(myid.ne.0)then
           ! nodeleader, not proc 0:
 !$omp parallel do default(shared)  &
 !$omp private(i,j)
@@ -1711,7 +1711,7 @@
           ! wait for send to finish:
           call MPI_WAIT(reqs,MPI_STATUS_IGNORE,ierr)
           ! DONE, nodeleader (not proc 0)
-        ELSE
+        else
           ! proc 0:
             ! start receives from other nodeleaders:
             do nn = 1,(nodes-1)
@@ -1773,9 +1773,9 @@
             endif
           enddo
           ! DONE, proc 0
-        ENDIF
+        endif
         !-------------------- end MPI section --------------------!
-      ENDIF
+      endif
       ! seems to help with memory:
       call MPI_BARRIER (MPI_COMM_WORLD,ierr)
 #endif
@@ -1789,4 +1789,4 @@
   !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-  END MODULE hifrq_module
+  end module hifrq_module

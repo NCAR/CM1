@@ -1,8 +1,8 @@
-  MODULE misclibs
+  module misclibs
 
   implicit none
 
-  CONTAINS
+  contains
 
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -26,7 +26,7 @@
       integer :: i,j,k,n
       real(kind=qp) :: qtem
 
-      IF( ntim.eq.5 )THEN
+      if( ntim.eq.5 )then
 
         do k=k1,k2
         do j=0,nj+1+jstag
@@ -41,7 +41,7 @@
         enddo
         enddo
 
-      ELSE
+      else
 
         do k=k1,k2
         do j=0,nj+1+jstag
@@ -56,7 +56,7 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
       end subroutine tavg_plus1
 
@@ -77,7 +77,7 @@
 
       integer :: i,j,k,n
 
-      DO n = 1 , ntim-1
+      do n = 1 , ntim-1
 
         do k=k1,k2
         do j=0,nj+2
@@ -87,7 +87,7 @@
         enddo
         enddo
 
-      ENDDO
+      enddo
 
       do k=k1,k2
       do j=0,nj+2
@@ -124,8 +124,8 @@
       integer :: i,j,k
       real :: r1,r2
 
-      IF(.not.terrain_flag)THEN
-        IF(axisymm.eq.0)THEN
+      if(.not.terrain_flag)then
+        if(axisymm.eq.0)then
           ! Cartesian without terrain:
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -139,7 +139,7 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           ! axisymmetric:
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
@@ -152,12 +152,12 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ELSE
+        endif
+      else
           ! Cartesian with terrain:
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
-          DO k=1,nk
+          do k=1,nk
             do j=1,nj
             do i=1,ni+1
               dum1(i,j,k)=u(i,j,k)*rgzu(i,j)
@@ -168,18 +168,18 @@
               dum2(i,j,k)=v(i,j,k)*rgzv(i,j)
             enddo
             enddo
-          ENDDO
+          enddo
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k,r1,r2)
-          DO k=1,nk
-            IF(k.eq.1)THEN
+          do k=1,nk
+            if(k.eq.1)then
               do j=1,nj
               do i=1,ni
                 dum3(i,j,1)=0.0
                 dum3(i,j,nk+1)=0.0
               enddo
               enddo
-            ELSE
+            else
               r2 = (sigmaf(k)-sigma(k-1))*rds(k)
               r1 = 1.0-r2
               r1 = 0.5*r1
@@ -194,8 +194,8 @@
                                )*(sigmaf(k)-zt)*gz(i,j)*rzt
               enddo
               enddo
-            ENDIF
-          ENDDO
+            endif
+          enddo
           !$omp parallel do default(shared)  &
           !$omp private(i,j,k)
           do k=1,nk
@@ -208,7 +208,7 @@
           enddo
           enddo
           enddo
-      ENDIF
+      endif
       if(timestats.ge.1) time_divx=time_divx+mytime()
 
       end subroutine getdiv
@@ -238,12 +238,12 @@
       integer :: i,j,k
       real :: r1,r2,tem
 
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
       ! without terrain:
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,tem)
-      DO k=1,nk
+      do k=1,nk
         tem = rho0(1,1,k)
         do j=1,nj
         do i=1,ni+1
@@ -255,29 +255,29 @@
           rrv(i,j,k)=rrv(i,j,k)*tem
         enddo
         enddo
-        IF(k.eq.1)THEN
+        if(k.eq.1)then
           do j=1,nj
           do i=1,ni
             rrw(i,j,   1) = 0.0
             rrw(i,j,nk+1) = 0.0
           enddo
           enddo
-        ELSE
+        else
           tem = rf0(1,1,k)
           do j=1,nj
           do i=1,ni
             rrw(i,j,k)=rrw(i,j,k)*tem
           enddo
           enddo
-        ENDIF
-      ENDDO
+        endif
+      enddo
 
-    ELSE
+    else
       ! with terrain:
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
         do j=1,nj
         do i=1,ni+1
           rru(i,j,k)=0.5*(rho0(i-1,j,k)+rho0(i,j,k))*rru(i,j,k)*rgzu(i,j)
@@ -288,19 +288,19 @@
           rrv(i,j,k)=0.5*(rho0(i,j-1,k)+rho0(i,j,k))*rrv(i,j,k)*rgzv(i,j)
         enddo
         enddo
-      ENDDO
+      enddo
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,r1,r2)
-      DO k=1,nk
-        IF(k.eq.1)THEN
+      do k=1,nk
+        if(k.eq.1)then
           do j=1,nj
           do i=1,ni
             rrw(i,j,   1) = 0.0
             rrw(i,j,nk+1) = 0.0
           enddo
           enddo
-        ELSE
+        else
           r2 = (sigmaf(k)-sigma(k-1))*rds(k)
           r1 = 1.0-r2
           r1 = 0.5*r1
@@ -315,14 +315,14 @@
                        )*(sigmaf(k)-zt)*gz(i,j)*rzt
           enddo
           enddo
-        ENDIF
-      ENDDO
+        endif
+      enddo
 
-    ENDIF
+    endif
     if(timestats.ge.1) time_advs=time_advs+mytime()
 
-      IF(.not.terrain_flag)THEN
-        IF(axisymm.eq.0)THEN
+      if(.not.terrain_flag)then
+        if(axisymm.eq.0)then
           ! Cartesian without terrain:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -336,7 +336,7 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           ! axisymmetric:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -349,8 +349,8 @@
           enddo
           enddo
           enddo
-        ENDIF
-      ELSE
+        endif
+      else
           ! Cartesian with terrain:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -364,7 +364,7 @@
           enddo
           enddo
           enddo
-      ENDIF
+      endif
       if(timestats.ge.1) time_divx=time_divx+mytime()
 
       end subroutine getdivx
@@ -556,7 +556,7 @@
 
       gamm = 1.0
 
-      if(mtime.ge.t1_wnudge)THEN
+      if(mtime.ge.t1_wnudge)then
         gamm = 1.0+(0.0-1.0)*(mtime-t1_wnudge)/(t2_wnudge-t1_wnudge)
       endif
 
@@ -631,32 +631,32 @@
       dtlast = dt
 
       myid0:  &
-      IF( myid.eq.0 )THEN
+      if( myid.eq.0 )then
         ! only processor 0 does this:
 
         cflmax = max(cflmax,1.0e-10)
 
-        IF( cflmax.gt.cfl_limit )THEN
+        if( cflmax.gt.cfl_limit )then
           ! decrease timestep:
           dbldt = dbldt*(cfl_limit/cflmax)
-        ELSE
+        else
           ! increase timestep:
           dbldt = dbldt*min( 1.0+max_change , cfl_limit/cflmax )
-        ENDIF
+        endif
 
         ! 180129:
-        IF( cm1setup.ge.1 .and. (ksmax*dbldt/dt).gt.ks_limit )THEN
+        if( cm1setup.ge.1 .and. (ksmax*dbldt/dt).gt.ks_limit )then
           ! decrease timestep:
           dbldt = min( dbldt , dt*ks_limit/max(1.0e-10,ksmax) )
-        ENDIF
+        endif
 
         ! don't allow dt to exceed twice initial timestep
         dbldt = min( dbldt , dble(2.0*dtl) )
 
 
-        IF( .not. doinit )THEN
+        if( .not. doinit )then
 
-            IF( taptim.gt.0.0 )THEN
+            if( taptim.gt.0.0 )then
               ! ramp-down timestep when approaching output time
               if( dowriteout )then
                 tout = ( ( taptim - mtime ) + tapfrq )
@@ -673,9 +673,9 @@
                 if(myid.eq.0) print *,'  Note: setting dt based on upcoming writeout time '
                 dbldt = tout
               endif
-            ENDIF
+            endif
 
-            IF( rsttim.gt.0.0 )THEN
+            if( rsttim.gt.0.0 )then
               ! ramp-down timestep when approaching restart time
               if( dorestart )then
                 tout = ( ( rsttim - mtime ) + rstfrq )
@@ -692,9 +692,9 @@
                 if(myid.eq.0) print *,'  Note: setting dt based on upcoming restart time '
                 dbldt = tout
               endif
-            ENDIF
+            endif
 
-            IF( stattim.gt.0.0 )THEN
+            if( stattim.gt.0.0 )then
               ! ramp-down timestep when approaching stat time
               if( dostat )then
                 tout = ( ( stattim - mtime ) + statfrq )
@@ -711,9 +711,9 @@
                 if(myid.eq.0) print *,'  Note: setting dt based on upcoming stat time '
                 dbldt = tout
               endif
-            ENDIF
+            endif
 
-            IF( dodomaindiag .and. diagtim.gt.0.0 )THEN
+            if( dodomaindiag .and. diagtim.gt.0.0 )then
               ! ramp-down timestep when approaching domaindiag time
               if( dotdwrite )then
                 tout = ( ( diagtim - mtime ) + diagfrq )
@@ -730,9 +730,9 @@
                 if(myid.eq.0) print *,'  Note: setting dt based on upcoming diag time '
                 dbldt = tout
               endif
-            ENDIF
+            endif
 
-            IF( doazimavg .and. azimavgtim.gt.0.0 )THEN
+            if( doazimavg .and. azimavgtim.gt.0.0 )then
               ! ramp-down timestep when approaching azimavg time
               if( doazimwrite )then
                 tout = ( ( azimavgtim - mtime ) + azimavgfrq )
@@ -749,9 +749,9 @@
                 if(myid.eq.0) print *,'  Note: setting dt based on upcoming azimavg time '
                 dbldt = tout
               endif
-            ENDIF
+            endif
 
-            IF( dohifrq .and. hifrqtim.gt.0.0 )THEN
+            if( dohifrq .and. hifrqtim.gt.0.0 )then
               ! ramp-down timestep when approaching hifrq time
               if( dohifrqwrite )then
                 tout = ( ( hifrqtim - mtime ) + hifrqfrq )
@@ -768,12 +768,12 @@
                 if(myid.eq.0) print *,'  Note: setting dt based on upcoming hifrq time '
                 dbldt = tout
               endif
-            ENDIF
+            endif
 
-        ENDIF
+        endif
 
         ! end of processor 0 stuff
-      ENDIF  myid0
+      endif  myid0
 
 
       ! all processors:
@@ -784,18 +784,18 @@
       dt = dbldt
       call dtsmall(dt,dbldt)
 
-      IF( ( dt.ne.dtlast ) .or. doinit )THEN
-        IF( (imoist.eq.1).and.(ptype.eq.2) )then
+      if( ( dt.ne.dtlast ) .or. doinit )then
+        if( (imoist.eq.1).and.(ptype.eq.2) )then
           if(timestats.ge.1) time_misc=time_misc+mytime()
           call consat2(dt)
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
-        ENDIF
-        IF( (imoist.eq.1).and.(ptype.eq.4) )then
+        endif
+        if( (imoist.eq.1).and.(ptype.eq.4) )then
           if(timestats.ge.1) time_misc=time_misc+mytime()
           call lfoice_init(dt)
           if(timestats.ge.1) time_microphy=time_microphy+mytime()
-        ENDIF
-      ENDIF
+        endif
+      endif
 
       tem = dt/dtlast
       cflmax = cflmax*tem
@@ -834,51 +834,51 @@
 !!!      integer, parameter :: max_nsound = 96
       integer, parameter :: max_nsound = 192
 
-      IF( psolver.eq.1 .or. psolver.eq.4 .or. psolver.eq.5 )THEN
+      if( psolver.eq.1 .or. psolver.eq.4 .or. psolver.eq.5 )then
 
         dtsm = dt
         nsound = 1
 
-      ELSE
+      else
 
         ! Algorithm to determine number of small steps:
-        IF( psolver.eq.2 )THEN
+        if( psolver.eq.2 )then
           ! check dx,dy,dz:
-          IF( ny.eq.1 )THEN
+          if( ny.eq.1 )then
             ! 2D sims (x-z):
             dtsm = 0.60*min( min_dx , min_dz )/360.0
-          ELSEIF( nx.eq.1 )THEN
+          elseif( nx.eq.1 )then
             ! 2D sims (y-z):
             dtsm = 0.60*min( min_dy , min_dz )/360.0
-          ELSE
+          else
             ! 3D sims:
             dtsm = 0.50*min( min_dx , min_dy , min_dz )/360.0
-          ENDIF
-        ELSEIF( psolver.eq.3 )THEN
+          endif
+        elseif( psolver.eq.3 )then
           ! check dx,dy:
-          IF( ny.eq.1 )THEN
+          if( ny.eq.1 )then
             ! 2D sims (x-z):
             dtsm = 0.60*min_dx/360.0
-          ELSEIF( nx.eq.1 )THEN
+          elseif( nx.eq.1 )then
             ! 2D sims (y-z):
             dtsm = 0.60*min_dy/360.0
-          ELSE
+          else
             ! 3D sims:
             dtsm = 0.60*min( min_dx , min_dy )/360.0
-          ENDIF
-        ELSEIF( psolver.eq.6 .or. psolver.eq.7 )THEN
+          endif
+        elseif( psolver.eq.6 .or. psolver.eq.7 )then
           ! check dx,dy,dz:
-          IF( ny.eq.1 )THEN
+          if( ny.eq.1 )then
             ! 2D sims (x-z):
             dtsm = 0.60*min( min_dx , min_dz )/csound
-          ELSEIF( nx.eq.1 )THEN
+          elseif( nx.eq.1 )then
             ! 2D sims (y-z):
             dtsm = 0.60*min( min_dy , min_dz )/csound
-          ELSE
+          else
             ! 3D sims:
             dtsm = 0.50*min( min_dx , min_dy , min_dz )/csound
-          ENDIF
-        ENDIF
+          endif
+        endif
 
         nsound = max( nint( dbldt/dtsm ) , 4 )
         if( mod(nsound,2).ne.0 ) nsound = nsound + 1
@@ -910,7 +910,7 @@
           endif
         endif
 
-      ENDIF
+      endif
 
       end subroutine dtsmall
 
@@ -931,7 +931,7 @@
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,n)
-    DO k=1,nk
+    do k=1,nk
 
       do j=1,nj
       do i=1,ni
@@ -940,7 +940,7 @@
       enddo
       enddo
 
-    IF( nql1.gt.0 )THEN
+    if( nql1.gt.0 )then
       do n=nql1,nql2
         do j=1,nj
         do i=1,ni
@@ -948,9 +948,9 @@
         enddo
         enddo
       enddo
-    ENDIF
+    endif
 
-      IF(iice.eq.1)THEN
+      if(iice.eq.1)then
         do n=nqs1,nqs2
           do j=1,nj
           do i=1,ni
@@ -958,9 +958,9 @@
           enddo
           enddo
         enddo
-      ENDIF
+      endif
 
-    ENDDO
+    enddo
 
       if(timestats.ge.1) time_misc=time_misc+mytime()
 
@@ -984,9 +984,9 @@
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,n)
-    DO k=1,nk
+    do k=1,nk
 
-      IF( eqtset.le.1 .or. imoist.eq.0 )THEN
+      if( eqtset.le.1 .or. imoist.eq.0 )then
 
         do j=1,nj
         do i=1,ni
@@ -994,14 +994,14 @@
         enddo
         enddo
 
-      ELSE
+      else
 
         do j=1,nj
         do i=1,ni
           cvm(i,j,k) = cv+cvv*q(i,j,k,nqv)
         enddo
         enddo
-      IF( nql1.gt.0 )THEN
+      if( nql1.gt.0 )then
         do n=nql1,nql2
           do j=1,nj
           do i=1,ni
@@ -1009,8 +1009,8 @@
           enddo
           enddo
         enddo
-      ENDIF
-        IF(iice.eq.1)THEN
+      endif
+        if(iice.eq.1)then
           do n=nqs1,nqs2
           do j=1,nj
           do i=1,ni
@@ -1018,11 +1018,11 @@
           enddo
           enddo
           enddo
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 
-    ENDDO
+    enddo
 
       if(timestats.ge.1) time_misc=time_misc+mytime()
 
@@ -1055,7 +1055,7 @@
 
       tem = dx*dy*dz
 
-      IF(pdscheme.eq.1)THEN
+      if(pdscheme.eq.1)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,t1,t2,t3,a1,a2)
@@ -1087,7 +1087,7 @@
           asq=asq+budj(j)*tem
         enddo
 
-      ELSE
+      else
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k,a1,a2)
@@ -1108,7 +1108,7 @@
           asq=asq+budk(k)*tem
         enddo
 
-      ENDIF
+      endif
 
 !----------------------------------------------------------------------
 
@@ -1144,11 +1144,11 @@
 
       tem = dx*dy*dz
 
-      IF(pdscheme.eq.1)THEN
+      if(pdscheme.eq.1)then
 
       !$omp parallel do default(shared)   &
       !$omp private(i,j,k)
-      DO j=1,nj
+      do j=1,nj
 
         budj(j) = 0.0
 
@@ -1194,13 +1194,13 @@
           budj(j)=budj(j)+(dum2d5(i,j)-dum2d2(i,j))
         enddo
 
-      ENDDO
+      enddo
 
         do j=1,nj
           asq=asq+budj(j)*tem
         enddo
 
-      ELSE
+      else
 
         !$omp parallel do default(shared)   &
         !$omp private(i,j,k,a1,a2)
@@ -1221,7 +1221,7 @@
           asq=asq+budk(k)*tem
         enddo
 
-      ENDIF
+      endif
 
 !----------------------------------------------------------------------
 
@@ -1282,7 +1282,7 @@
 
 !----------------------------------------------------------------------
 
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -1296,7 +1296,7 @@
         enddo
         enddo
 
-      ELSE
+      else
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -1309,7 +1309,7 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !----------------------------------------------------------------------
 
@@ -1338,7 +1338,7 @@
       ! Reference:  Fovell and Ogura, 1988, JAS, pg 3850
       !             (and references therein)
 
-  IF(ptype.eq.2)THEN
+  if(ptype.eq.2)then
 
     rhor = 1000.0 * ROQR
     rhog = 1000.0 * ROQG
@@ -1393,7 +1393,7 @@
     enddo
     enddo
 
-  ELSE
+  else
 
     if(dowr) write(outfile,*)
     if(dowr) write(outfile,*) ' ptype = ',ptype
@@ -1402,7 +1402,7 @@
     if(dowr) write(outfile,*)
     call stopcm1
 
-  ENDIF
+  endif
 
       if(timestats.ge.1) time_write=time_write+mytime()
 
@@ -1445,22 +1445,22 @@
       real :: r1,r2
       real :: wbar,zbar
 
-  IF(.not.terrain_flag)THEN
+  if(.not.terrain_flag)then
 
     ! Cartesian grid, without terrain:
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
-    DO k=1,nk
-    DO j=1,nj+1
-    DO i=1,ni+1
+    do k=1,nk
+    do j=1,nj+1
+    do i=1,ni+1
       zeta(i,j,k) = (va(i,j,k)-va(i-1,j,k))*rdx*uf(i)   &
                    -(ua(i,j,k)-ua(i,j-1,k))*rdy*vf(j)
-    ENDDO
-    ENDDO
-    ENDDO
+    enddo
+    enddo
+    enddo
 
-  ELSE
+  else
 
     ! Cartesian grid, with terrain:
 
@@ -1509,25 +1509,25 @@
           enddo
         enddo
 
-  ENDIF
+  endif
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,wbar,zbar)
-    DO j=1,nj
-    DO i=1,ni
+    do j=1,nj
+    do i=1,ni
       uh(i,j) = 0.0
-      DO k=1,nk
-        IF( zh(i,j,k).ge.zz0 .and. zh(i,j,k).le.zzt )THEN
+      do k=1,nk
+        if( zh(i,j,k).ge.zz0 .and. zh(i,j,k).le.zzt )then
           ! note:  only consider cyclonically rotating updrafts
           !        (so, w and zeta must both be positive)
           wbar = max( 0.0 , 0.5*(wa(i,j,k)+wa(i,j,k+1)) )
           zbar = max( 0.0 , 0.25*(zeta(i,j,k)+zeta(i+1,j,k)   &
                                  +zeta(i,j+1,k)+zeta(i+1,j+1,k)) )
           uh(i,j) = uh(i,j) + (min(zf(i,j,k+1),zzt)-max(zf(i,j,k),zz0))*wbar*zbar
-        ENDIF
-      ENDDO
-    ENDDO
-    ENDDO
+        endif
+      enddo
+    enddo
+    enddo
 
       end subroutine calcuh
 
@@ -1572,7 +1572,7 @@
 
 !-----------------------------------------------------------------------
 
-      IF( output_pv.eq.1 )THEN
+      if( output_pv.eq.1 )then
         do k=1,nk
         do j=1,nj
         do i=1,ni
@@ -1580,9 +1580,9 @@
         enddo
         enddo
         enddo
-      ENDIF
+      endif
 
-    IF( terrain_flag .or. output_pv.eq.1 )THEN
+    if( terrain_flag .or. output_pv.eq.1 )then
       ! dum1 stores w at scalar pts
       ! dum2 stores theta at w pts
 !$omp parallel do default(shared)   &
@@ -1611,14 +1611,14 @@
         enddo
         enddo
       enddo
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 ! x-vort:
 
   tem=0.0
   if(axisymm.eq.0)then
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
       !cccccccccccccccccccccccccccccccccccccc
       ! Cartesian grid, without terrain:
 !$omp parallel do default(shared)  &
@@ -1631,7 +1631,7 @@
       enddo
       enddo
       enddo
-      IF( bbc.eq.1 )THEN
+      if( bbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj+1
@@ -1639,7 +1639,7 @@
           tem(i,j,1)=tem(i,j,2)
         enddo
         enddo
-      ELSEIF( bbc.eq.2 )THEN
+      elseif( bbc.eq.2 )then
       if( imove.eq.0 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -1657,8 +1657,8 @@
         enddo
         enddo
       endif
-      ENDIF
-      IF( tbc.eq.1 )THEN
+      endif
+      if( tbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj+1
@@ -1666,7 +1666,7 @@
           tem(i,j,nk+1)=tem(i,j,nk)
         enddo
         enddo
-      ELSEIF( tbc.eq.2 )THEN
+      elseif( tbc.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj+1
@@ -1674,7 +1674,7 @@
           tem(i,j,nk+1)=2.0*va(i,j,nk)*rdz*0.5*(mf(i,j-1,nk+1)+mf(i,j,nk+1))
         enddo
         enddo
-      ENDIF
+      endif
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
       do k=1,nk
@@ -1685,7 +1685,7 @@
       enddo
       enddo
       !cccccccccccccccccccccccccccccccccccccc
-    getpv11: IF( output_pv.eq.1 )THEN
+    getpv11: if( output_pv.eq.1 )then
       ! here, zvort array stores d(th)/dx
       do k=1,nk
       do j=1,nj
@@ -1704,9 +1704,9 @@
       enddo
       enddo
       enddo
-    ENDIF  getpv11
+    endif  getpv11
       !cccccccccccccccccccccccccccccccccccccc
-    ELSE
+    else
       !cccccccccccccccccccccccccccccccccccccc
       ! Cartesian grid, with terrain:
       !   (dum1 stores w at scalar-pts:)
@@ -1724,7 +1724,7 @@
       enddo
       enddo
       enddo
-      IF( bbc.eq.1 )THEN
+      if( bbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj+1
@@ -1732,7 +1732,7 @@
           tem(i,j,1)=tem(i,j,2)
         enddo
         enddo
-      ELSEIF( bbc.eq.2 )THEN
+      elseif( bbc.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj+1
@@ -1740,8 +1740,8 @@
           tem(i,j,1)=-2.0*va(i,j,1)*rds(2)*0.5*( gz(i,j-1)+gz(i,j) )
         enddo
         enddo
-      ENDIF
-      IF( tbc.eq.1 )THEN
+      endif
+      if( tbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj+1
@@ -1749,7 +1749,7 @@
           tem(i,j,nk+1)=tem(i,j,nk)
         enddo
         enddo
-      ELSEIF( tbc.eq.2 )THEN
+      elseif( tbc.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj+1
@@ -1757,7 +1757,7 @@
           tem(i,j,nk+1)=2.0*va(i,j,nk)*rdz*0.5*(mf(i,j-1,nk+1)+mf(i,j,nk+1))
         enddo
         enddo
-      ENDIF
+      endif
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
       do k=1,nk
@@ -1767,7 +1767,7 @@
       enddo
       enddo
       enddo
-    getpv1: IF( output_pv.eq.1 )THEN
+    getpv1: if( output_pv.eq.1 )then
       !cccccccccccccccccccccccccccccccccccccc
       ! here, zvort array stores d(th)/dx
       do k=1,nk
@@ -1790,8 +1790,8 @@
       enddo
       enddo
       !cccccccccccccccccccccccccccccccccccccc
-    ENDIF  getpv1
-    ENDIF
+    endif  getpv1
+    endif
   else
       !cccccccccccccccccccccccccccccccccccccc
       ! Axisymmetric grid:
@@ -1804,7 +1804,7 @@
       enddo
       enddo
       enddo
-      IF( bbc.eq.1 )THEN
+      if( bbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1812,7 +1812,7 @@
           tem(i,j,1)=tem(i,j,2)
         enddo
         enddo
-      ELSEIF( bbc.eq.2 )THEN
+      elseif( bbc.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1820,8 +1820,8 @@
           tem(i,j,1)=-2.0*va(i,j,1)*rdz*mf(1,1,1)
         enddo
         enddo
-      ENDIF
-      IF( tbc.eq.1 )THEN
+      endif
+      if( tbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1829,7 +1829,7 @@
           tem(i,j,nk+1)=tem(i,j,nk)
         enddo
         enddo
-      ELSEIF( tbc.eq.2 )THEN
+      elseif( tbc.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1837,7 +1837,7 @@
           tem(i,j,nk+1)=2.0*va(i,j,nk)*rdz*mf(1,1,nk+1)
         enddo
         enddo
-      ENDIF
+      endif
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
       do k=1,nk
@@ -1854,7 +1854,7 @@
 ! y-vort:
 
     tem=0.0
-    IF(.not.terrain_flag)THEN
+    if(.not.terrain_flag)then
       !cccccccccccccccccccccccccccccccccccccc
       ! Cartesian grid, without terrain:
       ! and axisymmetric grid:
@@ -1869,7 +1869,7 @@
       enddo
       enddo
       enddo
-      IF( bbc.eq.1 )THEN
+      if( bbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1877,7 +1877,7 @@
           tem(i,j,1)=tem(i,j,2)
         enddo
         enddo
-      ELSEIF( bbc.eq.2 )THEN
+      elseif( bbc.eq.2 )then
       if( imove.eq.0 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -1895,8 +1895,8 @@
         enddo
         enddo
       endif
-      ENDIF
-      IF( tbc.eq.1 )THEN
+      endif
+      if( tbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1904,7 +1904,7 @@
           tem(i,j,nk+1)=tem(i,j,nk)
         enddo
         enddo
-      ELSEIF( tbc.eq.2 )THEN
+      elseif( tbc.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1912,7 +1912,7 @@
           tem(i,j,nk+1)=-2.0*ua(i,j,nk)*rdz*0.5*(mf(i-1,j,nk+1)+mf(i,j,nk+1))
         enddo
         enddo
-      ENDIF
+      endif
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
       do k=1,nk
@@ -1923,7 +1923,7 @@
       enddo
       enddo
       !cccccccccccccccccccccccccccccccccccccc
-    getpv12:  IF( output_pv.eq.1 )THEN
+    getpv12:  if( output_pv.eq.1 )then
       ! here, zvort array stores d(th)/dy
       do k=1,nk
       do j=1,nj+1
@@ -1942,9 +1942,9 @@
       enddo
       enddo
       enddo
-    ENDIF  getpv12
+    endif  getpv12
       !cccccccccccccccccccccccccccccccccccccc
-    ELSE
+    else
       !cccccccccccccccccccccccccccccccccccccc
       ! Cartesian grid, with terrain:
       !   (dum1 stores w at scalar-pts:)
@@ -1962,7 +1962,7 @@
       enddo
       enddo
       enddo
-      IF( bbc.eq.1 )THEN
+      if( bbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1970,7 +1970,7 @@
           tem(i,j,1)=tem(i,j,2)
         enddo
         enddo
-      ELSEIF( bbc.eq.2 )THEN
+      elseif( bbc.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1978,8 +1978,8 @@
           tem(i,j,1)=2.0*ua(i,j,1)*rds(2)*0.5*( gz(i-1,j)+gz(i,j) )
         enddo
         enddo
-      ENDIF
-      IF( tbc.eq.1 )THEN
+      endif
+      if( tbc.eq.1 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1987,7 +1987,7 @@
           tem(i,j,nk+1)=tem(i,j,nk)
         enddo
         enddo
-      ELSEIF( tbc.eq.2 )THEN
+      elseif( tbc.eq.2 )then
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
         do j=1,nj
@@ -1995,7 +1995,7 @@
           tem(i,j,nk+1)=-2.0*ua(i,j,nk)*rds(nk)*0.5*( gz(i-1,j)+gz(i,j) )
         enddo
         enddo
-      ENDIF
+      endif
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
       do k=1,nk
@@ -2005,7 +2005,7 @@
       enddo
       enddo
       enddo
-    getpv2:  IF( output_pv.eq.1 )THEN
+    getpv2:  if( output_pv.eq.1 )then
       !cccccccccccccccccccccccccccccccccccccc
       ! here, zvort array stores d(th)/dy
       do k=1,nk
@@ -2027,16 +2027,16 @@
       enddo
       enddo
       enddo
-    ENDIF  getpv2
+    endif  getpv2
       !cccccccccccccccccccccccccccccccccccccc
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 ! z-vort:
 
     tem=0.0
     if(axisymm.eq.0)then
-      IF(.not.terrain_flag)THEN
+      if(.not.terrain_flag)then
         !cccccccccccccccccccccccccccccccccccccc
         ! Cartesian grid, without terrain:
 !$omp parallel do default(shared)  &
@@ -2055,7 +2055,7 @@
           enddo
         enddo
         !cccccccccccccccccccccccccccccccccccccc
-      ELSE
+      else
         !cccccccccccccccccccccccccccccccccccccc
         ! Cartesian grid, with terrain:
         ! dum1 stores u at w-pts:
@@ -2106,7 +2106,7 @@
           enddo
         enddo
         !cccccccccccccccccccccccccccccccccccccc
-      ENDIF
+      endif
     else
       !cccccccccccccccccccccccccccccccccccccc
       ! Axisymmetric grid:
@@ -2129,7 +2129,7 @@
     endif
 
 
-    getpv3:  IF( output_pv.eq.1 )THEN
+    getpv3:  if( output_pv.eq.1 )then
       ! now, dum1 stores dt/dz:
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -2153,11 +2153,11 @@
         enddo
         enddo
       enddo
-    ENDIF  getpv3
+    endif  getpv3
 
 !-----------------------------------------------------------------------
 
-      IF( bbc.eq.3 )THEN
+      if( bbc.eq.3 )then
         ! cm1r18:  use log-layer equation below
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -2167,7 +2167,7 @@
           yvort(i,j,1) =  (ust(i,j)/(karman*(zh(i,j,1)+znt(i,j))))*(u1(i,j)/max(s1(i,j),0.01))
         enddo
         enddo
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 
@@ -2200,8 +2200,8 @@
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k,n,ql,bb)
-    DO j=1,nj
-    DO i=1,ni
+    do j=1,nj
+    do i=1,ni
       cpc(i,j) = 0.0
       cph(i,j) = 0.0
       bb = 0.0
@@ -2211,11 +2211,11 @@
       if(imoist.eq.1)then
         do k=1,nk
           ql = 0.0
-        IF( nql1.gt.0 )THEN
+        if( nql1.gt.0 )then
           do n=nql1,nql2
             ql=ql+qa(i,j,k,n)
           enddo
-        ENDIF
+        endif
           if(iice.eq.1)then
             do n=nqs1,nqs2
               ql=ql+qa(i,j,k,n)
@@ -2225,7 +2225,7 @@
         enddo
       endif
     ! only calculate cpc/cph if surface B is less than bcrit
-    IF( bb(1).lt.bcrit .and. tha(i,j,1).le.-1.0 )THEN
+    if( bb(1).lt.bcrit .and. tha(i,j,1).le.-1.0 )then
       cpc(i,j) = - 2.0*bb(1)*(zf(i,j,2)-zf(i,j,1))
       k = 2
       do while( bb(k).lt.bcrit .and. k.lt.nk )
@@ -2244,9 +2244,9 @@
         ! account for terrain:
         cph(i,j) = cph(i,j) - zf(i,j,1)
       endif
-    ENDIF
-    ENDDO
-    ENDDO
+    endif
+    enddo
+    enddo
 
       end subroutine calccpch
 
@@ -2465,7 +2465,7 @@
         if(zh(1,1,k).ge.5000.0) n5km=k
       enddo
 
-      IF(terrain_flag)THEN
+      if(terrain_flag)then
         ! dum1 stores u at w-pts:
         ! dum2 stores v at w-pts:
 !$omp parallel do default(shared)   &
@@ -2493,7 +2493,7 @@
           enddo
           enddo
         enddo
-      ENDIF
+      endif
 
       do n=1,6
         vmax = 0.0
@@ -2516,10 +2516,10 @@
           k=n5km
           text='VOR5KM'
         endif
-    kcheck:  IF( k.le.nk )THEN
+    kcheck:  if( k.le.nk )then
         vmax=-9999999.
-    IF( axisymm.eq.0 )THEN
-      IF(.not.terrain_flag)THEN
+    if( axisymm.eq.0 )then
+      if(.not.terrain_flag)then
         ! Cartesian grid, without terrain:
         do j=1+ibs,nj+1-ibn
         do i=1+ibw,ni+1-ibe
@@ -2528,7 +2528,7 @@
           vmax=max(vmax,vort)
         enddo
         enddo
-      ELSE
+      else
         ! Cartesian grid, with terrain:
         do j=1+ibs,nj+1-ibn
         do i=1+ibw,ni+1-ibe
@@ -2544,8 +2544,8 @@
           vmax=max(vmax,vort)
         enddo
         enddo
-      ENDIF
-    ELSE
+      endif
+    else
         ! axisymmetric grid
         do j=1,nj+1
         do i=2,ni+1
@@ -2553,8 +2553,8 @@
           vmax=max(vmax,vort)
         enddo
         enddo
-    ENDIF
-    ENDIF  kcheck
+    endif
+    endif  kcheck
 #ifdef MPI
         call MPI_REDUCE(vmax,var,1,MPI_REAL,MPI_MAX,0,   &
                         MPI_COMM_WORLD,ierr)
@@ -2567,7 +2567,7 @@
 #ifdef MPI
         endif
 #endif
-      ENDDO
+      enddo
 
 100   format(2x,a6,':',1x,e13.6)
 
@@ -2693,17 +2693,17 @@
       if(myid.eq.0)then
 #endif
 
-    IF(writeit.eq.1)THEN
+    if(writeit.eq.1)then
       nstat = nstat + 1
-      IF( adapt_dt.eq.1 )THEN
+      if( adapt_dt.eq.1 )then
         write(6,100) 'CFLMAX',sngl(acfl),imax,jmax,kmax
         rstat(nstat) = sngl(acfl)
-      ELSE
+      else
         write(6,100) 'CFLMAX',fmax,imax,jmax,kmax
         rstat(nstat) = fmax
-      ENDIF
+      endif
 100   format(2x,a6,':',1x,f13.6,i5,i5,i5)
-    ENDIF
+    endif
 
 #ifdef MPI
       endif
@@ -3089,25 +3089,25 @@
         vmaxt(k) = 0.0
         do i=1,ni
           wspd = sqrt( (0.5*(ua(i,1,k)+ua(i+1,1,k)))**2 + va(i,1,k)**2 )
-          IF( wspd.ge.vmaxt(k) )THEN
+          if( wspd.ge.vmaxt(k) )then
             vmaxt(k) = wspd
             rmaxt(k) = xh(i)
             zmaxt(k) = zh(i,1,k)
             imaxt(k) = i
             kmaxt(k) = k
-          ENDIF
+          endif
         enddo
       enddo
 
       vmax = 0.0
       do k=1,nk
-        IF( vmaxt(k).ge.vmax )THEN
+        if( vmaxt(k).ge.vmax )then
           vmax = vmaxt(k)
           rmax = rmaxt(k)
           zmax = zmaxt(k)
           imax = imaxt(k)
           kmax = kmaxt(k)
-        ENDIF
+        endif
       enddo
 
       jmax = 1
@@ -3778,4 +3778,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-  END MODULE misclibs
+  end module misclibs

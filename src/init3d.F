@@ -1,11 +1,11 @@
-  MODULE init3d_module
+  module init3d_module
 
   implicit none
 
   private
   public :: init3d,getset
 
-  CONTAINS
+  contains
 
 !-----------------------------------------------------------------------------
 !
@@ -223,8 +223,8 @@
       enddo
 
 
-      IF( idoles .and. iusetke .and. ( testcase.eq.3 .or. testcase.eq.4 .or.  testcase.eq.5 .or. testcase.eq.9 .or. testcase.eq.11 ) )THEN
-          IF( testcase.eq.3 )THEN
+      if( idoles .and. iusetke .and. ( testcase.eq.3 .or. testcase.eq.4 .or.  testcase.eq.5 .or. testcase.eq.9 .or. testcase.eq.11 ) )then
+          if( testcase.eq.3 )then
             ! shallow Cu case (Siebesma at al, 2003, JAS)
             do k=1,nk+1
             do j=jbt,jet
@@ -234,7 +234,7 @@
             enddo
             enddo
             enddo
-          ELSEIF( testcase.eq.9 .or. testcase.eq.11 )THEN
+          elseif( testcase.eq.9 .or. testcase.eq.11 )then
             ! stable boundary layer (Beare et al. 2006, BLM)
             do k=1,nk+1
             do j=jbt,jet
@@ -248,39 +248,39 @@
             enddo
             enddo
             enddo
-          ELSE
+          else
             tkea = 1.0
             tke3d = 1.0
-          ENDIF
+          endif
           call bcw(tkea,1)
           call bcw(tke3d,1)
-      ENDIF
+      endif
 
 
 !-----------------------------------------------------------------------
 
-    IF ( ( ptype .ge. 26 .and. ptype.le.29 ) .and. lccn .gt. 0 ) THEN
+    if ( ( ptype .ge. 26 .and. ptype.le.29 ) .and. lccn .gt. 0 ) then
 ! initialize CCN concentrations as constant mixing ratios througout the domain
       do k=kbm,kem
       do j=jbm,jem
       do i=ibm,iem
-       IF ( irenuc < 5 ) THEN ! number of unactivated ccn
+       if ( irenuc < 5 ) then ! number of unactivated ccn
        qa (i,j,k,lccn-1) = ccn/1.225
        q3d(i,j,k,lccn-1) = ccn/1.225
-       ELSE ! treat as number of activated ccn
+       else ! treat as number of activated ccn
        qa (i,j,k,lccn-1) = 0.0
        q3d(i,j,k,lccn-1) = 0.0
-       ENDIF
+       endif
       enddo
       enddo
       enddo
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 !  Set qv to base state value:
 
     im1:  &
-    IF(imoist.eq.1)THEN
+    if(imoist.eq.1)then
 
       do k=kbm,kem
       do j=jbm,jem
@@ -293,9 +293,9 @@
 !---- This is here to ensure that certain idealized cases work ----
 
     pt1:  &
-    IF( ptype.ge.1 )THEN
+    if( ptype.ge.1 )then
 
-      IF( (isnd.eq.4 .or. isnd.eq.9 .or. isnd.eq.10 .or. isnd.eq.11 .or. isnd.eq.15) )THEN
+      if( (isnd.eq.4 .or. isnd.eq.9 .or. isnd.eq.10 .or. isnd.eq.11 .or. isnd.eq.15) )then
 
         do k=kbm,kem
         do j=jbm,jem
@@ -305,9 +305,9 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-      IF( (isnd.eq.4 .or. isnd.eq.9 .or. isnd.eq.10) .and. iice.eq.1 )THEN
+      if( (isnd.eq.4 .or. isnd.eq.9 .or. isnd.eq.10) .and. iice.eq.1 )then
 
         do k=kbm,kem
         do j=jbm,jem
@@ -317,15 +317,15 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ENDIF  pt1
+    endif  pt1
 
-    ENDIF  im1
+    endif  im1
 
 !-----
 
-    IF(iptra.eq.1)THEN
+    if(iptra.eq.1)then
       ! define concentrations for passive fluid tracers here:
       do n=1,npt
       do k=kbp,kep
@@ -347,12 +347,12 @@
       enddo
       enddo
       enddo
-    ENDIF
+    endif
 
 !-----
 !  parcel info:
 
-      IF(iprcl.eq.1)THEN
+      if(iprcl.eq.1)then
         ! define initial locations of parcels here:
         !   pdata(*,prx) = x location (m)
         !   pdata(*,pry) = y location (m)
@@ -396,30 +396,30 @@
         call MPI_ALLREDUCE(MPI_IN_PLACE,pdata(1,1),3*nparcels,MPI_REAL,MPI_MAX,MPI_COMM_WORLD,ierr)
 #endif
 
-        IF(axisymm.eq.1.or.ny.eq.1)THEN
+        if(axisymm.eq.1.or.ny.eq.1)then
           ! 170719,  for 2d setup (x,z), fix all y values:
-          DO n=1,nparcels
+          do n=1,nparcels
             pdata(n,pry) = 0.0
-          ENDDO
-        ENDIF
-        IF(nx.eq.1)THEN
+          enddo
+        endif
+        if(nx.eq.1)then
           ! 170719,  for 2d setup (y,z), fix all x values:
-          DO n=1,nparcels
+          do n=1,nparcels
             pdata(n,prx) = 0.0
-          ENDDO
-        ENDIF
+          enddo
+        endif
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  initialize random number generator:
 
-      IF( use_truly_random_pert )THEN
+      if( use_truly_random_pert )then
 
         ! randomly reinitializes the pseudorandom number generator:
         call reinit_random_seed
 
-      ELSE
+      else
 
         ! generate same set of pseudorandom numbers every time:
         ! (default for cm1)
@@ -440,14 +440,14 @@
         !----- don't change this code) -----!
         !-----------------------------------!
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  iinit = 1
 !  Warm bubble
 !  reference:
 
-      IF(iinit.eq.1)THEN
+      if(iinit.eq.1)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  Warm bubble'
@@ -486,7 +486,7 @@
 !  Cold pool (dam break style)
 !  reference:  
 
-      ELSEIF(iinit.eq.2)THEN
+      elseif(iinit.eq.2)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  Cold pool .... periodic in N-S'
@@ -518,7 +518,7 @@
 !  Line of warm bubbles
 !  reference:  
 
-      ELSEIF(iinit.eq.3)THEN
+      elseif(iinit.eq.3)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  Line of warm bubbles'
@@ -576,7 +576,7 @@
 !  moist bubble for moist benchmark
 !  reference:  Bryan and Fritsch, 2002, MWR, 130, 2917-2928.
 
-      ELSEIF(iinit.eq.4)THEN
+      elseif(iinit.eq.4)then
 
         ! parameters for dry counterpart bubble
 
@@ -651,7 +651,7 @@
 !  iinit = 5
 !  density current sim
 
-      ELSEIF(iinit.eq.5)THEN
+      elseif(iinit.eq.5)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  Cold pool (elipse, following Straka)'
@@ -694,7 +694,7 @@
 !------------------------------------------------------------------
 !  Analytic tropical cyclone-like vortex
 
-      ELSEIF(iinit.eq.7)THEN
+      elseif(iinit.eq.7)then
 
         ! for 3d runs, place TC in center of domain, by default:
         xref  =  centerx
@@ -744,7 +744,7 @@
       !----------------------------------------------------------------!
       ! do not change anything below here !
 
-        IF(axisymm.eq.1)THEN
+        if(axisymm.eq.1)then
           ! axisymmetric grid ... use actual grid:
 
           nref = nx
@@ -759,7 +759,7 @@
           enddo
           rrmax = rref(nref)
 
-        ELSE
+        else
           ! 3d Cartesian grid:
 
           nref = nx/2 + 3
@@ -776,7 +776,7 @@
           if( myid.eq.0 ) print *,'  xref,yref     = ',xref,yref
           if( myid.eq.0 ) print *,'  rrmax,nref = ',rrmax,nref
 
-        ENDIF
+        endif
 
 
         allocate(    vt(nref) )
@@ -797,25 +797,25 @@
          qvref=0.0
          rhref=0.0
 
-        IF(ibalance.ne.0)THEN
+        if(ibalance.ne.0)then
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) ' Please use ibalance = 0 with iinit=7'
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) ' ... stopping inside init3d ... '
           if(dowr) write(outfile,*)
           call stopcm1
-        ENDIF
-        IF(terrain_flag)THEN
+        endif
+        if(terrain_flag)then
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) ' iinit=7 is not setup for use with terrain'
           if(dowr) write(outfile,*)
           if(dowr) write(outfile,*) ' ... stopping inside init3d ... '
           if(dowr) write(outfile,*)
           call stopcm1
-        ENDIF
+        endif
 
 
-      IF( tctype.eq.1 )THEN
+      if( tctype.eq.1 )then
         ! Rotunno-Emanuel (1987) vortex:
         dd2 = 2.0 * rmax_re87 / ( r0_re87 + rmax_re87 )
         do i=1,nref
@@ -828,7 +828,7 @@
             vt(i) = 0.0
           endif
         enddo
-      ELSEIF( tctype.eq.2 )THEN
+      elseif( tctype.eq.2 )then
         ! modified Rankine vortex:
         do i=1,nref
           if( rref(i).lt.rm1 )then
@@ -845,7 +845,7 @@
             vt(i) = 0.0
           endif
         enddo
-      ENDIF
+      endif
 
 
         if( myid.eq.0 )then
@@ -881,7 +881,7 @@
           enddo
         enddo
 
-        IF( rhmods )THEN
+        if( rhmods )then
           ! increase RH in the inner core region (see parameters above)
           do k=1,nk
           do i=1,nref
@@ -889,10 +889,10 @@
                                                                              *0.5*( 1.0+tanh( -(zh(1,1,k)-zmid)/zscale ) )  )
           enddo
           enddo
-        ENDIF
+        endif
 
       ! need to iterate for qv to converge:
-      DO nloop=1,20
+      do nloop=1,20
 
         ! get pressure (pref) and theta-v (thvref) from pi-pert (piref) and theta-pert (thref):
         do k=1,nk
@@ -958,7 +958,7 @@
 
         if(dowr) write(outfile,*) nloop,thref(1,1),qvref(1,1),piref(1,1)
 
-      ENDDO   ! enddo for iteration
+      enddo   ! enddo for iteration
 
 
         tha = 0.0
@@ -970,7 +970,7 @@
         ysave = yref
 
         grid:  &
-        IF(axisymm.eq.1)THEN
+        if(axisymm.eq.1)then
           ! for axisymmetric model, we are done:
 
           do k=1,nk
@@ -984,7 +984,7 @@
           enddo
           enddo
 
-        ELSE  grid
+        else  grid
           ! for 3d model, we need to interpolate:
 
           if( myid.eq.0 ) print *
@@ -1050,7 +1050,7 @@
           endif
         endif
 
-        IF( doit )THEN
+        if( doit )then
 
           ! interpolate to Cartesian grid:
           if( myid.eq.0 ) print *,'  nn,xref,yref = ',nn,xref,yref
@@ -1179,7 +1179,7 @@
 !!!          enddo
 !!!          print *
 
-        ENDIF
+        endif
 
       enddo  nnloop
 
@@ -1199,7 +1199,7 @@
           enddo
           enddo
 
-        ENDIF  grid
+        endif  grid
 
 
         ! all done, set some boundary conditions, calculate final pressure, etc:
@@ -1227,7 +1227,7 @@
       ! add random theta perts for 3d runs:
       ! (plus or minus this value in K)
 
-      IF( nx.gt.3 .and. ny.gt.3 )THEN
+      if( nx.gt.3 .and. ny.gt.3 )then
 
         amplitude = 0.1
 
@@ -1239,22 +1239,22 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               ! only add perts in the warm core:
               if( tha(i,j,k).ge.0.1 )  &
               tha(i,j,k)=tha(i,j,k)+amplitude*(2.0*rand-1.0)
-            ENDIF
+            endif
           enddo
           enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  iinit = 8
 !  Line thermal with random small-amplitude perturbations
 
-      ELSEIF(iinit.eq.8)THEN
+      elseif(iinit.eq.8)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  Warm bubble'
@@ -1280,7 +1280,7 @@
           call random_number(rand)
           i = ii - myi1 + 1
           j = jj - myj1 + 1
-        IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+        if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
           beta=sqrt(                             &
                     ((xh(i)-ric)/bhrad)**2       &
                    +((zh(i,j,k)-zc)/bvrad)**2)
@@ -1290,7 +1290,7 @@
           else
             tha(i,j,k)=0.0
           endif
-        ENDIF
+        endif
         enddo
         enddo
         enddo
@@ -1300,7 +1300,7 @@
 !  Forced convergence
 !  Reference:  Loftus et al, 2008: MWR, v. 136, pp. 2408--2421.
 
-      ELSEIF(iinit.eq.9)THEN
+      elseif(iinit.eq.9)then
 
         ! User-defined settings:
         Dmax     =  -1.0e-3     ! maximum divergence (s^{-1})
@@ -1314,24 +1314,24 @@
 
         ! Don't change anything below here:
         convinit = 1
-        IF( ny.eq.1 )THEN
+        if( ny.eq.1 )then
           ! 2D (x-z):
           Aconv = (-0.5*Dmax)/( (1.0/(lamx**2)) )
           lamy = 1.0e20
-        ELSEIF( nx.eq.1 )THEN
+        elseif( nx.eq.1 )then
           ! 2D (y-z):
           Aconv = (-0.5*Dmax)/( (1.0/(lamy**2)) )
           lamx = 1.0e20
-        ELSE
+        else
           ! 3D:
           Aconv = (-0.5*Dmax)/( (1.0/(lamx**2))+(1.0/(lamy**2)) )
-        ENDIF
+        endif
 
 !------------------------------------------------------------------
 !  iinit = 10
 !  momentum (u) forcing scheme (Morrison et al, 2015, JAS, pg 315)
 
-      ELSEIF(iinit.eq.10)THEN
+      elseif(iinit.eq.10)then
 
         xc_uforce     =  minx + 0.5*(maxx-minx)    ! x_c (m), center point of forcing in x
         xr_uforce     =  10000.0                   ! x_r (m), radius of forcing in x
@@ -1345,7 +1345,7 @@
 !  Potential-temperature perturbation for inertia-gravity wave test case.
 !  Reference:  Skamarock and Klemp, 1994, MWR, 122, 2623-2630.
 
-      ELSEIF(iinit.eq.11)THEN
+      elseif(iinit.eq.11)then
 
         do k=1,nk
         do j=1,nj
@@ -1367,7 +1367,7 @@
 !  iinit = 12
 !  updraft nudging scheme (Naylor and Gilmore, 2012, MWR, pgs 3699-3705)
 
-      ELSEIF(iinit.eq.12)THEN
+      elseif(iinit.eq.12)then
 
         xc_wnudge     =  centerx                   ! x_c (m), center point of nudging in x
         xr_wnudge     =  10000.0                   ! x_r (m), radius of nudging in x
@@ -1395,7 +1395,7 @@
 !  iinit = 13
 !
 
-      ELSEIF(iinit.eq.13)THEN
+      elseif(iinit.eq.13)then
 
         bvrad = 1000.0
 
@@ -1413,7 +1413,7 @@
 
 !------------------------------------------------------------------
 
-      ENDIF    ! end of iinit options
+      endif    ! end of iinit options
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1443,7 +1443,7 @@
 
 ! Random perturbations:
 
-      IF( irandp.eq.1 )THEN
+      if( irandp.eq.1 )then
 
 !        do n=1,nint(var7)
 !          if(myid.eq.0) print *,'  pert loop = ',n
@@ -1456,7 +1456,7 @@
 !        enddo
 !        enddo
 
-      IF( testcase.eq.0 )THEN
+      if( testcase.eq.0 )then
         ! not a pre-configured test case: 
 
         ! this is the amplitude of the theta perturbations
@@ -1476,14 +1476,14 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               tha(i,j,k)=tha(i,j,k)+amplitude*(2.0*rand-1.0)
-            ENDIF
+            endif
           enddo
           enddo
         enddo
 
-      ELSEIF( testcase.eq.1 .or. testcase.eq.2 .or. testcase.eq.6 .or. testcase.eq.10 .or. testcase.eq.11 .or. testcase.eq.15 )THEN
+      elseif( testcase.eq.1 .or. testcase.eq.2 .or. testcase.eq.6 .or. testcase.eq.10 .or. testcase.eq.11 .or. testcase.eq.15 )then
 
         ! 1: convective boundary layer (Sullivan and Patton, 2011, JAS)
         ! 2: shear-driven boundary layer (Moeng and Sullivan, 1994, JAS)
@@ -1502,15 +1502,15 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               tha(i,j,k)=tha(i,j,k)+amplitude*(2.0*rand-1.0)
-            ENDIF
+            endif
           enddo
           enddo
         endif
         enddo
 
-      ELSEIF( testcase.eq.3 )THEN
+      elseif( testcase.eq.3 )then
 
         ! shallow Cu (Siebesma et al, 2003, JAS)
 
@@ -1524,16 +1524,16 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               tha(i,j,k)=tha(i,j,k)+0.1*(2.0*rand-1.0)
               qa(i,j,k,nqv)=qa(i,j,k,nqv)+0.001*0.025*(2.0*rand2-1.0)
-            ENDIF
+            endif
           enddo
           enddo
         endif
         enddo
 
-      ELSEIF( testcase.eq.4 .or. testcase.eq.5 .or. testcase.eq.7 )THEN
+      elseif( testcase.eq.4 .or. testcase.eq.5 .or. testcase.eq.7 )then
 
         amplitude = 0.10
 
@@ -1546,16 +1546,16 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               tha(i,j,k)=tha(i,j,k)+amplitude*(2.0*rand-1.0)
-            ENDIF
+            endif
           enddo
           enddo
         endif
         enddo
 
 
-      ELSEIF( testcase.eq.8 )THEN
+      elseif( testcase.eq.8 )then
 
         ! RCEMIP:
         do k=1,5
@@ -1568,14 +1568,14 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               tha(i,j,k)=tha(i,j,k)+amplitude*(2.0*rand-1.0)
-            ENDIF
+            endif
           enddo
           enddo
         enddo
 
-      ELSEIF( testcase.eq.9 )THEN
+      elseif( testcase.eq.9 )then
 
         ! stable boundary layer (Beare et al. 2006)
         amplitude = 0.10
@@ -1587,15 +1587,15 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               tha(i,j,k)=tha(i,j,k)+amplitude*(2.0*rand-1.0)
-            ENDIF
+            endif
           enddo
           enddo
           endif
         enddo
 
-      ELSEIF( testcase.eq.12 .or. testcase.eq.13 )THEN
+      elseif( testcase.eq.12 .or. testcase.eq.13 )then
         ! velocity perturbations:
 
         ! this is the amplitude of the theta perturbations
@@ -1622,11 +1622,11 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               dum1(i,j,k)=dum1(i,j,k)+amplitude*(2.0*rand-1.0)
               dum2(i,j,k)=dum2(i,j,k)+amplitude*(2.0*rand2-1.0)
 !!!              tha(i,j,k)=tha(i,j,k)+0.5*(2.0*rand2-1.0)
-            ENDIF
+            endif
           enddo
           enddo
           ! interpolate to u,v pts:
@@ -1638,7 +1638,7 @@
           enddo
         enddo
 
-      ELSE
+      else
 
         amplitude = 0.10
 
@@ -1649,16 +1649,16 @@
             i = ii - myi1 + 1
             j = jj - myj1 + 1
             ! check to see if this processor has this gridpoint:
-            IF( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )THEN
+            if( i.ge.ib .and. i.le.ie .and. j.ge.jb .and. j.le.je )then
               tha(i,j,k)=tha(i,j,k)+amplitude*(2.0*rand-1.0)
-            ENDIF
+            endif
           enddo
           enddo
         enddo
 
-      ENDIF
+      endif
 
-      ENDIF
+      endif
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1667,12 +1667,12 @@
 !----------------------------------------------
 !  arrays for elliptic solver
 
-      IF( (ibalance.eq.2).or.(psolver.eq.4).or.(psolver.eq.5).or.(pdcomp) )THEN
+      if( (ibalance.eq.2).or.(psolver.eq.4).or.(psolver.eq.5).or.(pdcomp) )then
 
         dpi = 4.0d0*datan(1.0d0)
         if(dowr) write(outfile,*) '  dpi = ',dpi
 
-        IF(psolver.le.3)THEN
+        if(psolver.le.3)then
           do k=1,nk
             cfa(k)=mh(1,1,k)*mf(1,1,k  )*rf0(1,1,k  )*0.5*(thv0(1,1,k-1)+thv0(1,1,k))/(dz*dz*rho0(1,1,k)*thv0(1,1,k))
             cfc(k)=mh(1,1,k)*mf(1,1,k+1)*rf0(1,1,k+1)*0.5*(thv0(1,1,k)+thv0(1,1,k+1))/(dz*dz*rho0(1,1,k)*thv0(1,1,k))
@@ -1690,7 +1690,7 @@
             enddo
           enddo
           enddo
-        ELSE
+        else
           do k=1,nk
             cfa(k)=mh(1,1,k)*mf(1,1,k  )*rf0(1,1,k  )/(dz*dz*rho0(1,1,k-1))
             cfc(k)=mh(1,1,k)*mf(1,1,k+1)*rf0(1,1,k+1)/(dz*dz*rho0(1,1,k+1))
@@ -1718,9 +1718,9 @@
                   -mh(1,1,nk)*mf(1,1,nk  )*rf0(1,1,nk  )/(dz*dz*rho0(1,1,nk))
           enddo
           enddo
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1730,7 +1730,7 @@
 !  Get 3d pressure
 
 
-    IF(setppi)THEN
+    if(setppi)then
 
       do k=kb,ke
       do j=jb,je
@@ -1740,7 +1740,7 @@
       enddo
       enddo
 
-      IF(ibalance.eq.1)THEN
+      if(ibalance.eq.1)then
 
         ! hydrostatic balance ... integrate top-down
 
@@ -1784,7 +1784,7 @@
         enddo
         enddo
 
-      ELSEIF(ibalance.eq.2)THEN
+      elseif(ibalance.eq.2)then
 
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  ibalance = 2'
@@ -1895,7 +1895,7 @@
                        dum1,dum2,dum3,dum4,divx,ppi,uten,vten,wten, &
                        cfb,cfa,cfc,ad1,ad2,pdt,lgbth,lgbph,rhs,trans,dtl)
 
-        IF(psolver.eq.4.or.psolver.eq.5.or.psolver.eq.6)THEN
+        if(psolver.eq.4.or.psolver.eq.5.or.psolver.eq.6)then
 
 !$omp parallel do default(shared)   &
 !$omp private(i,j,k)
@@ -1909,13 +1909,13 @@
           enddo
           enddo
 
-        ENDIF
+        endif
 
         call bcs(ppi)
 
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !  change base state:
@@ -1923,7 +1923,7 @@
 !    (do not modify)
 
   dobsmod = .false.
-  bsmod:  IF( dobsmod )THEN
+  bsmod:  if( dobsmod )then
     print *,'  33333 '
     call stopcm1
 
@@ -2014,7 +2014,7 @@
 
       call bcs(ppi)
 
-  ENDIF  bsmod
+  endif  bsmod
 
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
@@ -2137,11 +2137,11 @@
 
 !------------------------------------------------------------------
 
-        IF( do_ib )THEN
+        if( do_ib )then
           call zero_out_uv(bndy,kbdy,ua ,va )
           call zero_out_w(bndy,kbdy,wa )
           if( idoles .and. iusetke ) call zero_out_w(bndy,kbdy,tkea )
-        ENDIF
+        endif
 
 !------------------------------------------------------------------
 !  Make sure boundary values are set properly
@@ -2202,30 +2202,30 @@
       call comm_3s_end(tha,sw31,sw32,se31,se32,   &
                            ss31,ss32,sn31,sn32,reqs_s)
 
-      IF(imoist.eq.1)THEN
+      if(imoist.eq.1)then
         do n=1,numq
           call comm_3s_start(qa(ibm,jbm,kbm,n),sw31,sw32,se31,se32,   &
                                                ss31,ss32,sn31,sn32,reqs_s)
           call comm_3s_end(qa(ibm,jbm,kbm,n),sw31,sw32,se31,se32,   &
                                              ss31,ss32,sn31,sn32,reqs_s)
         enddo
-      ENDIF
+      endif
 
-      IF( idoles .and. iusetke )THEN
+      if( idoles .and. iusetke )then
         call comm_3t_start(tkea,tkw1,tkw2,tke1,tke2,   &
                                 tks1,tks2,tkn1,tkn2,reqs_tk)
         call comm_3t_end(tkea,tkw1,tkw2,tke1,tke2,   &
                               tks1,tks2,tkn1,tkn2,reqs_tk)
-      ENDIF
+      endif
 
-      IF(iptra.eq.1)THEN
+      if(iptra.eq.1)then
         do n=1,npt
           call comm_3s_start(pta(ib,jb,kb,n),sw31,sw32,se31,se32,   &
                                              ss31,ss32,sn31,sn32,reqs_s)
           call comm_3s_end(pta(ib,jb,kb,n),sw31,sw32,se31,se32,   &
                                            ss31,ss32,sn31,sn32,reqs_s)
         enddo
-      ENDIF
+      endif
 
       call comm_3u_start(u0,uw31,uw32,ue31,ue32,   &
                             us31,us32,un31,un32,reqs_u)
@@ -2362,9 +2362,9 @@
 !------------------------------------------------------------------
 !  Get stuff
 
-  IF( ( .not. restarted ) .or.( interp_on_restart ) )THEN
+  if( ( .not. restarted ) .or.( interp_on_restart ) )then
 
-    IF(psolver.eq.4.or.psolver.eq.5.or.psolver.eq.6.or.psolver.eq.7)THEN
+    if(psolver.eq.4.or.psolver.eq.5.or.psolver.eq.6.or.psolver.eq.7)then
 
 !$omp parallel do default(shared)  &
 !$omp private(i,j,k)
@@ -2377,13 +2377,13 @@
       enddo
       enddo
 
-    ELSE
+    else
 
       if(myid.eq.0) print *
       if(myid.eq.0) print *,'  getting prs,rho '
       if(myid.eq.0) print *
 
-      IF( imoist.eq.1 )THEN
+      if( imoist.eq.1 )then
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -2398,7 +2398,7 @@
         enddo
         enddo
 
-      ELSE
+      else
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k)
@@ -2412,14 +2412,14 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
-    ENDIF
+    endif
 
-  ENDIF
+  endif
 
 
-    IF( psolver.le.3 )THEN
+    if( psolver.le.3 )then
 
         call bcs(rho)
 #ifdef MPI
@@ -2466,7 +2466,7 @@
         enddo
         enddo
 
-    ELSE
+    else
 
       do k=kb,ke
       do j=jb,je
@@ -2478,12 +2478,12 @@
       enddo
       enddo
 
-    ENDIF
+    endif
 
 !------------------------------------------------------------------
 !  cm1r18:  get total mass of dry air at t=0
 
-      IF( ( .not. restarted ) .or. ( interp_on_restart ) )THEN
+      if( ( .not. restarted ) .or. ( interp_on_restart ) )then
 
         if(myid.eq.0) print *
         if(myid.eq.0) print *,'  Getting mass1 '
@@ -2491,7 +2491,7 @@
 
         dumk1 = 0.0
 
-        IF( axisymm.eq.0 )THEN
+        if( axisymm.eq.0 )then
           do k=1,nk
           do j=1,nj
           do i=1,ni
@@ -2499,7 +2499,7 @@
           enddo
           enddo
           enddo
-        ELSEIF( axisymm.eq.1 )THEN
+        elseif( axisymm.eq.1 )then
           do k=1,nk
           do j=1,nj
           do i=1,ni
@@ -2507,9 +2507,9 @@
           enddo
           enddo
           enddo
-        ELSE
+        else
           stop 2223
-        ENDIF
+        endif
 
 #ifdef MPI
         call MPI_ALLREDUCE(mpi_in_place,dumk1(1),nk,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
@@ -2527,20 +2527,20 @@
         if( myid.eq.0 ) print *,'  mass1 = ',mass1
         if( myid.eq.0 ) print *
 
-      ENDIF
+      endif
 
 !------------------------------------------------------------------
 !  cm1r19.5:
 
-    IF( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.6 .or. psolver.eq.7 )THEN
+    if( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.6 .or. psolver.eq.7 )then
 
-      IF( ( .not. restarted ) .or. ( interp_on_restart ) )THEN
+      if( ( .not. restarted ) .or. ( interp_on_restart ) )then
 
         if( myid.eq.0 ) print *
         if( myid.eq.0 ) print *,'  setting initial ppx '
         if( myid.eq.0 ) print *
 
-        IF( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.7 )THEN
+        if( psolver.eq.2 .or. psolver.eq.3 .or. psolver.eq.7 )then
 
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
@@ -2552,7 +2552,7 @@
           enddo
           enddo
 
-        ELSEIF( psolver.eq.6 )THEN
+        elseif( psolver.eq.6 )then
 
           !$omp parallel do default(shared)   &
           !$omp private(i,j,k)
@@ -2564,9 +2564,9 @@
           enddo
           enddo
 
-        ENDIF
+        endif
 
-      ENDIF
+      endif
 
       call bcs(ppx)
 #ifdef MPI
@@ -2574,11 +2574,11 @@
       call comm_1s_end(ppx,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
 #endif
 
-    ENDIF
+    endif
 
 !------------------------------------------------------------------
 
-      if( iprcl.eq.1 .and. terrain_flag )THEN
+      if( iprcl.eq.1 .and. terrain_flag )then
         ! get terrain at parcel locations:
         if( prsig.ge.1 )then
           call getparcelzs(xh,uh,ruh,xf,yh,vh,rvh,yf,zs,pdata)
@@ -2608,7 +2608,7 @@
 !------------------------------------------------------------------
 
       ifidoles:  &
-      IF( idoles )THEN
+      if( idoles )then
 
         cm1setupval:  &
         if( cm1setup.eq.1 )then
@@ -2625,7 +2625,7 @@
 
           cm0 = 0.0
 
-          IF( les_subdomain_shape.eq.1 )THEN
+          if( les_subdomain_shape.eq.1 )then
             ! square/rectangle:
 
             xw = centerx - 0.5*les_subdomain_xlen
@@ -2652,7 +2652,7 @@
             enddo
             enddo
 
-          ELSE
+          else
 
             if( myid.eq.0 )then
               print *
@@ -2664,7 +2664,7 @@
 
             call stopcm1
 
-          ENDIF
+          endif
 
         endif  cm1setupval
 
@@ -2682,16 +2682,16 @@
         enddo
         enddo
 
-      ENDIF  ifidoles
+      endif  ifidoles
 
 !------------------------------------------------------------------
 !  Get eddy diffusivities if interpolating on restart:
 
     doit = .true.
-    IF( doit )THEN
+    if( doit )then
 
     iorst:  &
-    IF( interp_on_restart .and. ( cm1setup.eq.1 .or. cm1setup.eq.4 ) )THEN
+    if( interp_on_restart .and. ( cm1setup.eq.1 .or. cm1setup.eq.4 ) )then
     if( idoles .and. iusetke )then
 
       if(myid.eq.0) print *
@@ -2725,7 +2725,7 @@
       enddo
       enddo
 
-        IF( do_ib ) call zero_out_w(bndy,kbdy,tkea )
+        if( do_ib ) call zero_out_w(bndy,kbdy,tkea )
         call bcw(tkea,1)
 #ifdef MPI
         call comm_3t_start(tkea,tkw1,tkw2,tke1,tke2,   &
@@ -2756,8 +2756,8 @@
         enddo
 
     endif
-    ENDIF  iorst
-    ENDIF
+    endif  iorst
+    endif
 
 !------------------------------------------------------------------
 
@@ -2771,7 +2771,7 @@
         call comm_1s_start(vpten,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
         call comm_1s_end(vpten,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
 #endif
-        IF( axisymm.eq.1 )THEN
+        if( axisymm.eq.1 )then
           ! cm1r19 bug fix:
           !$omp parallel do default(shared)   &
           !$omp private(i,k)
@@ -2784,13 +2784,13 @@
               vpten(i,3,k) = vpten(i,1,k)
             enddo
           enddo
-        ENDIF
+        endif
 
       endif
 
 !------------------------------------------------------------------
 
-    IF( cuparam.eq.1 )THEN
+    if( cuparam.eq.1 )then
       call bcs(ucuten)
       call bcs(vcuten)
 #ifdef MPI
@@ -2799,12 +2799,12 @@
       call comm_1s_start(vcuten,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
       call comm_1s_end(vcuten,pw1,pw2,pe1,pe2,ps1,ps2,pn1,pn2,reqs_p)
 #endif
-      ENDIF
+      endif
 
 !------------------------------------------------------------------
 
         tavgcode:  &
-        IF( dotimeavg .and. ( (.not. restarted) .or. interp_on_restart ) )THEN
+        if( dotimeavg .and. ( (.not. restarted) .or. interp_on_restart ) )then
           if(myid.eq.0) print *
           if(myid.eq.0) print *,'  initializing timeavg fields '
           if(myid.eq.0) print *
@@ -2862,7 +2862,7 @@
             enddo
             enddo
           endif
-        ENDIF  tavgcode
+        endif  tavgcode
 
 !------------------------------------------------------------------
 
@@ -2872,4 +2872,4 @@
       end subroutine getset
 
 
-  END MODULE init3d_module
+  end module init3d_module

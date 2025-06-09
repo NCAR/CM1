@@ -25,7 +25,7 @@
 ! Last updated:  2023-FEB                                                                  !
 !__________________________________________________________________________________________!
 
- MODULE microphy_p3
+ module microphy_p3
 
 #ifdef ECCCGEM
  use tdpack, only: foew, foewa
@@ -683,12 +683,12 @@
 
  return
 
-END subroutine p3_init
+end subroutine p3_init
 
 !==================================================================================================!
 #ifndef ECCCGEM
 
- SUBROUTINE mp_p3_wrapper_wrf(th_3d,qv_3d,qc_3d,qr_3d,qnr_3d,                            &
+ subroutine mp_p3_wrapper_wrf(th_3d,qv_3d,qc_3d,qr_3d,qnr_3d,                            &
                               th_old_3d,qv_old_3d,                                       &
                               pii,p,dz,w,dt,itimestep,                                   &
                               rainnc,rainncv,sr,snownc,snowncv,n_iceCat,                 &
@@ -930,11 +930,11 @@ END subroutine p3_init
       stop
    endif
 
-   END SUBROUTINE mp_p3_wrapper_wrf
+   end subroutine mp_p3_wrapper_wrf
 
    !------------------------------------------------------------------------------------------!
 
-   SUBROUTINE mp_p3_wrapper_wrf_2cat(th_3d,qv_3d,qc_3d,qr_3d,qnr_3d,                     &
+   subroutine mp_p3_wrapper_wrf_2cat(th_3d,qv_3d,qc_3d,qr_3d,qnr_3d,                     &
                               th_old_3d,qv_old_3d,                                       &
                               pii,p,dz,w,dt,itimestep,                                   &
                               rainnc,rainncv,sr,snownc,snowncv,n_iceCat,                 &
@@ -1179,7 +1179,7 @@ END subroutine p3_init
       stop
    endif
 
-   END SUBROUTINE mp_p3_wrapper_wrf_2cat
+   end subroutine mp_p3_wrapper_wrf_2cat
 
 #endif
 
@@ -1712,7 +1712,7 @@ END subroutine p3_init
  
 !==========================================================================================!
 
- SUBROUTINE compute_SCPF(Qcond,Qprec,Qv,Qsi,Pres,ktop,kbot,kdir,SCF,iSCF,SPF,iSPF,       &
+ subroutine compute_SCPF(Qcond,Qprec,Qv,Qsi,Pres,ktop,kbot,kdir,SCF,iSCF,SPF,iSPF,       &
                          SPF_clr,Qv_cld,Qv_clr,cldFrac_on,pfrac,resfact,quick)
 
 !------------------------------------------------------------------------------------------!
@@ -1875,7 +1875,7 @@ END subroutine p3_init
             endif
          endif
 
-       endif ! end of IF NOT quick
+       endif ! end of if NOT quick
 
        if ((SCF(k) .lt. 0.01) .and. (Qcond(k) > qsmall) ) then  ! avoid bad clipping
            SCF(k)    = max(0.01, SCF(k+kdir))                   ! in case of cloudy species precipitating
@@ -1899,11 +1899,11 @@ END subroutine p3_init
 
  endif compute_cloud_fraction
 
- END SUBROUTINE compute_SCPF
+ end subroutine compute_SCPF
 
 !==========================================================================================!
 
- SUBROUTINE p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,dt,qitot,qirim,nitot,birim,ssat,uzpl, &
+ subroutine p3_main(qc,nc,qr,nr,th_old,th,qv_old,qv,dt,qitot,qirim,nitot,birim,ssat,uzpl, &
                     pres,dzq,it,prt_liq,prt_sol,its,ite,kts,kte,nCat,diag_ze,diag_effc,   &
                     diag_effi,diag_vmi,diag_di,diag_rhoi,n_diag_2d,diag_2d,n_diag_3d,     &
                     diag_3d,log_predictNc,typeDiags_ON,model,clbfact_dep,clbfact_sub,     &
@@ -3560,7 +3560,7 @@ END subroutine p3_init
           endif
           do iice = 1,nCat
              dum = max(qisub(iice),1.e-20)
-             qisub(iice)  = qisub(iice)*min(1.,max(0.,-qdep_satadj)/max(sum(qisub), 1.e-20))  !optimized (avoids IF(qisub.gt.0.) )
+             qisub(iice)  = qisub(iice)*min(1.,max(0.,-qdep_satadj)/max(sum(qisub), 1.e-20))  !optimized (avoids if(qisub.gt.0.) )
              nisub(iice)  = nisub(iice)*min(1.,qisub(iice)/dum)
           enddo
          !qchetc = qchetc*min(1.,qc(i,k)*odt/max(sum(qchetc),1.e-20))  !currently not used
@@ -4119,7 +4119,7 @@ END subroutine p3_init
 
           enddo substep_sedi_c1
 
-       ENDIF two_moment
+       endif two_moment
 
        prt_liq(i) = prt_accum*inv_rhow*odt  !note, contribution from rain is added below
 
@@ -5030,7 +5030,7 @@ END subroutine p3_init
     if (.not.(present(prt_drzl).and.present(prt_rain).and.present(prt_crys).and. &
               present(prt_snow).and.present(prt_grpl).and.present(prt_pell).and. &
               present(prt_hail).and.present(prt_sndp))) then
-       print*,'***  ABORT IN P3_MAIN ***'
+       print*,'***  ABORT in P3_MAIN ***'
        print*,'*  typeDiags_ON = .true. but prt_drzl, etc. are not passed into P3_MAIN'
        print*,'*************************'
        global_status = STATUS_ERROR
@@ -5120,7 +5120,7 @@ END subroutine p3_init
                       endif
                    endif
                 else
-                   print*, 'STOP -- unrealistic rime fraction: ',tmp1
+                   print*, 'stop -- unrealistic rime fraction: ',tmp1
                    global_status = STATUS_ERROR
                    return
                 endif
@@ -5199,11 +5199,11 @@ END subroutine p3_init
 
  return
 
- END SUBROUTINE p3_main
+ end subroutine p3_main
 
 !==========================================================================================!
 
- SUBROUTINE access_lookup_table(dumjj,dumii,dumi,index,dum1,dum4,dum5,proc)
+ subroutine access_lookup_table(dumjj,dumii,dumi,index,dum1,dum4,dum5,proc)
 
  implicit none
 
@@ -5241,10 +5241,10 @@ END subroutine p3_init
 ! get final process rate
    proc   = tmp1+(dum5-real(dumjj))*(tmp2-tmp1)
 
-END SUBROUTINE access_lookup_table
+end subroutine access_lookup_table
 
 !------------------------------------------------------------------------------------------!
-SUBROUTINE access_lookup_table_coll(dumjj,dumii,dumj,dumi,index,dum1,dum3,          &
+subroutine access_lookup_table_coll(dumjj,dumii,dumj,dumi,index,dum1,dum3,          &
                                     dum4,dum5,proc)
 
  implicit none
@@ -5311,11 +5311,11 @@ SUBROUTINE access_lookup_table_coll(dumjj,dumii,dumj,dumi,index,dum1,dum3,      
 ! interpolate over density to get final values
    proc    = tmp1+(dum5-real(dumjj))*(tmp2-tmp1)
 
- END SUBROUTINE access_lookup_table_coll
+ end subroutine access_lookup_table_coll
 
 !------------------------------------------------------------------------------------------!
 
- SUBROUTINE access_lookup_table_colli(dumjjc,dumiic,dumic,dumjj,dumii,dumi,index,   &
+ subroutine access_lookup_table_colli(dumjjc,dumiic,dumic,dumjj,dumii,dumi,index,   &
                                       dum1c,dum4c,dum5c,dum1,dum4,dum5,proc)
 
  implicit none
@@ -5794,11 +5794,11 @@ SUBROUTINE access_lookup_table_coll(dumjj,dumii,dumj,dumi,index,dum1,dum3,      
 
  endif ! index =1 or 2
 
- END SUBROUTINE access_lookup_table_colli
+ end subroutine access_lookup_table_colli
 
 !==========================================================================================!
 
- SUBROUTINE access_lookup_table_3mom(dumzz,dumjj,dumii,dumi,index,dum1,dum4,dum5,dum6,proc)
+ subroutine access_lookup_table_3mom(dumzz,dumjj,dumii,dumi,index,dum1,dum4,dum5,dum6,proc)
 
  implicit none
 
@@ -5877,10 +5877,10 @@ SUBROUTINE access_lookup_table_coll(dumjj,dumii,dumj,dumi,index,dum1,dum3,      
 
    proc = rproc1+(dum6-real(dumzz))*(rproc2-rproc1)
 
-END SUBROUTINE access_lookup_table_3mom
+end subroutine access_lookup_table_3mom
 
 !------------------------------------------------------------------------------------------!
-SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,dum3,          &
+subroutine access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,dum3,          &
                                     dum4,dum5,dum6,proc)
 
  implicit none
@@ -6011,7 +6011,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
 ! get final process rate by interpolation over G
    proc    = rproc1+(dum6-real(dumzz))*(rproc2-rproc1)
 
- END SUBROUTINE access_lookup_table_coll_3mom
+ end subroutine access_lookup_table_coll_3mom
 
 !==========================================================================================!
 
@@ -6940,12 +6940,12 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
 
    ! check unrealistic values T and Qv
      if (.not.(T(k)>T_low .and. T(k)<T_high)) then
-        write(6,'(a41,4i5,1e15.6)') '** WARNING IN P3_MAIN -- src,i,k,step,T: ',      &
+        write(6,'(a41,4i5,1e15.6)') '** WARNING in P3_MAIN -- src,i,k,step,T: ',      &
            source_ind,i,k,timestepcount,T(k)
         badvalue_found = .true.
      endif
      if (.not.(Qv(k)>=0. .and. Qv(k)<Q_high)) then
-        write(6,'(a42,4i5,1e15.6)') '** WARNING IN P3_MAIN -- src,i,k,step,Qv: ',     &
+        write(6,'(a42,4i5,1e15.6)') '** WARNING in P3_MAIN -- src,i,k,step,Qv: ',     &
            source_ind,i,k,timestepcount,Qv(k)
         badvalue_found = .true.
      endif
@@ -6957,7 +6957,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
           .not.(Nc(k) == Nc(k)) .or.            &
           .not.(Qr(k) == Qr(k)) .or.            &
           .not.(Nr(k) == Nr(k)) ) then
-         write(6,'(a56,4i5,6e15.6)') '*A WARNING IN P3_MAIN -- src,i,k,step,T,Qv,Qc,Nc,Qr,Nr: ', &
+         write(6,'(a56,4i5,6e15.6)') '*A WARNING in P3_MAIN -- src,i,k,step,T,Qv,Qc,Nc,Qr,Nr: ', &
               source_ind,i,k,timestepcount,T(k),Qv(k),Qc(k),Nc(k),Qr(k),Nr(k)
          badvalue_found = .true.
       endif
@@ -6966,7 +6966,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
              .not.(Qirim(k,iice) == Qirim(k,iice)) .or.            &
              .not.(Nitot(k,iice) == Nitot(k,iice)) .or.            &
              .not.(Birim(k,iice) == Birim(k,iice)) ) then
-            write(6,'(a68,5i5,4e15.6)') '*B WARNING IN P3_MAIN -- src,i,k,step,iice,Qitot,Qirim,Nitot,Birim: ',  &
+            write(6,'(a68,5i5,4e15.6)') '*B WARNING in P3_MAIN -- src,i,k,step,iice,Qitot,Qirim,Nitot,Birim: ',  &
                  source_ind,i,k,timestepcount,iice,Qitot(k,iice),Qirim(k,iice),Nitot(k,iice),Birim(k,iice)
             badvalue_found = .true.
          endif
@@ -6980,7 +6980,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
             .and. source_ind /= 100                                            &  !skip trap for this source_ind
             .and. source_ind /= 200                                            &  !skip trap for this source_ind
             .and. source_ind /= 300 ) then                                        !skip trap for this source_ind
-        write(6,'(a45,4i5,4e15.6)') '*C WARNING IN P3_MAIN -- src,i,k,stepQc,Nc: ', &
+        write(6,'(a45,4i5,4e15.6)') '*C WARNING in P3_MAIN -- src,i,k,stepQc,Nc: ', &
            source_ind,i,k,timestepcount,Qc(k),Nc(k)
         badvalue_found = .true.
      endif
@@ -6993,7 +6993,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
             .and. source_ind /= 100                                            &  !skip trap for this source_ind
             .and. source_ind /= 200                                            &  !skip trap for this source_ind
             .and. source_ind /= 300 ) then                                        !skip trap for this source_ind
-        write(6,'(a45,4i5,4e15.6)') '*C WARNING IN P3_MAIN -- src,i,k,stepQr,Nr: ', &
+        write(6,'(a45,4i5,4e15.6)') '*C WARNING in P3_MAIN -- src,i,k,stepQr,Nr: ', &
            source_ind,i,k,timestepcount,Qr(k),Nr(k)
         badvalue_found = .true.
      endif
@@ -7010,7 +7010,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
                .and. source_ind /= 100                                                                        &  !skip trap for this source_ind
                .and. source_ind /= 200                                                                        &  !skip trap for this source_ind
                .and. source_ind /= 300 ) then                                                                    !skip trap for this source_ind
-           write(6,'(a68,5i5,4e15.6)') '*D WARNING IN P3_MAIN -- src,i,k,step,iice,Qitot,Qirim,Nitot,Birim: ', &
+           write(6,'(a68,5i5,4e15.6)') '*D WARNING in P3_MAIN -- src,i,k,step,iice,Qitot,Qirim,Nitot,Birim: ', &
               source_ind,i,k,timestepcount,iice,Qitot(k,iice),Qirim(k,iice),Nitot(k,iice),Birim(k,iice)
            badvalue_found = .true.
             print*, '**: ',Qitot(k,iice)>Q_high, Qirim(k,iice)>Q_high, Nitot(k,iice)>N_high,  &
@@ -7023,7 +7023,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
                .and. source_ind /= 100                                                                        &  !skip trap for this source_ind
                .and. source_ind /= 200                                                                        &  !skip trap for this source_ind
                .and. source_ind /= 300 ) then                                                                    !skip trap for this source_ind
-              write(6,'(a62,5i5,3e15.6)') '*E WARNING IN P3_MAIN -- src,i,k,step,iice,Qitot,Nitot,Zitot: ',   &
+              write(6,'(a62,5i5,3e15.6)') '*E WARNING in P3_MAIN -- src,i,k,step,iice,Qitot,Nitot,Zitot: ',   &
                  source_ind,i,k,timestepcount,iice,Qitot(k,iice),Nitot(k,iice),Zitot(k,iice)
               badvalue_found = .true.
            endif
@@ -7035,7 +7035,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
 
   if (badvalue_found .and. force_abort_in) then
      print*
-     print*,'** DEBUG TRAP IN P3_MAIN, s/r CHECK_VALUES -- source: ',source_ind
+     print*,'** DEBUG TRAP in P3_MAIN, s/r CHECK_VALUES -- source: ',source_ind
      print*
      global_status = STATUS_ERROR
      stop
@@ -7272,7 +7272,7 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
     use phy_options, only: p3_trplmomi
 
     implicit none
-    integer :: F_istat                          !Function return status
+    integer :: F_istat                          !function return status
     logical :: buserr
 
     F_istat = PHY_ERROR
@@ -7342,8 +7342,8 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
     real, dimension(:,:), intent(out) :: F_qltot        !Total water mass (kg/kg)
     real, dimension(:), pointer, contiguous :: F_dbus   !Dynamics bus
     real, dimension(:), pointer, contiguous :: F_pbus   !Permanent bus
-    real, dimension(:), pointer, contiguous :: F_vbus   !Volatile bus
-    integer :: F_istat                                  !Return status
+    real, dimension(:), pointer, contiguous :: F_vbus   !volatile bus
+    integer :: F_istat                                  !return status
 #include "phymkptr.hf"
     integer :: ni, nkm1
     real, dimension(:,:), pointer :: zqcp, zqrp
@@ -7366,8 +7366,8 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
     real, dimension(:,:), intent(out) :: F_qitot        !Total ice mass (kg/kg)
     real, dimension(:), pointer, contiguous :: F_dbus   !Dynamics bus
     real, dimension(:), pointer, contiguous :: F_pbus   !Permanent bus
-    real, dimension(:), pointer, contiguous :: F_vbus   !Volatile bus
-    integer :: F_istat                                  !Return status
+    real, dimension(:), pointer, contiguous :: F_vbus   !volatile bus
+    integer :: F_istat                                  !return status
 #include "phymkptr.hf"
     integer :: ni, nkm1
     real, dimension(:,:), pointer :: zqti1p, zqti2p, zqti3p, zqti4p
@@ -7389,4 +7389,4 @@ SUBROUTINE access_lookup_table_coll_3mom(dumzz,dumjj,dumii,dumj,dumi,index,dum1,
 #endif
 
 !======================================================================================!
- END MODULE microphy_p3
+ end module microphy_p3

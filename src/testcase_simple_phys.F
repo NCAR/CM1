@@ -1,4 +1,4 @@
-  MODULE simple_phys_module
+  module simple_phys_module
 
   implicit none
 
@@ -24,7 +24,7 @@
     real, parameter :: alphaz  =  1.0
     real, parameter :: rhoi    =  1.12
 
-  CONTAINS
+  contains
 
       subroutine testcase_simple_phys(mh,rho0,rr0,rf0,th0,u0,v0,     &
                    zh,zf,dum1,dum2,dum3,dum4,dum5,dum6,              &
@@ -72,7 +72,7 @@
 !     nonprecipitating stratoCu  (Stevens et al, 2005, MWR)
 !     drizzling stratoCu  (Ackerman et al, 2009, MWR)
 
-      IF( testcase.eq.4 .or. testcase.eq.5 )THEN
+      if( testcase.eq.4 .or. testcase.eq.5 )then
 
         ! simple radiation (Stevens et al 2005)
         call     simplerad(rho0,zh,zf,dum1,dum2,dum3,dum4,qa,frad,zir)
@@ -88,12 +88,12 @@
         enddo
         enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !     hurricane boundary layer (Bryan et al, 2017, BLM)
 
-      IF( lspgrad.eq.3 )THEN
+      if( lspgrad.eq.3 )then
 
         ! get domain averages:
         call     get_avg_uvt(uavg,vavg,thavg,cavg,th0,ua,va,tha,ruh,ruf,rvh,rvf)
@@ -105,7 +105,7 @@
 
         !$omp parallel do default(shared)  &
         !$omp private(i,j,k,fr,ft,uu,vv)
-        DO k=1,nk
+        do k=1,nk
           ! get average radial and tangential velocities:
           uu = vavg(k)*sin(-hurr_angle) + uavg(k)*cos(-hurr_angle)
           vv = vavg(k)*cos(-hurr_angle) - uavg(k)*sin(-hurr_angle)
@@ -115,15 +115,15 @@
           ! rotate into Cartesian coordinations:
           ufrc(k) = fr*cos(-hurr_angle) - ft*sin(-hurr_angle)
           vfrc(k) = fr*sin(-hurr_angle) + ft*cos(-hurr_angle)
-        ENDDO
+        enddo
 
-      ENDIF
+      endif
 
 !-----------------------------------------------------------------------
 !  Prescribed advective and radiative tendencies for SGP shallow cumulus case
 !  (Brown et al, 2002, QJRMS)
 
-    IF( testcase.eq.14 )THEN
+    if( testcase.eq.14 )then
 
       if(     mtime .le.  3.0*3600.0 )then
         tt1 =  0.0*3600.0
@@ -196,16 +196,16 @@
         qvfrc(k) = fac*qt*0.001/3600.0
       enddo
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
       !  Add tendencies:
 
-    IF( testcase.ge.1 )THEN
+    if( testcase.ge.1 )then
 
       !$omp parallel do default(shared)  &
       !$omp private(i,j,k)
-      DO k=1,nk
+      do k=1,nk
         do j=1,nj
         do i=1,ni+1
           uten1(i,j,k) = uten1(i,j,k) + ufrc(k)
@@ -221,16 +221,16 @@
           thten1(i,j,k) = thten1(i,j,k) + thfrc(k)
         enddo
         enddo
-        IF( imoist.eq.1 )THEN
+        if( imoist.eq.1 )then
           do j=1,nj
           do i=1,ni
             qten(i,j,k,nqv) = qten(i,j,k,nqv) + qvfrc(k)
           enddo
           enddo
-        ENDIF
-      ENDDO
+        endif
+      enddo
 
-    ENDIF
+    endif
 
 !-----------------------------------------------------------------------
 
@@ -478,4 +478,4 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-  END MODULE simple_phys_module
+  end module simple_phys_module
