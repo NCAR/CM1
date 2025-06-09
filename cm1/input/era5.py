@@ -222,7 +222,6 @@ def compute_z_level(ds: xarray.Dataset, lev: int, z_h: float) -> Tuple[float, fl
     # Update the half-level geopotential `z_h`
     z_h = z_h + (t_level * Rd * dlog_p)
     z_h = z_h.assign_coords(half_level=lev).drop_vars("level")
-    z_h = z_h.assign_coords(half_level=lev).drop_vars("level")
 
     return z_h, z_f
 
