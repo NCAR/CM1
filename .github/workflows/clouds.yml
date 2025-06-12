@@ -3,7 +3,7 @@ name: Cirrus clouds GPU
 on:
   push:
     branches:
-      - "main"
+      - "cicd"
   pull_request:
   workflow_dispatch:
 
@@ -13,7 +13,7 @@ jobs:
     container:
       image:  nvcr.io/nvidia/nvhpc:23.7-devel-cuda12.2-ubuntu22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Install dependencies
         run: |
