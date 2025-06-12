@@ -20,6 +20,7 @@ jobs:
         run: |
            apt update
            apt install -y cmake g++
-           #sudo apt-get install libnetcdf-dev libnetcdf11 libnetcdf-bin
+           apt install mpich
+           sudo apt-get install libnetcdf-dev libnetcdf11 libnetcdf-bin
            ncdump -h
 
