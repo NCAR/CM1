@@ -19,8 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
            apt update
-           apt install -y cmake gcc
-           apt install gcc-gfortran -y
+           apt install -y cmake gcc gfortran
            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mpich
            sudo apt-get install libnetcdf-dev libnetcdf11 libnetcdf-bin
            ncdump -h
