@@ -20,7 +20,8 @@ jobs:
         run: |
            apt update
            apt install -y cmake gcc gfortran
-           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mpich
-           sudo apt-get install libnetcdf-dev libnetcdf11 libnetcdf-bin
+           DEBIAN_FRONTEND=noninteractive apt install -y mpich
+           apt install libnetcdf-dev libnetcdf11 libnetcdf-bin
            ncdump -h
+           mpiexec --version
 
