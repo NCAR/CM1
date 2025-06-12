@@ -21,7 +21,8 @@ jobs:
            apt update
            apt install -y cmake gcc gfortran
            DEBIAN_FRONTEND=noninteractive apt install -y mpich
-           apt install libnetcdf-dev libnetcdf11 libnetcdf-bin
+           apt install -y netcdf-bin libnetcdff-dev
+           apt install -y libnetcdf-mpi-dev libhdf5-mpi-dev
            ncdump -h
            mpiexec --version
 
