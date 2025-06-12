@@ -20,7 +20,7 @@ jobs:
         run: |
            apt update
            apt install -y cmake gcc
-           apt nstall gcc-gfortran -y
+           apt install gcc-gfortran -y
            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mpich
            sudo apt-get install libnetcdf-dev libnetcdf11 libnetcdf-bin
            ncdump -h
