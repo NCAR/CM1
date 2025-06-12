@@ -1,0 +1,24 @@
+name: Cirrus clouds GPU
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: gha-runner-cm1-gpu
+    container:
+      image:  nvcr.io/nvidia/nvhpc:23.7-devel-cuda12.2-ubuntu22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+           apt update
+           apt install -y cmake g++
+           sudo apt-get install libnetcdf-dev libnetcdf11 libnetcdf-bin
+           ncdump -h
+
