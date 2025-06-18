@@ -20,5 +20,7 @@ jobs:
            mpiexec --version
            cd src/
            FC=gfortran && make USE_OPENMP=true USE_MPI=true
+           cd ../run
+           mpiexec -n 4 ./cm1.exe
            
 
