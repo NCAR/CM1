@@ -2,6 +2,10 @@ name: Build gnu container
 
 on:
   workflow_dispatch:
+    inputs:
+      name:
+        description: "Which one to run"
+        default: "GNU"
 
 jobs:
   build-and-run:
