@@ -1,6 +1,8 @@
 name: Build gnu container
 
 on:
+  push:
+    branches: cicd
   workflow_dispatch:
     inputs:
       name:
@@ -10,7 +12,7 @@ on:
 jobs:
   build-and-run:
    name: Build container
-   runs-on: gha-runner-cm1
+   runs-on: ubuntu-latest
    steps:
    - name: Checkout code 
      uses: actions/checkout@v3
