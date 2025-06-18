@@ -1,0 +1,30 @@
+name: Build gnu container
+
+on:
+  workflow_dispatch:
+    - "cicd"
+
+jobs:
+  build-and-run:
+   name: Build container
+   runs-on: ubuntu-latest
+   steps:
+   - name: Checkout code 
+     uses: actions/checkout@v3
+
+   - name: Setup Docker Buildx
+     uses: docker/setup-buildx-action@v1
+       
+   - name: Log in to Docker Hub - gnu_IO container registry
+     uses: docker/login-action@v1
+     with: 
+       username: ${{ secrets.USERNAME }}
+       password: ${{ secrets.PASSWORD }}
+ 
+   - name: Build and push gnu_IO container image to registry
+     uses: docker/build-push-action@v2
+     with:
+       tags: gnu_io:latest
+       file: docker/Docker.gnu
+
+  
