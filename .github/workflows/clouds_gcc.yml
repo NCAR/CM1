@@ -1,4 +1,4 @@
-name: Cirrus clouds GPU
+name: Cirrus clouds CPU and GNU
 
 on:
   push:
@@ -17,6 +17,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+           ls -al /opt/hdf5
            gfortran
            ncdump -h
            mpiexec --version
