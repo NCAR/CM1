@@ -29,7 +29,8 @@ jobs:
    - name: Build and push gnu_IO container image to registry
      uses: docker/build-push-action@v2
      with:
-       tags: gnu_io:latest
+       push: true
+       tags: ${{ secrets.USERNAME }}/gnu_io:latest
        file: docker/Docker.gnu
 
   
