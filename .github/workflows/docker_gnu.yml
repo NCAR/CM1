@@ -2,7 +2,6 @@ name: Build gnu container
 
 on:
   workflow_dispatch:
-    - "cicd"
 
 jobs:
   build-and-run:
