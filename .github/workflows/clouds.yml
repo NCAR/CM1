@@ -11,18 +11,15 @@ jobs:
   setup:
     runs-on: gha-runner-cm1-gpu
     container:
-      image:  nvcr.io/nvidia/nvhpc:23.7-devel-cuda12.2-ubuntu22.04
+      image:  cmille73/mpas-nvidia:carlp-mpich
       options: --gpus all
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: 
         run: |
-           apt update
-           apt install -y cmake gcc gfortran
-           DEBIAN_FRONTEND=noninteractive apt install -y mpich
-           apt install -y netcdf-bin libnetcdff-dev
-           apt install -y libnetcdf-mpi-dev libhdf5-mpi-dev
-           ncdump -h
-           mpiexec --version
+           cd src/
+           FC=nvfortran && make USE_OPENACC=true USE_MPI=true
+           cd ../run
+           mpiexec -n 4 ./cm1.exe
 
