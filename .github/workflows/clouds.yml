@@ -19,7 +19,7 @@ jobs:
       - name: 
         run: |
            cd src/
-           FC=nvfortran && make USE_OPENACC=true USE_MPI=true
+           make -j 4 FC=nvfortran USE_OPENACC=true USE_MPI=true
            cd ../run
            mpiexec -n 4 ./cm1.exe
 
