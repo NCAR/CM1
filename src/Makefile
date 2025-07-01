@@ -168,7 +168,7 @@ endif
 #  GNU compiler
 #-----------------------------------------------------------------------------
 ifeq (${FC},gfortran)
-    OPTS         += -ffree-form -ffree-line-length-none -O2 -finline-functions
+    OPTS         += -ffree-form -ffree-line-length-none -O2 -finline-functions -fallow-argument-mismatch
     CPP          += cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
     ifeq (${USE_OPENMP_L},true)
         OPTS     += -fopenmp

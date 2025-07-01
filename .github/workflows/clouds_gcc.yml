@@ -17,9 +17,8 @@ jobs:
 
       - name: Build CM1
         run: |
-           mpiexec --version
            cd src/
-           FC=gfortran && make USE_OPENMP=true USE_MPI=true
+           make -j 4 FC=gfortran USE_OPENMP=true USE_MPI=true
            cd ../run
            mpiexec -n 4 ./cm1.exe
            
