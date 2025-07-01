@@ -20,6 +20,6 @@ jobs:
            cd src/
            make -j 4 FC=gfortran USE_OPENMP=true USE_MPI=true
            cd ../run
-           OMP_NUM_THREADS=1 mpiexec -n 4 -bind-to core:1 ./cm1.exe
+           OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe
            
 
