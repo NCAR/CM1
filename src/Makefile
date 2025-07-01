@@ -348,8 +348,8 @@ code:
 			$(AR) onefile.F $(SRC)
 			mv onefile.F ../run
 
-html-report: 
-	                gcovr -r . --html --html-details -o coverage.html
+coverage: 
+	                gcovr -r . --exclude-directories tests
 
 clean:
 			rm -f *.f90 *.o *.a *.mod 

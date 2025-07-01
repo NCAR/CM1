@@ -33,11 +33,6 @@ jobs:
       - name: Generate coverage report
         run: |
            cd ../src
-           make html-report
+           make coverage
 
-      - name: Upload HTML coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: coverage.html 
 
