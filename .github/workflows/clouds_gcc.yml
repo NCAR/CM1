@@ -40,5 +40,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}  # optional for public repos
           files: src/coverage.xml
+          disable_gcov: true
+          fail_ci_if_error: true
 
 
