@@ -349,7 +349,7 @@ code:
 			mv onefile.F ../run
 
 coverage: 
-	                gcovr -r . --html --html-details -o coverage.html
+	                gcovr -r . --cobertura -o coverage.xml
 
 clean:
 			rm -f *.f90 *.o *.a *.mod 
