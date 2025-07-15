@@ -28,8 +28,8 @@ jobs:
            cd src/
            make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true
            cd ../run
-           OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe --namelist config_files/supercell/
-namelist.input
+           OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe --namelist \
+           config_files/supercell/namelist.input
 
       - name: Generate coverage report
         run: |
