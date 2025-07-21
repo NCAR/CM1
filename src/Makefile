@@ -11,6 +11,7 @@
 #  - USE_OPENACC: turn on OpenACC (for PGI/NVHPC only, default=false)
 #  - USE_NETCDF: turn on netCDF output (default=false)
 #  - DEBUG: turn on DEBUG mode (default=false)
+#  - CODE_COVERAGE: turn on code coverage mode (default=false)
 #
 #  Some example usages are:
 #    make USE_OPENMP=true                 # shared memory only
@@ -37,6 +38,7 @@ USE_NETCDF_L  = $(shell echo $(USE_NETCDF) | tr A-Z a-z)
 DEBUG_L       = $(shell echo $(DEBUG) | tr A-Z a-z)
 USE_CUDAMEM_L = $(shell echo $(USE_CUDAMEM) | tr A-Z a-z)
 GPU_TYPE_L    = $(shell echo $(GPU_TYPE) | tr A-Z a-z)
+CODE_COVERAGE_L    = $(shell echo $(CODE_COVERAGE) | tr A-Z a-z)
 
 #-----------------------------------------------------------------------------
 #  initialize some options as empty
@@ -168,11 +170,14 @@ endif
 #  GNU compiler
 #-----------------------------------------------------------------------------
 ifeq (${FC},gfortran)
-    OPTS         += -ffree-form -ffree-line-length-none -O2 -finline-functions
+    OPTS         += -ffree-form -ffree-line-length-none -O2 -finline-functions -fallow-argument-mismatch
     CPP          += cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
     ifeq (${USE_OPENMP_L},true)
         OPTS     += -fopenmp
         OMP      += -DOPENMP
+    endif
+    ifeq (${CODE_COVERAGE_L},true)
+        OPTS     += -fprofile-arcs -ftest-coverage
     endif
 endif
 
@@ -343,8 +348,15 @@ code:
 			$(AR) onefile.F $(SRC)
 			mv onefile.F ../run
 
+coverage: 
+	                gcovr -r . --txt-report-covered --gcov-ignore-parse-errors -s
+
 clean:
-			rm -f *.f90 *.o *.a *.mod
+			rm -f *.f90 *.o *.a *.mod 
+
+codeclean:
+			rm -f *.f90 *.o *.a *.mod *.gcno *.gcda *.gcov *.html coverage.xml *.css
+	                find . -name "*.gcov" -delete
 
 # DEPENDENCIES : only dependencies after this line (don't remove the word DEPENDENCIES)
 
