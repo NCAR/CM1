@@ -17,7 +17,6 @@ dependencies = [
     "ipython",
     "ipykernel",
     "metpy",
-    "netcdf-fortran",
     "pandas",
     "s3fs",
     "scikit-learn",
