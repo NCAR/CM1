@@ -17,18 +17,18 @@ jobs:
         gpu:      [ cuda ]
         arch:     [ x86_64 ]
                 
-  setup:
-    runs-on: gha-runner-cm1-gpu
-    container:
-      image:  ncarcisl/cisldev-${{ matrix.arch }}-${{ inputs.os }}-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
-      options: --gpus all
-    steps:
-      - uses: actions/checkout@v3
+    setup:
+      runs-on: gha-runner-cm1-gpu
+      container:
+        image:  ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
+        options: --gpus all
+      steps:
+        - uses: actions/checkout@v3
 
-      - name: 
-        run: |
-           cd src/
-           make -j 4 FC=nvfortran USE_OPENACC=true USE_MPI=true
-           cd ../run
-           mpiexec -n 4 ./cm1.exe
+        - name: 
+          run: |
+             cd src/
+             make -j 4 FC=nvfortran USE_OPENACC=true USE_MPI=true
+             cd ../run
+             mpiexec -n 4 ./cm1.exe
 
