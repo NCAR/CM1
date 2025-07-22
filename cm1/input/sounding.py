@@ -11,16 +11,15 @@ import os
 import typing
 from pathlib import Path
 
+import cm1.input.era5
 import metpy.calc as mcalc
 import metpy.constants
 import numpy as np
 import pandas as pd
 import xarray
+from cm1.utils import TMPDIR, parse_args
 from metpy.units import units
 from pint import Quantity
-
-import cm1.input.era5
-from cm1.utils import TMPDIR, parse_args
 
 # Assuming this script is located in a subdirectory of the repository
 repo_base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -335,7 +334,7 @@ def to_txt(ds: xarray.Dataset) -> str:
     s = f"{sfc_pres.compute().item().m_as('hPa')} {sfc_theta_K.values} {sfc_qv_gkg.values}\n"
     s += (
         ds[["Z", "theta", "qv", "U", "V"]]
-        .drop_vars(["latitude", "longitude", "time"])
+        .drop_vars(["latitude", "longitude", "time"], errors="ignore")
         .to_dataframe()
         .sort_values("Z")  # from surface upward
         .to_csv(sep=" ", header=False, index=False)

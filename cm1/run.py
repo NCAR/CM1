@@ -57,8 +57,8 @@ class CM1Run:
         """
         self.cm1_path: Path = cm1_path
         self.pbs: PBS = pbs_config
-        self.printout: str = printout
-        self.readme: str = None
+        self.printout: str = printout if printout is not None else "cm1.print.out"
+        self.readme: str = ""
 
         # Path to default namelist and readme
         defaults_path = cm1_path / "run"
@@ -100,7 +100,6 @@ module load ncarenv/24.12
 module reset
 module load intel/2025.0.3
 
-export TMPDIR={os.getenv("TMPDIR", Path(os.getenv("SCRATCH")) / "tmp")}
 mkdir -p $TMPDIR
 
 export PALS_PPN=128
