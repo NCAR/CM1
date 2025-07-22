@@ -8,10 +8,18 @@ on:
   workflow_dispatch:
 
 jobs:
+  matrix:
+    compiler: [ nvhpc ]
+    mpi:      [ openmpi, mpich3 ]
+    gpu:      [ cuda ]
+    arch:     [ x86_64 ]
+    
+  
+          
   setup:
     runs-on: gha-runner-cm1-gpu
     container:
-      image:  cmille73/mpas-nvidia:carlp-mpich
+      image:  ncarcisl/cisldev-${{ matrix.arch }}-${{ inputs.os }}-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
       options: --gpus all
     steps:
       - uses: actions/checkout@v3
