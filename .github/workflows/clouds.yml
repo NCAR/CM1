@@ -8,14 +8,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  matrix:
-    compiler: [ nvhpc ]
-    mpi:      [ openmpi, mpich3 ]
-    gpu:      [ cuda ]
-    arch:     [ x86_64 ]
-    
-  
-          
+  run-matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [ nvhpc ]
+        mpi:      [ openmpi, mpich3 ]
+        gpu:      [ cuda ]
+        arch:     [ x86_64 ]
+                
   setup:
     runs-on: gha-runner-cm1-gpu
     container:
