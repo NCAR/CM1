@@ -13,8 +13,7 @@ import pickle
 import matplotlib.pyplot as plt
 import pandas as pd
 
-import cm1.input.era5
-from cm1.input.sounding import era5_aws, get_ofile
+from cm1.input.sounding import era5_aws, era5_model_level, get_ofile
 from cm1.utils import parse_args, skewt
 
 
@@ -35,7 +34,7 @@ def main() -> None:
             ds = pickle.load(file)
     else:
         if os.path.exists("/glade/campaign"):
-            ds = cm1.input.sounding.era5_model_level(
+            ds = era5_model_level(
                 valid_time,
                 args.lat,
                 args.lon,
