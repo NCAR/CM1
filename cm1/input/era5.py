@@ -1,5 +1,6 @@
 import logging
 import os
+from functools import lru_cache
 from pathlib import Path
 from typing import Tuple, cast
 
@@ -160,7 +161,9 @@ def circle_neighborhood(ds, lat, lon, neighbors, debug=True):
     return ds
 
 
-def compute_z_level(ds: xarray.Dataset, lev: int, z_h: float) -> Tuple[float, float]:
+def compute_z_level(
+    ds: xarray.Dataset, lev: int, z_h: xarray.DataArray
+) -> Tuple[xarray.DataArray, xarray.DataArray]:
     r"""
     Compute the geopotential at a full level and the overlying half-level.
 
@@ -176,12 +179,12 @@ def compute_z_level(ds: xarray.Dataset, lev: int, z_h: float) -> Tuple[float, fl
         specifically "Tv" (virtual temperature) and "P_half" (pressure on half-levels).
     lev : int
         The level index for the desired full-level geopotential calculation.
-    z_h : float
+    z_h : xarray.DataArray
         The initial geopotential height at the lower half-level.
 
     Returns:
     -------
-    Tuple[float, float]
+    Tuple[xarray.DataArray, xarray.DataArray]
         A tuple containing:
             - `z_h`: The updated geopotential at the overlying half-level.
             - `z_f`: The computed geopotential at the specified full level.
@@ -320,7 +323,7 @@ def model_level(
         "/glade/campaign/collections/rda/decsdata/COLD_STORAGE/d630000/P/e5.oper.invariant/201601"
     )
     invariant = xarray.open_mfdataset(
-        invariant_path.glob("*.nc"),
+        list(invariant_path.glob("*.nc")),
         drop_variables=["utc_date", "time"],
     )
     invariant = quantify_invariant(invariant)
@@ -429,6 +432,11 @@ def pressure_level(
     return ds
 
 
+@lru_cache(maxsize=1)
+def get_s3():
+    return s3fs.S3FileSystem(anon=True)
+
+
 def aws(time: pd.Timestamp) -> xarray.Dataset:
     """
     Retrieve ERA5 data from an S3 bucket and cache it locally.
@@ -455,8 +463,7 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
             logging.warning(f"Found cached s3 {var} {time}")
             return cache_file_path
 
-        if "s3" not in globals():
-            s3 = s3fs.S3FileSystem(anon=True)
+        s3 = get_s3()
 
         year_month_dir = start_end_str[0:6]
         s3_file_path = S3_BUCKET + f"/e5.oper.{level_type}/{year_month_dir}/{file_name}"
@@ -529,20 +536,24 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
 
 
 def nearest_grid_block_sel(
-    dataset: xarray.Dataset, lat: Quantity, lon: Quantity
+    dataset: xarray.Dataset, lat: Quantity, lon: Quantity, n: int = 3, **kwargs
 ) -> dict:
     """
-    Returns a dictionary to select a 3x3 grid (center + 8 neighbors) around the nearest grid point
+    Returns a dictionary to select nearest nxn slice
     to a specified lat/lon, to be used with xarray.Dataset.sel.
 
     Parameters:
         dataset (xarray.Dataset): ERA5 dataset with 'latitude' and 'longitude' coordinates.
-        lat (Quantity): Target latitude with units.
-        lon (Quantity): Target longitude with units.
+        lat (Quantity): Target latitude with units (must be in degrees, e.g., degrees_north).
+        lon (Quantity): Target longitude with units (must be in degrees, e.g., degrees_east).
+        n (int): Size of the square slice (must be positive odd integer).
 
     Returns:
         dict: Dictionary with 'latitude' and 'longitude' slices for use in .sel()
     """
+
+    if n < 1 or n % 2 != 1:
+        raise ValueError("n must be a positive odd integer.")
 
     # Convert lon to 0-360° if needed
     lon = lon % (360 * units.degree)
@@ -552,7 +563,7 @@ def nearest_grid_block_sel(
         raise ValueError("Dataset must contain 'latitude' and 'longitude' coordinates.")
 
     # Snap to the nearest point
-    center = dataset.sel(latitude=lat, longitude=lon, method="nearest")
+    center = dataset.sel(latitude=lat, longitude=lon, method="nearest", **kwargs)
     center_lat = center.latitude.values
     center_lon = center.longitude.values
 
@@ -562,17 +573,16 @@ def nearest_grid_block_sel(
     lat_idx = np.abs(lat_vals - center_lat).argmin()
     lon_idx = np.abs(lon_vals - center_lon).argmin()
 
+    half = n // 2
     # Latitude index range (handle edges)
-    lat_start = max(lat_idx - 1, 0)
-    lat_end = min(lat_idx + 1, len(lat_vals) - 1)
+    lat_start = max(lat_idx - half, 0)
+    lat_end = min(lat_idx + half, len(lat_vals) - 1)
+    lat_sel_vals = lat_vals[lat_start : lat_end + 1]
 
     # Longitude index range with wrapping
     lon_size = len(lon_vals)
-    lon_indices = [(lon_idx - 1) % lon_size, lon_idx, (lon_idx + 1) % lon_size]
-    lon_sel_vals = [lon_vals[i] for i in lon_indices]
-
-    # Get actual latitude values (preserve ordering in the data)
-    lat_sel_vals = lat_vals[lat_start : lat_end + 1]
+    lon_sel_indices = [(lon_idx + i) % lon_size for i in range(-half, half + 1)]
+    lon_sel_vals = np.array([lon_vals[i] for i in lon_sel_indices])
 
     # Return dictionary suitable for .sel()
     return {"latitude": lat_sel_vals, "longitude": lon_sel_vals}
