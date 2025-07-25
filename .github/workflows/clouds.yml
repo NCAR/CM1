@@ -16,7 +16,7 @@ jobs:
         gpu: [cuda]
         arch: [x86_64]
 
-    runs-on: gha-runner-cm1-gpu
+    runs-on: ubuntu-latest
   
     container:
       image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
