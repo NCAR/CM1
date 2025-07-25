@@ -17,13 +17,28 @@ jobs:
         arch: [x86_64]
 
     runs-on: gha-runner-cm1-gpu
+    env:
+      BASE_OS: ${{ github.event.inputs.os || 'almalinux9' }}
     container:
-      image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
+      image: ncarcisl/cisldev-${{ matrix.arch }}-${{ BASE_OS }}-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
       options: --gpus all
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup runtime environment
         run: |
+          pwd
+          ls
+          find -type d
+          env
+          cat /container/config_env.sh
+          df -h
+          cat /etc/os-release 2>/dev/null || true
+          uname -a
+          lscpu
+          nvidia-smi 2>/dev/null || true
+          echo && echo && echo
+          echo '----------------------------------------------------------------'
+          echo && echo && echo
           echo "CC=${CC}"
           echo "CXX=${CXX}"
           echo "FC=${FC}"
@@ -35,6 +50,11 @@ jobs:
           echo "FCFLAGS=${FCFLAGS}"
           echo "F77FLAGS=${F77FLAGS}"
           export CC CXX FC F77 CFLAGS CXXFLAGS FCFLAGS F77FLAGS CPPFLAGS
+          which conda 2>/dev/null && conda --version || echo " --> no conda in this container"
+          which mpicc
+          mpicc --version 2>/dev/null || true
+
+         
       - name: Build and Run CM1
         run: |
           cd src/
