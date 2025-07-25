@@ -17,10 +17,9 @@ jobs:
         arch: [x86_64]
 
     runs-on: gha-runner-cm1-gpu
-    env:
-      BASE_OS: ${{ github.event.inputs.os || 'almalinux9' }}
+  
     container:
-      image: ncarcisl/cisldev-${{ matrix.arch }}-${{ BASE_OS }}-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
+      image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
       options: --gpus all
     steps:
       - uses: actions/checkout@v4
