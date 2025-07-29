@@ -56,11 +56,26 @@ jobs:
           which mpicc
           mpicc --version 2>/dev/null || true
 
-         
-      - name: Build and Run CM1
+      - name: Build CM1
+        continue-on-error: false
         run: |
-          cd src/
-          make -j 4 FC=nvfortran USE_OPENACC=true USE_MPI=true
-          cd ../run
-          mpiexec -n 4 ./cm1.exe
+          chmod +x .github/workflows/build_cm1.sh
+
+          # Use extra_io_args to set whether to use PIO or SMIOL
+          if [ -n "${{ matrix.extra_output_args }}" ]; then
+            eval "${{ matrix.extra_output_args }}"
+          fi
+
+          # Use extra_accel_args to set whether to use OpenACC
+          if [ -n "${{ matrix.extra_accel_args }}" ]; then
+            eval "${{ matrix.extra_accel_args }}"
+          fi
+          timeout 25m .github/workflows/build_cm1.sh
+         
+      #- name: Build and Run CM1
+      #  run: |
+      #    cd src/
+      #    make -j 4 FC=nvfortran USE_OPENACC=true USE_MPI=true
+      #    cd ../run
+      #    mpiexec -n 4 ./cm1.exe
 
