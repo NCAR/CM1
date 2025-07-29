@@ -1,0 +1,81 @@
+name: Cirrus clouds GPU
+on:
+  push:
+    branches:
+      - "cicd"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  run-matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [nvhpc]
+        mpi: [openmpi, mpich3]
+        gpu: [cuda]
+        arch: [x86_64]
+
+    runs-on: gha-runner-cm1-gpu
+    defaults:
+      run:
+        shell: bash -elo pipefail {0}
+        
+    container:
+      image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
+      options: --gpus all
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup runtime environment
+        run: |
+          pwd
+          ls
+          find -type d
+          env
+          cat /container/config_env.sh
+          df -h
+          cat /etc/os-release 2>/dev/null || true
+          uname -a
+          lscpu
+          nvidia-smi 2>/dev/null || true
+          echo && echo && echo
+          echo '----------------------------------------------------------------'
+          echo && echo && echo
+          echo "CC=${CC}"
+          echo "CXX=${CXX}"
+          echo "FC=${FC}"
+          echo "F77=${F77}"
+          echo
+          echo "CFLAGS=${CFLAGS}"
+          echo "CPPFLAGS=${CPPFLAGS}"
+          echo "CXXFLAGS=${CXXFLAGS}"
+          echo "FCFLAGS=${FCFLAGS}"
+          echo "F77FLAGS=${F77FLAGS}"
+          export CC CXX FC F77 CFLAGS CXXFLAGS FCFLAGS F77FLAGS CPPFLAGS
+          which conda 2>/dev/null && conda --version || echo " --> no conda in this container"
+          which mpicc
+          mpicc --version 2>/dev/null || true
+
+      - name: Build CM1
+        continue-on-error: false
+        run: |
+          chmod +x .github/workflows/build_cm1.sh
+
+          # Use extra_io_args to set whether to use PIO or SMIOL
+          if [ -n "${{ matrix.extra_output_args }}" ]; then
+            eval "${{ matrix.extra_output_args }}"
+          fi
+
+          # Use extra_accel_args to set whether to use OpenACC
+          if [ -n "${{ matrix.extra_accel_args }}" ]; then
+            eval "${{ matrix.extra_accel_args }}"
+          fi
+          timeout 25m .github/workflows/build_cm1.sh
+         
+      #- name: Build and Run CM1
+      #  run: |
+      #    cd src/
+      #    make -j 4 FC=nvfortran USE_OPENACC=true USE_MPI=true
+      #    cd ../run
+      #    mpiexec -n 4 ./cm1.exe
+
