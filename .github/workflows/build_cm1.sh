@@ -28,6 +28,6 @@ case "${COMPILER_FAMILY}" in
 esac
 
 
-export USE_MPI=true
-make FC=${compiler_target} 
+cd src
+make FC=${compiler_target} USE_MPI=true USE_OPENACC=true 
 #--jobs ${MAKE_J_PROCS:-$(nproc)}
