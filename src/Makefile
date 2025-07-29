@@ -108,7 +108,7 @@ ifeq (${FC},nvfortran)
             ifeq (${GPU_TYPE_L},a100)
                 OPTS += -acc -gpu=cc80,lineinfo,nofma,math_uniform -Minfo=accel -cudalib=cutensor 
             else
-                OPTS += -acc -gpu=cc70,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
+                OPTS += -acc -gpu=cc86,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
             endif
         endif
         DM       += -D_OPENACC
