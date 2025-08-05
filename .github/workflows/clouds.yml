@@ -32,6 +32,7 @@ jobs:
           ls
           find -type d
           env
+          ls /dev
           cat /container/config_env.sh
           df -h
           cat /etc/os-release 2>/dev/null || true
