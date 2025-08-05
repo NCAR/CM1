@@ -22,7 +22,7 @@ jobs:
         shell: bash -elo pipefail {0}
         
     container:
-      image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
+      image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:25.08
       options: --gpus all
     steps:
       - uses: actions/checkout@v4
