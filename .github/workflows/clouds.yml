@@ -11,10 +11,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [nvhpc]
-        mpi: [openmpi, mpich3]
-        gpu: [cuda]
-        arch: [x86_64]
+        image: [ubuntu24.04:nvhpc25.7_openmpi5.0.8_cuda12.9]
+        
 
     runs-on: gha-runner-cm1-gpu
     defaults:
@@ -22,45 +20,48 @@ jobs:
         shell: bash -elo pipefail {0}
         
     container:
-      image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:25.08
+      image: hub.k8s.ucar.edu/stormspeed/${{ matrix.image }}
       options: --gpus all
     steps:
       - uses: actions/checkout@v4
-      - name: Setup runtime environment
+
+      - name: Checkout individual components
+        run: | # Use -C option to specify the workspace directory; otherwise root_dir is set to '.' and the checkout will fail
+          . /opt/spack/share/spack/setup-env.sh && \
+          spack load python && \
+          ./bin/git-fleximod -C ${GITHUB_WORKSPACE} update
+
+      - name: Build and run 
         run: |
-          pwd
-          ls
-          find -type d
-          env
-          ls /dev
-          cat /container/config_env.sh
-          df -h
-          cat /etc/os-release 2>/dev/null || true
-          uname -a
-          lscpu
-          nvidia-smi 2>/dev/null || true
-          echo && echo && echo
-          echo '----------------------------------------------------------------'
-          echo && echo && echo
-          echo "CC=${CC}"
-          echo "CXX=${CXX}"
-          echo "FC=${FC}"
-          echo "F77=${F77}"
-          echo
-          echo "CFLAGS=${CFLAGS}"
-          echo "CPPFLAGS=${CPPFLAGS}"
-          echo "CXXFLAGS=${CXXFLAGS}"
-          echo "FCFLAGS=${FCFLAGS}"
-          echo "F77FLAGS=${F77FLAGS}"
-          export CC CXX FC F77 CFLAGS CXXFLAGS FCFLAGS F77FLAGS CPPFLAGS
-          which conda 2>/dev/null && conda --version || echo " --> no conda in this container"
-          which mpicc
-          mpicc --version 2>/dev/null || true
+          ################################
+          # Set up environment variables #
+          ################################
+          . /opt/spack/share/spack/setup-env.sh
+          cat /opt/spack/share/spack/setup-env.sh
+          spack load python libxml2 openmpi parallel-netcdf parallelio esmf
+          if ! command -v cmake &> /dev/null; then
+            spack load cmake
+          fi
+          export MPI_ROOT=$(spack location -i openmpi@5.0.8)
+          export NETCDF_C_PATH=$(spack location -i netcdf-c@4.9.2)
+          export NETCDF_FORTRAN_PATH=$(spack location -i netcdf-fortran@4.6.1)
+          export PNETCDF=$(spack location -i parallel-netcdf@1.14.0)
+          export PIO=$(spack location -i parallelio@2.6.6)
+          export ESMFMKFILE=$(spack location -i esmf@8.8.1)/lib/esmf.mk
+          export LAPACK=$(spack location -i netlib-lapack@3.12.1)
+          if [ "${{ matrix.compiler }}" != "nvhpc" ]; then
+            spack load cuda
+            export CUDA_ROOT=$(spack location -i cuda@12.9.0)
+          fi
+          export PIO_VERSION_MAJOR=2
+          export PIO_TYPENAME_VALID_VALUES="netcdf, pnetcdf, netcdf4c, netcdf4p"
+          export USER=robot
+    
 
       - name: Build CM1
         continue-on-error: false
         run: |
-          chmod +x .github/workflows/build_cm1.sh
+          
 
           # Use extra_io_args to set whether to use PIO or SMIOL
           if [ -n "${{ matrix.extra_output_args }}" ]; then
