@@ -1,6 +1,7 @@
 <img src="https://www2.mmm.ucar.edu/people/bryan/cm1/NSF-NCAR_Lockup-UCAR-Dark_102523.png" width="30%"/>
 
 [![Documentation Status](https://readthedocs.org/projects/cm1/badge/?version=latest)](https://cm1.readthedocs.io/en/latest/?badge=latest)
+&nbsp;<a href="https://forum.mmm.ucar.edu/#cm1-cloud-model-1.137"><img src="cm1/images/logo-wrf-mpas-sm.png"></a>
 
 ## New announcements:
 * January 2025: Slides from a presentation at NCAR HPC Users Group: [CM1 Description, Recent Developments, and Future Directions](https://www2.mmm.ucar.edu/people/bryan/cm1/CM1_NHUG_Slides_Jan2025.pdf)
@@ -17,13 +18,13 @@
 
 ### [Support Forum](https://forum.mmm.ucar.edu/#cm1-cloud-model-1.137)
 
-#### [Research Results](docs/research_results.md)
+### [Research Results](docs/research_results.md)
 
-#### [Honors and Awards](docs/honors_and_awards.md)
+### [Honors and Awards](docs/honors_and_awards.md)
 
-#### [Testing and Evaluation](docs/testing_and_evaluation.md)
+### [Testing and Evaluation](docs/testing_and_evaluation.md)
 
-#### [Utilities](docs/utilities.md)
+### [Utilities](docs/utilities.md)
 
 Send comments and/or questions about this page to:
 
