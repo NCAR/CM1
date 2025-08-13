@@ -73,5 +73,5 @@ jobs:
           cd src/
           make -j 4 FC=nvfortran USE_OPENACC=true USE_MPI=true
           cd ../run
-          mpiexec -n 4 ./cm1.exe
+          mpiexec -n 4 --allow-run-as-root ./cm1.exe
 
