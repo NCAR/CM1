@@ -25,12 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout individual components
-        run: | # Use -C option to specify the workspace directory; otherwise root_dir is set to '.' and the checkout will fail
-          . /opt/spack/share/spack/setup-env.sh && \
-          spack load python && \
-          ./bin/git-fleximod -C ${GITHUB_WORKSPACE} update
-
       - name: Build and run 
         run: |
           ################################
