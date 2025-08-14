@@ -33,4 +33,3 @@ make FC=${compiler_target} USE_MPI=true USE_OPENACC=true
 cd ../run
 export MPIR_CVAR_ENABLE_GPU=1
 mpiexec -n 4 ./cm1.exe
-#--jobs ${MAKE_J_PROCS:-$(nproc)}
