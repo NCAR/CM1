@@ -2,7 +2,7 @@ name: Cirrus clouds GPU
 on:
   push:
     branches:
-      - "cicd"
+      - "gpu-opt"
   pull_request:
   workflow_dispatch:
 
