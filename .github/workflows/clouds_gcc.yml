@@ -1,4 +1,4 @@
-name: Cirrus clouds CPU with GNU
+name: Cirrus clouds CPU with GNU and my container 
 
 on:
   push:
