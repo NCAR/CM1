@@ -65,9 +65,3 @@ jobs:
              make coverage         
            fi
 
-      #- name: Generate coverage report
-      #  run: | 
-      #     conda activate
-      #     cd src/
-      #     make coverage         
-
