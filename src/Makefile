@@ -349,14 +349,14 @@ code:
 			mv onefile.F ../run
 
 coverage: 
-	                gcovr -r . --txt-report-covered --gcov-ignore-parse-errors -s
+			gcovr -r . --txt-report-covered --gcov-ignore-parse-errors -s
 
 clean:
 			rm -f *.f90 *.o *.a *.mod 
 
 codeclean:
 			rm -f *.f90 *.o *.a *.mod *.gcno *.gcda *.gcov *.html coverage.xml *.css
-	                find . -name "*.gcov" -delete
+			find . -name "*.gcov" -delete
 
 # DEPENDENCIES : only dependencies after this line (don't remove the word DEPENDENCIES)
 
