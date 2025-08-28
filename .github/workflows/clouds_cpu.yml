@@ -29,6 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup runtime environment
         run: |
+          env
           echo '----------------------------------------------------------------'
           echo && echo && echo
           echo "CC=${CC}"
