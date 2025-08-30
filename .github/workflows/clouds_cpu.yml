@@ -54,6 +54,7 @@ jobs:
              
              conda activate
              pip install gcovr
+             echo "NETCDFBASE=$NETCDFBASE"
              ls $NETCDFBASE/include
              
              make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
