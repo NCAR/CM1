@@ -48,13 +48,15 @@ jobs:
 
       - name: Build and run CM1 code coverage
         run: |
+           echo "NETCDFBASE=${NETCDF}"
+           export NETCDFBASE
            cd src/
-           if [ "${{ matrix.compiler }}" != "oneapi" ]; then
-             echo "NETCDFBASE=${NETCDF}" >> $GITHUB_ENV
-             
+           echo "$NETCDFBASE"
+           ls $NETCDFBASE/include
+           if [ "${{ matrix.compiler }}" != "oneapi" ]; then             
              conda activate
              pip install gcovr
-             echo "NETCDFBASE=$NETCDFBASE"
+             echo "$NETCDFBASE"
              ls $NETCDFBASE/include
              
              make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
