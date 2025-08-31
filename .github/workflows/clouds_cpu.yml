@@ -52,12 +52,12 @@ jobs:
            export NETCDFBASE
            cd src/
            echo "${NETCDFBASE}"
-           ls ${NETCDFBASE}/include
+           ls -al ${NETCDFBASE}/include
            if [ "${{ matrix.compiler }}" != "oneapi" ]; then             
              #conda activate
              #pip install gcovr
-             echo "$NETCDFBASE"
-             ls $NETCDFBASE/include
+             echo "${NETCDFBASE}"
+             ls ${NETCDFBASE}/include
              
              make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
            else 
