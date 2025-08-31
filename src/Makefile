@@ -59,8 +59,8 @@ LINKOPTS      =
 #  Note:  you may need to remove -DNCFPLUS if you use an old version of netcdf
 #-----------------------------------------------------------------------------
 ifeq (${USE_NETCDF_L},true)
-    OUTPUTINC    += -I$(NETCDFBASE)/include
-    OUTPUTLIB    += -L$(NETCDFBASE)/lib
+    OUTPUTINC    += -I$(NETCDF)/include
+    OUTPUTLIB    += -L$(NETCDF)/lib
     OUTPUTOPT    += -DNETCDF -DNCFPLUS
     LINKOPTS     += -lnetcdf -lnetcdff
 endif
