@@ -54,8 +54,8 @@ jobs:
            echo "$NETCDFBASE"
            ls $NETCDFBASE/include
            if [ "${{ matrix.compiler }}" != "oneapi" ]; then             
-             conda activate
-             pip install gcovr
+             #conda activate
+             #pip install gcovr
              echo "$NETCDFBASE"
              ls $NETCDFBASE/include
              
