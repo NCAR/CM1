@@ -52,9 +52,9 @@ jobs:
            if [ "${{ matrix.compiler }}" != "oneapi" ]; then
              conda activate
              pip install gcovr
-             make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
+             NETCDFBASE=$NETCDF make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
            else 
-             make -j 4 FC=ifort CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
+             NETCDFBASE=$NETCDF make -j 4 FC=ifort CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
            fi
            cd ../run
            if [ "${{ matrix.mpi }}" = "openmpi" ]; then
