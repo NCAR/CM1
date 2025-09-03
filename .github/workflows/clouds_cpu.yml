@@ -46,7 +46,7 @@ jobs:
           which mpicc
           mpicc --version 2>/dev/null || true
 
-      - name: Build and run CM1 code coverage
+      - name: Build CM1 w/o code coverage
         run: |
            cd src/
            if [ "${{ matrix.compiler }}" != "oneapi" ]; then
@@ -56,7 +56,11 @@ jobs:
            else 
              NETCDFBASE=$NETCDF make -j 4 FC=ifort CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
            fi
-           cd ../run
+
+      - name: Run CM1 w/o code coverage
+        run: |
+           conda activate
+           cd run/
            if [ "${{ matrix.mpi }}" = "openmpi" ]; then
              OMP_NUM_THREADS=1 mpiexec --allow-run-as-root -n 4 ./cm1.exe 
            else
