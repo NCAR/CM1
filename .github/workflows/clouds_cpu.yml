@@ -61,7 +61,7 @@ jobs:
         run: |
            conda activate
            cd run/
-           if { "${{ matrix.netcdf }}" = "true" ]; then
+           if [ "${{ matrix.netcdf }}" = "true" ]; then
              sed -i 's/format    = 0/format    = 2/g' namelist.input
            fi
            if [ "${{ matrix.mpi }}" = "openmpi" ]; then
