@@ -69,7 +69,7 @@ jobs:
            else
              OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe
            fi
-           ls *nc
+           grep format namelist.input 
            if [ "${{ matrix.compiler }}" != "oneapi" ]; then
              cd ../src
              make coverage         
