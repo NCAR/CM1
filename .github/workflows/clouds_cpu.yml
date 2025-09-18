@@ -1,0 +1,77 @@
+name: Cirrus clouds CPU with Linux 
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  run-matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [oneapi, gcc12, gcc13]
+        mpi: [openmpi, mpich3]
+        gpu: [nogpu]
+        arch: [x86_64]
+        netcdf: [true, false]
+
+    runs-on: gha-runner-cm1
+    defaults:
+      run:
+        shell: bash -elo pipefail {0}
+        
+    container:
+      image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
+      options: --gpus all
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup runtime environment
+        run: |
+          env
+          echo '----------------------------------------------------------------'
+          echo && echo && echo
+          echo "CC=${CC}"
+          echo "CXX=${CXX}"
+          echo "FC=${FC}"
+          echo "F77=${F77}"
+          echo
+          echo "CFLAGS=${CFLAGS}"
+          echo "CPPFLAGS=${CPPFLAGS}"
+          echo "CXXFLAGS=${CXXFLAGS}"
+          echo "FCFLAGS=${FCFLAGS}"
+          echo "F77FLAGS=${F77FLAGS}"
+          export CC CXX FC F77 CFLAGS CXXFLAGS FCFLAGS F77FLAGS CPPFLAGS
+          which mpicc
+          mpicc --version 2>/dev/null || true
+
+      - name: Build CM1 w/o code coverage
+        run: |
+           cd src/
+           if [ "${{ matrix.compiler }}" != "oneapi" ]; then
+             conda activate
+             pip install gcovr
+             NETCDFBASE=$NETCDF make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
+           else 
+             NETCDFBASE=$NETCDF make -j 4 FC=ifort CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
+           fi
+
+      - name: Run CM1 w/o code coverage
+        run: |
+           conda activate
+           cd run/
+           if [ "${{ matrix.netcdf }}" = "true" ]; then
+             sed -i 's/output_format    = 1/output_format    = 2/g' namelist.input
+           fi
+           if [ "${{ matrix.mpi }}" = "openmpi" ]; then
+             OMP_NUM_THREADS=1 mpiexec --allow-run-as-root -n 4 ./cm1.exe 
+           else
+             OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe
+           fi
+           ls cm1out*
+           if [ "${{ matrix.compiler }}" != "oneapi" ]; then
+             cd ../src
+             make coverage         
+           fi
+
