@@ -19,7 +19,6 @@ from metpy.units import units
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from pint import Quantity
 
-CAMPAIGNDIR = "glade/campaign/collections/rda/data"
 TMPDIR = Path(os.getenv("TMPDIR"))
 
 
@@ -30,8 +29,7 @@ def parse_args() -> argparse.Namespace:
     Returns
     -------
     argparse.Namespace
-        Parsed command-line arguments including time, longitude, latitude,
-        and optional path to glade directory.
+        Parsed command-line arguments including time, longitude, latitude
     """
     parser = argparse.ArgumentParser(description="get ERA5 sounding at time, lon, lat")
     parser.add_argument("time", help="time")
@@ -45,7 +43,6 @@ def parse_args() -> argparse.Namespace:
         type=lambda x: float(x) * units.degreeN,
         help="latitude in degrees North",
     )
-    parser.add_argument("--glade", default="/", help="parent of glade directory")
     args = parser.parse_args()
     logging.info(args)
     return args
@@ -222,25 +219,25 @@ def skewt(
 
     # Get parcel potential temperature and mixing ratio from
     # "surface_potential_temperature" and/or "surface_mixing_ratio" DataArray.
-    # Otherwise, assume the value(s) of the level with the highest pressure.
+    # Otherwise, assume the value(s) at the level with the highest pressure.
     parcel_level = ds.level.sel(level=ds.P.compute().idxmax())
     if "surface_potential_temperature" in ds:
         T_parcel = mpcalc.temperature_from_potential_temperature(
             ds.SP, ds.surface_potential_temperature
         )
-        logging.warning(
+        logging.info(
             f"got T_parcel {T_parcel.metpy.convert_units('degC').item():~.2f} from SP {ds.SP.item():~.1f} "
             f"and surface_potential_temperature {ds.surface_potential_temperature.metpy.convert_units('degC').item():~.2f}"
         )
     else:
         T_parcel = ds.T.sel(level=parcel_level)
-        logging.warning(
+        logging.info(
             f"got T_parcel {T_parcel.item():~.2f} from "
-            f"highest pressure level {parcel_level.item()}"
+            f"level with highest pressure {parcel_level.item()}"
         )
     if "surface_mixing_ratio" in ds:
         parcel_mixing_ratio = ds.surface_mixing_ratio
-        logging.warning(
+        logging.info(
             f"got parcel_mixing_ratio "
             f"{parcel_mixing_ratio.item().to('g/kg'):~.3f} "
             f"from surface_mixing_ratio"
@@ -249,12 +246,12 @@ def skewt(
         parcel_mixing_ratio = mpcalc.mixing_ratio_from_specific_humidity(
             ds.Q.sel(level=parcel_level)
         )
-        logging.warning(
+        logging.info(
             f"got parcel_mixing_ratio {parcel_mixing_ratio.item().to('g/kg'):~.3f} "
-            f"from highest pressure level {parcel_level.item()}"
+            f"level with highest pressure {parcel_level.item()}"
         )
     Td_parcel = mpcalc.dewpoint(mpcalc.vapor_pressure(ds.SP, parcel_mixing_ratio))
-    logging.warning(
+    logging.info(
         f"p_parcel {ds.SP.item():~.1f} T_parcel {T_parcel.item().to('degC'):~.2f} "
         f"Td_parcel {Td_parcel.item():~.2f} "
         f"parcel_mixing_ratio {parcel_mixing_ratio.item().to('g/kg'):~.3f}"
@@ -262,7 +259,7 @@ def skewt(
 
     # Calculate LCL pressure and label level on SkewT.
     lcl_pressure, lcl_temperature = mpcalc.lcl(ds.SP, T_parcel, Td_parcel)
-    logging.warning(f"lcl_p {lcl_pressure:~.1f} lcl_t {lcl_temperature:~.2f}")
+    logging.info(f"lcl_p {lcl_pressure:~.1f} lcl_t {lcl_temperature:~.2f}")
 
     trans = transforms.blended_transform_factory(skew.ax.transAxes, skew.ax.transData)
     skew.ax.plot(
@@ -315,7 +312,7 @@ def skewt(
     skew.plot(p, Td, "g")
     # Draw virtual temperature like temperature, but thin and dashed.
     if "Tv" in ds:
-        logging.warning("Ignore input Tv. Derive from T, qv(p,Td(p,Q))")
+        logging.warning("ignoring input Tv. Derive from T, qv(p,Td(p,Q))")
 
     Tv = mpcalc.virtual_temperature(T, mpcalc.saturation_mixing_ratio(p, Td))
 
@@ -424,8 +421,26 @@ def skewt(
 
     logging.info("Create hodograph")
     ax_hod = inset_axes(skew.ax, "40%", "40%", loc=1)
-    h = Hodograph(ax_hod, component_range=30.0)
+    # Initialize Hodograph without a fixed component range to allow for dynamic axes
+    h = Hodograph(ax_hod)
     h.add_grid(increment=10, linewidth=0.75)
+
+    # Calculate the data range for u and v winds to center the plot
+    u_min, u_max = u.min(), u.max()
+    v_min, v_max = v.min(), v.max()
+
+    # Determine the center of the wind data
+    u_center = (u_min + u_max) / 2
+    v_center = (v_min + v_max) / 2
+
+    # To make the plot square, find the largest range (u or v) and apply it to both axes
+    max_range = max(u_max - u_min, v_max - v_min).to(plot_barbs_units).m
+    # Add 10% padding around the maximum range
+    plot_radius = (max_range / 2) * 1.1
+
+    # Set the x and y limits of the hodograph axes, centered on the data
+    ax_hod.set_xlim(u_center.m - plot_radius, u_center.m + plot_radius)
+    ax_hod.set_ylim(v_center.m - plot_radius, v_center.m + plot_radius)
     # ax_hod.set_xlabel("")
     ax_hod.set_ylabel("")
     ax_hod.xaxis.label.set_fontsize("xx-small")

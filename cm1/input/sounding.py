@@ -1,5 +1,5 @@
 """
-Load ERA5 model dataset for a user-specified time and location.
+Load ERA5 model Sounding for a user-specified time and location.
 
 --campaign: Use campaign storage.
 Otherwise use the s3fs Amazon Web Service bucket or a local cached file.
@@ -15,7 +15,7 @@ import metpy.calc as mcalc
 import metpy.constants
 import numpy as np
 import pandas as pd
-import xarray
+import xarray as xr
 from metpy.units import units
 from pint import Quantity
 
@@ -27,7 +27,101 @@ repo_base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."
 soundings_path = os.path.join(repo_base_path, "soundings")
 
 
-def era5_aws(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs):
+class Sounding(xr.Dataset):
+    __slots__ = ("case",)
+
+    def __init__(self, *args, case=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.case = case
+
+    def plot(self, fig=None, subplot=None, **kwargs):
+        """
+        Plot the sounding using the skewt function.
+
+        Parameters:
+            fig: matplotlib Figure (optional)
+            subplot: subplot tuple (optional)
+            **kwargs: Additional keyword arguments passed to skewt
+        """
+        from cm1.skewt import skewt  # Import here to avoid circular import
+
+        return skewt(self, fig=fig, subplot=subplot, **kwargs)
+
+    def to_txt(self) -> str:
+        """
+        Convert a Sounding into a formatted string suitable for CM1 or WRF input.
+
+        Parameters:
+            self (Sounding): Dataset containing atmospheric profiles.
+
+        Returns:
+            str: Formatted string representing the sounding data.
+
+        The CM1 input sounding file format is as follows:
+        One-line header containing:   sfc pres (mb)    sfc theta (K)    sfc qv (g/kg)
+
+        (Note1: here, "sfc" refers to near-surface atmospheric conditions.
+        Technically, this should be z = 0, but in practice is obtained from the
+        standard reporting height of 2 m AGL/ASL from observations)
+        (Note2: land-surface temperature and/or sea-surface temperature (SST) are
+        specified elsewhere: see tsk0 in namelist.input and/or tsk array in
+        init_surface.F)
+
+        Then, the following lines are:   z (m)    theta (K)   qv (g/kg)    u (m/s)    v (m/s)
+
+        (Note3: # of levels is arbitrary)
+
+            Index:   sfc    =  surface (technically z=0, but typically from 2 m AGL/ASL obs)
+                    z      =  height AGL/ASL
+                    pres   =  pressure
+                    theta  =  potential temperature
+                    qv     =  mixing ratio
+                    u      =  west-east component of velocity
+                    v      =  south-north component of velocity
+
+        Note4:  For final line of input_sounding file, z (m) must be greater than the model top
+                (which is nz * dz when stretch_z=0, or ztop when stretch_z=1,  etc)
+        """
+        # Find the level label with the maximum pressure.
+        # Don't assign level with highest numeric value. This worked for ERA5 but not CM1 input soundings.
+        sfc = self.level.sel(level=self.P.compute().idxmax())
+        # ds.SP (surface pressure) is half-level below ds.level.max()
+        sfc_pres = self.SP if "SP" in self else self.P.sel(level=sfc)
+        self["theta"] = mcalc.potential_temperature(self.P, self.T).metpy.convert_units(
+            "K"
+        )
+        sfc_theta_K = (
+            self["surface_potential_temperature"].metpy.convert_units("K")
+            if "surface_potential_temperature" in self
+            else self["theta"].sel(level=sfc)
+        )
+        # Convert specific humidity Q to mixing ratio qv.
+        if "qv" in self:
+            logging.warning(
+                "ignoring qv already in Dataset. Recompute from specific humidity Q"
+            )
+        self["qv"] = mcalc.mixing_ratio_from_specific_humidity(
+            self["Q"]
+        ).metpy.convert_units("g/kg")
+        sfc_qv_gkg = (
+            self["surface_mixing_ratio"].metpy.convert_units("g/kg")
+            if "surface_mixing_ratio" in self
+            else self.qv.sel(level=sfc)
+        )
+
+        s = f"{sfc_pres.compute().item().m_as('hPa')} {sfc_theta_K.values} {sfc_qv_gkg.values}\n"
+        s += (
+            self[["Z", "theta", "qv", "U", "V"]]
+            .drop_vars(["latitude", "longitude", "time"], errors="ignore")
+            .to_dataframe()
+            .sort_values("Z")  # from surface upward
+            .to_csv(sep=" ", header=False, index=False)
+        )
+
+        return s
+
+
+def era5_aws(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs) -> Sounding:
     """
     Retrieve ERA5 dataset for a specific time and location.
 
@@ -38,7 +132,7 @@ def era5_aws(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs):
         **kwargs: Additional arguments to pass to the data retrieval function.
 
     Returns:
-        xarray.Dataset: ERA5 dataset for the specified time and nearest location.
+        Sounding: ERA5 dataset for the specified time and nearest location.
     """
     ds = cm1.input.era5.aws(time, **kwargs)
     # map negative longitude to 0-360 degreeE
@@ -50,7 +144,7 @@ def era5_aws(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs):
         tolerance=5 * units.deg,
     )
 
-    return ds
+    return Sounding(ds)
 
 
 def era5_model_level(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs):
@@ -64,7 +158,7 @@ def era5_model_level(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs)
         **kwargs: Additional arguments to pass to the data retrieval function.
 
     Returns:
-        xarray.Dataset: ERA5 dataset for the specified time and nearest location.
+        Sounding: ERA5 dataset for the specified time and nearest location.
     """
     ds = cm1.input.era5.model_level(time, **kwargs)
     # map negative longitude to 0-360 degreeE
@@ -76,7 +170,7 @@ def era5_model_level(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs)
         tolerance=5 * units.deg,
     )
 
-    return ds
+    return Sounding(ds)
 
 
 def era5_pressure_level(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs):
@@ -90,7 +184,7 @@ def era5_pressure_level(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwar
         **kwargs: Additional arguments to pass to the data retrieval function.
 
     Returns:
-        xarray.Dataset: ERA5 dataset for the specified time and nearest location.
+        Sounding: ERA5 dataset for the specified time and nearest location.
     """
     ds = cm1.input.era5.pressure_level(time, **kwargs)
     # map negative longitude to 0-360 degreeE
@@ -102,7 +196,7 @@ def era5_pressure_level(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwar
         tolerance=5 * units.deg,
     )
 
-    return ds
+    return Sounding(ds)
 
 
 def get_ofile(args: argparse.Namespace) -> Path:
@@ -117,12 +211,12 @@ def get_ofile(args: argparse.Namespace) -> Path:
     """
     ofile = (
         TMPDIR
-        / f"{pd.to_datetime(args.time).strftime('%Y%m%d_%H%M%S')}.{args.lat:~}.{args.lon:~}.nc"
+        / f"{pd.to_datetime(args.time).strftime('%Y%m%d_%H%M%S')}.{args.lat:~}.{args.lon:~}"
     )
     return ofile
 
 
-def get_case(case: str) -> xarray.Dataset:
+def get_case(case: str) -> Sounding:
     """
     Retrieve a predefined sounding case dataset.
 
@@ -130,12 +224,12 @@ def get_case(case: str) -> xarray.Dataset:
         case (str): Name of the sounding case.
 
     Returns:
-        xarray.Dataset: Dataset corresponding to the specified case.
+        Sounding: Dataset corresponding to the specified case.
     """
     file_path = os.path.join(soundings_path, f"input_sounding_{case}")
     ds = read_from_txt(file_path)
-    ds.attrs.update({"case": case})
-    return ds
+
+    return Sounding(ds, case=case)
 
 
 # Functions for specific sounding cases
@@ -167,15 +261,15 @@ def seabreeze_test():
     return get_case("seabreeze_test")
 
 
-def read_from_txt(file_path: typing.Union[str, Path]) -> xarray.Dataset:
+def read_from_txt(file_path: typing.Union[str, Path]) -> Sounding:
     """
-    Read a CM1 sounding file format and convert it into an xarray Dataset.
+    Read a CM1 sounding file format and convert it into a Sounding object.
 
     Parameters:
         file_path (str): Path to the sounding file.
 
     Returns:
-        xarray.Dataset: Dataset containing sounding data with appropriate units.
+        Sounding: Dataset containing sounding data with appropriate units.
     """
     # Open the file and read the first line (header with surface variables)
     with open(file_path, "r") as file:
@@ -223,7 +317,7 @@ def read_from_txt(file_path: typing.Union[str, Path]) -> xarray.Dataset:
         P.append(p_bot.item().m_as(ds.SP.metpy.units))
         z_bot = ds.Z.sel(level=level)
 
-    ds["P"] = xarray.DataArray(P, coords=[ds.level])
+    ds["P"] = xr.DataArray(P, coords=[ds.level])
     ds["P"] *= ds.SP.metpy.units
     ds["T"] = mcalc.temperature_from_potential_temperature(ds["P"], ds["theta"])
     ds["Tv"] = mcalc.thermo.virtual_temperature(ds.T, ds.qv)
@@ -237,7 +331,8 @@ def read_from_txt(file_path: typing.Union[str, Path]) -> xarray.Dataset:
     ds["surface_geopotential_height"] *= units.m
     ds["U"] = ds["U"] * units.m / units.s
     ds["V"] = ds["V"] * units.m / units.s
-    return ds
+
+    return Sounding(ds)
 
 
 def main() -> None:
@@ -259,89 +354,17 @@ def main() -> None:
         with open(ofile, "rb") as file:
             ds = pickle.load(file)
     else:
-        ds = cm1.input.era5.model_level(
-            valid_time,
-            glade=args.glade,
-        )
-        with open(ofile, "wb") as file:
-            logging.warning(f"pickle dump {ofile}")
-            pickle.dump(ds, file)
+        if os.path.exists("/glade/campaign"):
+            ds = era5_model_level(valid_time, args.lat, args.lon)
+        else:
+            logging.warning("No campaign storage. Get pressure level data from AWS")
+            ds = era5_aws(valid_time, args.lat, args.lon)
 
-    ds = era5_model_level(valid_time, args.lat, args.lon)
+    with open(ofile, "wb") as file:
+        logging.warning(f"pickle dump {ofile}")
+        pickle.dump(ds, file)
 
-    print(to_txt(ds))
-
-
-def to_txt(ds: xarray.Dataset) -> str:
-    """
-    Convert an xarray Dataset into a formatted string suitable for CM1 or WRF input.
-
-    Parameters:
-        ds (xarray.Dataset): Dataset containing atmospheric profiles.
-
-    Returns:
-        str: Formatted string representing the sounding data.
-
-    The CM1 input sounding file format is as follows:
-    One-line header containing:   sfc pres (mb)    sfc theta (K)    sfc qv (g/kg)
-
-      (Note1: here, "sfc" refers to near-surface atmospheric conditions.
-       Technically, this should be z = 0, but in practice is obtained from the
-       standard reporting height of 2 m AGL/ASL from observations)
-      (Note2: land-surface temperature and/or sea-surface temperature (SST) are
-       specified elsewhere: see tsk0 in namelist.input and/or tsk array in
-       init_surface.F)
-
-    Then, the following lines are:   z (m)    theta (K)   qv (g/kg)    u (m/s)    v (m/s)
-
-      (Note3: # of levels is arbitrary)
-
-        Index:   sfc    =  surface (technically z=0, but typically from 2 m AGL/ASL obs)
-                 z      =  height AGL/ASL
-                 pres   =  pressure
-                 theta  =  potential temperature
-                 qv     =  mixing ratio
-                 u      =  west-east component of velocity
-                 v      =  south-north component of velocity
-
-    Note4:  For final line of input_sounding file, z (m) must be greater than the model top
-            (which is nz * dz when stretch_z=0, or ztop when stretch_z=1,  etc)
-    """
-    # Find the level label with the maximum pressure.
-    # Don't assign level with highest numeric value. This worked for ERA5 but not CM1 input soundings.
-    sfc = ds.level.sel(level=ds.P.compute().idxmax())
-    # ds.SP (surface pressure) is half-level below ds.level.max()
-    sfc_pres = ds.SP if "SP" in ds else ds.P.sel(level=sfc)
-    ds["theta"] = mcalc.potential_temperature(ds.P, ds.T).metpy.convert_units("K")
-    sfc_theta_K = (
-        ds["surface_potential_temperature"].metpy.convert_units("K")
-        if "surface_potential_temperature" in ds
-        else ds["theta"].sel(level=sfc)
-    )
-    # Convert specific humidity Q to mixing ratio qv.
-    if "qv" in ds:
-        logging.warning(
-            "ignoring qv already in Dataset. Recompute from specific humidity Q"
-        )
-    ds["qv"] = mcalc.mixing_ratio_from_specific_humidity(ds["Q"]).metpy.convert_units(
-        "g/kg"
-    )
-    sfc_qv_gkg = (
-        ds["surface_mixing_ratio"].metpy.convert_units("g/kg")
-        if "surface_mixing_ratio" in ds
-        else ds.qv.sel(level=sfc)
-    )
-
-    s = f"{sfc_pres.compute().item().m_as('hPa')} {sfc_theta_K.values} {sfc_qv_gkg.values}\n"
-    s += (
-        ds[["Z", "theta", "qv", "U", "V"]]
-        .drop_vars(["latitude", "longitude", "time"])
-        .to_dataframe()
-        .sort_values("Z")  # from surface upward
-        .to_csv(sep=" ", header=False, index=False)
-    )
-
-    return s
+    print(ds.to_txt())
 
 
 if __name__ == "__main__":

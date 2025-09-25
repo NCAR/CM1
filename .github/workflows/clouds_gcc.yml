@@ -1,0 +1,38 @@
+name: Cirrus clouds CPU with GNU
+
+on:
+  push:
+    branches:
+      - "develop"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: gha-runner-cm1
+    container:
+      image: halehawk/gnu_io:latest
+    steps:
+      - uses: actions/checkout@v3
+
+      #- name: Build and run CM1
+      #  run: |
+      #     cd src/
+      #     make -j 4 FC=gfortran USE_OPENMP=true USE_MPI=true
+      #     cd ../run
+      #     OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe
+
+      - name: Build and run CM1 code coverage
+        run: |
+           pip install gcovr
+           cd src/
+           make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true
+           cd ../run
+           OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe 
+
+      - name: Generate coverage report
+        run: |
+           cd src/
+           make coverage
+           
+

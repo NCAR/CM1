@@ -34,7 +34,9 @@ class PBS:
         self.nodes: int = nodes
         self.run_dir: Path = run_dir if isinstance(run_dir, Path) else Path(run_dir)
         self.executable_path: Path = (
-            executable_path if isinstance(executable_path, Path) else Path(executable_path)
+            executable_path
+            if isinstance(executable_path, Path)
+            else Path(executable_path)
         )
 
 
@@ -45,6 +47,7 @@ class CM1Run:
         pbs_config: PBS,
         namelist_path: Optional[Path] = None,
         printout: Optional[str] = "cm1.print.out",
+        sounding: Optional[object] = None,
     ):
         """
         Initialize a CM1 model run.
@@ -57,18 +60,25 @@ class CM1Run:
         """
         self.cm1_path: Path = cm1_path
         self.pbs: PBS = pbs_config
-        self.printout: str = printout
-        self.readme: str = None
+        self.printout: str = printout if printout is not None else "cm1.print.out"
+        self.readme: str = ""
+        self.sounding = sounding
 
         # Path to default namelist and readme
         defaults_path = cm1_path / "run"
         # Change defaults_path if pbs.name matches an existing config_files directory.
         if os.path.exists(defaults_path / "config_files" / self.pbs.name):
             defaults_path = defaults_path / "config_files" / self.pbs.name
+
         if namelist_path is None:
             logging.warning(f"assign default {self.pbs.name} namelist")
             namelist_path = defaults_path / "namelist.input"
         self.namelist: f90nml.Namelist = f90nml.read(namelist_path)
+
+        if self.sounding:
+            # Run with temperature, wind from "input_sounding".
+            self.namelist["param2"]["isnd"] = 7
+
         with open(defaults_path / "README", "r") as file:
             self.readme = file.read()
 
@@ -100,7 +110,6 @@ module load ncarenv/24.12
 module reset
 module load intel/2025.0.3
 
-export TMPDIR={os.getenv("TMPDIR", Path(os.getenv("SCRATCH")) / "tmp")}
 mkdir -p $TMPDIR
 
 export PALS_PPN=128
@@ -121,7 +130,9 @@ mpiexec --cpu-bind depth {self.pbs.executable_path} >& {self.printout}
         Prepare the run directory by copying necessary files.
         """
         if self.namelist is None:
-            raise ValueError("Namelist must be defined before preparing the run directory.")
+            raise ValueError(
+                "Namelist must be defined before preparing the run directory."
+            )
 
         run_dir = self.pbs.run_dir
         run_dir.mkdir(parents=True, exist_ok=True)
@@ -132,7 +143,9 @@ mpiexec --cpu-bind depth {self.pbs.executable_path} >& {self.printout}
         #  namelist.input (overwritten below)
         #  README
         shutil.copytree(
-            self.cm1_path / "run/config_files" / self.pbs.name, run_dir, dirs_exist_ok=True
+            self.cm1_path / "run/config_files" / self.pbs.name,
+            run_dir,
+            dirs_exist_ok=True,
         )
 
         # Copy RRTMG radiation data from cm1_path/run
@@ -171,4 +184,6 @@ mpiexec --cpu-bind depth {self.pbs.executable_path} >& {self.printout}
             if background:
                 subprocess.Popen([self.pbs.executable_path], stdout=f, stderr=f)
             else:
-                subprocess.run([self.pbs.executable_path], stdout=f, stderr=f, check=True)
+                subprocess.run(
+                    [self.pbs.executable_path], stdout=f, stderr=f, check=True
+                )
