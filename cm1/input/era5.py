@@ -396,7 +396,13 @@ def pressure_level(
         start_end_str,
     )
 
-    ds_pl["P"] = ds_pl.level * ds_pl.level.metpy.units
+    # Quantify the entire dataset to ensure all variables are pint.Quantities
+    # for consistent data types throughout the merging process.
+    ds_pl = ds_pl.metpy.quantify()
+
+    # Create pressure variable from the 'level' coordinate.
+    # After quantification, 'level' is already a pint.Quantity.
+    ds_pl["P"] = ds_pl.level
     ds_pl["Z"] /= g
 
     lastdayofmonth = time + pd.offsets.MonthEnd(0)
@@ -467,7 +473,7 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
         file_name = f"e5.oper.{level_type}.{var}.{start_end_str}.nc"
         cache_file_path = CACHE_DIR / file_name
         if os.path.exists(cache_file_path):
-            logging.warning(f"Found cached s3 {var} {time}")
+            logging.info(f"Found cached s3 {var} {time}")
             return cache_file_path
 
         s3 = get_s3()
@@ -593,3 +599,4 @@ def nearest_grid_block_sel(
 
     # Return dictionary suitable for .sel()
     return {"latitude": lat_sel_vals, "longitude": lon_sel_vals}
+
