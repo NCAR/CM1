@@ -108,7 +108,7 @@ ifeq (${FC},nvfortran)
             ifeq (${GPU_TYPE_L},a100)
                 OPTS += -acc -gpu=cc80,lineinfo,nofma,math_uniform -Minfo=accel -cudalib=cutensor 
             else
-                OPTS += -acc -gpu=cc70,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
+                OPTS += -acc -gpu=cc86,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
             endif
         endif
         DM       += -D_OPENACC
@@ -206,7 +206,7 @@ endif
 #-----------------------------------------------------------------------------
 ifeq (${USE_MPI_L},true)
     DM           += -DMPI
-    override FC  = mpif90
+    override FC  = mpifort
 endif
 
 $(info $$DEBUG_L is [${DEBUG_L}])
@@ -349,14 +349,14 @@ code:
 			mv onefile.F ../run
 
 coverage: 
-	                gcovr -r . --txt-report-covered --gcov-ignore-parse-errors -s
+			gcovr -r . --txt-report-covered --gcov-ignore-parse-errors -s
 
 clean:
 			rm -f *.f90 *.o *.a *.mod 
 
 codeclean:
 			rm -f *.f90 *.o *.a *.mod *.gcno *.gcda *.gcov *.html coverage.xml *.css
-	                find . -name "*.gcov" -delete
+			find . -name "*.gcov" -delete
 
 # DEPENDENCIES : only dependencies after this line (don't remove the word DEPENDENCIES)
 

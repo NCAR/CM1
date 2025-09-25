@@ -193,6 +193,13 @@ def compute_z_level(
     ----------
     ERA5: Compute pressure and geopotential on model levels, geopotential height, and geometric height.
     ECMWF Confluence: https://confluence.ecmwf.int/display/CKB/ERA5%3A+compute+pressure+and+geopotential+on+model+levels%2C+geopotential+height+and+geometric+height
+    https://opensky.ucar.edu/islandora/object/%3A3444
+    NCAR/TN-396+STR
+    Dec 1993
+    Vertical Interpolation and Truncation of Model-Coordinate Data
+    Kevin E. Trenberth
+    Jeffery C. Berry
+    Lawrence E. Buja
     """
     # Virtual temperature at the specified level
     t_level = ds["Tv"].sel(level=lev)
