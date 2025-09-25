@@ -149,11 +149,11 @@ def circle_neighborhood(ds, lat, lon, neighbors, debug=True):
         # assert mean location is close to what was requested.
         assert abs(lat_mean - lat) < 1, f"meanlat {lat_mean} lat {lat}"
         assert (
-            np.cos(np.radians(lon_mean)) - np.cos(np.radians(lon))
-        ) < 0.01, f"meanlon {lon_mean} lon {lon} {np.cos(np.radians(lon_mean)) - np.cos(np.radians(lon))}"
+            (np.cos(np.radians(lon_mean)) - np.cos(np.radians(lon))) < 0.01
+        ), f"meanlon {lon_mean} lon {lon} {np.cos(np.radians(lon_mean)) - np.cos(np.radians(lon))}"
         assert (
-            np.sin(np.radians(lon_mean)) - np.sin(np.radians(lon))
-        ) < 0.01, f"meanlon {lon_mean} lon {lon} {np.sin(np.radians(lon_mean)) - np.sin(np.radians(lon))}"
+            (np.sin(np.radians(lon_mean)) - np.sin(np.radians(lon))) < 0.01
+        ), f"meanlon {lon_mean} lon {lon} {np.sin(np.radians(lon_mean)) - np.sin(np.radians(lon))}"
 
     ds = ds.mean(dim="z")  # drop `z` `latitude` `longitude` dimensions
     ds = ds.assign_coords(latitude=lat_mean, longitude=lon_mean)
@@ -351,9 +351,9 @@ def model_level(
     ds["Z"] = xarray.concat(Z, dim="level") / g
     ds["Z"].attrs["long_name"] = "geopotential height"
     ds["surface_geopotential_height"] = ds["surface_geopotential"] / g
-    ds["surface_geopotential_height"].attrs[
-        "long_name"
-    ] = "geopotential height at surface"
+    ds["surface_geopotential_height"].attrs["long_name"] = (
+        "geopotential height at surface"
+    )
     # ds = ds.drop_dims("half_level") # why drop this?
 
     return ds
@@ -599,4 +599,3 @@ def nearest_grid_block_sel(
 
     # Return dictionary suitable for .sel()
     return {"latitude": lat_sel_vals, "longitude": lon_sel_vals}
-

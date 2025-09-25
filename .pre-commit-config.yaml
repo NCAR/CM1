@@ -4,26 +4,20 @@ repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
-    # Trims trailing whitespace.
     -   id: trailing-whitespace
-    # Ensures that a file is either empty, or ends with one newline.
+        exclude: ^src/
     -   id: end-of-file-fixer
-    # Checks yaml files for parseable syntax.
+        exclude: ^src/
     -   id: check-yaml
-    # Prevents giant files from being committed.
+        exclude: mkdocs.yml
     -   id: check-added-large-files
 
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     # Pin to a specific version of ruff to ensure consistent formatting
     rev: v0.4.4
     hooks:
-    # Run ruff's linter and automatically fix what it can.
     -   id: ruff
-      args: [--fix, --exit-non-zero-on-fix]
-      # Only run on files in the cm1/ directory
-      files: ^cm1/
-    # Run ruff's formatter.
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^cm1/
     -   id: ruff-format
-      # Only run on files in the cm1/ directory
-      files: ^cm1/
-
+        files: ^cm1/

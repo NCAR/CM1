@@ -1,17 +1,17 @@
 ```
  User's Guide to namelist.input file (which is located in the "run" directory)
 
- CM1 Numerical Model, Release 21.1  (cm1r21.1) 
+ CM1 Numerical Model, Release 21.1  (cm1r21.1)
  Last updated:  24 March 2024
 
  Entries with "--- NEW ---" are new (or modified) for cm1r21
 
  NOTE:  some namelist.input files that have been configured for certain
-        idealized simulations ... e.g., squall lines, supercells, 
-        hurricanes, LES, etc ... are available in the run/config_files 
+        idealized simulations ... e.g., squall lines, supercells,
+        hurricanes, LES, etc ... are available in the run/config_files
         subdirectory.
 
-        For mode information about CM1, see the website:  
+        For mode information about CM1, see the website:
           http://www2.mmm.ucar.edu/people/bryan/cm1/
 
 -------------------------------------------------------------------------
@@ -43,7 +43,7 @@
 
  timestats - 0 = Do not provide provide timing statistics
              1 = Provide timing statistics at end of simulation
-             2 = The same as 1, but include time required to complete 
+             2 = The same as 1, but include time required to complete
                  each time step
 
  terrain_flag -  .true.  = With terrain
@@ -68,17 +68,17 @@
  dz - Vertical grid spacing (m).
 
     NOTE:
-       The variables dx,dy,dz are only used when stretch_* = 0.  When 
-       stretch_* >= 1, these variables should be set to an approximately 
-       average value (to minimize roundoff errors).  See README.stretch 
+       The variables dx,dy,dz are only used when stretch_* = 0.  When
+       stretch_* >= 1, these variables should be set to an approximately
+       average value (to minimize roundoff errors).  See README.stretch
        for more information.
 
  dtl - Large time step (s).
 
-       For psolver = 2,3,4,5,6 this time step is limited by the fastest 
-       nonacoustic speed.  For thunderstorm simulations, this is usually 
-       the maximum vertical velocity.  Otherwise, this would be the 
-       propagation speed of gravity waves.  The following is a rough 
+       For psolver = 2,3,4,5,6 this time step is limited by the fastest
+       nonacoustic speed.  For thunderstorm simulations, this is usually
+       the maximum vertical velocity.  Otherwise, this would be the
+       propagation speed of gravity waves.  The following is a rough
        estimate that usually works well for convective storm simulations:
            dtl = min(dx,dy,dz)/67  (rounded to an appropriate value, of course)
 
@@ -94,7 +94,7 @@
  run_time - Integration time (s) to run model from current time.
             NOTE: Ignored if value is less than zero.
             NOTE: Overrides timax.
-            (Useful for restarts.  For example, just integrate model 
+            (Useful for restarts.  For example, just integrate model
              "run_time" seconds forward from current time.)
 
  tapfrq - Frequency of three-dimensional model output (s).
@@ -106,13 +106,13 @@
  statfrq - Frequency for calculating some interesting output.  (seconds)
            Set to negative number to output stats every timestep.
            Output is in cm1out_stats.dat file.
-           See param10 section below for the information that can 
+           See param10 section below for the information that can
            be requested.
 
- prclfrq - Frequency to output parcel data (s).  Note ... this does not 
-           affect the parcel calculations themselves, which are always 
-           updated every timestep;  it merely tells the model how 
-           frequently to output the information.  Set to a negative number 
+ prclfrq - Frequency to output parcel data (s).  Note ... this does not
+           affect the parcel calculations themselves, which are always
+           updated every timestep;  it merely tells the model how
+           frequently to output the information.  Set to a negative number
            to output parcel data every time step.
 
 -------------------------------------------------------------------------
@@ -122,7 +122,7 @@
  cm1setup - Overall CM1 setup, base on how turbulence is handled:
 
       0 = no subgrid turbulence model & no explicit diffusion
-            - essentially integrates the Euler equations 
+            - essentially integrates the Euler equations
               (adiabatic and inviscid flow)
               (although, diffusion can still occur via numerical methods)
             - NOTE:  ignores sgsmodel, param7 section, etc
@@ -132,30 +132,30 @@
             - NOTE:  user must set "sgsmodel" (and related parameters) below
 
       2 = mesoscale modeling with planetary boundary layer (PBL) parameterization
-            - essentially uses Reynolds-averaged Navier-Stokes (RANS) equations 
-            - NOTE:  user must set "ipbl" below 
+            - essentially uses Reynolds-averaged Navier-Stokes (RANS) equations
+            - NOTE:  user must set "ipbl" below
 
       3 = direct numerical simulation (DNS)
-            - integrates Navier-Stokes equations with explicit diffusion and 
+            - integrates Navier-Stokes equations with explicit diffusion and
               diffusivity terms
             - NOTE:  user must set the parameters in "param7" section below
 
                --- NEW ---
       4 = LES within mesoscale model
-            - runs LES model within an inner fine mesh; runs mesoscale model 
-              with PBL parameterization beyond.  See param17 section for 
+            - runs LES model within an inner fine mesh; runs mesoscale model
+              with PBL parameterization beyond.  See param17 section for
               settings.
 
 
 
- testcase - Turns on certain simplied physics schemes and/or specified 
-            tendency terms and/or special settings for well-documented 
+ testcase - Turns on certain simplied physics schemes and/or specified
+            tendency terms and/or special settings for well-documented
             test cases.
 
     0  =  Default.  (no special physics, forcings, or configutation)
           - Most users will use testcase=0.
 
-    1  =  Convective Boundary Layer (CBL) using Large Eddy Simulation (LES) 
+    1  =  Convective Boundary Layer (CBL) using Large Eddy Simulation (LES)
           - Based on Sullivan and Patton (2011, JAS, pg 2395)
           - See namelist.input in directory run/config_files/les_ConvBoundLayer
 
@@ -179,7 +179,7 @@
           - Based on Bryan et al (2017, BLM, pg 475)
           - See namelist.input in directory run/config_files/les_HurrBoundLayer
 
-          Also: a single-column model (SCM) version using a PBL scheme is 
+          Also: a single-column model (SCM) version using a PBL scheme is
           available.
           - See namelist.input in directory run/config_files/scm_HurrBoundLayer
 
@@ -187,35 +187,35 @@
           - Based on RICO shallow Cu case (VanZanten et al 2011, JAMES)
           - See namelist.input in run/config_files/les_ShallowCuPrecip
 
-    8  =  Convection Permitting Model (CPM) simulation of Radiative Convective 
+    8  =  Convection Permitting Model (CPM) simulation of Radiative Convective
           Equilibrium (RCE)
           - Based on Bretherton et al (2005, JAS)
           - NOTE: No diurnal cycle.  (Solar constant is fixed at 650.83 W/m2)
-          - See namelist.input in run/config_files/cpm_RadConvEquil 
+          - See namelist.input in run/config_files/cpm_RadConvEquil
 
     9  =  Stable boundary layer using Large Eddy Simulation (LES)
           - Based on Beare et al. (2006, BLM)
           - See namelist.input in run/config_files/les_StableBoundLayer
 
-    10 =   Hurricane boundary layer with LES or single-column modeling 
-           with heat and moisture stratification.  Experimental:  uses 
-           nudging to help maintain original temperature and moisture 
-           profiles.  See "tqnudge" in solve.F for more information and 
-           settings. 
+    10 =   Hurricane boundary layer with LES or single-column modeling
+           with heat and moisture stratification.  Experimental:  uses
+           nudging to help maintain original temperature and moisture
+           profiles.  See "tqnudge" in solve.F for more information and
+           settings.
 
-    11 =  Convective boundary layer with moisture (but without clouds). 
-          - Based on NCAR LES intercomparison case. 
+    11 =  Convective boundary layer with moisture (but without clouds).
+          - Based on NCAR LES intercomparison case.
           - See namelist.input in run/config_files/les_ConvPBL_moisture
 
     12 =  LES, wind tunnel with immersed cube.
-          - Based on Martinuzzi and Tropea (1993, JFE). 
+          - Based on Martinuzzi and Tropea (1993, JFE).
           - See run/config_files/les_ib_windtunnel
 
-    14 =  Shallow cumulus convection over land with diurnal cycle. 
+    14 =  Shallow cumulus convection over land with diurnal cycle.
           - Based on Brown et al. (2002, QJRMS, 128, p 1075).
           - See namelist.input in run/config_files/les_ShallowCuLand
 
-    15 =  LES, hurricane winds at a coast. 
+    15 =  LES, hurricane winds at a coast.
           - See run/config_files/les_HurrCoast
 
 
@@ -244,8 +244,8 @@
            scheme is used (3,5,7,9) then idiff can be set to 0 (i.e., no
            additional artifical diffusion is typically necessary).
 
-           Even-ordered schemes (2,4,6,8,10) usually require additional artifical 
-           diffusion for stability (i.e., idiff=1 is recommended).  Users can use 
+           Even-ordered schemes (2,4,6,8,10) usually require additional artifical
+           diffusion for stability (i.e., idiff=1 is recommended).  Users can use
            idiff=1 with difforder=6 and a value of kdiff6 between about 0.02-0.24
 
  advwenos - Advect scalars (except pressure) with WENO scheme?
@@ -254,11 +254,11 @@
             1 = yes, apply on every Runge-Kutta step
             2 = yes, apply on final Runge-Kutta step only  (default)
 
- weno_order - Formulation for the WENO scheme. 
+ weno_order - Formulation for the WENO scheme.
               Valid options are 3, 5, 7, 9
 
-        References:  
-        original 3rd and 5th order weno:  Jiang and Shu, 1996, 
+        References:
+        original 3rd and 5th order weno:  Jiang and Shu, 1996,
         J. Comput. Phys., 126, pg 202
 
         original 7th and 9th order weno:  Balsara and Shu, 2000,
@@ -274,7 +274,7 @@
 
              Note:  This option checks the total dry-air mass
                     in the domain and adjusts the domain-average
-                    pressure perturbation to ensure conservation. 
+                    pressure perturbation to ensure conservation.
                     In general, this option is only needed for long
                     (several days or more) simulations.
 
@@ -286,7 +286,7 @@
 
          User must also set difforder and kdiff2 or kdiff6.
 
- mdiff - When idiff=1 and difforder=6, apply monotonic version of 
+ mdiff - When idiff=1 and difforder=6, apply monotonic version of
          artificial diffusion?
 
            (0=no, 1=yes)
@@ -328,7 +328,7 @@
                   Reference:  Nakanishi and Niino (2006, BLM)
 
              6 = MYJ (Mellor-Yamada-Janjic)
- 
+
         Note:  ipbl >= 1 requires cm1setup = 2
 
  sgsmodel - Subgrid-scale turbulence model for Large Eddy Simulation (LES)
@@ -341,11 +341,11 @@
                   (previously, this was iturb=2)
               3 = sgsmodel=1 (TKE scheme) + Sullivan et al (1994, BLM)
                   version of two-part model
-                  (see tunable parameters in param.F ... 
+                  (see tunable parameters in param.F ...
                    search for "2-part turbulence model")
               4 = sgsmodel=1 (TKE scheme) + Bryan (2020, in prep)
                   version of two-part model
-                  (see tunable parameters in param.F ... 
+                  (see tunable parameters in param.F ...
                    search for "2-part turbulence model")
               5 = Nonlinear Backscatter and Anisotropy (NBA) model,
                   Deardorff-type TKE version (Mirocha et al. 2010, MWR)
@@ -356,16 +356,16 @@
  tconfig - Calculation of turbulence coefficients for sgsmodel = 1 or 2
             1 = horizontal and vertical turbulence coefficients are the
                 same;  use this if dx,dy are about equal to dz (default)
-            2 = horizontal turbulence coefficient is different from vertical 
+            2 = horizontal turbulence coefficient is different from vertical
                 turbulence coefficient;  use this if dx,dy are much greater
                 than dz.
 
- bcturbs - Lower/upper boundary condition for vertical diffusion of all 
+ bcturbs - Lower/upper boundary condition for vertical diffusion of all
            scalars.  (Applies only to sgsmodel=1,2 and ipbl=2)
                  1 = zero flux (default)
                  2 = zero gradient
 
- horizturb - Horizontal turbulence parameterization 
+ horizturb - Horizontal turbulence parameterization
              (i.e., horizontal Smagorinsky scheme)
              Reference:  Bryan and Rotunno (2009, MWR, pg 1773)
              (note:  previously, this was part of iturb=3)
@@ -375,18 +375,18 @@
 
         Note:  horizturb = 1 requires cm1setup = 2
 
- doimpl - Vertically implicit calculation for vertical turbulence tendencies 
+ doimpl - Vertically implicit calculation for vertical turbulence tendencies
 
                  0 = no   (use vertically explicit scheme)
-                 1 = YES  (use vertically implicit scheme)   
+                 1 = YES  (use vertically implicit scheme)
                     (note:  doimpl=1 was required in cm1r18)
 
-          Default formulation (doimpl=1) is a Crank-Nicholson scheme, which is 
+          Default formulation (doimpl=1) is a Crank-Nicholson scheme, which is
           absolutely stable (i.e., numerically stable regardless of time step).
 
           For doimpl=0, an explicit scheme is used for vertical turbulence
           tendencies, which can severely limit the time step for simulations
-          with small vertical grid spacing. 
+          with small vertical grid spacing.
 
  irdamp - Use upper-level Rayleigh damping zone?
              (acts on u,v,w, and theta only)
@@ -407,51 +407,51 @@
         - when dx,dy,dz are approximately equal, use psolver=2
         - when dz is much smaller than dx,dy, use psolver=3
 
-       1 = Compressible equations, integrated explicitly: 
+       1 = Compressible equations, integrated explicitly:
            No time-splitting, no small time steps, no implicit numerics.
            (note: very expensive for weak wind speeds, < 10 m/s)
            (recommended only use when max wind speed is order 100 m/s)
 
        2 = Compressible equations, Klemp-Wilhelmson time-splitting, explicit:
-           Uses K-W split time steps for acoustic modes; uses explicit 
-           calculations of acoustic terms in both vertical and horizontal 
+           Uses K-W split time steps for acoustic modes; uses explicit
+           calculations of acoustic terms in both vertical and horizontal
            directions.
            (use if dx,dy,dz are approximately equal)
 
-       3 = Compressible, Klemp-Wilhelmson time-splitting, vertically implicit: 
-           Uses K-W split time steps for acoustic modes, with a vetically 
-           implicit solver, and horizontally explicit calculations.  
+       3 = Compressible, Klemp-Wilhelmson time-splitting, vertically implicit:
+           Uses K-W split time steps for acoustic modes, with a vetically
+           implicit solver, and horizontally explicit calculations.
            (as in MM5, ARPS, WRF, MPAS)
            (use if dz is much smaller than dx,dy)
 
-       4 = Anelastic solver:  
-           Uses the anelastic mass continuity equation.  Pressure is retrieved 
+       4 = Anelastic solver:
+           Uses the anelastic mass continuity equation.  Pressure is retrieved
            diagnostically.
            (Note: OpenMP parallelization only; no MPI parallelization, for now.)
 
-       5 = Incompressible solver:  
-           Uses the incompressible mass continuity equation.  Pressure is 
+       5 = Incompressible solver:
+           Uses the incompressible mass continuity equation.  Pressure is
            retrieved diagnostically.
            (Note: OpenMP parallelization only; no MPI parallelization, for now.)
 
-       6 = Compressible-Boussinesq:  
-           Compressible equation set, using KW time splitting, fully explicit 
+       6 = Compressible-Boussinesq:
+           Compressible equation set, using KW time splitting, fully explicit
            (like psolver=2), but Boussinesq approx made for pressure-gradient
-           terms in velocity equations.  Useful for certain types of idealized 
+           terms in velocity equations.  Useful for certain types of idealized
            modeling.  (see, eg, Bryan and Rotunno, 2014, JAS, pg 1126)
-           Note: user must set value for "csound" in param.F (otherwise, default 
+           Note: user must set value for "csound" in param.F (otherwise, default
            value of 300 m/s will be used)
 
-       7 = Modified compressible equations:  
-           Equation set from Klemp and Wilhelmson (1978) but with modified value 
-           of sound propagation speed.  Useful for certain simulations with low 
+       7 = Modified compressible equations:
+           Equation set from Klemp and Wilhelmson (1978) but with modified value
+           of sound propagation speed.  Useful for certain simulations with low
            wind speeds (<10 m/s).
-           Note: user must set value for "csound" in param.F (otherwise, default 
+           Note: user must set value for "csound" in param.F (otherwise, default
            value of 300 m/s will be used)
 
 
        NOTE:  since cm1r19, users no longer need to set the "nsound" parameter
-              for psolver=2,3,6,7   
+              for psolver=2,3,6,7
               (It is now determined adaptively during simulations)
 
 
@@ -473,16 +473,16 @@
 
              7 = WSM6        --- NEW ---
 
-            (Note: options 26,27,28 use namelist nssl2mom_params, see below and 
+            (Note: options 26,27,28 use namelist nssl2mom_params, see below and
                    README.NSSLmp
                    3-moment option can be activated with nssl_3moment = .true.)
-             26 = NSSL 2-moment scheme (graupel-only, no hail); 
+             26 = NSSL 2-moment scheme (graupel-only, no hail);
                   graupel density predicted
-             27 = NSSL 2-moment scheme (graupel and hail); 
+             27 = NSSL 2-moment scheme (graupel and hail);
                   graupel and hail densities predicted
              28 = NSSL single-moment scheme (graupel-only, similar to ptype=4);
                   fixed graupel density (rho_qh)
-             Ice density prediction can be turned off with nssl_density_on  (logical flag, default .true.) 
+             Ice density prediction can be turned off with nssl_density_on  (logical flag, default .true.)
                  (ptype 26 or 27)
 
 
@@ -494,12 +494,12 @@
 
              55 = Jensen's ISHMAEL (Ice-Spheroids Habit Model with Aspect-ratio Evolution)
 
- nssl_3moment - logical (default = .false.) Works with ptype 26 and 27 to turn on 
-              the reflectivity moments for rain and graupel (ptype=26/27) and for 
-              hail (ptype=27) Includes option for bin-emulating melting 
+ nssl_3moment - logical (default = .false.) Works with ptype 26 and 27 to turn on
+              the reflectivity moments for rain and graupel (ptype=26/27) and for
+              hail (ptype=27) Includes option for bin-emulating melting
               (Mansell et al. 2020; see README.NSSLmp)
 
- nssl_density_on  - logical flag (default .true.) to toggle graupel/hail density 
+ nssl_density_on  - logical flag (default .true.) to toggle graupel/hail density
                  prediction (ptype 26 or 27)
 
  ihail - Use hail or graupel for large ice category when ptype=2,5.
@@ -519,14 +519,14 @@
         (If user chooses 1, then fcor must be set below)
         f-plane is assumed.
 
-    NOTE: if icor=1, consider including a large-scale pressure gradient 
+    NOTE: if icor=1, consider including a large-scale pressure gradient
           acceleration term (see lspgrad below)
 
                --- NEW ---
- betaplane - Use beta plane (i.e., Coriolis term is a function of y)?  
+ betaplane - Use beta plane (i.e., Coriolis term is a function of y)?
              (0=no, 1=yes)
              Caution: not well tested.  May not work with some lateral
-             boundary condition options.  
+             boundary condition options.
 
  lspgrad - Apply large-scale pressure gradient acceleration to u and v
            components of velocity.
@@ -535,7 +535,7 @@
           (note:  lspgrad = 1 was called "pertcor" in earlier versions of cm1)
         2 = yes, based on geostropic balance using ug,vg arrays
         3 = yes, based on gradient-wind balance (Bryan et al 2017, BLM)
-        4 = yes, specified values (set ulspg, vlspg in base.F)  
+        4 = yes, specified values (set ulspg, vlspg in base.F)
 
  eqtset - equation set for moist microphysics:
         1 = a traditional (approximate) equation set for cloud models
@@ -578,7 +578,7 @@
                                 3 = semi-slip (i.e., partial slip)
    (NOTE: for bbc=3, user must also set some options in param12 section below)
           [see variables that mention "bbc=3" below]
-          
+
 
  tbc - top boundary condition for winds
 
@@ -600,13 +600,13 @@
        solvers, this scheme helps prevent runaway outward mass flux that can
        cause domain-total mass loss and pressure falls.
 
- nudgeobc - Nudge winds at inflow boundaries when using open boundary 
+ nudgeobc - Nudge winds at inflow boundaries when using open boundary
             conditions?    (0=no, 1=yes)
 
-       When using open-radiative lateral boundary conditions, this option 
-       nudges the horizontal winds toward the base-state fields where there 
-       is inflow.  This option is useful for maintaining an inflowing wind 
-       profile in long simulations.  (User must set the variable alphobc; 
+       When using open-radiative lateral boundary conditions, this option
+       nudges the horizontal winds toward the base-state fields where there
+       is inflow.  This option is useful for maintaining an inflowing wind
+       profile in long simulations.  (User must set the variable alphobc;
        see below).
 
  isnd - Base-state sounding:  1 = Dry adiabatic
@@ -616,7 +616,7 @@
     set in base.F file]       5 = Weisman-Klemp analytic sounding
                               7 = External file (named 'input_sounding')
                                   (see isnd=7 section of base.F for info)
-                                  (some soundings are available at 
+                                  (some soundings are available at
                                    http://www2.mmm.ucar.edu/people/bryan/cm1)
                                   (Note: wind profile is also obtained from
                                    input_sounding file; iwnd is ignored)
@@ -625,30 +625,30 @@
                              10 = Saturated, constant Brunt-Vaisala frequency
                              11 = Saturated, constant equiv. pot. temp.
                              12 = Dry, adiabatic near surface, constant
-                                  lapse rate above 
+                                  lapse rate above
                              13 = Dry, three different layers having constant
                                   N^2 (squared Brunt-Vaisala frequency)
-                             14 = Dry, profile for Convective Boundary Layer 
+                             14 = Dry, profile for Convective Boundary Layer
                                   test case.
-                             15 = Moist, analytic, based on DYCOMS-II, 
+                             15 = Moist, analytic, based on DYCOMS-II,
                                   used for stratocumulus test cases.
                              17 = Same as isnd=7, but wind profiles are neglected.
                                   User must set wind profile using the 'iwnd' option.
                                   External file named 'input_sounding' is used,
                                   although columns 4-5 are ignored.
                                   (see isnd=7 section of base.F for more info)
-                                  (some soundings are available at 
+                                  (some soundings are available at
                                    http://www2.mmm.ucar.edu/people/bryan/cm1)
-                             18 = Dry, sharp inversion in middle of profile, 
+                             18 = Dry, sharp inversion in middle of profile,
                                   used for sheared boundary layer test case.
-                             19 = Moist analytic profiles based on BOMEX, 
+                             19 = Moist analytic profiles based on BOMEX,
                                   used for shallow cumulus test case
                              20 = Moist analytic profiles based on RICO,
                                   used for precipitating shallow cumulus test case
-                             22 = Initial sounding for stable boundary-layer 
+                             22 = Initial sounding for stable boundary-layer
                                   test case (testcase=9).
-                             23 = Initial sounding for shallow cumulus test case 
-                                  over land (testcase=14). 
+                             23 = Initial sounding for shallow cumulus test case
+                                  over land (testcase=14).
 
  iwnd - Base-state wind profile:  (ignored if isnd=7)
                                   0 = zero winds
@@ -658,14 +658,14 @@
                                   4 = Weisman-Klemp multicell
                                   5 = Dornbrack etal analytic profile
                                   6 = constant wind
-                                  8 = constant or linearly decreasing wind profile, 
+                                  8 = constant or linearly decreasing wind profile,
                                       used for simple hurricane boundary layer case
                                       (see base.F for more details)
-                                  9 = linear wind profiles used for shallow 
+                                  9 = linear wind profiles used for shallow
                                       cumulus test case
                                   10 = linear wind profiles used for drizzling
                                        stratocumulus test case
-                                  11 = wind profiles used for RICO precipitating 
+                                  11 = wind profiles used for RICO precipitating
                                        shallow cumulus case
 
  itern - Initial topography specifications.
@@ -698,10 +698,10 @@
             (ignored if iinit=7)
 
           0 = no balance (initial pressure perturbation is zero everywhere,
-                          except for iinit=7) 
+                          except for iinit=7)
           1 = hydrostatic balance (appropriate for small aspect ratios)
-          2 = anelastic balance (initial pressure perturbation is the 
-              buoyancy pressure perturbation field for an anelastic 
+          2 = anelastic balance (initial pressure perturbation is the
+              buoyancy pressure perturbation field for an anelastic
               atmosphere).  (Does not currently work with MPI setup.)
 
  iorigin - Specifies location of the origin in horizontal space
@@ -742,7 +742,7 @@
 
  kdiff2 - Diffusion coefficient for difforder=2.  Specified in m^2/s.
 
- kdiff6 - Diffusion coefficient for difforder=6.  Specified as a 
+ kdiff6 - Diffusion coefficient for difforder=6.  Specified as a
           fraction of one-dimensional stability.  A value between
           0.02-0.24 is recommended.
 
@@ -754,7 +754,7 @@
         an artificial term designed to damp acoustic waves.)
 
  alph - Off-centering coefficient for vertically implicit acoustic
-        solver.  A value of 0.5 is centered-in-time.  Slight forward-in-time 
+        solver.  A value of 0.5 is centered-in-time.  Slight forward-in-time
         bias is recommended.  Default value is 0.60.
         (only used for psolver=3)
 
@@ -765,23 +765,23 @@
       (when irdamp = 1)
 
  xhd - Distance from lateral boundaries where Rayleigh damping is applied (m).
-       (when hrdamp = 1) 
+       (when hrdamp = 1)
 
- alphobc - Time scale (s) of nudging tendency when using the nudgeobc option. 
+ alphobc - Time scale (s) of nudging tendency when using the nudgeobc option.
 
  umove - Constant speed for domain translation in x-direction (m/s)
          (for imove = 1)
-         (NOTE: for imove=1 and umove not equal to 0.0, ground-relative winds 
+         (NOTE: for imove=1 and umove not equal to 0.0, ground-relative winds
           are umove+ua, umove+u3d, etc)
 
  vmove - Constant speed for domain translation in y-direction (m/s)
          (for imove = 1)
-         (NOTE: for imove=1 and vmove not equal to 0.0, ground-relative winds 
+         (NOTE: for imove=1 and vmove not equal to 0.0, ground-relative winds
           are vmove+va, vmove+v3d, etc)
 
  v_t - Constant terminal fall velocity of liquid water (m/s) when ptype=6
 
-         When v_t is negative, all liquid water above a small threshold is 
+         When v_t is negative, all liquid water above a small threshold is
          removed from the domain, ie, pseudoadiabatic thermodynamics are
          used, following Bryan and Rotunno (2009, JAS, pg 3042).
 
@@ -793,8 +793,8 @@
  lhref1 - a reference value of l_h (m):  value for surface pressure of 1015 mb
  lhref2 - a reference value of l_h (m):  value for surface pressure of  900 mb
 
-    notes:  - Since cm1r18, the horizontal turbulence length scale for 
-              horizturb=1 is a function of surface pressure 
+    notes:  - Since cm1r18, the horizontal turbulence length scale for
+              horizturb=1 is a function of surface pressure
               (over the OCEAN ONLY).
             - This is based on studies of hurricanes (eg, Bryan 2012, MWR).
             - lhref1 and lhref2 define a linear formulation for horizontal
@@ -803,10 +803,10 @@
             - For water points above sea level (e.g., lakes) l_h is used.
 
  l_inf - Asymptotic vertical turbulence length scale (m) (i.e., vertical
-         length scale at z = infinity) used for ipbl=2 (simple parameterized 
+         length scale at z = infinity) used for ipbl=2 (simple parameterized
          turbulence / boundary layer scheme)
 
- ndcnst - specified cloud droplet concentration for default version of 
+ ndcnst - specified cloud droplet concentration for default version of
           Morrison microphysics scheme (units of cm-3)
 
         Note: typical value of ndcnst (nt_c) for maritime environments:  100 cm-3
@@ -815,7 +815,7 @@
  --- NEW  ---
  nt_c - same as ndcnst, but for Thompson microphysics scheme
 
-     (NOTE: for other microphysics schemes, you will have 
+     (NOTE: for other microphysics schemes, you will have
             to change this value manually in the code)
 
  --- NEW  ---
@@ -823,7 +823,7 @@
      (Note: should be roughly 5-10 times larger than maximum flow velocity)
 
  --- NEW  ---
- cstar - propagation speed (m/s) of outward-propagating waves at open 
+ cstar - propagation speed (m/s) of outward-propagating waves at open
          boundaries (for irbc=1,2 only)
 
 -------------------------------------------------------------------------
@@ -839,37 +839,37 @@
                2 = yes, use the RRTMG scheme
 
        Note:  the NASA-Goddard longwave and shortwave radiation codes
-       were adapted from the ARPS model, courtesy of the ARPS/CAPS group 
-       at the University of Oklahoma. 
+       were adapted from the ARPS model, courtesy of the ARPS/CAPS group
+       at the University of Oklahoma.
 
-       Note:  the RRTMG code was adapted from the WRF model. 
+       Note:  the RRTMG code was adapted from the WRF model.
 
        (Note:  TIPA option is not implemented in this version of CM1)
 
         -----
-        Note:  for the NASA-Goddard code, the interaction of radiation with 
-        clouds is configured consistently for only two microphysics 
+        Note:  for the NASA-Goddard code, the interaction of radiation with
+        clouds is configured consistently for only two microphysics
         schemes:  the NASA-Goddard LFO scheme (ptype=2) and the Morrison
-        microphysics scheme (ptype=5).  A future version of CM1 might pass the 
-        proper variables from all microphysics schemes into the radiation 
-        code so that consistent calculations are performed.  
+        microphysics scheme (ptype=5).  A future version of CM1 might pass the
+        proper variables from all microphysics schemes into the radiation
+        code so that consistent calculations are performed.
 
-        That said, the radiative tendencies should still be reasonable for all 
-        ice microphysics schemes, and there is no issue for clear-sky 
-        conditions.  (The inconsistency arises only when radiation interacts 
-        with water and ice particles, and the radiation scheme needs to be 
-        sent information about hydrometeor size and distribution for 
-        accurate calculations.) 
+        That said, the radiative tendencies should still be reasonable for all
+        ice microphysics schemes, and there is no issue for clear-sky
+        conditions.  (The inconsistency arises only when radiation interacts
+        with water and ice particles, and the radiation scheme needs to be
+        sent information about hydrometeor size and distribution for
+        accurate calculations.)
         -----
 
         -----
-        Note:  for the RRTMG code, only the Thompson (ptype=3), Morrison 
-        (ptype=5), NSSL (ptype=26/27), P3 (50-53), and Jensen ISHMAEL (55) schemes are 
+        Note:  for the RRTMG code, only the Thompson (ptype=3), Morrison
+        (ptype=5), NSSL (ptype=26/27), P3 (50-53), and Jensen ISHMAEL (55) schemes are
         accurately coupled with the radiation calculations.
         -----
 
  If radopt >= 1, set the following parameters:
-     
+
  dtrad   -  Time increment (seconds) between calculation of radiation
             tendency.  (Radiative tendencies are held fixed in-between
             calls to the atmospheric radiation subroutine.)
@@ -878,12 +878,12 @@
 
  ctrlon  -  Longitude (applies to entire domain, for now)
 
-     NOTE:  because ctrlat and ctrlon are fixed (for now) the radiation 
-            scheme is only appropriate for domains having horizontal 
+     NOTE:  because ctrlat and ctrlon are fixed (for now) the radiation
+            scheme is only appropriate for domains having horizontal
             extent of order 100--1000 km or less
 
-     (FAQ:  Why are lat and lon fixed across the entire domain?  
-      It's because George doesn't have time, at the moment, to deal with 
+     (FAQ:  Why are lat and lon fixed across the entire domain?
+      It's because George doesn't have time, at the moment, to deal with
       map projections in CM1.)
 
  year    -  Year (integer) at start of simulation
@@ -898,23 +898,23 @@
 
  second  -  Second (integer) at start of simulation
 
-        Yet Another Note:  the radiation schemes uses three important 
+        Yet Another Note:  the radiation schemes uses three important
         pieces of information from the surface section (param12) below:
-        surface temperature, land/water flag, and land-use type.  
-        Make sure you have the desired settings for your simulation below 
-        (even if you are not using surface fluxes!).  
+        surface temperature, land/water flag, and land-use type.
+        Make sure you have the desired settings for your simulation below
+        (even if you are not using surface fluxes!).
 
 -------------------------------------------------------------------------
   param12 section:  surface model, ocean model, boundary layer:
 
-      NOTE:  By default, surface conditions are the same everywhere at the 
-      initial time.  But, users can define spatially varying initial surface 
+      NOTE:  By default, surface conditions are the same everywhere at the
+      initial time.  But, users can define spatially varying initial surface
       conditions in init_surface.F
 
  isfcflx - Include surface fluxes of heat and moisture (0=no, 1=yes)
 
  sfcmodel - Surface model:
-     (Specifically, method to calculate surface fluxes and surface stress 
+     (Specifically, method to calculate surface fluxes and surface stress
       over land and water)
      (NOTE:  bbc=3 requires sfcmodel >= 1 )
      (NOTE:  set_znt=1, or set_ust=1, or set_flx=1 requires sfcmodel = 1)
@@ -929,39 +929,39 @@
 
             4 = GFDL surface layer  (as configured in HWRF_v4.0a)
 
-            5 = Monin-Obukhov Similarity Theory (MOST) for LES 
+            5 = Monin-Obukhov Similarity Theory (MOST) for LES
 
-            6 = MYNN surface layer 
+            6 = MYNN surface layer
 
-            7 = MYJ surface layer 
+            7 = MYJ surface layer
 
       Further information:
 
-        - sfcmodel=1 : Uses simple formulations wherein surface exchange 
-        coefficients are specified:  see "Options for sfcmodel = 1" section 
+        - sfcmodel=1 : Uses simple formulations wherein surface exchange
+        coefficients are specified:  see "Options for sfcmodel = 1" section
         below.  For diagnostic surface layer calculations (such as 10-m winds),
-        a neutrally stratified surface layer is assumed. 
+        a neutrally stratified surface layer is assumed.
         Notes:  - surface temperature remains fixed over time
                 - surface moisture availability remains fixed over time
                 - sfcmodel=1 requires oceanmodel=1
 
-        - sfcmodel=2 : Uses the MM5/WRF similarity theory code for the surface 
-        layer:  based on Monin-Obukhov with Carslon-Boland viscous sub-layer 
-        and standard similarity functions from look-up tables.  
+        - sfcmodel=2 : Uses the MM5/WRF similarity theory code for the surface
+        layer:  based on Monin-Obukhov with Carslon-Boland viscous sub-layer
+        and standard similarity functions from look-up tables.
         ("sf_sfclay_physics = 1" in WRF)
         See also "Options for sfcmodel = 2" section below.
-        The soil model is the "Thermal diffusion" model from MM5/WRF:  it 
-        updates soil temperature only ... soil moisture availability is held 
+        The soil model is the "Thermal diffusion" model from MM5/WRF:  it
+        updates soil temperature only ... soil moisture availability is held
         fixed over time.  (Same as "sf_surface_physics = 1" in WRF)
         Notes:  - sfcmodel=2 can be used with either oceanmodel=1,2
 
-        - sfcmodel=3 : A revised version of sfcmodel=2.  See Jimenez et al 
+        - sfcmodel=3 : A revised version of sfcmodel=2.  See Jimenez et al
         (2012, MWR, pg 898) for more details.
         Notes:  - sfcmodel=3 can be used with either oceanmodel=1,2
 
         - sfcmodel=4 : GFDL surface layer, as configured in HWRF_v4.0a
 
-        - sfcmodel=5 : Monin-Obukhov Similarity Theory (MOST). 
+        - sfcmodel=5 : Monin-Obukhov Similarity Theory (MOST).
 
         - sfcmodel=6 : MYNN surface layer (from WRFV4.2)
 
@@ -979,7 +979,7 @@
  --------
  Options for initialization of surface conditions:
 
- initsfc - initial surface conditions: 
+ initsfc - initial surface conditions:
               1 = constant values  (set tsk0,tmn0,xland0,lu0 below)
               2 = sea breeze test case from WRF
               3 = rough surface to west; smoother surface to east
@@ -988,7 +988,7 @@
               for any other value:  you must initialize the surface conditions
               yourself in the "init_surface.F" file.
 
- tsk0 - default initial value for "skin temperature" (K) of soil/water  
+ tsk0 - default initial value for "skin temperature" (K) of soil/water
         (~1 cm deep)
         NOTE:  this replaces sea surface temperature (tsurf) in cm1r15
 
@@ -997,8 +997,8 @@
         (only used if sfcmodel=2)
         (only used over land ... ignored over water)
 
- xland0 - default initial value for land/water flag: 
-             1 for land,   2 for water 
+ xland0 - default initial value for land/water flag:
+             1 for land,   2 for water
 
  lu0 - default initial value for land-use index   (see LANDUSE.TBL file)
         (NOTE:  for water/ocean, use lu0 = 16)
@@ -1008,26 +1008,26 @@
             2 = winter values
 
     c-------------------------------------------------------------c
-     To reiterate:  if you want to use spatially varying values of 
-     tsk,tmn,xland,lu then you must code it up yourself in the 
+     To reiterate:  if you want to use spatially varying values of
+     tsk,tmn,xland,lu then you must code it up yourself in the
      "init_surface.F" file.
     c-------------------------------------------------------------c
 
  --------
  Options for sfcmodel = 1:
 
- cecd - When bbc=3 and/or isfcflx=1, this allows the user to choose the 
+ cecd - When bbc=3 and/or isfcflx=1, this allows the user to choose the
         formulation for the surface exchange coefficients for enthalphy (Ce)
         and momentum (Cd).  Options are:
                 1 = constant value:  user must set cnstce and/or cnstcd below
                     (applies to land and water)
                 2 = Deacon's formula  [eg, Rotunno and Emanuel (1987, JAS)]
-                    (over water only) 
+                    (over water only)
                     (WRF LANDUSE.TBL used over land)
        default: 3 = Cd based roughly on Fairall et al (2003) at low wind speeds
                                     and Donelan (2004, GRL) at high wind speeds
                     Ce constant, based on Drennan et al. (2007, JAS)
-                    (over water only) 
+                    (over water only)
                     (WRF LANDUSE.TBL used over land)
 
  pertflx - Use only perturbation winds for calculation of surface fluxes?
@@ -1065,7 +1065,7 @@
 
  set_flx - impose constant surface heat fluxes  (0=no, 1=yes)
 
- cnst_shflx  - value for surface sensible heat flux (K m/s) if set_flx=1 
+ cnst_shflx  - value for surface sensible heat flux (K m/s) if set_flx=1
 
  cnst_lhflx - value for surface latent heat flux (g/g m/s) if set_flx=1
 
@@ -1078,12 +1078,12 @@
  cnst_ust - value of surface friction velocity (u-star, m/s) if set_ust=1
 
  --- NEW  ---
- ramp_sgs - gradually turn on (ie, "ramp up") the subgrid-scale model for 
+ ramp_sgs - gradually turn on (ie, "ramp up") the subgrid-scale model for
             LES  (0=no, 1=yes)   (for sgsmodel >=1 only)
 
  --- NEW  ---
- ramp_time - for ramp_sgs=1 only: this is the time over which the LES 
-             subgrid-scale model is linearly ramped up. 
+ ramp_time - for ramp_sgs=1 only: this is the time over which the LES
+             subgrid-scale model is linearly ramped up.
 
  --- NEW  ---
  t2p_avg - for two-part models (sgsmodel=3,4) use either:
@@ -1136,12 +1136,12 @@
 
           See README.stretch for more information.
 
- stretch_z - Use vertically stretched grid spacing?  
+ stretch_z - Use vertically stretched grid spacing?
                0 = no
                1 = Wilhelmson and Chen
-               2 = Smooth geometric (L. Wicker) Stretch factor, 
+               2 = Smooth geometric (L. Wicker) Stretch factor,
                           dz(k+1) = stretch*dz(k)
-                   is determined iteratively. Max stretch factor 
+                   is determined iteratively. Max stretch factor
                    of 1.1 to limit finite difference errors. If an error
                    is issued, either increase nz or adjust other parameters
                    and try again.
@@ -1149,15 +1149,15 @@
                    Note: this option specifies the heights of scalar
                    levels (also known as "half levels").
                    For example:  0.5*dz , 1.5*dz , 2.5*dz , etc.
-                   Total number of levels specified in file is nz. 
-                   See run/config_files/les_StratoCuDrizzle/input_grid_z 
+                   Total number of levels specified in file is nz.
+                   See run/config_files/les_StratoCuDrizzle/input_grid_z
                    for an example.
                    (note: options below are ignored for stretch_z = 3)
                4 = Arbitrary, specified by user in input_grid_z file.
-                   Note: this option specifies the heights of w levels 
+                   Note: this option specifies the heights of w levels
                    (also known as "full levels").
                    For example:  0.0*dz , 1.0*dz , 2.0*dz , 3.0*dz , etc.
-                   Total number of levels specified in file is nz+1. 
+                   Total number of levels specified in file is nz+1.
                    (note: options below are ignored for stretch_z = 4)
 
  ztop - Total depth of the domain (i.e., the height of the top of the
@@ -1207,8 +1207,8 @@
  compile the code.  Then, var1 can be changed in the namelist.input file
  and the initial wind profile will change without needing to re-compile.
 
- Example: A user wants to change the location, size, and amplitude of the 
- initial thermal bubble.  Using the flex vars, the code could be modified in 
+ Example: A user wants to change the location, size, and amplitude of the
+ initial thermal bubble.  Using the flex vars, the code could be modified in
  this manner:
         ric     =    var1
         rjc     =    var2
@@ -1241,12 +1241,12 @@
 
           !---  IMPORTANT NOTE about large runs  ---!
           ! NOTE:  output_format=2 (netcdf-format output files) tends
-                   to be inefficient in CM1 for large processor/core 
+                   to be inefficient in CM1 for large processor/core
                    counts, ie, when using >2,000 (roughly) cores.
-                   For many thousands of processors/cores, we recommend 
+                   For many thousands of processors/cores, we recommend
                    using output_format=1 (also known as unformatted,
-                   direct-access binary format) and then converting the 
-                   subsequent output files to netcdf format (if desired) 
+                   direct-access binary format) and then converting the
+                   subsequent output files to netcdf format (if desired)
                    using a conversion program; CDO (climate data operators)
                    is useful to this end.  On NCAR's derecho, use the two
                    following commands:
@@ -1264,7 +1264,7 @@
                            but this produces many files)
                       3 = for MPI runs only:  one output file per output time
                           ...AND... one output file per MPI process
-                          (note:  creates many output files that need to 
+                          (note:  creates many output files that need to
                            be combined together using special code ... see, eg,
                            http://www2.mmm.ucar.edu/people/bryan/cm1/programs/)
                           but this is the most efficient way to write output
@@ -1281,16 +1281,16 @@
 
      ------ For the remaining variables, 0=no and 1=yes ------
 
- output_rain     - surface rainfall.  If imove = 1, two output fields are 
+ output_rain     - surface rainfall.  If imove = 1, two output fields are
                    generated.  The first (rn) is the accumulated rainfall
                    at model grid points.  The second (rn2) is the translated
-                   rainfall pattern, assuming a lower surface is moving at 
+                   rainfall pattern, assuming a lower surface is moving at
                    umove and vmove.
 
  output_sws      - maximum surface wind speed (aka, surface wind swath, sws)
-                   If imove = 1, two output fields are generated.  The first 
-                   (sws) is the max sws at model grid points.  The second 
-                   (sws2) is the translated sws pattern, assuming a lower 
+                   If imove = 1, two output fields are generated.  The first
+                   (sws) is the max sws at model grid points.  The second
+                   (sws2) is the translated sws pattern, assuming a lower
                    surface is moving at umove and vmove.
 
    Similar to output_sws:
@@ -1312,7 +1312,7 @@
       cpc = cold pool intensity, C
       cph = cold pool depth, h
 
-            NOTE:  the reference profile (for calculation of buoyancy) is 
+            NOTE:  the reference profile (for calculation of buoyancy) is
                    simply the initial sounding.
 
  output_sfcflx   - surface fluxes of potential temperature and water vapor,
@@ -1398,8 +1398,8 @@
                    (Kain et al, 2008, WAF, p 931)
 
  output_pblten   - tendencies from PBL scheme?  (only if ipbl >= 1)
-                   (Note:  since cm1r19, pbl tendencies for theta, qv, 
-                    u, and v are including with the "budget" output 
+                   (Note:  since cm1r19, pbl tendencies for theta, qv,
+                    u, and v are including with the "budget" output
                     variables;  see below)
 
  output_dissten  - dissipation rate?
@@ -1431,8 +1431,8 @@
  output_lwp - liquid water path and cloud water path?
 
 
-      Budget variables: includes tendencies due to advection, turbulence, 
-                        microphysics, radiation, pbl scheme, buoyancy, 
+      Budget variables: includes tendencies due to advection, turbulence,
+                        microphysics, radiation, pbl scheme, buoyancy,
                         pressure-gradient acceleration, etc, as calculated
                         within CM1.  See output files for more information.
 
@@ -1447,11 +1447,11 @@
  output_wbudget - Budget terms for w velocity?
 
  output_pdcomp  -  Pressure decomposition variables?
-   Three diagnostic variables are determined: buoyancy pressure perturbation, 
-   non-linear dynamic pressure perturbation, and linear dynamic pressure 
-   perturbation (based on the base-state wind profiles). 
+   Three diagnostic variables are determined: buoyancy pressure perturbation,
+   non-linear dynamic pressure perturbation, and linear dynamic pressure
+   perturbation (based on the base-state wind profiles).
    Note: this code does not work with distributed-memory parallelization (MPI)
-   yet. 
+   yet.
 
 ----------------------------------------------------------------------------
             Variables/settings for restart files
@@ -1478,18 +1478,18 @@
                           (faster when using large numbers of procs, ie > 1000)
                           (requires restart_format=1, at the moment)
 
-              Summary:  For restart_format=1 (binary format), 
+              Summary:  For restart_format=1 (binary format),
                         only restart_filetype=2,3 are available
 
-                        For restart_format=2 (netcdf format), 
+                        For restart_format=2 (netcdf format),
                         only restart_filetype=1,2 are available
 
 
- restart_reset_frqtim  -  Reset next output/stat/restart time based on 
+ restart_reset_frqtim  -  Reset next output/stat/restart time based on
                           parameters in namelist.input file?
 
-                          .true. means the next time CM1 writes 
-                          output/stats/restart files will be current time 
+                          .true. means the next time CM1 writes
+                          output/stats/restart files will be current time
                           (ie, the time at restart) plus tapfrq/statfrq/rstfrq.
                           In other words, the user decides when the next file
                           write will be based on namelist parameters.
@@ -1499,20 +1499,20 @@
                           .false. means the next time CM1 writes
                           output/stats/restart files will be whatever time
                           is specified in the restart files, meaning whatever
-                          time would have occurred in the original simulation 
+                          time would have occurred in the original simulation
                           (i.e., the simulation that wrote the restart file).
-                          (This option is useful for so-called "true" 
+                          (This option is useful for so-called "true"
                            restarts, meaning the user has not changed anything
                            in the namelist, and merely wants to continue a
                            previous simulation.)
-                          (This option may be needed to obtain bit-identical 
+                          (This option may be needed to obtain bit-identical
                            restarts in some instances.)
 
 
         --- Additional variables in restart files: ---
 
          (NOTE: None of the following are required for bit-identical restarts.
-                These options have been made available for specialized applications 
+                These options have been made available for specialized applications
                 only, eg data assimilation systems.)
 
  restart_file_theta  -  potential temperature (base state + perturbation)?
@@ -1547,30 +1547,30 @@
 
         --- For reading restart files (i.e., when irst=1): ---
 
- restart_use_theta  -  Use total potential temperature on restarts? 
+ restart_use_theta  -  Use total potential temperature on restarts?
 
                        .false. means that perturbation potential temperature
                        is read from the restart file and used (as is) for the
-                       simulation.  (Note:  this is needed to obtain 
-                       bit-identical restarts with CM1.) 
+                       simulation.  (Note:  this is needed to obtain
+                       bit-identical restarts with CM1.)
                        (note:  this is the default)
 
-                       .true. means that the total (i.e. base-state + 
-                       perturbation) potential temperature is read from 
+                       .true. means that the total (i.e. base-state +
+                       perturbation) potential temperature is read from
                        the restart file, then perturbation potential temp
                        is calculated and then used for the simulation.
                        (Can only be used if restart_file_theta was set to .true.
                         when the restart file was written.)
-                       (Note:  bit-identical restarts are usually not 
+                       (Note:  bit-identical restarts are usually not
                         possible for this option, because of round-off errors
                         associated with adding, then subtracting, the base-state
                         field.)
-           
 
-                       Default is .false.  
+
+                       Default is .false.
 
                        Note that the .true. option shouldn't be used in most
-                       cases, but it can be useful for some applications, such 
+                       cases, but it can be useful for some applications, such
                        as ensemble data assimilation.
 
 
@@ -1689,19 +1689,19 @@
     (used only if ptype=26,27,28)
     Default values are noted. There is an additional internal namelist that
     can be accessed for more options. See README.NSSLmp
-  
+
   ihlcnh       - Graupel -> hail conversion option (old default was 1, new default is 3)
   rho_qr       - Rain density (1000 kg m**-3)
   rho_qs       - Snow density (100 kg m**-3)
-  rho_qh       - Graupel density (500 kg m**-3) 
+  rho_qh       - Graupel density (500 kg m**-3)
                  [Only for ptype=28 (single moment) or with nssl_density_on=.false.]
-  rho_qhl      - Hail density (800 kg m**-3) 
+  rho_qhl      - Hail density (800 kg m**-3)
                  [Only for ptype=28 (single moment) or with nssl_density_on=.false.]
-  cnor         - Rain intercept (8.e5 m**-4) 
+  cnor         - Rain intercept (8.e5 m**-4)
                  [Only for ptype=28 (single moment)]
-  cnos         - Snow intercept (3.e6 m**-4) 
+  cnos         - Snow intercept (3.e6 m**-4)
                  [Only for ptype=28 (single moment)]
-  cnoh         - Graupel/hail intercept (4.e5 m**-4) 
+  cnoh         - Graupel/hail intercept (4.e5 m**-4)
                  [Only for ptype=28 (single moment)]
 
   ccn          - Initial concentration of cloud condensation nuclei
@@ -1712,27 +1712,27 @@
                  Value sets the concentration at MSL, and an initially
                  homogeneous number mixing ratio (ccn/1.225) is assumed throughout the depth of
                  the domain.
-  
+
   irenuc (new option) : 2 = ccn field is UNactivated aerosol (previous default; old droplet activation)
                         7 = ccn field is ACTVIATED aerosol (new default 2023) (new droplet activation)
 
   infall       - Two-moment sedimation options (default infall=4 recommended)
-                          ! 0 -> uses number-wgt for N; NO correction applied 
+                          ! 0 -> uses number-wgt for N; NO correction applied
                                  (results in excessive size sorting)
                           ! 1 -> uses mass-weighted fallspeed for N ALWAYS
                                  (prevents size sorting)
                           ! 2 -> uses number-wgt for N and mass-weighted
-                                 correction for N 
+                                 correction for N
                                  (Method II in Mansell, 2010 JAS)
                           ! 3 -> uses number-wgt for N and Z-weighted
-                                 correction for N 
+                                 correction for N
                                  (Method I in Mansell, 2010 JAS)
                           ! 4 -> Hybrid of 2 and 3: Uses minimum N from each
-                                 method (z-wgt and m-wgt corrections) 
+                                 method (z-wgt and m-wgt corrections)
                                  (Method I+II in Mansell, 2010 JAS)
   alphah       - Shape parameter for graupel (0.0)
   alphahl      - Shape parameter for hail (1.0)
-  
+
   Less-used parameters (see code)
   imurain      - DSD function option for rain (1 - gamma of diameter)
   icdx         - fall speed option for graupel (default was 3, now is 6)
@@ -1743,7 +1743,7 @@
                  larger graupel
   hldnmn       - Minimum hail particle density (500 kg m**-3) (changed from 750 in r17)
   iehw,iehlw   - Graupel (iehw) and Hail (iehlw) droplet collection efficiency
-                 options 
+                 options
   ehw0,ehlw0   - Maximim droplet collection efficiencies for graupel (default was ehw0=0.75, now 0.9)
                  and hail (default was ehlw0=0.75, now 0.9)
   dmrauto      - Options for limiting rain autoconversion
@@ -1753,12 +1753,12 @@
   param14 section:  Options related to domain-wide diagnostics.
 
 
-  dodomaindiag - Calculate and write domain-wide / domain-averaged diagnostics 
+  dodomaindiag - Calculate and write domain-wide / domain-averaged diagnostics
                (eg, domain-average vertical profiles, variances, vertical
                 fluxes, etc)
               (logical:  .true. or .false.)
 
-                     Can now be written in CF-compliant netcdf format! 
+                     Can now be written in CF-compliant netcdf format!
                      Use output_format = 2
 
   diagfrq - Frequency (seconds) for calculating/writing diagnostics.
@@ -1769,16 +1769,16 @@
   param15 section:   Options related to azimuthally averaged output.
 
 
-  doazimavg  -  Calculate and write azimuthally averaged vertical cross 
+  doazimavg  -  Calculate and write azimuthally averaged vertical cross
                 sections?
                 (logical:  .true. or .false.)
 
-                      Can now be written in CF-compliant netcdf format! 
+                      Can now be written in CF-compliant netcdf format!
                       Use output_format = 2
 
-      Note:  To define the center-point for these calculatins, there is 
-             only one option, at the moment:  the code searches for the 
-             point that yields maximum possible azimuthally averaged  
+      Note:  To define the center-point for these calculatins, there is
+             only one option, at the moment:  the code searches for the
+             point that yields maximum possible azimuthally averaged
              tangential velocity, and defines this point as "storm center."
              Other mehtods could be coded in the future
 
@@ -1786,14 +1786,14 @@
 
   rlen  -  Length (m) of analysis grid (in radial direction).
 
-  do_adapt_move  -  Automatically identify center of a storm (using min 
-           surface pressure), and adaptively adjust umove,vmove to keep 
+  do_adapt_move  -  Automatically identify center of a storm (using min
+           surface pressure), and adaptively adjust umove,vmove to keep
            the storm near the center of the domain.
 
-           Caution: this is an experimental capability in CM1 
+           Caution: this is an experimental capability in CM1
            (although it seems to work well in our tests).
 
-  adapt_move_frq  -  Frequency (seconds) to identify center of storm, 
+  adapt_move_frq  -  Frequency (seconds) to identify center of storm,
            and update umove,vmove (when do_adapt_move = .true.)
 
 
@@ -1801,14 +1801,14 @@
 -------------------------------------------------------------------------
                         --- NEW ---
 
-  param17 section:  options for cm1setup=4 only 
+  param17 section:  options for cm1setup=4 only
                     (ie, for LES-within-Mesoscale-Model framework)
 
 
- les_subdomain_shape  -  1 = square-shaped LES subdomain 
+ les_subdomain_shape  -  1 = square-shaped LES subdomain
                          2 = circular-shaped LES subdomain (not implemented yet)
 
- les_subdomain_xlen  -  size of LES subdomain in x direction 
+ les_subdomain_xlen  -  size of LES subdomain in x direction
                         (for les_subdomain_shape=1 only)
                     (Note: for stretch_x=1, this should be similar to nos_x_len)
 
@@ -1819,18 +1819,18 @@
  les_subdomain_dlen  -  diameter of LES subdomain for les_subdomain_shape=2 only
                            (not implemented yet)
 
- les_subdomain_trnslen  -  a transition scale (meters) for expected development of 
-                           resolved-scale turbulence.  Specifically, this is how 
-                           far into the LES subdomain at which the LES subgrid 
-                           model is completely turned on. 
+ les_subdomain_trnslen  -  a transition scale (meters) for expected development of
+                           resolved-scale turbulence.  Specifically, this is how
+                           far into the LES subdomain at which the LES subgrid
+                           model is completely turned on.
 
 
 -------------------------------------------------------------------------
                         --- NEW ---
 
   param18 section:  options for eddy recycling
-                    (ie, turbulent fluctuations are nudged into the flow 
-                     at either open boundaries when cm1setup=0,1,3, or at 
+                    (ie, turbulent fluctuations are nudged into the flow
+                     at either open boundaries when cm1setup=0,1,3, or at
                      the edges of an LES subdomain when cm1setup=4)
 
  do_recycle_w  -  use eddy recycling near western boundary of an LES domain?
@@ -1845,15 +1845,15 @@
  do_recycle_n  -  use eddy recycling near northern boundary of an LES domain?
                   (T/F)
 
- recycle_width_dx  -  width of the recycled data, in number of grid points 
+ recycle_width_dx  -  width of the recycled data, in number of grid points
                       (eg, a value of 6.0 means 6*dx)
 
  recycle_depth_m  -  depth of recycled data, from the surface (meters)
 
- recycle_cap_loc_m  -  distance (meters) from the edge of the LES domain 
+ recycle_cap_loc_m  -  distance (meters) from the edge of the LES domain
                        where turbulent fluctuations are "captured"
 
- recycle_inj_loc_m  -  distance (meters) from the edge of the LES domain 
+ recycle_inj_loc_m  -  distance (meters) from the edge of the LES domain
                        where turbulent fluctuations are "injected"
 
 
@@ -1884,19 +1884,19 @@
   lsnudge_tau   -   time scale (seconds) for damping term
 
 
-  ! NOTE:  CM1 only applies large-scale nudging when t > lsnudge_start and 
-  !        t < lsnudge_end;  the user must set these two variables below.  
-  !        For any other times, large-scale nudging is not applied, regardless 
-  !        of the times provided for lsnudge_time1 and lsnudge_time2 in the 
+  ! NOTE:  CM1 only applies large-scale nudging when t > lsnudge_start and
+  !        t < lsnudge_end;  the user must set these two variables below.
+  !        For any other times, large-scale nudging is not applied, regardless
+  !        of the times provided for lsnudge_time1 and lsnudge_time2 in the
   !        lsnudge_xxxx.dat files.
 
   lsnudge_start  -   time (seconds) to begin large-scale nudging
 
   lsnudge_end    -   time (seconds) to end large-scale nudging
 
-  lsnudge_ramp_time  -   time (seconds) over which to gradually introduce 
-     nudging; that is, for  
-         lsnudge_start  <  t (seconds)  <  lsnudge_start+nudge_ramp_time 
+  lsnudge_ramp_time  -   time (seconds) over which to gradually introduce
+     nudging; that is, for
+         lsnudge_start  <  t (seconds)  <  lsnudge_start+nudge_ramp_time
 
      Nudging term is linearly increased from 0 to full nudging term
      over this time period.
@@ -1907,17 +1907,17 @@
 -------------------------------------------------------------------------
                         --- NEW ---
 
-  param20 section:  options related to immersed boundaries 
+  param20 section:  options related to immersed boundaries
 
 
  do_ib  -  use immersed boundaries?  (T/F)
 
- ib_init  -  distribution of immersed boundaries 
+ ib_init  -  distribution of immersed boundaries
              (see ib_module.F for more details)
 
  top_cd  -  drag coefficient (unitless) on top of immersed boundaries
 
- side_cd  -  drag coefficient (unitless) on sides of immersed boundaries 
+ side_cd  -  drag coefficient (unitless) on sides of immersed boundaries
 
 
 -------------------------------------------------------------------------
@@ -1931,32 +1931,32 @@
 
  hurr_vg  -  Gradient wind (m/s)
 
-             This is also the default initial wind speed in idealized 
+             This is also the default initial wind speed in idealized
              initial conditions.
              (assumes iwnd=8)
 
  hurr_rad  -  Radius (meters) from center of tropical cyclone
 
- hurr_vgpl  -  The "power law" (or "radial decay" parameter) for the 
-               gradient wind  (see Eqn 20 in Bryan et al. 2017). 
+ hurr_vgpl  -  The "power law" (or "radial decay" parameter) for the
+               gradient wind  (see Eqn 20 in Bryan et al. 2017).
                (Note: should be a negative number)
 
- hurr_rotate  -  How much to rotate winds and pressure gradient from the 
-                 convention used by Bryan et al (2017). 
+ hurr_rotate  -  How much to rotate winds and pressure gradient from the
+                 convention used by Bryan et al (2017).
 
-                 Here, positive is clockwise, negative is counterclockwise.  
+                 Here, positive is clockwise, negative is counterclockwise.
 
-                 Example 1: for hurr_rotate = 0.0, winds are southerly 
-                 (ie, from south-to-north) and the TC center is to the west 
-                 (see Fig 1 of B17). 
+                 Example 1: for hurr_rotate = 0.0, winds are southerly
+                 (ie, from south-to-north) and the TC center is to the west
+                 (see Fig 1 of B17).
 
-                 Example 2: for hurr_rotate = -90.0, winds are easterly 
-                 (ie, from east-to-west) and the TC center is to the south. 
+                 Example 2: for hurr_rotate = -90.0, winds are easterly
+                 (ie, from east-to-west) and the TC center is to the south.
 
-                 Example 3: for hurr_rotate = 90.0, winds are westerly 
+                 Example 3: for hurr_rotate = 90.0, winds are westerly
                  (ie, from west-to-east) and the TC center is to the north.
 
-                 (Note: Nothern hemisphere is assumed.) 
+                 (Note: Nothern hemisphere is assumed.)
 
 
 -------------------------------------------------------------------------

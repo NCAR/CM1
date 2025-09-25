@@ -34,9 +34,9 @@
 3) if successful, two files will have been created in the "run" directory:
    cm1.exe (the executable) and onefile.F (an archive of the code used to
    make this particular executable ... I highly recommend that you retain
-   onefile.F with every simulation, because it makes a nice record of the 
+   onefile.F with every simulation, because it makes a nice record of the
    model code for your particular simulation, and it sometimes helps me to
    debug potential problems)
 
-4) to cleanup the src directory, type "make clean".  You should also do this 
+4) to cleanup the src directory, type "make clean".  You should also do this
    when changing compiler flags.

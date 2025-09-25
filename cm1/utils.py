@@ -49,7 +49,12 @@ def parse_args() -> argparse.Namespace:
 
 
 def animate_cm1out_nc(
-    ds: xarray.Dataset, var_name: str, height: float, dim: str = "zh", interval: int = 200, **kwargs
+    ds: xarray.Dataset,
+    var_name: str,
+    height: float,
+    dim: str = "zh",
+    interval: int = 200,
+    **kwargs,
 ):
     """
     Create an animation of a user-specified variable at a given vertical level.
@@ -72,7 +77,9 @@ def animate_cm1out_nc(
     # Animation function
     def update(frame):
         img.set_array(data.isel(time=frame))
-        img.axes.set_title(f"{var_name} at {data[dim].data:.2f} km, Time: {time[frame]}")
+        img.axes.set_title(
+            f"{var_name} at {data[dim].data:.2f} km, Time: {time[frame]}"
+        )
         return [img]
 
     # Create animation
@@ -285,7 +292,9 @@ def skewt(
         # Averaging temperature, pressure, and mixing ratio along levels can
         # make mixing ratio above saturation, making LCL below profile.
         # Don't bother adding lcl_pressure point in that case.
-        logging.warning(f"lcl outside range of p {p.min().item():~.1f} {p.max().item():~.1f}")
+        logging.warning(
+            f"lcl outside range of p {p.min().item():~.1f} {p.max().item():~.1f}"
+        )
         p = p.data  # convert to Quantity array (with units) so we can sort it
     # Create reverse sorted array of pressure. mpcalc assumes bottom-up arrays.
     p = np.sort(p)[::-1]
@@ -398,7 +407,7 @@ def skewt(
         else:
             barbcolor.append("none")
 
-    bbz = skew.plot_barbs(
+    skew.plot_barbs(
         p,
         u,
         v,

@@ -1,4 +1,4 @@
-name: Cirrus clouds CPU with Linux 
+name: Cirrus clouds CPU with Linux
 on:
   push:
     branches:
@@ -21,7 +21,7 @@ jobs:
     defaults:
       run:
         shell: bash -elo pipefail {0}
-        
+
     container:
       image: ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
       options: --gpus all
@@ -53,7 +53,7 @@ jobs:
              conda activate
              pip install gcovr
              NETCDFBASE=$NETCDF make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
-           else 
+           else
              NETCDFBASE=$NETCDF make -j 4 FC=ifort CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
            fi
 
@@ -65,13 +65,12 @@ jobs:
              sed -i 's/output_format    = 1/output_format    = 2/g' namelist.input
            fi
            if [ "${{ matrix.mpi }}" = "openmpi" ]; then
-             OMP_NUM_THREADS=1 mpiexec --allow-run-as-root -n 4 ./cm1.exe 
+             OMP_NUM_THREADS=1 mpiexec --allow-run-as-root -n 4 ./cm1.exe
            else
              OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe
            fi
            ls cm1out*
            if [ "${{ matrix.compiler }}" != "oneapi" ]; then
              cd ../src
-             make coverage         
+             make coverage
            fi
-
