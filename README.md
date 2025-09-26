@@ -10,7 +10,7 @@
 
 * [Here is a sample submission script for NCAR's derecho supercomputer](utils/cm1run_derecho)  **(Last updated:  24 March 2024)**
 
-### [About CM1](docs/about.md)
+### [About CM1](docs/index.md)
 
 ### [Download](docs/releases.md)
 

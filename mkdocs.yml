@@ -33,7 +33,6 @@ validation:
 nav:
   - Home: index.md
   - About:
-    - about.md
     - Parallelization:
       - Background: README.parallel.md
       - Performance: pp.md
