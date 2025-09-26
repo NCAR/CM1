@@ -31,7 +31,7 @@ validation:
 # ----------- content ----------------
 # ------------------------------------
 nav:
-  - Home: about.md
+  - Home: index.md
   - About:
     - Parallelization:
       - Background: README.parallel.md
