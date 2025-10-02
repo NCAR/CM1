@@ -280,7 +280,9 @@ def model_level(
 ) -> xarray.Dataset:
     """
     Load native model levels ERA5 dataset for specified time
-    from campaign storage.
+    from campaign storage. On Gaussian lat-lon grid.
+    SP:grid_specification = "0.28125° x ~0.28125° from 0E to 359.71875E and 89.78488N to 89.78488S (1280 x 640 Longitude/Gaussian Latitude), ~31km at Equator" ;
+        SP:original_data_representation = "N320 reduced Gaussian grid, ECMWF Meteorological Archival and Retrieval System (MARS)" ;
 
     Parameters
     ----------
@@ -327,12 +329,16 @@ def model_level(
     # has same resolution as the invariant surface geopotential you refer to in d633006.
 
     invariant_path = Path(
-        "/glade/campaign/collections/rda/decsdata/COLD_STORAGE/d630000/P/e5.oper.invariant/201601"
+        # "/glade/campaign/collections/rda/decsdata/COLD_STORAGE/d630000/P/e5.oper.invariant/201601"
+        f"/glade/campaign/collections/rda/data/{rdaindex}/e5.oper.invariant"
     )
     invariant = xarray.open_mfdataset(
         list(invariant_path.glob("*.nc")),
         drop_variables=["utc_date", "time"],
     )
+    assert (
+        invariant.latitude.size == 640
+    ), "expected invariant fields on Gaussian grid like ds"
     invariant = quantify_invariant(invariant)
     ds = ds.merge(invariant)
 
