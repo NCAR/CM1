@@ -6,10 +6,11 @@ Otherwise use the s3fs Amazon Web Service bucket or a local cached file.
 """
 
 import argparse
+import io
 import logging
 import os
-import typing
 from pathlib import Path
+from typing import TextIO, Union
 
 import metpy.calc as mcalc
 import metpy.constants
@@ -28,40 +29,73 @@ soundings_path = os.path.join(repo_base_path, "soundings")
 
 
 class Sounding(xr.Dataset):
-    __slots__ = ("case",)
+    __slots__ = ()
 
-    def __init__(self, data_or_path=None, *args, case=None, **kwargs):
+    def __init__(self, data_or_path=None, *args, **kwargs):
         """
-        Initializes the Sounding object from a file path or an xarray.Dataset.
-        For special text files or named cases, use the factory methods:
-        Sounding.from_txt() or Sounding.get_case().
+        Initializes the Sounding object.
+
+        This constructor is designed to be compatible with xarray's internal
+        mechanisms (like .map, .sel) which may pass a dict of variables,
+        while also handling user-provided file paths or xarray.Dataset objects.
         """
+        # This is the path xarray's internal methods (like .map) will take.
+        # They pass a dictionary of variables as the first argument.
+        if isinstance(data_or_path, dict):
+            super().__init__(data_or_path, *args, **kwargs)
+            return
+
+        # This block handles user-initiated creation from a path or Dataset.
         ds = None
-        if isinstance(data_or_path, (str, Path)):
+        if isinstance(data_or_path, (str, Path, os.PathLike)):
             ds = xr.open_dataset(data_or_path)
         else:
+            # Assumes an xr.Dataset, xr.DataArray, or None
             ds = data_or_path
 
-        if ds is not None:
+        if isinstance(ds, (xr.Dataset, xr.DataArray)):
+            # We are creating a Sounding from another xarray object. Quantify it.
             quantified_ds = ds.metpy.quantify()
+            # Explicitly pass the components to the parent constructor for robustness.
+            super().__init__(quantified_ds, *args, **kwargs)
         else:
-            quantified_ds = ds
-
-        super().__init__(quantified_ds, *args, **kwargs)
-        self.case = case
+            # Handles the None case, passing it up to the parent.
+            super().__init__(ds, *args, **kwargs)
 
     @classmethod
-    def from_txt(cls, file_path: typing.Union[str, Path]):
-        """Creates a Sounding instance by parsing a special CM1 text file."""
-        with open(file_path, "r") as file:
-            header = file.readline().strip()
-            surface_pressure, surface_theta, surface_mixing_ratio = map(
-                float, header.split()
-            )
-        column_names = ["Z", "theta", "qv", "U", "V"]
-        df = pd.read_csv(
-            file_path, sep=r"\s+", skiprows=1, names=column_names, engine="python"
+    def from_txt(cls, source: Union[str, os.PathLike]):
+        """
+        Creates a Sounding instance by parsing a special CM1 text file.
+
+        This method can handle:
+        1. A file path (as a string or Path object).
+        2. The raw string content of a sounding file (e.g., from to_txt()).
+        """
+        # If the source is a string and contains newlines, treat it as content.
+        if isinstance(source, str) and "\n" in source:
+            string_stream = io.StringIO(source)
+            # For content, there's no file name, so provide a default hint.
+            return cls._parse_stream(string_stream, case_name_hint="from_string")
+
+        # Otherwise, treat it as a file path.
+        path = Path(source)
+        if not path.is_file():
+            raise FileNotFoundError(f"Sounding file not found at path: {path}")
+
+        with path.open("r") as f:
+            return cls._parse_stream(f, case_name_hint=path.stem)
+
+    @classmethod
+    def _parse_stream(cls, stream: TextIO, case_name_hint: str):
+        """Helper method to parse a CM1 text file from a text stream."""
+        header = stream.readline().strip()
+        surface_pressure, surface_theta, surface_mixing_ratio = map(
+            float, header.split()
         )
+
+        column_names = ["Z", "theta", "qv", "U", "V"]
+        df = pd.read_csv(stream, sep=r"\s+", names=column_names, engine="python")
+
         df = df.rename_axis("level")
         ds = df.to_xarray()
 
@@ -89,7 +123,7 @@ class Sounding(xr.Dataset):
             p_bot = p_bot * np.exp(-metpy.constants.g * dz / (metpy.constants.Rd * Tv))
             assert (
                 p_bot >= 0 * units.hPa
-            ), f"{file_path} p_bot<0 {p_bot:~} dz {dz:~} Tv {Tv:~}"
+            ), f"{case_name_hint} p_bot<0 {p_bot:~} dz {dz:~} Tv {Tv:~}"
             P[i] = p_bot.data.to(ds.SP.metpy.units).m.item()
             z_bot = ds.Z.sel(level=level)
 
@@ -108,8 +142,10 @@ class Sounding(xr.Dataset):
         ds["U"] *= units.m / units.s
         ds["V"] *= units.m / units.s
 
-        case_name = Path(file_path).stem.replace("input_sounding_", "")
-        return cls(ds, case=case_name)
+        case_name = case_name_hint.replace("input_sounding_", "")
+        sounding_obj = cls(ds)
+        sounding_obj.attrs["case"] = case_name
+        return sounding_obj
 
     @classmethod
     def get_case(cls, case: str):
@@ -125,7 +161,8 @@ class Sounding(xr.Dataset):
 
     def to_txt(self) -> str:
         """Converts a Sounding into a formatted string suitable for CM1."""
-        sfc = self.level.sel(level=self.P.compute().idxmax())
+        self.load()  # can't use item() on lazy dask array below
+        sfc = self.level.sel(level=self.P.idxmax())
         sfc_pres = self.SP if "SP" in self else self.P.sel(level=sfc)
         self["theta"] = mcalc.potential_temperature(self.P, self.T).metpy.convert_units(
             "K"
@@ -180,7 +217,7 @@ def era5_model_level(
 def era5_pressure_level(
     time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs
 ) -> Sounding:
-    """Retrieves ERA5 pressure-level dataset for a specific time and location."""
+    """Retrievis ERA5 pressure-level dataset for a specific time and location."""
     ds = cm1.input.era5.pressure_level(time, **kwargs)
     lon = lon % (360 * units.degreeE)
     ds = ds.sel(longitude=lon, latitude=lat, method="nearest", tolerance=5 * units.deg)

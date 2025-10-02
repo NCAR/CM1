@@ -10,7 +10,7 @@ import matplotlib.transforms as transforms
 import metpy.calc as mpcalc
 import numpy as np
 import pandas as pd
-import xarray
+import xarray as xr
 from IPython.display import HTML
 from matplotlib.figure import Figure
 from metpy.interpolate import interpolate_1d
@@ -49,37 +49,54 @@ def parse_args() -> argparse.Namespace:
 
 
 def animate_cm1out_nc(
-    ds: xarray.Dataset,
-    var_name: str,
-    height: float,
-    dim: str = "zh",
+    data: xr.DataArray,
     interval: int = 200,
     **kwargs,
 ):
     """
-    Create an animation of a user-specified variable at a given vertical level.
+    Create an animation of a user-specified 2D field over its time dimension.
+
+    The user is responsible for selecting any other dimensions (e.g., vertical)
+    before passing the data to this function.
 
     Parameters:
-    - ds: xarray.Dataset
-    - var_name: str, Name of the variable to animate
-    - height: height in km
-    - dim: str, Name of height dimension
-    - interval: int, Interval between frames in milliseconds (default: 200ms)
+    - data: xr.DataArray. A DataArray with a 'time' coordinate, ready to be plotted.
+      Example: ds['cref'] or ds['u'].sel(zh=1.0, method='nearest')
+    - interval: int, Interval between frames in milliseconds (default: 200ms).
+    - **kwargs: Additional keyword arguments passed to the plot function.
     """
+    if "time" not in data.dims:
+        raise ValueError("Input DataArray must have a 'time' dimension.")
 
-    # Extract the variable at the given vertical level
-    data = ds[var_name].sel({dim: height}, method="nearest")
+    time = pd.to_timedelta(data.time)
 
-    time = pd.to_timedelta(ds.time)
+    # --- SIMPLIFIED LOGIC ---
+    # The title is built from the DataArray's attributes.
+    title_parts = []
+    if data.name:
+        title_parts.append(data.name)
 
+    # Check for a vertical coordinate to add its value to the title.
+    for coord_name in ["zh", "z", "level", "pressure"]:
+        if coord_name in data.coords and data[coord_name].size == 1:
+            level_val = data[coord_name].item()
+            units = data[coord_name].attrs.get("units", "")
+            title_parts.append(f"at {level_val:.2f} {units}")
+            break
+
+    title_parts.append("Time: {time}")
+    title_template = ", ".join(title_parts)
+
+    # --- PLOTTING LOGIC (largely unchanged) ---
     img = data.isel(time=0).plot.imshow(origin="lower", **kwargs)
 
     # Animation function
     def update(frame):
         img.set_array(data.isel(time=frame))
-        img.axes.set_title(
-            f"{var_name} at {data[dim].data:.2f} km, Time: {time[frame]}"
-        )
+
+        # Use the appropriate title template.
+        current_time = time[frame]
+        img.axes.set_title(title_template.format(time=current_time))
         return [img]
 
     # Create animation
@@ -136,7 +153,7 @@ def mean_lat_lon(lats_deg, lons_deg):
 
 
 def skewt(
-    ds: xarray.Dataset,
+    ds: xr.Dataset,
     fig: Optional[Figure] = None,
     subplot: Optional[Tuple[int, int, int]] = None,
     rotation: int = 40,
@@ -187,7 +204,7 @@ def skewt(
     # a level dimension like SP are broadcast to all levels.
     # Apply mask only to variables with the 'level' dimension
     # Mask high pressure levels greater than surface pressure SP
-    ds = xarray.Dataset(
+    ds = xr.Dataset(
         {
             var: (
                 ds[var].where((ds.P >= 10 * units.hPa) & (ds.P < ds.SP), drop=True)
