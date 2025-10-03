@@ -2,21 +2,17 @@ import logging
 import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Tuple, cast
+from typing import Tuple
 
-import cartopy.mpl.geoaxes as cgeo
 import metpy.calc as mcalc
 import numpy as np
 import pandas as pd
 import s3fs
-import xarray
-from matplotlib import pyplot as plt
+import xarray as xr
 from metpy.constants import Rd, g
 from metpy.units import units
-from pint import Quantity
-from sklearn.neighbors import BallTree
 
-from cm1.utils import TMPDIR, mean_lat_lon
+from cm1.utils import TMPDIR
 
 
 def load_from_campaign(
@@ -26,7 +22,7 @@ def load_from_campaign(
     varnames: list,
     start_end_str: str,
     drop_variables: list = ["utc_date"],
-) -> xarray.Dataset:
+) -> xr.Dataset:
     """
     Load ERA5 dataset for specified time from
     campaign storage
@@ -46,7 +42,7 @@ def load_from_campaign(
 
     Returns
     -------
-    xarray.Dataset
+    xr.Dataset
         Dataset containing ERA5 data for the specified time and configuration.
     """
 
@@ -65,7 +61,7 @@ def load_from_campaign(
         for varname in varnames
     ]
 
-    ds = xarray.open_mfdataset(local_files, drop_variables=drop_variables)
+    ds = xr.open_mfdataset(local_files, drop_variables=drop_variables)
     logging.info(f"opened {len(local_files)} local {level_type} files")
     logging.debug(local_files)
     logging.info(f"selected {time}")
@@ -74,96 +70,9 @@ def load_from_campaign(
     return ds
 
 
-def circle_neighborhood(ds, lat, lon, neighbors, debug=True):
-    """
-    mean in neighborhood of
-    of lat, lon
-    Average args.neighbor points.
-    """
-    if neighbors > 100:
-        logging.warning(
-            f"averaging {neighbors} neighbors along model levels may include wildly different pressures and heights"
-        )
-    # indexing="ij" allows Dataset.stack dims order to be "latitude", "longitude"
-    lat2d, lon2d = np.meshgrid(ds.latitude, ds.longitude, indexing="ij")
-    latlon = np.deg2rad(np.vstack([lat2d.ravel(), lon2d.ravel()]).T)
-    X = [[lat.m_as("radian"), lon.m_as("radian")]]
-
-    idx = BallTree(latlon, metric="haversine").query(
-        X, return_distance=False, k=neighbors
-    )
-    ds = ds.stack(z=("latitude", "longitude")).isel(z=idx).load()
-    lat_mean, lon_mean = mean_lat_lon(ds.latitude, ds.longitude)
-    sfc_pressure_range = ds.SP.max() - ds.SP.min()
-    if sfc_pressure_range > 1 * units.hPa:
-        logging.warning(f"sfc_pressure_range: {sfc_pressure_range:~}")
-    sfc_height_range = (
-        ds.surface_geopotential_height.max() - ds.surface_geopotential_height.min()
-    )
-    if sfc_height_range > 10 * units.m:
-        logging.warning(f"sfc_height_range: {sfc_height_range:~}")
-
-    # Plot requested sounding location and nearest neighbors used for averaging.
-    if debug:
-        logging.warning(f"plotting {lat_mean} {lon_mean}")
-        import cartopy.crs as ccrs
-        import cartopy.feature as cfeature
-
-        fig, ax = plt.subplots(
-            figsize=(10, 5),
-            subplot_kw={
-                "projection": ccrs.PlateCarree(central_longitude=lon_mean.data)
-            },
-        )
-        ax = cast(cgeo.GeoAxes, ax)
-
-        # Add features to the map
-        ax.add_feature(cfeature.COASTLINE)
-        ax.add_feature(cfeature.BORDERS, linestyle=":")
-        ax.add_feature(cfeature.LAND, edgecolor="black")
-        ax.add_feature(cfeature.OCEAN)
-
-        # Plot the points
-        ax.plot(
-            lon_mean,
-            lat_mean,
-            marker="o",
-            transform=ccrs.PlateCarree(),
-            label="mean",
-            linestyle="none",
-        )
-        ax.plot(
-            lon.m_as("degrees_E"),
-            lat.m_as("degrees_N"),
-            marker=".",
-            transform=ccrs.PlateCarree(),
-            label="request",
-            linestyle="none",
-        )
-        ax.scatter(ds.longitude, ds.latitude, marker=".", transform=ccrs.PlateCarree())
-        ax.set_title(f"{lat_mean.data} {lon_mean.data}")
-        ax.gridlines(draw_labels=True)
-        ax.legend()
-        plt.show()
-        # TODO: remove assertions after function is bug-free
-        # assert mean location is close to what was requested.
-        assert abs(lat_mean - lat) < 1, f"meanlat {lat_mean} lat {lat}"
-        assert (
-            (np.cos(np.radians(lon_mean)) - np.cos(np.radians(lon))) < 0.01
-        ), f"meanlon {lon_mean} lon {lon} {np.cos(np.radians(lon_mean)) - np.cos(np.radians(lon))}"
-        assert (
-            (np.sin(np.radians(lon_mean)) - np.sin(np.radians(lon))) < 0.01
-        ), f"meanlon {lon_mean} lon {lon} {np.sin(np.radians(lon_mean)) - np.sin(np.radians(lon))}"
-
-    ds = ds.mean(dim="z")  # drop `z` `latitude` `longitude` dimensions
-    ds = ds.assign_coords(latitude=lat_mean, longitude=lon_mean)
-    ds.attrs["neighbors"] = neighbors
-    return ds
-
-
 def compute_z_level(
-    ds: xarray.Dataset, lev: int, z_h: xarray.DataArray
-) -> Tuple[xarray.DataArray, xarray.DataArray]:
+    ds: xr.Dataset, lev: int, z_h: xr.DataArray
+) -> Tuple[xr.DataArray, xr.DataArray]:
     r"""
     Compute the geopotential at a full level and the overlying half-level.
 
@@ -174,17 +83,17 @@ def compute_z_level(
 
     Parameters:
     ----------
-    ds : xarray.Dataset
+    ds : xr.Dataset
         The dataset containing the variables required for computation,
         specifically "Tv" (virtual temperature) and "P_half" (pressure on half-levels).
     lev : int
         The level index for the desired full-level geopotential calculation.
-    z_h : xarray.DataArray
+    z_h : xr.DataArray
         The initial geopotential height at the lower half-level.
 
     Returns:
     -------
-    Tuple[xarray.DataArray, xarray.DataArray]
+    Tuple[xr.DataArray, xr.DataArray]
         A tuple containing:
             - `z_h`: The updated geopotential at the overlying half-level.
             - `z_f`: The computed geopotential at the specified full level.
@@ -254,7 +163,7 @@ INVARIANT_VARNAMES = [
 ]
 
 
-def quantify_invariant(invariant: xarray.Dataset) -> xarray.Dataset:
+def quantify_invariant(invariant: xr.Dataset) -> xr.Dataset:
     """
     Quantify invariant Dataset
     Squeeze time dimension if present
@@ -277,7 +186,7 @@ def quantify_invariant(invariant: xarray.Dataset) -> xarray.Dataset:
 
 def model_level(
     time: pd.Timestamp,
-) -> xarray.Dataset:
+) -> xr.Dataset:
     """
     Load native model levels ERA5 dataset for specified time
     from campaign storage. On Gaussian lat-lon grid.
@@ -291,7 +200,7 @@ def model_level(
 
     Returns
     -------
-    xarray.Dataset
+    xr.Dataset
         Dataset containing ERA5 data for the specified time.
     """
     # get from campaign storage
@@ -332,7 +241,7 @@ def model_level(
         # "/glade/campaign/collections/rda/decsdata/COLD_STORAGE/d630000/P/e5.oper.invariant/201601"
         f"/glade/campaign/collections/rda/data/{rdaindex}/e5.oper.invariant"
     )
-    invariant = xarray.open_mfdataset(
+    invariant = xr.open_mfdataset(
         list(invariant_path.glob("*.nc")),
         drop_variables=["utc_date", "time"],
     )
@@ -352,9 +261,9 @@ def model_level(
         z_h, z_f = compute_z_level(ds, level, z_h)
         Z.append(z_f)
         Z_h.append(z_h)
-    ds["Z_half"] = xarray.concat(Z_h, dim="half_level") / g
+    ds["Z_half"] = xr.concat(Z_h, dim="half_level") / g
     ds["Z_half"].attrs["long_name"] = "geopotential height"
-    ds["Z"] = xarray.concat(Z, dim="level") / g
+    ds["Z"] = xr.concat(Z, dim="level") / g
     ds["Z"].attrs["long_name"] = "geopotential height"
     ds["surface_geopotential_height"] = ds["surface_geopotential"] / g
     ds["surface_geopotential_height"].attrs["long_name"] = (
@@ -367,7 +276,7 @@ def model_level(
 
 def pressure_level(
     time: pd.Timestamp,
-) -> xarray.Dataset:
+) -> xr.Dataset:
     """
     Load ERA5 dataset for specified time and configuration.
     Comes from campaign storage.
@@ -379,7 +288,7 @@ def pressure_level(
 
     Returns
     -------
-    xarray.Dataset
+    xr.Dataset
         Dataset containing ERA5 data for the specified time and configuration.
     """
     rdaindex = "d633000"
@@ -456,7 +365,7 @@ def get_s3():
     return s3fs.S3FileSystem(anon=True)
 
 
-def aws(time: pd.Timestamp) -> xarray.Dataset:
+def aws(time: pd.Timestamp) -> xr.Dataset:
     """
     Retrieve ERA5 data from an S3 bucket and cache it locally.
 
@@ -467,7 +376,7 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
 
     Returns
     -------
-    xarray.Dataset
+    xr.Dataset
         Dataset containing ERA5 data for the specified time, downloaded from S3.
     """
     S3_BUCKET = "nsf-ncar-era5"
@@ -491,7 +400,7 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
 
         logging.warning(f"Downloading {s3_file_path} from S3...")
         with s3.open(s3_file_path, "rb") as f:
-            xarray.open_dataset(f).to_netcdf(cache_file_path)
+            xr.open_dataset(f).to_netcdf(cache_file_path)
         logging.warning(f"Downloaded and cached: {cache_file_path}")
         return cache_file_path
 
@@ -508,7 +417,7 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
         ]
     ]
 
-    ds_pl = xarray.open_mfdataset(cache_file_paths).drop_vars("utc_date")
+    ds_pl = xr.open_mfdataset(cache_file_paths).drop_vars("utc_date")
     ds_pl = ds_pl.sel(time=time)
     ds_pl = ds_pl.metpy.quantify()
     ds_pl["P"] = ds_pl.level * ds_pl.level.metpy.units
@@ -527,7 +436,7 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
         ]
     ]
 
-    ds_sfc = xarray.open_mfdataset(cache_file_paths).drop_vars("utc_date")
+    ds_sfc = xr.open_mfdataset(cache_file_paths).drop_vars("utc_date")
     ds_sfc = ds_sfc.sel(time=time)
     ds_sfc = ds_sfc.metpy.quantify()
 
@@ -544,64 +453,9 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
         for var in INVARIANT_VARNAMES
     ]
 
-    invariant = xarray.open_mfdataset(
-        cache_file_paths, drop_variables=["utc_date", "time"]
-    )
+    invariant = xr.open_mfdataset(cache_file_paths, drop_variables=["utc_date", "time"])
     invariant = quantify_invariant(invariant)
 
     ds = ds_pl.merge(ds_sfc).merge(invariant)
 
     return ds
-
-
-def nearest_grid_block_sel(
-    dataset: xarray.Dataset, lat: Quantity, lon: Quantity, n: int = 3, **kwargs
-) -> dict:
-    """
-    Returns a dictionary to select nearest nxn slice
-    to a specified lat/lon, to be used with xarray.Dataset.sel.
-
-    Parameters:
-        dataset (xarray.Dataset): ERA5 dataset with 'latitude' and 'longitude' coordinates.
-        lat (Quantity): Target latitude with units (must be in degrees, e.g., degrees_north).
-        lon (Quantity): Target longitude with units (must be in degrees, e.g., degrees_east).
-        n (int): Size of the square slice (must be positive odd integer).
-
-    Returns:
-        dict: Dictionary with 'latitude' and 'longitude' slices for use in .sel()
-    """
-
-    if n < 1 or n % 2 != 1:
-        raise ValueError("n must be a positive odd integer.")
-
-    # Convert lon to 0-360° if needed
-    lon = lon % (360 * units.degree)
-
-    # Ensure coords exist
-    if "latitude" not in dataset.coords or "longitude" not in dataset.coords:
-        raise ValueError("Dataset must contain 'latitude' and 'longitude' coordinates.")
-
-    # Snap to the nearest point
-    center = dataset.sel(latitude=lat, longitude=lon, method="nearest", **kwargs)
-    center_lat = center.latitude.values
-    center_lon = center.longitude.values
-
-    # Find lat/lon index of center
-    lat_vals = dataset.latitude.values
-    lon_vals = dataset.longitude.values
-    lat_idx = np.abs(lat_vals - center_lat).argmin()
-    lon_idx = np.abs(lon_vals - center_lon).argmin()
-
-    half = n // 2
-    # Latitude index range (handle edges)
-    lat_start = max(lat_idx - half, 0)
-    lat_end = min(lat_idx + half, len(lat_vals) - 1)
-    lat_sel_vals = lat_vals[lat_start : lat_end + 1]
-
-    # Longitude index range with wrapping
-    lon_size = len(lon_vals)
-    lon_sel_indices = [(lon_idx + i) % lon_size for i in range(-half, half + 1)]
-    lon_sel_vals = np.array([lon_vals[i] for i in lon_sel_indices])
-
-    # Return dictionary suitable for .sel()
-    return {"latitude": lat_sel_vals, "longitude": lon_sel_vals}

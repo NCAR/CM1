@@ -152,6 +152,59 @@ def mean_lat_lon(lats_deg, lons_deg):
     return lat_mean, lon_mean
 
 
+def nearest_grid_block_sel(
+    dataset: xr.Dataset, lat: Quantity, lon: Quantity, n: int = 3, **kwargs
+) -> dict:
+    """
+    Returns a dictionary to select nearest nxn slice
+    to a specified lat/lon, to be used with xr.Dataset.sel.
+
+    Parameters:
+        dataset (xr.Dataset): ERA5 dataset with 'latitude' and 'longitude' coordinates.
+        lat (Quantity): Target latitude with units (must be in degrees, e.g., degrees_north).
+        lon (Quantity): Target longitude with units (must be in degrees, e.g., degrees_east).
+        n (int): Size of the square slice (must be positive odd integer).
+
+    Returns:
+        dict: Dictionary with 'latitude' and 'longitude' slices for use in .sel()
+    """
+
+    if n < 1 or n % 2 != 1:
+        raise ValueError("n must be a positive odd integer.")
+
+    # Convert lon to 0-360° if needed
+    lon = lon % (360 * units.degree)
+
+    # Ensure coords exist
+    if "latitude" not in dataset.coords or "longitude" not in dataset.coords:
+        raise ValueError("Dataset must contain 'latitude' and 'longitude' coordinates.")
+
+    # Snap to the nearest point
+    center = dataset.sel(latitude=lat, longitude=lon, method="nearest", **kwargs)
+    center_lat = center.latitude.values
+    center_lon = center.longitude.values
+
+    # Find lat/lon index of center
+    lat_vals = dataset.latitude.values
+    lon_vals = dataset.longitude.values
+    lat_idx = np.abs(lat_vals - center_lat).argmin()
+    lon_idx = np.abs(lon_vals - center_lon).argmin()
+
+    half = n // 2
+    # Latitude index range (handle edges)
+    lat_start = max(lat_idx - half, 0)
+    lat_end = min(lat_idx + half, len(lat_vals) - 1)
+    lat_sel_vals = lat_vals[lat_start : lat_end + 1]
+
+    # Longitude index range with wrapping
+    lon_size = len(lon_vals)
+    lon_sel_indices = [(lon_idx + i) % lon_size for i in range(-half, half + 1)]
+    lon_sel_vals = np.array([lon_vals[i] for i in lon_sel_indices])
+
+    # Return dictionary suitable for .sel()
+    return {"latitude": lat_sel_vals, "longitude": lon_sel_vals}
+
+
 def skewt(
     ds: xr.Dataset,
     fig: Optional[Figure] = None,
