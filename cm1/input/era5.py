@@ -46,12 +46,7 @@ def load_from_campaign(
         Dataset containing ERA5 data for the specified time and configuration.
     """
 
-    # model level invariant files don't have no year_month_dir.
-    year_month_dir = (
-        ""
-        if rdaindex == "d633006" and level_type == "e5.oper.invariant"
-        else time.strftime("%Y%m")
-    )
+    year_month_dir = time.strftime("%Y%m")
     local_files = [
         Path("/glade/campaign/collections/rda/data")
         / rdaindex
@@ -239,7 +234,9 @@ def model_level(
 
     invariant_path = Path(
         # "/glade/campaign/collections/rda/decsdata/COLD_STORAGE/d630000/P/e5.oper.invariant/201601"
-        f"/glade/campaign/collections/rda/data/{rdaindex}/e5.oper.invariant"
+        # f"/glade/campaign/collections/rda/data/{rdaindex}/e5.oper.invariant"
+        # "/glade/u/home/davestep/ds633.6-ERA5ML/e5.oper.invariant"
+        "/glade/work/ahijevyc/share/ds633.6-ERA5ML/e5.oper.invariant"
     )
     invariant = xr.open_mfdataset(
         list(invariant_path.glob("*.nc")),
