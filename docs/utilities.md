@@ -5,7 +5,7 @@
 
 ## Run a CM1 test case
 
-- `utils/run_casei.csh`: csh script to run a CM1 test case
+- `utils/run_case.csh`: csh script to run a CM1 test case
 
 ```csh
 Usage:
