@@ -13,8 +13,21 @@ Usage:
      <case>: Name of the test case (e.g., "dunion_MT").
      -f    : (Optional) Force overwrite of existing run directories.
 ```
+## Convert unformatted direct-access binary to netcdf
+
+- `output_format = 1`
+- Conversion program: CDO (climate data operators)
+- On NCAR's derecho, use the two following commands:
+
+```
+module load cdo
+cdo -f nc4 import_binary cm1out_s.ctl cm1out_s.nc
+```
+- see https://code.mpimet.mpg.de/projects/cdo for more info on CDO
 
 ## [Combining output (MPI users)](combine_output.md)
+
+- Fortran programs that combine the tiled GrADS output from CM1 into one file
 
 ## [GrADS Scripts](grads.md)
 
