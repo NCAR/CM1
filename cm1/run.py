@@ -3,187 +3,263 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict
+from dataclasses import dataclass, field
 
+# You may need to install f90nml: pip install f90nml
 import f90nml
 
 
+# --- Best Practice Improvements ---
+@dataclass
 class PBS:
-    def __init__(
-        self,
-        name: str,
-        account: str,
-        walltime: str,
-        nodes: int,
-        run_dir: Path,
-        executable_path: Path,
-    ):
-        """
-        Initialize PBS job configuration.
+    """
+    Configuration for a PBS batch job.
+    REFAC-NOTE: This class now only contains PBS-specific scheduler information.
+    """
 
-        :param name: Job name.
-        :param account: Account number for the PBS job.
-        :param walltime: Wall clock time for the job (e.g., '02:00:00' for 2 hours).
-        :param nodes: Number of nodes to request.
-        :param run_dir: Directory where the model run will be executed.
-        :param executable_path: Executable path.
-        """
-        self.name: str = name
-        self.account: str = account
-        self.walltime: str = walltime
-        self.nodes: int = nodes
-        self.run_dir: Path = run_dir if isinstance(run_dir, Path) else Path(run_dir)
-        self.executable_path: Path = (
-            executable_path
-            if isinstance(executable_path, Path)
-            else Path(executable_path)
-        )
+    name: str
+    account: str
+    walltime: str
+    nodes: int
+    queue: str = "main@desched1"
+    cpus_per_node: int = 128
+    mpi_procs_per_node: int = 128
+    omp_threads: int = 1
+    env_vars: Dict[str, str] = field(
+        default_factory=lambda: {
+            "PALS_PPN": "128",
+            "PALS_DEPTH": "1",
+            "PALS_CPU_BIND": "depth",
+        }
+    )
 
 
 class CM1Run:
+    """
+    A class to manage the setup, configuration, and execution of a CM1 model run.
+    """
+
     def __init__(
         self,
         cm1_path: Path,
-        pbs_config: PBS,
-        namelist_path: Optional[Path] = None,
-        printout: Optional[str] = "cm1.print.out",
+        run_dir: Path,
+        executable_path: Path,
+        # REFAC-NOTE: pbs_config is now optional.
+        pbs_config: Optional[PBS] = None,
+        printout: str = "cm1.print.out",
         sounding: Optional[object] = None,
+        serial: bool = False,
+        background: bool = False,
     ):
         """
         Initialize a CM1 model run.
-        Assign a default namelist and readme.
 
-        :param cm1_path: Path to CM1 repository.
-        :param pbs_config: Instance of PBS.
-        :param namelist_path: Path to namelist.
+        :param cm1_path: Path to the root of the CM1 repository.
+        :param run_dir: The directory where the model will be run. Its name determines the config to use.
+        :param executable_path: Path to the CM1 executable.
+        :param pbs_config: An instance of the PBS configuration dataclass. If provided, PBS mode is enabled.
         :param printout: Filename for the standard output log.
+        :param sounding: An optional sounding object with a `to_txt()` method.
+        :param serial: If True, the model will be run serially on the command line.
+        :param background: If True (and serial is True), run the serial job in the background.
         """
-        self.cm1_path: Path = cm1_path
-        self.pbs: PBS = pbs_config
-        self.printout: str = printout if printout is not None else "cm1.print.out"
-        self.readme: str = ""
+        self.cm1_path = Path(cm1_path)
+        self.pbs_config = pbs_config
+        self.printout = printout
         self.sounding = sounding
+        self.serial = serial
+        self.background = background
+        self.pbs = pbs_config is not None
 
-        # Path to default namelist and readme
-        defaults_path = cm1_path / "run"
-        # Change defaults_path if pbs.name matches an existing config_files directory.
-        if os.path.exists(defaults_path / "config_files" / self.pbs.name):
-            defaults_path = defaults_path / "config_files" / self.pbs.name
+        if self.serial and self.pbs:
+            raise ValueError("Cannot select both serial and PBS execution modes.")
 
-        if namelist_path is None:
-            logging.warning(f"assign default {self.pbs.name} namelist")
-            namelist_path = defaults_path / "namelist.input"
-        self.namelist: f90nml.Namelist = f90nml.read(namelist_path)
+        self.run_dir = Path(run_dir)
+        self.run_dir.mkdir(parents=True, exist_ok=True)
+        self.executable_path = Path(executable_path)
 
-        if self.sounding:
-            # Run with temperature, wind from "input_sounding".
-            self.namelist["param2"]["isnd"] = 7
+        if not self.executable_path.is_file():
+            raise FileNotFoundError(f"Executable not found at: {self.executable_path}")
+        if not os.access(self.executable_path, os.X_OK):
+            raise PermissionError(
+                f"Executable is not executable: {self.executable_path}"
+            )
 
-        with open(defaults_path / "README", "r") as file:
-            self.readme = file.read()
+        # REFAC-NOTE: Derive test case and paths from the run_dir name.
+        if not self.run_dir.name.startswith("run_"):
+            raise ValueError(
+                "run_dir name must start with 'run_' to derive the test case."
+            )
+        testcase = self.run_dir.name.split("run_")[-1]
+        self.config_source_dir = self.cm1_path / "run" / "config_files" / testcase
+        self.original_namelist_path = self.config_source_dir / "namelist.input"
 
-    def generate_pbs_script(self, script_path: str = "pbs.job") -> str:
+        self.readme = self._load_readme()
+        self.namelist = self._load_namelist()
+
+    def _load_readme(self) -> str:
+        """
+        Loads the README file from the derived config source directory.
+        """
+        readme_path = self.config_source_dir / "README"
+        if readme_path.is_file():
+            return readme_path.read_text()
+        logging.warning(f"No README file found at {readme_path}")
+        return ""
+
+    def _load_namelist(self) -> f90nml.Namelist:
+        """
+        Loads the namelist from the derived original_namelist_path.
+        """
+        if not self.original_namelist_path.is_file():
+            raise FileNotFoundError(
+                f"Derived namelist file not found: {self.original_namelist_path}"
+            )
+
+        logging.info(f"Loading namelist from: {self.original_namelist_path}")
+        return f90nml.read(self.original_namelist_path)
+
+    def generate_pbs_script(self, script_path: str = "job.pbs") -> Path:
         """
         Generate a PBS job script for the CM1 model run.
 
-        :param script_path: Name of the PBS script file.
-        :return: Full path of the generated PBS script.
+        :param script_path: Name of the PBS script file to generate.
+        :return: Path object of the generated PBS script.
         """
-        script_content = f"""#!/bin/bash
-# job name:
-#PBS -N {self.pbs.name}
-#PBS -A {self.pbs.account}
-# Number of nodes:
-#PBS -l select={self.pbs.nodes}:ncpus=128:mpiprocs=128:ompthreads=1
-# Maximum wall-clock time:
-#PBS -l walltime={self.pbs.walltime}
-# Queue:
-#PBS -q main@desched1
-# Redirect output:
-#PBS -o {self.pbs.run_dir}
-#PBS -e {self.pbs.run_dir}
+        if not self.pbs_config:
+            raise ValueError("Cannot generate PBS script without pbs_config.")
 
-# Use ncarenv version before it is loaded by default. Executable must have
-# been compiled with same modules loaded.
+        run_dir_abs = self.run_dir.resolve()
+        executable_abs = self.executable_path.resolve()
+
+        env_setup = "\n".join(
+            [f"export {key}={value}" for key, value in self.pbs_config.env_vars.items()]
+        )
+
+        script_content = f"""#!/bin/bash
+# Job Name:
+#PBS -N {self.pbs_config.name}
+# Account:
+#PBS -A {self.pbs_config.account}
+# Number of nodes:
+#PBS -l select={self.pbs_config.nodes}:ncpus={self.pbs_config.cpus_per_node}:mpiprocs={self.pbs_config.mpi_procs_per_node}:ompthreads={self.pbs_config.omp_threads}
+# Wall-clock time:
+#PBS -l walltime={self.pbs_config.walltime}
+# Queue:
+#PBS -q {self.pbs_config.queue}
+# Redirect output and error streams:
+#PBS -o {run_dir_abs / self.printout}
+#PBS -e {run_dir_abs / (self.printout + '.err')}
+
+# Environment setup
 module purge
 module load ncarenv/24.12
 module reset
-module load intel/2025.0.3
 
+# Create a temporary directory if needed
 mkdir -p $TMPDIR
 
-export PALS_PPN=128
-export PALS_DEPTH=1
-export PALS_CPU_BIND=depth
+# MPI environment variables
+{env_setup}
 
-cd {self.pbs.run_dir}
+# Change to the run directory before execution
+cd {run_dir_abs}
 
-mpiexec --cpu-bind depth {self.pbs.executable_path} >& {self.printout}
+# Execute the model
+mpiexec --cpu-bind depth {executable_abs}
 """
-        script_full_path = self.pbs.run_dir / script_path
-        with open(script_full_path, "w") as script_file:
-            script_file.write(script_content)
-        return str(script_full_path)
+        script_full_path = self.run_dir / script_path
+        script_full_path.write_text(script_content)
+        script_full_path.chmod(0o755)
+        logging.info(f"Generated PBS script: {script_full_path}")
+        return script_full_path
 
     def prepare_run_dir(self) -> None:
         """
-        Prepare the run directory by copying necessary files.
+        Prepare the run directory by creating it and copying necessary files.
+        Errors out if expected output files already exist.
         """
-        if self.namelist is None:
-            raise ValueError(
-                "Namelist must be defined before preparing the run directory."
-            )
+        run_dir = self.run_dir
 
-        run_dir = self.pbs.run_dir
+        # Check for existing output files before creating/populating the directory.
+        expected_outputs = ["cm1out.nc", "cm1out_stats.nc"]
+        for filename in expected_outputs:
+            output_file = run_dir / filename
+            if output_file.exists():
+                raise FileExistsError(
+                    f"Output file {output_file} already exists. Aborting to prevent overwrite."
+                )
+
+        logging.info(f"Preparing run directory: {run_dir}")
         run_dir.mkdir(parents=True, exist_ok=True)
 
-        # Copy testcase configuration files to run_dir
-        #  input_sounding
-        #  LANDUSE.TBL
-        #  namelist.input (overwritten below)
-        #  README
-        shutil.copytree(
-            self.cm1_path / "run/config_files" / self.pbs.name,
-            run_dir,
-            dirs_exist_ok=True,
-        )
+        # REFAC-NOTE: Copy from the derived config source directory.
+        if self.config_source_dir.is_dir():
+            shutil.copytree(self.config_source_dir, run_dir, dirs_exist_ok=True)
+        else:
+            logging.warning(
+                f"Config source directory not found, skipping copy: {self.config_source_dir}"
+            )
 
-        # Copy RRTMG radiation data from cm1_path/run
-        for file in ["RRTMG_LW_DATA", "RRTMG_SW_DATA"]:
-            shutil.copy(self.cm1_path / "run" / file, run_dir / file)
-        # Copy executable to run_dir
-        shutil.copy(self.pbs.executable_path, run_dir)
+        common_files_path = self.cm1_path / "run"
+        common_files = ["RRTMG_LW_DATA", "RRTMG_SW_DATA"]
+        for file_name in common_files:
+            source_file = common_files_path / file_name
+            if source_file.is_file():
+                shutil.copy(source_file, run_dir / file_name)
+            else:
+                logging.warning(f"Common file not found, skipping: {source_file}")
 
-        # Write namelist to run directory
+        shutil.copy(self.executable_path, run_dir)
+
         namelist_out = run_dir / "namelist.input"
-        self.namelist.write(namelist_out, force=True)
+        # The namelist object loaded from the original path is written to the run directory.
+        self.namelist.write(str(namelist_out), force=True)
         logging.info(f"Wrote namelist to {namelist_out}")
 
-        # TODO: function to get expected output files from namelist.
-        # Check for existing output file(s). Right now assume one netCDF.
-        output_file = self.pbs.run_dir / "cm1out.nc"
-        if output_file.exists():
-            raise FileExistsError(f"Output file {output_file} already exists.")
+        if self.sounding:
+            sounding_path = run_dir / "input_sounding"
+            sounding_path.write_text(self.sounding.to_txt())
+            logging.info(f"Wrote input sounding to {sounding_path}")
 
-    def submit_job(self) -> None:
-        """Submit the PBS job."""
-        self.prepare_run_dir()
-        script_path = self.generate_pbs_script()
-        subprocess.run(["qsub", script_path], check=True)
-
-    def run_serial(self, background: bool = False) -> None:
+    def run(self) -> None:
         """
-        Run executable serially as from the command line.
-
-        :param background: Whether to run the process in the background.
+        Prepares the run directory and executes the model based on instance attributes.
         """
         self.prepare_run_dir()
-        os.chdir(self.pbs.run_dir)
-        logging.info(f"stdout and stderr directed to {self.printout}")
-        with open(self.printout, "w") as f:
-            if background:
-                subprocess.Popen([self.pbs.executable_path], stdout=f, stderr=f)
-            else:
-                subprocess.run(
-                    [self.pbs.executable_path], stdout=f, stderr=f, check=True
-                )
+
+        if self.pbs:
+            script_path = self.generate_pbs_script()
+            logging.info(f"Submitting job script: {script_path}")
+            subprocess.run(["qsub", str(script_path)], check=True, cwd=self.run_dir)
+        elif self.serial:
+            executable_local_name = self.executable_path.name
+            run_dir = self.run_dir
+            printout_path = run_dir / self.printout
+
+            logging.info(
+                f"Running serially in {run_dir}. Output will be in {printout_path}"
+            )
+
+            with open(printout_path, "w") as f_out:
+                command = ["./" + executable_local_name]
+                if self.background:
+                    subprocess.Popen(
+                        command, stdout=f_out, stderr=subprocess.STDOUT, cwd=run_dir
+                    )
+                    logging.info(f"Process started in background in {run_dir}.")
+                else:
+                    result = subprocess.run(
+                        command,
+                        stdout=f_out,
+                        stderr=subprocess.STDOUT,
+                        check=False,
+                        cwd=run_dir,
+                    )
+                    if result.returncode != 0:
+                        logging.error(
+                            f"Serial run failed with exit code {result.returncode}. Check {printout_path}."
+                        )
+                    else:
+                        logging.info("Serial run completed successfully.")

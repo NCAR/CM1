@@ -10,7 +10,7 @@
 # - Configuration files for the specified case should exist under $CM1/run/config_files/.
 
 # Usage:
-#   run_case <case> [-f]
+#   run_case.csh <case> [-f]
 #     <case>: Name of the simulation case (e.g., "dunion_MT").
 #     -f    : (Optional) Force overwrite of existing run directories.
 
@@ -82,14 +82,6 @@ cp -v $CM1/run/config_files/$case/* .
 
 # Put longwave and shortwave radiation data in run directory
 cp -v $CM1/run/RRTMG_LW_DATA $CM1/run/RRTMG_SW_DATA .
-
-# Modify specific parameters in the namelist.input file
-# On macOS, sed -i requires an empty string or a backup suffix.
-# However, on HPC, sed -i '' mistakes empty string for sed command.
-# - Set `output_format` to 2 (NetCDF)
-sed -i"" "/output_format/s/=[^,]*/= 2/" namelist.input
-# - Set `output_filetype` to 1 (Single file)
-sed -i"" "/output_filetype/s/=[^,]*/= 1/" namelist.input
 
 # Copy CM1 executable
 cp -v $CM1/run/cm1.exe .
