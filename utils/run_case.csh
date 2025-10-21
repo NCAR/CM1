@@ -10,7 +10,7 @@
 # - Configuration files for the specified case should exist under $CM1/run/config_files/.
 
 # Usage:
-#   run_case <case> [-f]
+#   run_case.csh <case> [-f]
 #     <case>: Name of the simulation case (e.g., "dunion_MT").
 #     -f    : (Optional) Force overwrite of existing run directories.
 
