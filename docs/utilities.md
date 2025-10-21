@@ -13,10 +13,10 @@ Usage:
      <case>: Name of the test case (e.g., "dunion_MT").
      -f    : (Optional) Force overwrite of existing run directories.
 ```
-## Convert unformatted direct-access binary to netcdf
+## Convert GrADS format to netcdf
 
-- `output_format = 1`
-- Conversion program: CDO (climate data operators)
+- `output_format = 1` or unformatted direct-access binary format
+- Requires CDO (climate data operators)
 - On NCAR's derecho, use the two following commands:
 
 ```
