@@ -14,14 +14,22 @@
 #  - CODE_COVERAGE: turn on code coverage mode (default=false)
 #
 #  Some example usages are:
-#    make USE_OPENMP=true                 # shared memory only
-#    make USE_OPENMP=true USE_MPI=true    # shared + distributed memory
-#    make USE_OPENACC=true USE_MPI=true   # distributed memory + GPU offloading
+#    make USE_OPENMP=true                  # shared memory only
+#    make USE_OPENMP=true USE_MPI=true     # shared + distributed memory
+#    make USE_OPENACC=true USE_MPI=true    # distributed memory + GPU offloading
+#                                          # works on derecho
+#    make USE_OPENMP=true USE_NETCDF=true\ # shared + netCDF with gfortran
+#      FC=gfortran \                       # and netcdf-fortran in conda env.
+#      NETCDFBASE=$CONDA_PREFIX            # Works on MacBook where "FC" env var
+#                                          # is full path to gfortran and may
+#                                          # not match any hardware below.
 #
 #  Note that the logical values set to the argument variables are case insensitive.
 #
 #  If the "FC" env variable is not set on your system, you could also specify it through:
 #    make FC=ifort                        # use Intel compiler
+#
+#  If USE_NETCDF=true, then the "NETCDFBASE" env variable must be set.
 #
 #-----------------------------------------------------------------------------
 
