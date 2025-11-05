@@ -32,6 +32,10 @@
 
   If the "FC" env variable is not set on your system, you could also specify it through:
     make FC=ifort                        # use Intel compiler
+
+  If USE_NETCDF=true, then "NETCDFBASE" must be either set in environment or
+    defined as an argument variable (e.g. NETCDFBASE=$CONDA_PREFIX).
+
 ```
 
    - NOTE:  on some machines, you may need to use "gmake" instead of "make".
