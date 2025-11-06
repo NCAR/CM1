@@ -18,15 +18,24 @@
   - DEBUG: turn on DEBUG mode (default=false)
 
   Some example usages are:
-    make USE_OPENMP=true                 # shared memory only
-    make USE_OPENMP=true USE_MPI=true    # shared + distributed memory
-    make USE_OPENACC=true USE_MPI=true   # distributed memory + GPU offloading
-                                         # works for derecho
+    make USE_OPENMP=true                  # shared memory only
+    make USE_OPENMP=true USE_MPI=true     # shared + distributed memory
+    make USE_OPENACC=true USE_MPI=true    # distributed memory + GPU offloading
+                                          # works on derecho
+    make USE_OPENMP=true USE_NETCDF=true\ # shared + netCDF with gfortran and
+      FC=gfortran \                       # netcdf-fortran installed in conda env.
+      NETCDFBASE=$CONDA_PREFIX            # Works on MacBook where "FC" env var
+                                          # is full path to gfortran and may
+                                          # not match any hardware below.
 
   Note that the logical values set to the argument variables are case insensitive.
 
   If the "FC" env variable is not set on your system, you could also specify it through:
     make FC=ifort                        # use Intel compiler
+
+  If USE_NETCDF=true, then "NETCDFBASE" must be either set in environment or
+    defined as an argument variable (e.g. NETCDFBASE=$CONDA_PREFIX).
+
 ```
 
    - NOTE:  on some machines, you may need to use "gmake" instead of "make".
