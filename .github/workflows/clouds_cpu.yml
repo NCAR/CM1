@@ -17,7 +17,8 @@ jobs:
         arch: [x86_64]
         netcdf: [true, false]
 
-    runs-on: gha-runner-cm1
+    runs-on: 
+      group: CIRRUS-4x8
     defaults:
       run:
         shell: bash -elo pipefail {0}
