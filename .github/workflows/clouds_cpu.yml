@@ -2,7 +2,7 @@ name: Cirrus clouds CPU with Linux
 on:
   push:
     branches:
-      - "main"
+      - "cicd"
   pull_request:
   workflow_dispatch:
 
