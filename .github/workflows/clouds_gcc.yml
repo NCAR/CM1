@@ -9,7 +9,7 @@ on:
 
 jobs:
   setup:
-    runs-on: gha-runner-cm1
+    runs-on:  CIRRUS-4x8
     container:
       image: halehawk/gnu_io:latest
     steps:
