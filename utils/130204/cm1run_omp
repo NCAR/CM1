@@ -15,4 +15,3 @@ setenv OMP_NUM_THREADS 4
 
 ldedit -btextpsize=64K -bdatapsize=64K -bstackpsize=64K cm1.exe
 ./cm1.exe >&! cm1.print.out
-

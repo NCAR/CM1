@@ -4,15 +4,15 @@ Brief User's Guide to using grid stretching in CM1.
 Last updated:  15 June 2017
 
 CM1 can be used with stretched grids in all three coordinates.  An
-analytic stretching function (from Wilhelmson and Chen, 1982, JAS) is 
+analytic stretching function (from Wilhelmson and Chen, 1982, JAS) is
 used to make it easy for model users to create smoothly varying grid
-spacing.  An explanation for how to create a stretched grid is 
+spacing.  An explanation for how to create a stretched grid is
 provided below.
 
 Although the analytic stretching function is hard-wired into the code,
-users can actually place the gridpoints wherever they wish ... i.e., 
-a different stretching function can be used, or grid points can be 
-arbitrarily located.  See relevant sections of code in "param.F" for 
+users can actually place the gridpoints wherever they wish ... i.e.,
+a different stretching function can be used, or grid points can be
+arbitrarily located.  See relevant sections of code in "param.F" for
 more information.
 
 %----------------------------------------------------------------------
@@ -42,7 +42,7 @@ First, a review of the namelist parameters:
 
  str_bot - Level where stretching begins (m).
 
- str_top - Level where stretching ends (m). (not used for stretch_z = 2, 
+ str_top - Level where stretching ends (m). (not used for stretch_z = 2,
            which computes this from the other inputs)
 
  dz_bot - Grid spacing at (and below) str_bot (m).
@@ -54,7 +54,7 @@ STRETCH_Z = 1
 Background:
 
 The stretching function in the model is hard-wired, to ensure that the
-stretching is smoothly distributed.  For those interested in learning 
+stretching is smoothly distributed.  For those interested in learning
 more, the scheme is based on the one presented in Wilhelmson and Chen,
 1982, JAS, 39, 1466-1483.
 
@@ -100,7 +100,7 @@ specific value for "nz", given the other inputs (like dz_bot and dz_top).
 ***** The value for nz MUST be: *****
 
   nz =  ( str_bot / dz_bot )
-      + ( ztop - str_top ) / dz_top 
+      + ( ztop - str_top ) / dz_top
       + ( str_top - str_bot )/( 0.5*( dz_bot + dz_top ) )
 
 *************************************
@@ -129,7 +129,7 @@ Notice that the number of levels needed for the stretching layer is
 the depth of the layer divided by the average grid spacing in that
 layer [which is 0.5*( dz_bot + dz_top ) ].
 
-If you are unsure what to do, just compile and run the model:  the code will 
+If you are unsure what to do, just compile and run the model:  the code will
 recommend a value for nz.
 
 ------------------------------------------------------------------------
@@ -139,11 +139,11 @@ This method takes the input ztop, str_bot, dz_bot, and dz_top to compute
 (iteratively) a grid stretch factor. (Method was used in COMMAS at least as
 early as Skamarock et al. 2000, JGR.)  The resulting factor gives a constant
 percentage change in dz from dz_bot until either dz_top is reached (then dz
-remains constant until ztop) or ztop is reached (in which case stretching 
-continues to the model top). To reduce numerical errors, the routine will 
-abort if the stretch factor exceeds 1.1, in which case one can try 
-increasing dz_bot, dz_top, and/or nz. The stretch factor and model levels 
-are printed out, so some experimentation may be needed by running the model 
+remains constant until ztop) or ztop is reached (in which case stretching
+continues to the model top). To reduce numerical errors, the routine will
+abort if the stretch factor exceeds 1.1, in which case one can try
+increasing dz_bot, dz_top, and/or nz. The stretch factor and model levels
+are printed out, so some experimentation may be needed by running the model
 for one time step and checking the resulting grid.
 
 
@@ -284,6 +284,3 @@ if the grid stretches from 100 m to 500 m, an approriate value for dx would
 be anything from 100 m to 500 m.  The goal should be to make the stretching
 factors ("uf" and "uh" in the printout file, just to the right of the dx
 values) close to 1.0 in value.
-
-
-

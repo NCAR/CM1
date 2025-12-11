@@ -3,7 +3,7 @@
 ! George Bryan's cm1 numerical model.
 !
 ! Provided by:  Daniel Kirshbaum, University of Reading
-! 
+!
 ! Last modified:  2 April 2008
 !------------------------------------------------------------------------
 
@@ -105,7 +105,7 @@
       enddo
 !-----------------------------------------------------------------------
 ! get dx,dy,dz
-      status = nf_get_att_real(ncid(1),nf_global,"x_delta",dx)  
+      status = nf_get_att_real(ncid(1),nf_global,"x_delta",dx)
       if (status /= nf_noerr) call disp_err(status)
 
       status = nf_get_att_real(ncid(1),nf_global,"y_delta",dy)
@@ -141,7 +141,7 @@
       mxp1=mx+1
       my=(y_max1-y_min1)/dx
       myp1=my+1
-          
+
 ! times
       allocate(time(nt))
       time(:)=0.0
@@ -177,10 +177,10 @@
 !-----------------------------------------------------------------------
 ! write output, necessary variables
 !-----------------------------------------------------------------------
-      write(*,81) 
+      write(*,81)
  81   format(/,'Input name of the new netCDF file (name.cdf):')
       read(*,*) fname1
-        
+
       status = nf_create(fname1,nf_noclobber,ncid1)
       if (status /= nf_noerr) call disp_err(status)
 
@@ -257,7 +257,7 @@
 
       status = nf_def_var(ncid1,"sgz",nf_float,1,3,varid)
       status = nf_put_att_text(ncid1,varid,"units",2,"km")
-      status = nf_put_att_text(ncid1,varid,"def",11,"staggered z") 
+      status = nf_put_att_text(ncid1,varid,"def",11,"staggered z")
       status = nf_put_att_int(ncid1,varid,"no_button",nf_int,1,int(1))
       status = nf_enddef(ncid1)
       status = nf_put_vara_real(ncid1,varid,1,nz,sgz)
@@ -265,7 +265,7 @@
 
       status = nf_def_var(ncid1,"wgz",nf_float,1,6,varid)
       status = nf_put_att_text(ncid1,varid,"units",2,"km")
-      status = nf_put_att_text(ncid1,varid,"def",13,"unstaggered z") 
+      status = nf_put_att_text(ncid1,varid,"def",13,"unstaggered z")
       status = nf_put_att_int(ncid1,varid,"no_button",nf_int,1,int(1))
       status = nf_enddef(ncid1)
       status = nf_put_vara_real(ncid1,varid,1,nzp1,wgz)
@@ -326,7 +326,7 @@
         status = nf_redef(ncid1)
         status = nf_def_var(ncid1,"qvflux",nf_float,2,(/1,2/),varid)
         status = nf_put_att_text(ncid1,varid,"units",7,"1/m/m/s")
-        status = nf_put_att_text(ncid1,varid,"def",7,"qv flux") 
+        status = nf_put_att_text(ncid1,varid,"def",7,"qv flux")
         status = nf_put_att_real(ncid1,varid,"x_min",nf_real,
      *                           1,x_min1+0.5*dx)
         status = nf_put_att_real(ncid1,varid,"y_min",nf_real,
@@ -355,7 +355,7 @@
         status = nf_redef(ncid1)
         status = nf_def_var(ncid1,"rain",nf_float,2,(/1,2/),varid)
         status = nf_put_att_text(ncid1,varid,"units",2,"mm")
-        status = nf_put_att_text(ncid1,varid,"def",4,"rain") 
+        status = nf_put_att_text(ncid1,varid,"def",4,"rain")
         status = nf_put_att_real(ncid1,varid,"x_min",nf_real,
      *                           1,x_min1+0.5*dx)
         status = nf_put_att_real(ncid1,varid,"y_min",nf_real,
@@ -1117,11 +1117,11 @@
 !-----------------------------------------------------------------------
       print *, 'Closing files'
       do i=1,nfile
-      status = nf_close(ncid(i)) 
+      status = nf_close(ncid(i))
       if (status /= nf_noerr) call disp_err(status)
       enddo
 
-      status = nf_close(ncid1) 
+      status = nf_close(ncid1)
       if (status /= nf_noerr) call disp_err(status)
 
       end program combine
@@ -1137,7 +1137,7 @@
       include '/usr/local/netcdf/include/netcdf.inc'
 
       integer, intent (in) :: status
-  
+
       print *, trim(nf_strerror(status))
       stop "Stopped"
       end subroutine disp_err

@@ -17,17 +17,17 @@ The NSSL bulk microphysical parameterization scheme describes form and phase cha
 Basic options in param2 namelist:
  ptype = 26 ! NSSL scheme (2-moment) without hail
  ptype = 27 ! NSSL scheme (2-moment) with hail
- nssl_3moment : default .false., setting true adds 6th moment for rain, 
+ nssl_3moment : default .false., setting true adds 6th moment for rain,
                 graupel (i.e., 3-moment )(ptype=26/27)  and hail (ptype=27)
  nssl_density_on : default .true.; Setting to false turns off graupel/hail predicted
-                   ice density and instead uses fixed (constant) ice density 
+                   ice density and instead uses fixed (constant) ice density
                   for graupel (rho_qh, default 500.) and hail (rho_qhl, default 800.)
 
  Other options are in the nssl2mom_params namelist (see also the README.namelist)
 
 The graupel and hail particle densities are also calculated by predicting the total particle volume. The graupel category therefore emulates a range of characteristics from high-density frozen drops (includes small hail) to low-density graupel (from rimed ice crystals/snow) in its size and density spectrum. The hail category is designed to simulate larger hail sizes. Hail is only produced from higher-density large graupel that is actively riming (esp. in wet growth).
 
-Hydrometeor size distributions are assumed to follow a gamma functional form. Microphysical processes include cloud droplet and cloud ice nucleation, condensation, deposition, evaporation, sublimation, collection–coalescence, variable-density riming, shedding, ice multiplication, cloud ice aggregation, freezing and melting, and conversions between hydrometeor categories. 
+Hydrometeor size distributions are assumed to follow a gamma functional form. Microphysical processes include cloud droplet and cloud ice nucleation, condensation, deposition, evaporation, sublimation, collection–coalescence, variable-density riming, shedding, ice multiplication, cloud ice aggregation, freezing and melting, and conversions between hydrometeor categories.
 
 Cloud concentration nuclei (CCN) concentration is predicted as in Mansell et al. (2010)  with a bulk activation spectrum approximating small aerosols. The model tracks the number of unactivated CCN, and the local CCN concentration is depleted as droplets are activated, either at cloud base or in cloud. The CCN are subjected to advection and subgrid turbulent mixing but have no other interactions with hydrometeors; for example, scavenging by raindrops is omitted. CCN are restored by droplet evaporation and by a gradual regeneration when no hydrometeors are present (ccntimeconst). Aerosol sensitivity is enhanced by explicitly treating droplet condensation instead of using a saturation adjustment. Supersaturation (within reason) is allowed to persist in updraft with low droplet concentration.
 
@@ -55,7 +55,7 @@ May 2023 update introduces changes in the default options for graupel/hail fall 
   icdx         - fall speed option for graupel (was 3, now is 6)
   icdxhl       - fall speed option for hail (was 3, now is 6)
   ehw0,ehlw0   - Maximim droplet collection efficiencies for graupel (ehw0=0.75, now 0.9)
-                 and hail (ehlw0=0.75, now 0.9) 
+                 and hail (ehlw0=0.75, now 0.9)
 
 In summary, to get something closer to previous behavior, use the following:
 
@@ -68,7 +68,7 @@ In summary, to get something closer to previous behavior, use the following:
   ihlcnh = 1
 /
 
-For the 2-moment option, shape parameters of graupel and hail can be set in the 
+For the 2-moment option, shape parameters of graupel and hail can be set in the
 nssl2mom_params namelist:
 
   alphah       - Shape parameter for graupel (0.0)
@@ -98,6 +98,3 @@ Possible parameters to adjust:
  ccn : base cloud condensation nuclei concentration (use namelist.input value "nssl_cccn")
  alphah, alphahl : Size distribution shape parameters for graupel (h) and hail (hl)
  infall : changes sedimentation options to see effects (see below)
-
-
-

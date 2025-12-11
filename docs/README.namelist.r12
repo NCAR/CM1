@@ -5,7 +5,7 @@ Bryan Cloud Model, Version 1, Release 12
 Last updated:  12 August 2008
 
 NOTE:  some namelist.input files that have been configured for certain
-       idealized simulations ... e.g., squall lines, supercells, 
+       idealized simulations ... e.g., squall lines, supercells,
        axisymmetric hurricanes ... are available on the CM1 website:
           http://www.mmm.ucar.edu/people/bryan/cm1/
 
@@ -30,7 +30,7 @@ NOTE:  some namelist.input files that have been configured for certain
 
  timestats - 0 = Do not provide provide timing statistics
              1 = Provide timing statistics at end of simulation
-             2 = The same as 1, but include time required to complete 
+             2 = The same as 1, but include time required to complete
                  each time step
 
  terrain_flag -  .true.  = With terrain
@@ -47,15 +47,15 @@ NOTE:  some namelist.input files that have been configured for certain
 
     NOTE:
        The variables dx,dy,dz are only used when stretch=0.  When stretch=1,
-       these variables should be set to an approximately average value 
+       these variables should be set to an approximately average value
        (to minimize roundoff errors).  See README.stretch for more
        information.
 
  dtl - Large time step (s).
 
-       For psolver = 2,3,4, or 5, this time step is limited by the fastest 
-       nonacoustic speed.  For thunderstorm simulations, this is usually 
-       the maximum vertical velocity.  Otherwise, this would be the 
+       For psolver = 2,3,4, or 5, this time step is limited by the fastest
+       nonacoustic speed.  For thunderstorm simulations, this is usually
+       the maximum vertical velocity.  Otherwise, this would be the
        propagation speed of gravity waves.  The following usually works well:
            dtl = min(dx,dy,dz)/67  (rounded to an appropriate value, of course)
 
@@ -70,10 +70,10 @@ NOTE:  some namelist.input files that have been configured for certain
  rstfrq - Frequency to save model restart files (s).  Set to a negative
           number if restart files are not desired.
 
- prclfrq - Frequency to output parcel data (s).  Note ... this does not 
-           affect the parcel calculations themselves, which are always 
-           updated every timestep;  it merely tells the model how 
-           frequently to output the information.  Set equal to dtl to 
+ prclfrq - Frequency to output parcel data (s).  Note ... this does not
+           affect the parcel calculations themselves, which are always
+           updated every timestep;  it merely tells the model how
+           frequently to output the information.  Set equal to dtl to
            output parcel data every time step.
 
 -------------------------------------------------------------------------
@@ -155,11 +155,11 @@ NOTE:  some namelist.input files that have been configured for certain
  tconfig - Calculation of turbulence coefficients in turbulence scheme:
             1 = horizontal and vertical turbulence coefficients are the
                 same;  use this if dx,dy are about equal to dz (default)
-            2 = horizontal turbulence coefficient is different from vertical 
+            2 = horizontal turbulence coefficient is different from vertical
                 turbulence coefficient;  use this if dx,dy are much greater
                 than dz
 
- bcturbu - Lower/upper boundary condition for vertical diffusion of winds 
+ bcturbu - Lower/upper boundary condition for vertical diffusion of winds
            (u and v).  This includes diffusion from subgrid turbulence
            (when iturb >= 1) and artificial diffusion (when vdiff=1).
                  1 = zero flux (default)
@@ -167,7 +167,7 @@ NOTE:  some namelist.input files that have been configured for certain
                  3 = no slip
            (note:  bcturbu=3 is required if idrag=1)
 
- bcturbs - Lower/upper boundary condition for vertical diffusion of all 
+ bcturbs - Lower/upper boundary condition for vertical diffusion of all
            scalars.  This includes diffusion from subgrid turbulence
            (when iturb >= 1) and artificial diffusion (when vdiff=1).
                  1 = zero flux (default)
@@ -200,7 +200,7 @@ NOTE:  some namelist.input files that have been configured for certain
                               (use if dz is much smaller than dx,dy)
        4 = Anelastic solver:  Uses the anelastic mass continuity equation.
                               Pressure is retrieved diagnostically.
-       5 = Incomprssible solver:  Uses the incompressible mass continuity 
+       5 = Incomprssible solver:  Uses the incompressible mass continuity
                               equation.  Pressure is retrieved diagnostically.
 
        NOTE:  psolver = 4 and 5 are only recommended for simulations
@@ -226,7 +226,7 @@ NOTE:  some namelist.input files that have been configured for certain
  thsmall - Integrate potential temperature on small time steps?
              (0=NO, 1=yes)
            (Probably not needed for most cloud-scale simulations, but this
-            becomes quite useful for simulations with horizontal grid spacing 
+            becomes quite useful for simulations with horizontal grid spacing
             of 10 km and larger.)
 
  ptype - Explicit moisture scheme.
@@ -248,7 +248,7 @@ NOTE:  some namelist.input files that have been configured for certain
 
  isfcflx - Simple surface fluxes of heat and moisture (0=no, 1=yes)
          See file sfcphys.F for specification of exchange coefficient.
-       [Note:  this scheme assumes the surface is an ocean with 
+       [Note:  this scheme assumes the surface is an ocean with
         specified sea-surface temperature (tsurf) and environmental
         surface pressure (psurf).]
 
@@ -314,7 +314,7 @@ NOTE:  some namelist.input files that have been configured for certain
                               5 = Weisman-Klemp analytic sounding
                               7 = External file (named 'input_sounding')
                                   (see isnd=7 section of base.F for info)
-                                  (some soundings are available at 
+                                  (some soundings are available at
                                    http://www.mmm.ucar.edu/people/bryan/cm1)
                               8 = Dry, constant d(theta)/dz
                               9 = Dry, constant Brunt-Vaisala frequency
@@ -353,8 +353,8 @@ NOTE:  some namelist.input files that have been configured for certain
 
           0 = no balance (initial pressure perturbation is zero everywhere)
           1 = hydrostatic balance (appropriate for small aspect ratios)
-          2 = anelastic balance (initial pressure perturbation is the 
-              buoyancy pressure perturbation field for an anelastic 
+          2 = anelastic balance (initial pressure perturbation is the
+              buoyancy pressure perturbation field for an anelastic
               atmosphere).  (Does not currently work with MPI setup.)
 
  iorigin - Specifies location of the origin in horizontal space
@@ -391,7 +391,7 @@ NOTE:  some namelist.input files that have been configured for certain
 
  kdiff2 - Diffusion coefficient for difforder=2.  Specified in m^2/s.
 
- kdiff6 - Diffusion coefficient for difforder=6.  Specified as a 
+ kdiff6 - Diffusion coefficient for difforder=6.  Specified as a
           fraction of one-dimensional stability.  A value between
           0.02-0.24 is recommended.
 
@@ -403,7 +403,7 @@ NOTE:  some namelist.input files that have been configured for certain
         an artificial term designed to damp acoustic waves.)
 
  alph - Off-centering coefficient for vertically implicit acoustic
-        solver.  A value of 0.5 is centered-in-time.  Slight forward-in-time 
+        solver.  A value of 0.5 is centered-in-time.  Slight forward-in-time
         bias is recommended.  Default value is 0.60.
         (only used for psolver=3)
 
@@ -487,7 +487,7 @@ NOTE:  some namelist.input files that have been configured for certain
  dz_top - Grid spacing at (and above) str_top (m).
 
 -------------------------------------------------------------------------
-  param7 section -- Options relating to dns 
+  param7 section -- Options relating to dns
         (used ONLY when dns = 1)
 
  bc_wind - top/bottom boundary condition for horizontal winds
@@ -525,8 +525,8 @@ NOTE:  some namelist.input files that have been configured for certain
  compile the code.  Then, var1 can be changed in the namelist.input file
  and the initial wind profile will change without needing to re-compile.
 
- Example: A user wants to change the location, size, and amplitude of the 
- initial thermal bubble.  Using the flex vars, the code could be modified in 
+ Example: A user wants to change the location, size, and amplitude of the
+ initial thermal bubble.  Using the flex vars, the code could be modified in
  this manner:
         ric     =    var1
         rjc     =    var2
@@ -552,8 +552,8 @@ NOTE:  some namelist.input files that have been configured for certain
   param9 section - output options
 
  output_path - Specifies the path where the output will be placed.  By
-               default, the output is placed in the same directory as 
-               the executable (cm1.exe), by specifying './'   
+               default, the output is placed in the same directory as
+               the executable (cm1.exe), by specifying './'
                IMPORTANT NOTE:  Always end the path with a "/".
 
  output_basename - Specifies the base file name for output.  By default,
@@ -594,16 +594,16 @@ NOTE:  some namelist.input files that have been configured for certain
 
      ------ For the remaining variables, 0=no and 1=yes ------
 
- output_rain     - surface rainfall.  If imove = 1, two output fields are 
+ output_rain     - surface rainfall.  If imove = 1, two output fields are
                    generated.  The first (rn) is the accumulated rainfall
                    at model grid points.  The second (rn2) is the translated
-                   rainfall pattern, assuming a lower surface is moving at 
+                   rainfall pattern, assuming a lower surface is moving at
                    umove and vmove.
 
  output_sws      - maximum surface wind speed (aka, surface wind swath, sws)
-                   If imove = 1, two output fields are generated.  The first 
-                   (sws) is the max sws at model grid points.  The second 
-                   (sws2) is the translated sws pattern, assuming a lower 
+                   If imove = 1, two output fields are generated.  The first
+                   (sws) is the max sws at model grid points.  The second
+                   (sws2) is the translated sws pattern, assuming a lower
                    surface is moving at umove and vmove.
 
  output_sfcflx   - surface fluxes of potential temperature and water vapor
@@ -725,4 +725,3 @@ NOTE:  some namelist.input files that have been configured for certain
 -------------------------------------------------------------------------
 
 Questions, comments, suggestions:  send email to gbryan@ucar.edu
-

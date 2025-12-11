@@ -18,15 +18,24 @@
   - DEBUG: turn on DEBUG mode (default=false)
 
   Some example usages are:
-    make USE_OPENMP=true                 # shared memory only
-    make USE_OPENMP=true USE_MPI=true    # shared + distributed memory
-    make USE_OPENACC=true USE_MPI=true   # distributed memory + GPU offloading
-                                         # works for derecho
+    make USE_OPENMP=true                  # shared memory only
+    make USE_OPENMP=true USE_MPI=true     # shared + distributed memory
+    make USE_OPENACC=true USE_MPI=true    # distributed memory + GPU offloading
+                                          # works on derecho
+    make USE_OPENMP=true USE_NETCDF=true\ # shared + netCDF with gfortran and
+      FC=gfortran \                       # netcdf-fortran installed in conda env.
+      NETCDFBASE=$CONDA_PREFIX            # Works on MacBook where "FC" env var
+                                          # is full path to gfortran and may
+                                          # not match any hardware below.
 
   Note that the logical values set to the argument variables are case insensitive.
 
   If the "FC" env variable is not set on your system, you could also specify it through:
     make FC=ifort                        # use Intel compiler
+
+  If USE_NETCDF=true, then "NETCDFBASE" must be either set in environment or
+    defined as an argument variable (e.g. NETCDFBASE=$CONDA_PREFIX).
+
 ```
 
    - NOTE:  on some machines, you may need to use "gmake" instead of "make".
@@ -34,9 +43,9 @@
 3) if successful, two files will have been created in the "run" directory:
    cm1.exe (the executable) and onefile.F (an archive of the code used to
    make this particular executable ... I highly recommend that you retain
-   onefile.F with every simulation, because it makes a nice record of the 
+   onefile.F with every simulation, because it makes a nice record of the
    model code for your particular simulation, and it sometimes helps me to
    debug potential problems)
 
-4) to cleanup the src directory, type "make clean".  You should also do this 
+4) to cleanup the src directory, type "make clean".  You should also do this
    when changing compiler flags.

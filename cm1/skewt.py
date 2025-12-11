@@ -1,7 +1,7 @@
 """
 Plot ERA5 Skew-T and hodograph for a specified time and location.
 
-This script generates a Skew-T diagram and a hodograph for ERA5 model data at 
+This script generates a Skew-T diagram and a hodograph for ERA5 model data at
 a user-specified time and location. It includes temperature, dewpoint, and wind
 data, as well as dry adiabats, moist adiabats, and mixing lines on the Skew-T diagram.
 """

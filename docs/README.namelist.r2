@@ -13,8 +13,8 @@ Bryan Cloud Model, Version 1, Release 2
 
  dtl - Large time step (s).
 
-       For kwss=1, this time step is limited by the fastest nonacoustic 
-       speed.  For thunderstorm simulations, this is usually the maximum 
+       For kwss=1, this time step is limited by the fastest nonacoustic
+       speed.  For thunderstorm simulations, this is usually the maximum
        vertical velocity.  Otherwise, this would be the propagation speed
        of gravity waves.
        The following usually works well:
@@ -81,7 +81,7 @@ Bryan Cloud Model, Version 1, Release 2
 
  implsound - Use vertical implicit scheme for acoustic modes?
                  (Only used if kwss = 1)
-              0 = explicit treament of acoustic terms in both vertical 
+              0 = explicit treament of acoustic terms in both vertical
                   and horizontal directions
               1 = vertical implicit sound (only horizontal terms are explicit,
                   as in MM5, ARPS, WRF)
@@ -169,8 +169,8 @@ Bryan Cloud Model, Version 1, Release 2
 
           0 = no balance (initial pressure perturbation is zero everywhere)
           1 = hydrostatic balance (appropriate for small aspect ratios)
-          2 = anelastic balance (initial pressure perturbation is the 
-              buoyancy pressure perturbation field for an anelastic 
+          2 = anelastic balance (initial pressure perturbation is the
+              buoyancy pressure perturbation field for an anelastic
               atmosphere).  CAUTION:  relatively untested.  Also slow.
 
  imove - Move domain at constant speed (0=no, 1=yes)
@@ -182,7 +182,7 @@ Bryan Cloud Model, Version 1, Release 2
 
  kdiff2 - Diffusion coefficient for difforder=2.  Specified in m^2/s.
 
- kdiff6 - Diffusion coefficient for difforder=6.  Specified as a 
+ kdiff6 - Diffusion coefficient for difforder=6.  Specified as a
           fraction of one-dimensional stability.  A value between
           0.02-0.06 is recommended.
 
@@ -202,5 +202,3 @@ Bryan Cloud Model, Version 1, Release 2
  umove - Constant speed for domain translation in x-direction (m/s)
 
  vmove - Constant speed for domain translation in y-direction (m/s)
-
-

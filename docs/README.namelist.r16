@@ -7,7 +7,7 @@ Last updated:  13 January 2011
 Entries with "--- NEW ---" are new (or modified) in cm1r15
 
 NOTE:  some namelist.input files that have been configured for certain
-       idealized simulations ... e.g., squall lines, supercells, 
+       idealized simulations ... e.g., squall lines, supercells,
        hurricanes ... are available on the CM1 website:
          http://www.mmm.ucar.edu/people/bryan/cm1/
 
@@ -32,7 +32,7 @@ NOTE:  some namelist.input files that have been configured for certain
 
  timestats - 0 = Do not provide provide timing statistics
              1 = Provide timing statistics at end of simulation
-             2 = The same as 1, but include time required to complete 
+             2 = The same as 1, but include time required to complete
                  each time step
 
  terrain_flag -  .true.  = With terrain
@@ -50,15 +50,15 @@ NOTE:  some namelist.input files that have been configured for certain
 
     NOTE:
        The variables dx,dy,dz are only used when stretch=0.  When stretch=1,
-       these variables should be set to an approximately average value 
+       these variables should be set to an approximately average value
        (to minimize roundoff errors).  See README.stretch for more
        information.
 
  dtl - Large time step (s).
 
-       For psolver = 2,3,4, or 5, this time step is limited by the fastest 
-       nonacoustic speed.  For thunderstorm simulations, this is usually 
-       the maximum vertical velocity.  Otherwise, this would be the 
+       For psolver = 2,3,4, or 5, this time step is limited by the fastest
+       nonacoustic speed.  For thunderstorm simulations, this is usually
+       the maximum vertical velocity.  Otherwise, this would be the
        propagation speed of gravity waves.  The following usually works well:
            dtl = min(dx,dy,dz)/67  (rounded to an appropriate value, of course)
 
@@ -81,13 +81,13 @@ NOTE:  some namelist.input files that have been configured for certain
  statfrq - Frequency for calculating some interesting output.  (seconds)
            Set to negative number to output stats every timestep.
            Output is in cm1out_stats.dat file.
-           See param10 section below for the information that can 
+           See param10 section below for the information that can
            be requested.
 
- prclfrq - Frequency to output parcel data (s).  Note ... this does not 
-           affect the parcel calculations themselves, which are always 
-           updated every timestep;  it merely tells the model how 
-           frequently to output the information.  Set to a negative number 
+ prclfrq - Frequency to output parcel data (s).  Note ... this does not
+           affect the parcel calculations themselves, which are always
+           updated every timestep;  it merely tells the model how
+           frequently to output the information.  Set to a negative number
            to output parcel data every time step.
 
 -------------------------------------------------------------------------
@@ -130,7 +130,7 @@ NOTE:  some namelist.input files that have been configured for certain
             3 = Runge-Kutta in time, WENO scheme
 
  pdscheme - Scheme to ensure positive definiteness of moisture:
-             0 = set negative values back to zero 
+             0 = set negative values back to zero
                  (not mass conserving)
              1 = simple, nearly mass-conserving scheme.  Takes water
                  from neighboring grid cells to conserve water
@@ -138,7 +138,7 @@ NOTE:  some namelist.input files that have been configured for certain
 
  advweno - Advect scalars (but not pressure) with WENO scheme?
             (0=no, 1=yes)
-        Reference:  Shu, 2001:  High order finite difference and finite 
+        Reference:  Shu, 2001:  High order finite difference and finite
         volume WENO schemes and discontinuous Galerkin methods for CFD.
         ICASE Rep. 2001-11.
 
@@ -154,7 +154,7 @@ NOTE:  some namelist.input files that have been configured for certain
 
            (0=no, 1=yes)
 
- mdiff - When idiff=1 and difforder=6, apply monotonic version of 
+ mdiff - When idiff=1 and difforder=6, apply monotonic version of
          artificial diffusion?
 
            (0=no, 1=yes)
@@ -182,11 +182,11 @@ NOTE:  some namelist.input files that have been configured for certain
  tconfig - Calculation of turbulence coefficients in turbulence scheme:
             1 = horizontal and vertical turbulence coefficients are the
                 same;  use this if dx,dy are about equal to dz (default)
-            2 = horizontal turbulence coefficient is different from vertical 
+            2 = horizontal turbulence coefficient is different from vertical
                 turbulence coefficient;  use this if dx,dy are much greater
                 than dz, or if iturb=3 is used.
 
- bcturbu - Lower/upper boundary condition for vertical diffusion of winds 
+ bcturbu - Lower/upper boundary condition for vertical diffusion of winds
            (u and v).  This includes diffusion from subgrid turbulence
            (when iturb >= 1) and artificial diffusion (when vdiff=1).
                  1 = zero flux (default)
@@ -194,7 +194,7 @@ NOTE:  some namelist.input files that have been configured for certain
                  3 = no slip
            (note:  bcturbu=3 is required if idrag=1)
 
- bcturbs - Lower/upper boundary condition for vertical diffusion of all 
+ bcturbs - Lower/upper boundary condition for vertical diffusion of all
            scalars.  This includes diffusion from subgrid turbulence
            (when iturb >= 1) and artificial diffusion (when vdiff=1).
                  1 = zero flux (default)
@@ -228,7 +228,7 @@ NOTE:  some namelist.input files that have been configured for certain
                               (use if dz is much smaller than dx,dy)
        4 = Anelastic solver:  Uses the anelastic mass continuity equation.
                               Pressure is retrieved diagnostically.
-       5 = Incomprssible solver:  Uses the incompressible mass continuity 
+       5 = Incomprssible solver:  Uses the incompressible mass continuity
                               equation.  Pressure is retrieved diagnostically.
 
        NOTE:  psolver = 4 and 5 are only recommended for simulations
@@ -256,7 +256,7 @@ NOTE:  some namelist.input files that have been configured for certain
  thsmall - Integrate potential temperature on small time steps?
              (0=NO, 1=yes)
            (Probably not needed for most cloud-scale simulations, but this
-            becomes quite useful for simulations with horizontal grid spacing 
+            becomes quite useful for simulations with horizontal grid spacing
             of 10 km and larger.)
            (thsmall = 1 is recommend for terrain_flag = .true.)
 
@@ -335,7 +335,7 @@ NOTE:  some namelist.input files that have been configured for certain
     set in base.F file]       5 = Weisman-Klemp analytic sounding
                               7 = External file (named 'input_sounding')
                                   (see isnd=7 section of base.F for info)
-                                  (some soundings are available at 
+                                  (some soundings are available at
                                    http://www.mmm.ucar.edu/people/bryan/cm1)
                               8 = Dry, constant d(theta)/dz
                               9 = Dry, constant Brunt-Vaisala frequency
@@ -376,10 +376,10 @@ NOTE:  some namelist.input files that have been configured for certain
             (ignored if iinit=7)
 
           0 = no balance (initial pressure perturbation is zero everywhere,
-                          except for iinit=7) 
+                          except for iinit=7)
           1 = hydrostatic balance (appropriate for small aspect ratios)
-          2 = anelastic balance (initial pressure perturbation is the 
-              buoyancy pressure perturbation field for an anelastic 
+          2 = anelastic balance (initial pressure perturbation is the
+              buoyancy pressure perturbation field for an anelastic
               atmosphere).  (Does not currently work with MPI setup.)
 
  iorigin - Specifies location of the origin in horizontal space
@@ -418,7 +418,7 @@ NOTE:  some namelist.input files that have been configured for certain
 
  kdiff2 - Diffusion coefficient for difforder=2.  Specified in m^2/s.
 
- kdiff6 - Diffusion coefficient for difforder=6.  Specified as a 
+ kdiff6 - Diffusion coefficient for difforder=6.  Specified as a
           fraction of one-dimensional stability.  A value between
           0.02-0.24 is recommended.
 
@@ -430,7 +430,7 @@ NOTE:  some namelist.input files that have been configured for certain
         an artificial term designed to damp acoustic waves.)
 
  alph - Off-centering coefficient for vertically implicit acoustic
-        solver.  A value of 0.5 is centered-in-time.  Slight forward-in-time 
+        solver.  A value of 0.5 is centered-in-time.  Slight forward-in-time
         bias is recommended.  Default value is 0.60.
         (only used for psolver=3)
 
@@ -441,7 +441,7 @@ NOTE:  some namelist.input files that have been configured for certain
       (when irdamp = 1)
 
  xhd - Distance from lateral boundaries where Rayleigh damping is applied (m).
-       (when hrdamp = 1) 
+       (when hrdamp = 1)
 
  umove - Constant speed for domain translation in x-direction (m/s)
          (for imove = 1)
@@ -470,21 +470,21 @@ NOTE:  some namelist.input files that have been configured for certain
                1 = yes
 
        The only option, at present, is the NASA-Goddard longwave and
-       shortwave radiation codes, which are kindly provided by the 
-       ARPS/CAPS group at the University of Oklahoma. 
+       shortwave radiation codes, which are kindly provided by the
+       ARPS/CAPS group at the University of Oklahoma.
 
        (Note:  TIPA option is not implemented in this version of CM1)
 
-       (Another Note:  technically, the interaction of radiation with 
-        clouds is configured specifically for the NASA-Goddard LFO scheme, 
-        i.e., ptype=2.  A future version of CM1 will pass the proper 
+       (Another Note:  technically, the interaction of radiation with
+        clouds is configured specifically for the NASA-Goddard LFO scheme,
+        i.e., ptype=2.  A future version of CM1 will pass the proper
         variables from all microphysics schemes into the radiation code
-        so that consistent calculations are performed.  That said, the 
-        radiative tendencies should still be reasonable for all ice 
+        so that consistent calculations are performed.  That said, the
+        radiative tendencies should still be reasonable for all ice
         microphysics schemes, and there is no issue for clear-sky conditions.)
 
  If radopt=1, set the following parameters:
-     
+
  dtrad   -  Time increment (seconds) between calculation of radiation
             tendency.  (Radiative tendencies are held fixed in-between
             calls to the atmospheric radiation subroutine.)
@@ -493,12 +493,12 @@ NOTE:  some namelist.input files that have been configured for certain
 
  ctrlon  -  Longitude (applies to entire domain, for now)
 
-     NOTE:  because ctrlat and ctrlon are fixed (for now) the radiation 
-            scheme is only appropriate for domains having horizontal 
+     NOTE:  because ctrlat and ctrlon are fixed (for now) the radiation
+            scheme is only appropriate for domains having horizontal
             extent of order 100--1000 km or less
 
-     (FAQ:  Why are lat and lon fixed across the entire domain?  
-      It's because George doesn't have time, at the moment, to deal with 
+     (FAQ:  Why are lat and lon fixed across the entire domain?
+      It's because George doesn't have time, at the moment, to deal with
       map projections in CM1.)
 
  year    -  Year (integer) at start of simulation
@@ -513,19 +513,19 @@ NOTE:  some namelist.input files that have been configured for certain
 
  second  -  Second (integer) at start of simulation
 
-        Yet Another Note:  the radiation scheme uses three important 
+        Yet Another Note:  the radiation scheme uses three important
         pieces of information from the surface section (param12) below:
-        surface temperature, land/water flag, and land-use type.  
-        Make sure you have the desired settings for your simulation below 
-        (even if you are not using surface fluxes!).  
+        surface temperature, land/water flag, and land-use type.
+        Make sure you have the desired settings for your simulation below
+        (even if you are not using surface fluxes!).
 
 -------------------------------------------------------------------------
   param12 section:  surface model, ocean model, boundary layer:
 
              --- NEW SECTION ---
 
-      NOTE:  By default, surface conditions are the same everywhere at the 
-      initial time.  But, users can define spatially varying initial surface 
+      NOTE:  By default, surface conditions are the same everywhere at the
+      initial time.  But, users can define spatially varying initial surface
       conditions in init_surface.F
 
  idrag - Include surface drag?  (0=no, 1=yes)
@@ -539,22 +539,22 @@ NOTE:  some namelist.input files that have been configured for certain
             2 = version from WRF model (see further details below)
 
 
-        - sfcmodel=1 uses simple formulations wherein surface exchange 
-        coefficients are specified:  see "Options for sfcmodel = 1" section 
+        - sfcmodel=1 uses simple formulations wherein surface exchange
+        coefficients are specified:  see "Options for sfcmodel = 1" section
         below.  For diagnostic surface layer calculations (such as 10-m winds),
-        a neutrally stratified surface layer is assumed. 
+        a neutrally stratified surface layer is assumed.
         Notes:  - surface temperature remains fixed over time
                 - surface moisture availability remains fixed over time
                 - sfcmodel=1 requires oceanmodel=1
 
              --- NEW ---
-        - sfcmodel=2 uses the MM5/WRF similarity theory code for the surface 
-        layer:  based on Monin-Obukhov with Carslon-Boland viscous sub-layer 
-        and standard similarity functions from look-up tables.  
+        - sfcmodel=2 uses the MM5/WRF similarity theory code for the surface
+        layer:  based on Monin-Obukhov with Carslon-Boland viscous sub-layer
+        and standard similarity functions from look-up tables.
         ("sf_sfclay_physics = 1" in WRF)
         See also "Options for sfcmodel = 2" section below.
-        The soil model is the "Thermal diffusion" model from MM5/WRF:  it 
-        updates soil temperature only ... soil moisture availability is held 
+        The soil model is the "Thermal diffusion" model from MM5/WRF:  it
+        updates soil temperature only ... soil moisture availability is held
         fixed over time.  (Same as "sf_surface_physics = 1" in WRF)
         Notes:  - sfcmodel=2 can be used with either oceanmodel=1,2
 
@@ -585,14 +585,14 @@ NOTE:  some namelist.input files that have been configured for certain
  Options for initialization of surface conditions:
                   --- NEW ---
 
- initsfc - initial surface conditions: 
+ initsfc - initial surface conditions:
               1 = constant values  (set tsk0,tmn0,xland0,lu0 below)
               2 = sea breeze test case from WRF
 
               for any other value:  you must initialize the surface conditions
               yourself in the "init_surface.F" file.
 
- tsk0 - default initial value for "skin temperature" (K) of soil/water  
+ tsk0 - default initial value for "skin temperature" (K) of soil/water
         (~1 cm deep)
         NOTE:  this replaces sea surface temperature (tsurf) in cm1r15
 
@@ -601,8 +601,8 @@ NOTE:  some namelist.input files that have been configured for certain
         (only used if sfcmodel=2)
         (only used over land ... ignored over water)
 
- xland0 - default initial value for land/water flag: 
-             1 for land,   2 for water 
+ xland0 - default initial value for land/water flag:
+             1 for land,   2 for water
 
  lu0 - default initial value for land-use index   (see LANDUSE.TBL file)
         (NOTE:  for water/ocean, use lu0 = 16)
@@ -612,15 +612,15 @@ NOTE:  some namelist.input files that have been configured for certain
             2 = winter values
 
     c-------------------------------------------------------------c
-     To reiterate:  if you want to use spatially varying values of 
-     tsk,tmn,xland,lu then you must code it up yourself in the 
+     To reiterate:  if you want to use spatially varying values of
+     tsk,tmn,xland,lu then you must code it up yourself in the
      "init_surface.F" file.
     c-------------------------------------------------------------c
 
  --------
  Options for sfcmodel = 1:
 
- cecd - When idrag=1 or isfcflx=1, this allows the user to choose the 
+ cecd - When idrag=1 or isfcflx=1, this allows the user to choose the
         formulation for the surface exchange coefficients for enthalphy (Ce)
         and momentum (Cd).  Options are:
                 1 = constant value:  user must set cnstce and/or cnstcd below
@@ -713,7 +713,7 @@ NOTE:  some namelist.input files that have been configured for certain
  dz_top - Grid spacing at (and above) str_top (m).
 
 -------------------------------------------------------------------------
-  param7 section -- Options relating to dns 
+  param7 section -- Options relating to dns
         (used ONLY when dns = 1)
 
  bc_wind - top/bottom boundary condition for horizontal winds
@@ -751,8 +751,8 @@ NOTE:  some namelist.input files that have been configured for certain
  compile the code.  Then, var1 can be changed in the namelist.input file
  and the initial wind profile will change without needing to re-compile.
 
- Example: A user wants to change the location, size, and amplitude of the 
- initial thermal bubble.  Using the flex vars, the code could be modified in 
+ Example: A user wants to change the location, size, and amplitude of the
+ initial thermal bubble.  Using the flex vars, the code could be modified in
  this manner:
         ric     =    var1
         rjc     =    var2
@@ -778,8 +778,8 @@ NOTE:  some namelist.input files that have been configured for certain
   param9 section - output options
 
  output_path - Specifies the path where the output will be placed.  By
-               default, the output is placed in the same directory as 
-               the executable (cm1.exe), by specifying './'   
+               default, the output is placed in the same directory as
+               the executable (cm1.exe), by specifying './'
                IMPORTANT NOTE:  Always end the path with a "/".
 
  output_basename - Specifies the base file name for output.  By default,
@@ -792,11 +792,11 @@ NOTE:  some namelist.input files that have been configured for certain
                           (note: GrADS users might want to use the COARDS
                            convention for netcdf output ... set coards = .true.
                            in writeout_nc.F)
-                      3 = HDF5: scale-offset lossy compression followed by 
+                      3 = HDF5: scale-offset lossy compression followed by
                                 gzip compression  (smallest files)
                       4 = HDF5: gzip compression (level 1) on floating point
                                 data and is lossless
-                      5 = HDF5: no compression whatsoever, just floating 
+                      5 = HDF5: no compression whatsoever, just floating
                                 point  (largest files)
 
                       (see top of writeout_hdf.F file for explanation
@@ -829,16 +829,16 @@ NOTE:  some namelist.input files that have been configured for certain
 
      ------ For the remaining variables, 0=no and 1=yes ------
 
- output_rain     - surface rainfall.  If imove = 1, two output fields are 
+ output_rain     - surface rainfall.  If imove = 1, two output fields are
                    generated.  The first (rn) is the accumulated rainfall
                    at model grid points.  The second (rn2) is the translated
-                   rainfall pattern, assuming a lower surface is moving at 
+                   rainfall pattern, assuming a lower surface is moving at
                    umove and vmove.
 
  output_sws      - maximum surface wind speed (aka, surface wind swath, sws)
-                   If imove = 1, two output fields are generated.  The first 
-                   (sws) is the max sws at model grid points.  The second 
-                   (sws2) is the translated sws pattern, assuming a lower 
+                   If imove = 1, two output fields are generated.  The first
+                   (sws) is the max sws at model grid points.  The second
+                   (sws2) is the translated sws pattern, assuming a lower
                    surface is moving at umove and vmove.
 
       --- NEW ---  When output_sws = 1, a whole bunch of additional
@@ -856,7 +856,7 @@ NOTE:  some namelist.input files that have been configured for certain
       cpc = cold pool intensity, C
       cph = cold pool depth, h
 
-            NOTE:  the reference profile (for calculation of buoyancy) is 
+            NOTE:  the reference profile (for calculation of buoyancy) is
                    simply the initial sounding.
 
  output_sfcflx   - surface fluxes of potential temperature and water vapor,
@@ -985,12 +985,12 @@ NOTE:  some namelist.input files that have been configured for certain
  stat_sfcprs   - max/min pressure at lowest model level
 
  stat_wsp      - max/min wind speed at lowest model level
-                   --- NEW ---   
+                   --- NEW ---
                    (includes 10-m windspeed if idrag=1)
 
  stat_cfl      - max Courant number
 
-       --- NEW ---   
+       --- NEW ---
                - also prints KSHMAX and KSVMAX
           (analysis of numerical stability for diffusion terms)
           (NOTE:  KSHMAX should ideally be less than 0.125)
@@ -1016,4 +1016,3 @@ NOTE:  some namelist.input files that have been configured for certain
 -------------------------------------------------------------------------
 
 Questions, comments, suggestions:  send email to gbryan@ucar.edu
-
