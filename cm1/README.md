@@ -1,7 +1,18 @@
+## `cm1` Python Library
+
 Requirements
 * access to [NCAR HPC Campaign Storage](https://ncar-hpc-docs.readthedocs.io/en/latest/storage-systems/glade/campaign/) `/glade/campaign/`
 * Install Python modules in `environment.yml`
 * install cm1 (`pip install -e .` from CM1 directory).
+
+🛠️ Development Setup
+
+This project uses pre-commit to maintain code quality. Please install it before making your first commit:
+
+1. Install the tool: `pip install pre-commit` (or `brew install pre-commit` on macOS).
+
+2. Install the hooks: Run `pre-commit install` in the root of the repo.
+
 
 Get ERA5 sounding for CM1.
 
