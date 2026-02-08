@@ -2,20 +2,18 @@ import logging
 import os
 import shutil
 import subprocess
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional, Dict
-from dataclasses import dataclass, field
-
-# You may need to install f90nml: pip install f90nml
 import f90nml
+from cm1.input.sounding import Sounding
 
 
-# --- Best Practice Improvements ---
 @dataclass
 class PBS:
     """
     Configuration for a PBS batch job.
-    REFAC-NOTE: This class now only contains PBS-specific scheduler information.
+    This class only contains PBS-specific scheduler information.
     """
 
     name: str
@@ -45,12 +43,8 @@ class CM1Run:
         cm1_path: Path,
         run_dir: Path,
         executable_path: Path,
-        # REFAC-NOTE: pbs_config is now optional.
         pbs_config: Optional[PBS] = None,
-        printout: str = "cm1.print.out",
-        sounding: Optional[object] = None,
-        serial: bool = False,
-        background: bool = False,
+        sounding: Optional[Sounding] = None,
     ):
         """
         Initialize a CM1 model run.
@@ -59,21 +53,11 @@ class CM1Run:
         :param run_dir: The directory where the model will be run. Its name determines the config to use.
         :param executable_path: Path to the CM1 executable.
         :param pbs_config: An instance of the PBS configuration dataclass. If provided, PBS mode is enabled.
-        :param printout: Filename for the standard output log.
         :param sounding: An optional sounding object with a `to_txt()` method.
-        :param serial: If True, the model will be run serially on the command line.
-        :param background: If True (and serial is True), run the serial job in the background.
         """
         self.cm1_path = Path(cm1_path)
         self.pbs_config = pbs_config
-        self.printout = printout
         self.sounding = sounding
-        self.serial = serial
-        self.background = background
-        self.pbs = pbs_config is not None
-
-        if self.serial and self.pbs:
-            raise ValueError("Cannot select both serial and PBS execution modes.")
 
         self.run_dir = Path(run_dir)
         self.run_dir.mkdir(parents=True, exist_ok=True)
@@ -86,7 +70,7 @@ class CM1Run:
                 f"Executable is not executable: {self.executable_path}"
             )
 
-        # REFAC-NOTE: Derive test case and paths from the run_dir name.
+        # Derive test case and paths from the run_dir name.
         if not self.run_dir.name.startswith("run_"):
             raise ValueError(
                 "run_dir name must start with 'run_' to derive the test case."
@@ -149,8 +133,8 @@ class CM1Run:
 # Queue:
 #PBS -q {self.pbs_config.queue}
 # Redirect output and error streams:
-#PBS -o {run_dir_abs / self.printout}
-#PBS -e {run_dir_abs / (self.printout + '.err')}
+#PBS -o {run_dir_abs / 'cm1.print.out'}
+#PBS -e {run_dir_abs / 'cm1.print.err'}
 
 # Environment setup
 module purge
@@ -180,86 +164,77 @@ mpiexec --cpu-bind depth {executable_abs}
         Prepare the run directory by creating it and copying necessary files.
         Errors out if expected output files already exist.
         """
-        run_dir = self.run_dir
+        logging.info(f"Preparing {self.run_dir}")
 
-        # Check for existing output files before creating/populating the directory.
-        expected_outputs = ["cm1out.nc", "cm1out_stats.nc"]
-        for filename in expected_outputs:
-            output_file = run_dir / filename
-            if output_file.exists():
-                raise FileExistsError(
-                    f"Output file {output_file} already exists. Aborting to prevent overwrite."
-                )
-
-        logging.info(f"Preparing run directory: {run_dir}")
-        run_dir.mkdir(parents=True, exist_ok=True)
-
-        # REFAC-NOTE: Copy from the derived config source directory.
+        # Copy from the derived config source directory.
         if self.config_source_dir.is_dir():
-            shutil.copytree(self.config_source_dir, run_dir, dirs_exist_ok=True)
+            shutil.copytree(self.config_source_dir, self.run_dir, dirs_exist_ok=True)
         else:
             logging.warning(
                 f"Config source directory not found, skipping copy: {self.config_source_dir}"
             )
 
-        common_files_path = self.cm1_path / "run"
-        common_files = ["RRTMG_LW_DATA", "RRTMG_SW_DATA"]
-        for file_name in common_files:
-            source_file = common_files_path / file_name
-            if source_file.is_file():
-                shutil.copy(source_file, run_dir / file_name)
+        # Check for existing output files before creating/populating the directory.
+        expected_outputs = ["cm1out.nc", "cm1out_stats.nc"]
+        for filename in expected_outputs:
+            output_file = self.run_dir / filename
+            if output_file.exists():
+                raise FileExistsError(
+                    f"Output file {output_file} already exists. Aborting to prevent overwrite."
+                )
+
+        self.run_dir.mkdir(parents=True, exist_ok=True)
+
+        for common_file in ["RRTMG_LW_DATA", "RRTMG_SW_DATA"]:
+            src = self.cm1_path / "run" / common_file
+            if src.is_file():
+                shutil.copy(src, self.run_dir)
             else:
-                logging.warning(f"Common file not found, skipping: {source_file}")
+                logging.warning(f"Common file {common_file} not found.")
 
-        shutil.copy(self.executable_path, run_dir)
+        shutil.copy(self.executable_path, self.run_dir)
 
-        namelist_out = run_dir / "namelist.input"
-        # The namelist object loaded from the original path is written to the run directory.
-        self.namelist.write(str(namelist_out), force=True)
-        logging.info(f"Wrote namelist to {namelist_out}")
+        if self.namelist:
+            # The namelist object loaded from the original path is written to the run directory.
+            namelist_out = self.run_dir / "namelist.input"
+            self.namelist.write(namelist_out, force=True)
+            logging.info(f"Wrote namelist to {namelist_out}")
 
         if self.sounding:
-            sounding_path = run_dir / "input_sounding"
+            sounding_path = self.run_dir / "input_sounding"
             sounding_path.write_text(self.sounding.to_txt())
             logging.info(f"Wrote input sounding to {sounding_path}")
 
     def run(self) -> None:
         """
-        Prepares the run directory and executes the model based on instance attributes.
+        Prepares the run directory and executes the model.
+        If pbs_config is present, it submits via qsub.
+        Otherwise, it runs the executable directly.
         """
         self.prepare_run_dir()
 
-        if self.pbs:
+        if self.pbs_config:
             script_path = self.generate_pbs_script()
             logging.info(f"Submitting job script: {script_path}")
             subprocess.run(["qsub", str(script_path)], check=True, cwd=self.run_dir)
-        elif self.serial:
-            executable_local_name = self.executable_path.name
-            run_dir = self.run_dir
-            printout_path = run_dir / self.printout
+        else:
+            printout_path = self.run_dir / "cm1.print.out"
 
             logging.info(
-                f"Running serially in {run_dir}. Output will be in {printout_path}"
+                f"Running locally in {self.run_dir}. Output will be in {printout_path}"
             )
 
             with open(printout_path, "w") as f_out:
-                command = ["./" + executable_local_name]
-                if self.background:
-                    subprocess.Popen(
-                        command, stdout=f_out, stderr=subprocess.STDOUT, cwd=run_dir
+                result = subprocess.run(
+                    self.executable_path,
+                    stdout=f_out,
+                    stderr=subprocess.STDOUT,
+                    cwd=self.run_dir,
+                    check=False,
+                )
+                if result.returncode != 0:
+                    logging.error(
+                        f"Serial run failed with exit code {result.returncode}. Check {printout_path}."
                     )
-                    logging.info(f"Process started in background in {run_dir}.")
                 else:
-                    result = subprocess.run(
-                        command,
-                        stdout=f_out,
-                        stderr=subprocess.STDOUT,
-                        check=False,
-                        cwd=run_dir,
-                    )
-                    if result.returncode != 0:
-                        logging.error(
-                            f"Serial run failed with exit code {result.returncode}. Check {printout_path}."
-                        )
-                    else:
-                        logging.info("Serial run completed successfully.")
+                    logging.info("Serial run completed successfully.")
