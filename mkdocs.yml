@@ -58,6 +58,7 @@ nav:
     - Sample submission script (derecho): cm1run_derecho.md
     - Combine output: combine_output.md
     - GrADS: grads.md
+    - Python Library: README.python.md
 
   - Other information:
     - Axisymmetric: README.axisymm.md
