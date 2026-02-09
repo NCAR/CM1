@@ -42,4 +42,4 @@ python skewt.py 20240518T18 -97.5 35
 
 Expected output
 
-<img src="images/skewt.png">
+<img src="../images/skewt.png">
