@@ -31,7 +31,7 @@ cdo -f nc4 import_binary cm1out_s.ctl cm1out_s.nc
 
 ## [GrADS Scripts](grads.md)
 
-## [Python Library](README.python.md)
+## [`cm1` Python Library](README.python.md)
 
 ## Links
 
