@@ -6,7 +6,6 @@ site_description: CM1 Docs website
 repo_url: https://github.com/NCAR/CM1/
 site_url: https://cm1.readthedocs.io/en/latest/
 site_author: David Ahijevych (MMM)
-use_directory_urls: false
 edit_uri: edit/main/docs/
 
 # directories to watch for automatic rebuilding when running "mkdocs serve"
