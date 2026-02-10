@@ -1,1 +1,1 @@
-## [Python Library](README.python.md)
+## [Python Library](docs/README.python.md)
