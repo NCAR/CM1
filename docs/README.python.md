@@ -1,26 +1,24 @@
-## `cm1` Python Library
+# `cm1` Python Library
 
-Requirements
-* access to [NCAR HPC Campaign Storage](https://ncar-hpc-docs.readthedocs.io/en/latest/storage-systems/glade/campaign/) `/glade/campaign/`
-* Install Python modules in `environment.yml`
-* install cm1 (`pip install -e .` from CM1 directory).
+## Requirements
+- Install Python modules in `environment.yml`
+- Install cm1 (`pip install -e .` from CM1 directory).
 
-🛠️ Development Setup
+## Development Setup
 
 This project uses pre-commit to maintain code quality. Please install it before making your first commit:
 
-1. Install the tool: `pip install pre-commit` (or `brew install pre-commit` on macOS).
+- Install the tool: `pip install pre-commit` (or `brew install pre-commit` on macOS).
+- Install the hooks: Run `pre-commit install` in the root of the repo.
 
-2. Install the hooks: Run `pre-commit install` in the root of the repo.
 
-
-Get ERA5 sounding for CM1.
+### Get ERA5 sounding for CM1.
 
 ```csh
 python input/sounding.py 20240518T18 -97.5 35
 ```
 
-Expected output
+### Expected output
 ```txt
 970.489765625 305.05290194997804 11.745924949645996
 359.56937392521945 305.05290194997804 11.745925 -0.4931507 2.7055435
@@ -40,6 +38,4 @@ Plot a skew-T diagram.
 python skewt.py 20240518T18 -97.5 35
 ```
 
-Expected output
-
-<img src="../images/skewt.png">
+<img src="images/skewt.png">

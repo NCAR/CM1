@@ -6,6 +6,7 @@ site_description: CM1 Docs website
 repo_url: https://github.com/NCAR/CM1/
 site_url: https://cm1.readthedocs.io/en/latest/
 site_author: David Ahijevych (MMM)
+use_directory_urls: false
 edit_uri: edit/main/docs/
 
 # directories to watch for automatic rebuilding when running "mkdocs serve"
@@ -88,7 +89,7 @@ INHERIT: theme.yml
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
 
-copyright: '&copy; 2025 UCAR, Licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons CC-BY-SA 4.0</a>.'
+copyright: '&copy; 2026 UCAR, Licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons CC-BY-SA 4.0</a>.'
 
 # ------------------------------------
 # -- configuration - extensions
@@ -120,37 +121,23 @@ markdown_extensions:
   - codehilite:
       guess_lang: true
 
-  - pymdownx.arithmatex
-  - pymdownx.betterem:
-      smart_enable: all
-  - pymdownx.caret
-  - pymdownx.critic
-  - pymdownx.emoji:
-      emoji_generator: !!python/name:pymdownx.emoji.to_svg
-  - pymdownx.magiclink
-  - pymdownx.mark
-  - pymdownx.smartsymbols:
-      fractions: false
-  - pymdownx.superfences
-  - pymdownx.details
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.tilde
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
+  - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
   - pymdownx.keys
   - pymdownx.magiclink:
       repo_url_shorthand: true
       user: squidfunk
       repo: mkdocs-material
   - pymdownx.mark
-  - pymdownx.smartsymbols
+  - pymdownx.smartsymbols:
+      fractions: false
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:
