@@ -272,8 +272,8 @@ def era5_pressure_level(
 def get_ofile(args: argparse.Namespace) -> Path:
     """Generates a temporary file path for caching the dataset."""
     time_str = pd.to_datetime(args.time).strftime("%Y%m%d_%H%M%S")
-    lat_str = f"{args.lat.m:~}"
-    lon_str = f"{args.lon.m:~}"
+    lat_str = f"{args.lat:~}"
+    lon_str = f"{args.lon:~}"
     return TMPDIR / f"{time_str}.{lat_str}.{lon_str}"
 
 
