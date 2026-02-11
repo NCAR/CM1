@@ -3,32 +3,14 @@
 # ------------------------------------
 site_name: CM1 Documentation
 site_description: CM1 Docs website
-repo_url: https://github.com/NCAR/CM1/
-site_url: https://cm1.readthedocs.io/en/latest/
 site_author: David Ahijevych (MMM)
+site_url: https://cm1.readthedocs.io/en/latest/
+repo_url: https://github.com/NCAR/CM1/
 edit_uri: edit/main/docs/
-
-# directories to watch for automatic rebuilding when running "mkdocs serve"
-watch:
-  - mkdocs.yml
-  - docs/
+copyright: '&copy; 2026 UCAR, Licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons CC-BY-SA 4.0</a>.'
 
 # ------------------------------------
-# -------- validation config ---------
-# ------------------------------------
-validation:
-  nav:
-    not_found: warn             # check if stubs exist or not!
-    omitted_files: warn         # check for files that exist without any links to them in nav
-    absolute_links : warn       # check for absolute links -- pointers to outside htmls in nav
-
-  links:
-    not_found: warn           # check for broken links inside mds. (to be activated later!)
-    absolute_links : warn     # check for absolute links -- pointers to outside htmls in files (to be activated later!)
-    unrecognized_links: warn  # unrecognized relative links (to be activated later!)
-
-# ------------------------------------
-# ----------- content ----------------
+# ----------- Navigation -------------
 # ------------------------------------
 nav:
   - Home: index.md
@@ -85,10 +67,13 @@ nav:
 # ------------------------------------
 INHERIT: theme.yml
 
+# directories to watch for automatic rebuilding when running "mkdocs serve"
+watch:
+  - mkdocs.yml
+  - docs/
+
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
-
-copyright: '&copy; 2026 UCAR, Licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons CC-BY-SA 4.0</a>.'
 
 # ------------------------------------
 # -- configuration - extensions
@@ -117,11 +102,7 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - codehilite:
-      guess_lang: true
-
   - pymdownx.arithmatex:
-      generic: true
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
@@ -132,8 +113,8 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.magiclink:
       repo_url_shorthand: true
-      user: squidfunk
-      repo: mkdocs-material
+      user: NCAR
+      repo: CM1
   - pymdownx.mark
   - pymdownx.smartsymbols:
       fractions: false
