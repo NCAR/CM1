@@ -1,10 +1,3 @@
-"""
-Load ERA5 model Sounding for a user-specified time and location.
-
---campaign: Use campaign storage.
-Otherwise use the s3fs Amazon Web Service bucket or a local cached file.
-"""
-
 import argparse
 import io
 import logging
@@ -39,106 +32,153 @@ class Sounding(xr.Dataset):
         mechanisms (like .map, .sel) which may pass a dict of variables,
         while also handling user-provided file paths or xarray.Dataset objects.
         """
-        # This is the path xarray's internal methods (like .map) will take.
-        # They pass a dictionary of variables as the first argument.
         if isinstance(data_or_path, dict):
             super().__init__(data_or_path, *args, **kwargs)
             return
 
-        # This block handles user-initiated creation from a path or Dataset.
         ds = None
         if isinstance(data_or_path, (str, Path, os.PathLike)):
             ds = xr.open_dataset(data_or_path)
         else:
-            # Assumes an xr.Dataset, xr.DataArray, or None
             ds = data_or_path
 
         if isinstance(ds, (xr.Dataset, xr.DataArray)):
-            # We are creating a Sounding from another xarray object. Quantify it.
             quantified_ds = ds.metpy.quantify()
-            # Explicitly pass the components to the parent constructor for robustness.
             super().__init__(quantified_ds, *args, **kwargs)
         else:
-            # Handles the None case, passing it up to the parent.
             super().__init__(ds, *args, **kwargs)
+
+    def __setitem__(self, key, value):
+        """
+        Overridden to handle assignment of scalar Pint Quantities, which
+        otherwise cause AttributeErrors in xarray because they lack a 'shape' attribute.
+        """
+        # Check if it looks like a Pint Quantity (has units and magnitude)
+        if hasattr(value, "units") and hasattr(value, "magnitude"):
+            # If the magnitude is a scalar (float/int) without a shape attribute
+            if not hasattr(value.magnitude, "shape"):
+                # Wrap the magnitude in a 0-d numpy array to satisfy xarray
+                value = np.array(value.magnitude) * value.units
+
+        super().__setitem__(key, value)
 
     @classmethod
     def from_txt(cls, source: Union[str, os.PathLike]):
         """
         Creates a Sounding instance by parsing a special CM1 text file.
-
-        This method can handle:
-        1. A file path (as a string or Path object).
-        2. The raw string content of a sounding file (e.g., from to_txt()).
         """
-        # If the source is a string and contains newlines, treat it as content.
         if isinstance(source, str) and "\n" in source:
             string_stream = io.StringIO(source)
-            # For content, there's no file name, so provide a default hint.
-            return cls._parse_stream(string_stream, case_name_hint="from_string")
+            return cls._parse_cm1_txt_stream(
+                string_stream, case_name_hint="from_string"
+            )
 
-        # Otherwise, treat it as a file path.
         path = Path(source)
         if not path.is_file():
             raise FileNotFoundError(f"Sounding file not found at path: {path}")
 
         with path.open("r") as f:
-            return cls._parse_stream(f, case_name_hint=path.stem)
+            return cls._parse_cm1_txt_stream(f, case_name_hint=path.stem)
 
     @classmethod
-    def _parse_stream(cls, stream: TextIO, case_name_hint: str):
+    def _integrate_pressure(cls, Z, theta, qv, sfc_pres, sfc_theta, sfc_mix):
+        """
+        Integrates the hydrostatic equation upward to calculate pressure at all levels.
+        Based on the physics in George Bryan's getcape.f90.
+        """
+        # Constants
+        g = metpy.constants.g
+        Cp = metpy.constants.Cp_d
+        kappa = metpy.constants.kappa  # Rd/Cp
+        P0 = 1000.0 * units.hPa
+
+        # Don't worry about swapping potential_temperature for temperature.
+        # Both multiplied by same factor below to get "virtual" version.
+        # (w+e)/(e(1+w))
+        theta_v = mcalc.virtual_temperature(theta, qv)
+
+        # Initialize boundary conditions with surface values
+        z_prev = 0.0 * units.m
+        pi_prev = (sfc_pres / P0) ** kappa
+
+        # Surface virtual potential temperature
+        theta_v_prev = mcalc.virtual_temperature(sfc_theta, sfc_mix)
+
+        P_values = []
+
+        for i, z_curr in enumerate(Z):
+            theta_v_curr = theta_v[i]
+            dz = z_curr - z_prev
+
+            # Layer mean virtual potential temperature
+            theta_v_mean = 0.5 * (theta_v_prev + theta_v_curr)
+
+            # Change in Exner function: dpi = - (g / (Cp * theta_v_mean)) * dz
+            dpi = -g * dz / (Cp * theta_v_mean)
+
+            pi_curr = pi_prev + dpi
+
+            # Convert back to Pressure: P = P0 * pi^(1/kappa)
+            p_curr = P0 * (pi_curr ** (1.0 / kappa))
+            P_values.append(p_curr.m_as(sfc_pres.units))
+
+            # Update for next level
+            pi_prev = pi_curr
+            theta_v_prev = theta_v_curr
+            z_prev = z_curr
+
+        return np.array(P_values) * sfc_pres.units
+
+    @classmethod
+    def _parse_cm1_txt_stream(cls, stream: TextIO, case_name_hint: str):
         """Helper method to parse a CM1 text file from a text stream."""
+        # Read the header: Surface Pressure (hPa), Surface Potential Temp (K), Surface Mixing Ratio (g/kg)
         header = stream.readline().strip()
         surface_pressure, surface_theta, surface_mixing_ratio = map(
             float, header.split()
         )
 
+        # CM1 sounding format: Height(m), Theta(K), Qv(g/kg), U(m/s), V(m/s)
         column_names = ["Z", "theta", "qv", "U", "V"]
         df = pd.read_csv(stream, sep=r"\s+", names=column_names, engine="python")
 
         df = df.rename_axis("level")
         ds = df.to_xarray()
 
-        # Add units and calculate pressure
+        # Apply units and derive initial variables
         ds["qv"] *= units("g/kg")
         ds["qv"].attrs["long_name"] = "water vapor mixing ratio"
         ds["Q"] = mcalc.specific_humidity_from_mixing_ratio(ds["qv"])
 
-        ds["SP"] = surface_pressure
-        ds["SP"] *= units.hPa
-
+        # Convert scalar to numpy array so it has .shape attribute (needed by xarray)
+        ds["SP"] = np.array(surface_pressure) * units.hPa
         ds["theta"] *= units.K
         ds["Z"] *= units.m
         ds["Z"].attrs["long_name"] = "geopotential height"
-        p_bot = ds.SP.copy()
-        z_bot = 0.0 * units.m
 
-        P = np.empty_like(ds.level, dtype=float)
-        for i, level in enumerate(ds.level):
-            T = mcalc.temperature_from_potential_temperature(
-                p_bot, ds.theta.sel(level=level)
-            )
-            Tv = mcalc.virtual_temperature(T, ds.qv.sel(level=level))
-            dz = ds.Z.sel(level=level) - z_bot
-            p_bot = p_bot * np.exp(-metpy.constants.g * dz / (metpy.constants.Rd * Tv))
-            assert (
-                p_bot >= 0 * units.hPa
-            ), f"{case_name_hint} p_bot<0 {p_bot:~} dz {dz:~} Tv {Tv:~}"
-            P[i] = p_bot.data.to(ds.SP.metpy.units).m.item()
-            z_bot = ds.Z.sel(level=level)
+        # --- RECONSTRUCT PRESSURE DATA ---
+        # Integrate upward from the surface using the Exner-Hydrostatic equation.
+        # We pass the .data property to ensure we work with Pint Quantities directly.
+        P = cls._integrate_pressure(
+            ds.Z.data,
+            ds.theta.data,
+            ds.qv.data,
+            ds.SP.data,
+            surface_theta * units.K,
+            surface_mixing_ratio * (units.g / units.kg),
+        )
 
+        # Attach calculated pressure and derive dependent temperatures
         ds["P"] = ("level", P)
-        ds["P"] *= ds.SP.metpy.units
         ds["T"] = mcalc.temperature_from_potential_temperature(ds["P"], ds["theta"])
         ds["Tv"] = mcalc.virtual_temperature(ds.T, ds.qv)
 
-        # Add surface data
-        ds["surface_potential_temperature"] = surface_theta
-        ds["surface_potential_temperature"] *= units.K
-        ds["surface_mixing_ratio"] = surface_mixing_ratio
-        ds["surface_mixing_ratio"] *= units.g / units.kg
-        ds["surface_geopotential_height"] = 0.0
-        ds["surface_geopotential_height"] *= units.m
+        # Final metadata and unit cleanup
+        ds["surface_potential_temperature"] = np.array(surface_theta) * units.K
+        ds["surface_mixing_ratio"] = np.array(surface_mixing_ratio) * (
+            units.g / units.kg
+        )
+        ds["surface_geopotential_height"] = np.array(0.0) * units.m
         ds["U"] *= units.m / units.s
         ds["V"] *= units.m / units.s
 
@@ -167,25 +207,30 @@ class Sounding(xr.Dataset):
         self["theta"] = mcalc.potential_temperature(self.P, self.T).metpy.convert_units(
             "K"
         )
+
         sfc_theta_K = (
             self["surface_potential_temperature"].metpy.convert_units("K")
             if "surface_potential_temperature" in self
             else self["theta"].sel(level=sfc)
         )
+
         if "qv" not in self and "Q" in self:
             self["qv"] = mcalc.mixing_ratio_from_specific_humidity(
                 self["Q"]
             ).metpy.convert_units("g/kg")
+
         sfc_qv_gkg = (
             self["surface_mixing_ratio"].metpy.convert_units("g/kg")
             if "surface_mixing_ratio" in self
             else self.qv.sel(level=sfc)
         )
+
         header = f"{sfc_pres.item().m_as('hPa'):.2f} {sfc_theta_K.item().m_as('K'):.2f} {sfc_qv_gkg.item().m_as('g/kg'):.2f}\n"
         df_export = self.copy(deep=False)
         for var in ["Z", "theta", "qv", "U", "V"]:
             if isinstance(df_export[var].data, Quantity):
                 df_export[var].data = df_export[var].data.m
+
         body = (
             df_export[["Z", "theta", "qv", "U", "V"]]
             .drop_vars(["latitude", "longitude", "time"], errors="ignore")
@@ -217,7 +262,7 @@ def era5_model_level(
 def era5_pressure_level(
     time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs
 ) -> Sounding:
-    """Retrievis ERA5 pressure-level dataset for a specific time and location."""
+    """Retrieves ERA5 pressure-level dataset for a specific time and location."""
     ds = cm1.input.era5.pressure_level(time, **kwargs)
     lon = lon % (360 * units.degreeE)
     ds = ds.sel(longitude=lon, latitude=lat, method="nearest", tolerance=5 * units.deg)
@@ -230,35 +275,6 @@ def get_ofile(args: argparse.Namespace) -> Path:
     lat_str = f"{args.lat.m:~}"
     lon_str = f"{args.lon.m:~}"
     return TMPDIR / f"{time_str}.{lat_str}.{lon_str}"
-
-
-# Functions for specific sounding cases now use the class method
-def trier():
-    return Sounding.get_case("trier")
-
-
-def jordan_allmean():
-    return Sounding.get_case("jordan_allmean")
-
-
-def jordan_hurricane():
-    return Sounding.get_case("jordan_hurricane")
-
-
-def rotunno_emanuel():
-    return Sounding.get_case("rotunno_emanuel")
-
-
-def dunion_MT():
-    return Sounding.get_case("dunion_MT")
-
-
-def bryan_morrison():
-    return Sounding.get_case("bryan_morrison")
-
-
-def seabreeze_test():
-    return Sounding.get_case("seabreeze_test")
 
 
 def main() -> None:

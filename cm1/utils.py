@@ -241,6 +241,12 @@ def skewt(
     skew : skewT
     """
 
+    # If a figure is provided for single-panel plot, clear (0-1) axes decorations
+    # If it is not a single-panel plot, you may not want to clear. See
+    # input_sounding_era5.ipynb where multiple CM1 soundings are plotted.
+    if fig is not None and (not subplot or subplot == (1, 1, 1)):
+        fig.clear()
+
     # Validate required variables in dataset
     assert (
         "surface_geopotential_height" in ds
@@ -339,17 +345,15 @@ def skewt(
     logging.info(f"lcl_p {lcl_pressure:~.1f} lcl_t {lcl_temperature:~.2f}")
 
     trans = transforms.blended_transform_factory(skew.ax.transAxes, skew.ax.transData)
-    skew.ax.plot(
-        [0.82, 0.85], 2 * [lcl_pressure.m_as("hPa")], transform=trans, color="brown"
-    )
+    hpos = 0.82
+    skew.ax.plot([hpos, hpos + 0.03], 2 * [lcl_pressure.m_as("hPa")], transform=trans)
     skew.ax.text(
-        1,
+        hpos + 0.035,
         lcl_pressure,
-        f"LCL {lcl_pressure.to('hPa').item():~.0f}",
+        f" LCL {lcl_pressure.to('hPa').item():~.0f}",
         transform=trans,
-        horizontalalignment="right",
+        horizontalalignment="left",
         verticalalignment="center",
-        color="brown",
         fontsize="x-small",
     )
 
@@ -435,15 +439,15 @@ def skewt(
         if label_hgt == 0 * units.km:
             agl2p = ds.SP.item()
             s = f"SFC {ds.surface_geopotential_height.item():~.0f}"
-        skew.ax.plot([0, 0.01], 2 * [agl2p.m_as("hPa")], transform=trans, color="brown")
+        skew.ax.plot([0, 0.01], 2 * [agl2p.m_as("hPa")], transform=trans, color="k")
         skew.ax.text(
-            0.01,
+            0.015,
             agl2p,
             s,
             transform=trans,
             horizontalalignment="left",
             verticalalignment="center",
-            color="brown",
+            fontsize="x-small",
             clip_on=True,
         )
 
