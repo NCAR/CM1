@@ -57,6 +57,7 @@ def load_from_campaign(
     ]
 
     ds = xr.open_mfdataset(local_files, drop_variables=drop_variables)
+    ds.attrs["source_files"] = [str(p) for p in local_files]
     logging.info(f"opened {len(local_files)} local {level_type} files")
     logging.debug(local_files)
     logging.info(f"selected {time}")
@@ -353,6 +354,13 @@ def pressure_level(
     ).drop_vars("time")
     invariant = quantify_invariant(invariant)
     ds = ds_pl.merge(ds_sfc).merge(invariant)
+
+    # Combine all source file lists into one master list
+    all_sources = []
+    for component in [ds_pl, ds_sfc, invariant]:
+        if "source_files" in component.attrs:
+            all_sources.extend(component.attrs["source_files"])
+    ds.attrs["history_sources"] = all_sources
 
     return ds
 

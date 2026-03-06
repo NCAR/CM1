@@ -37,7 +37,10 @@ class Sounding(xr.Dataset):
             return
 
         ds = None
+        source_file = None
+
         if isinstance(data_or_path, (str, Path, os.PathLike)):
+            source_file = str(data_or_path)
             ds = xr.open_dataset(data_or_path)
         else:
             ds = data_or_path
@@ -45,6 +48,8 @@ class Sounding(xr.Dataset):
         if isinstance(ds, (xr.Dataset, xr.DataArray)):
             quantified_ds = ds.metpy.quantify()
             super().__init__(quantified_ds, *args, **kwargs)
+            if source_file:
+                self.attrs["source_file"] = source_file
         else:
             super().__init__(ds, *args, **kwargs)
 
@@ -78,7 +83,9 @@ class Sounding(xr.Dataset):
             raise FileNotFoundError(f"Sounding file not found at path: {path}")
 
         with path.open("r") as f:
-            return cls._parse_cm1_txt_stream(f, case_name_hint=path.stem)
+            return cls._parse_cm1_txt_stream(
+                f, case_name_hint=path.stem, source_file=str(path.absolute())
+            )
 
     @classmethod
     def _integrate_pressure(cls, Z, theta, qv, sfc_pres, sfc_theta, sfc_mix):
@@ -130,7 +137,9 @@ class Sounding(xr.Dataset):
         return np.array(P_values) * sfc_pres.units
 
     @classmethod
-    def _parse_cm1_txt_stream(cls, stream: TextIO, case_name_hint: str):
+    def _parse_cm1_txt_stream(
+        cls, stream: TextIO, case_name_hint: str, source_file: str = None
+    ):
         """Helper method to parse a CM1 text file from a text stream."""
         # Read the header: Surface Pressure (hPa), Surface Potential Temp (K), Surface Mixing Ratio (g/kg)
         header = stream.readline().strip()
@@ -185,6 +194,9 @@ class Sounding(xr.Dataset):
         case_name = case_name_hint.replace("input_sounding_", "")
         sounding_obj = cls(ds)
         sounding_obj.attrs["case"] = case_name
+        if source_file:
+            sounding_obj.attrs["source_file"] = source_file
+
         return sounding_obj
 
     @classmethod
@@ -226,17 +238,16 @@ class Sounding(xr.Dataset):
         )
 
         header = f"{sfc_pres.item().m_as('hPa'):.2f} {sfc_theta_K.item().m_as('K'):.2f} {sfc_qv_gkg.item().m_as('g/kg'):.2f}\n"
-        df_export = self.copy(deep=False)
-        for var in ["Z", "theta", "qv", "U", "V"]:
-            if isinstance(df_export[var].data, Quantity):
-                df_export[var].data = df_export[var].data.m
+
+        columns = ["Z", "theta", "qv", "U", "V"]
 
         body = (
-            df_export[["Z", "theta", "qv", "U", "V"]]
-            .drop_vars(["latitude", "longitude", "time"], errors="ignore")
+            self[columns]
+            .sortby("Z")
             .to_dataframe()
-            .sort_values("Z")
-            .to_csv(sep=" ", header=False, index=False, float_format="%.2f")
+            .to_csv(
+                sep=" ", columns=columns, header=False, index=False, float_format="%.2f"
+            )
         )
         return header + body
 
@@ -279,16 +290,13 @@ def get_ofile(args: argparse.Namespace) -> Path:
 
 def main() -> None:
     """Main function for loading ERA5 data and printing sounding data."""
-    import pickle
-
     args = parse_args()
     valid_time = pd.to_datetime(args.time)
-    ofile = get_ofile(args)
+    ofile = get_ofile(args).with_suffix(".nc")
 
     if os.path.exists(ofile):
         logging.warning(f"Reading from cache: {ofile}")
-        with open(ofile, "rb") as file:
-            ds = pickle.load(file)
+        ds = Sounding(ofile)
     else:
         if os.path.exists("/glade/campaign"):
             ds = era5_model_level(valid_time, args.lat, args.lon)
@@ -298,9 +306,8 @@ def main() -> None:
             )
             ds = era5_aws(valid_time, args.lat, args.lon)
 
-        with open(ofile, "wb") as file:
-            logging.warning(f"Caching data to: {ofile}")
-            pickle.dump(ds, file)
+        logging.warning(f"Caching data to: {ofile}")
+        ds.metpy.dequantify().to_netcdf(ofile)
 
     print(ds.to_txt())
 
