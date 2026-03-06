@@ -181,7 +181,7 @@ def quantify_invariant(invariant: xr.Dataset) -> xr.Dataset:
 
 
 def model_level(
-    time: pd.Timestamp,
+    time: pd.Timestamp | np.datetime64 | str,
 ) -> xr.Dataset:
     """
     Load native model levels ERA5 dataset for specified time
@@ -191,14 +191,15 @@ def model_level(
 
     Parameters
     ----------
-    time : pd.Timestamp
-        Desired timestamp for data retrieval.
+    time : Desired timestamp for data retrieval.
 
     Returns
     -------
     xr.Dataset
         Dataset containing ERA5 data for the specified time.
     """
+    time = pd.Timestamp(time)
+
     # get from campaign storage
     rdaindex = "d633006"
 

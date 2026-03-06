@@ -252,26 +252,30 @@ class Sounding(xr.Dataset):
         return header + body
 
 
-def era5_aws(time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs) -> Sounding:
+def era5_aws(
+    time: pd.Timestamp | np.datetime64 | str, lat: Quantity, lon: Quantity, **kwargs
+) -> Sounding:
     """Retrieves ERA5 dataset for a specific time and location from AWS."""
-    ds = cm1.input.era5.aws(time, **kwargs)
+    valid_time = pd.Timestamp(time)
+    ds = cm1.input.era5.aws(valid_time, **kwargs)
     lon = lon % (360 * units.degreeE)
     ds = ds.sel(longitude=lon, latitude=lat, method="nearest", tolerance=5 * units.deg)
     return Sounding(ds)
 
 
 def era5_model_level(
-    time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs
+    time: pd.Timestamp | np.datetime64 | str, lat: Quantity, lon: Quantity, **kwargs
 ) -> Sounding:
     """Retrieves ERA5 model-level dataset for a specific time and location."""
-    ds = cm1.input.era5.model_level(time, **kwargs)
+    valid_time = pd.Timestamp(time)
+    ds = cm1.input.era5.model_level(valid_time, **kwargs)
     lon = lon % (360 * units.degreeE)
     ds = ds.sel(longitude=lon, latitude=lat, method="nearest", tolerance=5 * units.deg)
     return Sounding(ds)
 
 
 def era5_pressure_level(
-    time: pd.Timestamp, lat: Quantity, lon: Quantity, **kwargs
+    time: pd.Timestamp | np.datetime64 | str, lat: Quantity, lon: Quantity, **kwargs
 ) -> Sounding:
     """Retrieves ERA5 pressure-level dataset for a specific time and location."""
     ds = cm1.input.era5.pressure_level(time, **kwargs)
@@ -282,7 +286,8 @@ def era5_pressure_level(
 
 def get_ofile(args: argparse.Namespace) -> Path:
     """Generates a temporary file path for caching the dataset."""
-    time_str = pd.to_datetime(args.time).strftime("%Y%m%d_%H%M%S")
+    time_obj = pd.Timestamp(args.time)
+    time_str = time_obj.strftime("%Y%m%d_%H%M%S")
     lat_str = f"{args.lat:~}"
     lon_str = f"{args.lon:~}"
     return TMPDIR / f"{time_str}.{lat_str}.{lon_str}"
