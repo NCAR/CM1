@@ -207,7 +207,7 @@ class Sounding(xr.Dataset):
 
     def plot(self, fig=None, subplot=None, **kwargs):
         """Plots the sounding using the skewt function."""
-        from cm1.skewt import skewt
+        from cm1.utils import skewt
 
         return skewt(self, fig=fig, subplot=subplot, **kwargs)
 
@@ -287,17 +287,18 @@ def era5_pressure_level(
 def get_ofile(args: argparse.Namespace) -> Path:
     """Generates a temporary file path for caching the dataset."""
     time_obj = pd.Timestamp(args.time)
-    time_str = time_obj.strftime("%Y%m%d_%H%M%S")
-    lat_str = f"{args.lat:~}"
-    lon_str = f"{args.lon:~}"
-    return TMPDIR / f"{time_str}.{lat_str}.{lon_str}"
+    time_str = time_obj.strftime("%Y%m%dT%H%M%S")
+    lat_str = f"{args.lat.m:+06.2f}{args.lat.units}".replace(" ", "")
+    lon_str = f"{args.lon.m:+07.2f}{args.lon.units}".replace(" ", "")
+    ofile = TMPDIR / f"{time_str}.{lat_str}.{lon_str}.nc"
+    return ofile
 
 
 def main() -> None:
     """Main function for loading ERA5 data and printing sounding data."""
     args = parse_args()
     valid_time = pd.to_datetime(args.time)
-    ofile = get_ofile(args).with_suffix(".nc")
+    ofile = get_ofile(args)
 
     if os.path.exists(ofile):
         logging.warning(f"Reading from cache: {ofile}")
