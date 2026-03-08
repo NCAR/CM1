@@ -245,9 +245,9 @@ def model_level(
         list(invariant_path.glob("*.nc")),
         drop_variables=["utc_date", "time"],
     )
-    assert (
-        invariant.latitude.size == 640
-    ), "expected invariant fields on Gaussian grid like ds"
+    assert invariant.latitude.size == 640, (
+        "expected invariant fields on Gaussian grid like ds"
+    )
     invariant = quantify_invariant(invariant)
     ds = ds.merge(invariant)
 

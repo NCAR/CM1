@@ -133,8 +133,8 @@ class CM1Run:
 # Queue:
 #PBS -q {self.pbs_config.queue}
 # Redirect output and error streams:
-#PBS -o {run_dir_abs / 'cm1.print.out'}
-#PBS -e {run_dir_abs / 'cm1.print.err'}
+#PBS -o {run_dir_abs / "cm1.print.out"}
+#PBS -e {run_dir_abs / "cm1.print.err"}
 
 # Environment setup
 module purge
