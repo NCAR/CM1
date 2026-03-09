@@ -8,13 +8,13 @@
 
 * 24 March 2024:  A new version of CM1 `cm1r21.1` has been released.
 
-### [About CM1](https://cm1.readthedocs.io)
+## [About CM1](https://cm1.readthedocs.io)
 
-### [Download](https://cm1.readthedocs.io/en/latest/releases/)
+## [Download](https://cm1.readthedocs.io/en/latest/releases/)
 
-### [Utilities](https://cm1.readthedocs.io/en/latest/utilities)
+## [Utilities](https://cm1.readthedocs.io/en/latest/utilities)
 
-### [Support Forum](https://forum.mmm.ucar.edu/#cm1-cloud-model-1.137)
+## [Support Forum](https://forum.mmm.ucar.edu/#cm1-cloud-model-1.137)
 
 <font color="gray">
 The National Center for Atmospheric Research is sponsored by the U.S. National Science Foundation. Any opinions, findings and conclusions or recommendations expressed in this publication are those of the author(s) and do not necessarily reflect the views of the U.S. National Science Foundation.
