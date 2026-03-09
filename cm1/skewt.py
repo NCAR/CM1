@@ -8,13 +8,12 @@ data, as well as dry adiabats, moist adiabats, and mixing lines on the Skew-T di
 
 import logging
 import os
-import pickle
 
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from cm1.input.sounding import era5_aws, era5_model_level, get_ofile
-from cm1.utils import parse_args, skewt
+from cm1.input.sounding import era5_aws, era5_model_level, Sounding, get_ofile
+from cm1.utils import parse_args
 
 
 def main() -> None:
@@ -28,10 +27,10 @@ def main() -> None:
     args = parse_args()
     valid_time = pd.to_datetime(args.time)
     ofile = get_ofile(args)
+    logging.debug(f"ofile: {ofile}")
     if os.path.exists(ofile):
-        logging.warning(f"read {ofile}")
-        with open(ofile, "rb") as file:
-            ds = pickle.load(file)
+        logging.info(f"read cached data from: {ofile}")
+        ds = Sounding(ofile)
     else:
         if os.path.exists("/glade/campaign"):
             ds = era5_model_level(
@@ -40,13 +39,13 @@ def main() -> None:
                 args.lon,
             )
         else:
-            logging.warning("No campaign storage. Get pressure level data from AWS")
+            logging.warning("No campaign storage. Fetching pres lvl data from AWS")
             ds = era5_aws(valid_time, args.lat, args.lon)
 
-    with open(ofile, "wb") as file:
-        pickle.dump(ds, file)
+        logging.info(f"Caching data to: {ofile}")
+        ds.metpy.dequantify().to_netcdf(ofile)
 
-    skewt(ds)
+    ds.plot()
     plt.show()
 
 

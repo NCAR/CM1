@@ -11,6 +11,7 @@ import s3fs
 import xarray as xr
 from metpy.constants import Rd, g
 from metpy.units import units
+from pint import Quantity
 
 from cm1.utils import TMPDIR
 
@@ -57,6 +58,7 @@ def load_from_campaign(
     ]
 
     ds = xr.open_mfdataset(local_files, drop_variables=drop_variables)
+    ds.attrs["source_files"] = [str(p) for p in local_files]
     logging.info(f"opened {len(local_files)} local {level_type} files")
     logging.debug(local_files)
     logging.info(f"selected {time}")
@@ -180,7 +182,7 @@ def quantify_invariant(invariant: xr.Dataset) -> xr.Dataset:
 
 
 def model_level(
-    time: pd.Timestamp,
+    time: pd.Timestamp | np.datetime64 | str,
 ) -> xr.Dataset:
     """
     Load native model levels ERA5 dataset for specified time
@@ -190,14 +192,15 @@ def model_level(
 
     Parameters
     ----------
-    time : pd.Timestamp
-        Desired timestamp for data retrieval.
+    time : Desired timestamp for data retrieval.
 
     Returns
     -------
     xr.Dataset
         Dataset containing ERA5 data for the specified time.
     """
+    time = pd.Timestamp(time)
+
     # get from campaign storage
     rdaindex = "d633006"
 
@@ -242,9 +245,9 @@ def model_level(
         list(invariant_path.glob("*.nc")),
         drop_variables=["utc_date", "time"],
     )
-    assert (
-        invariant.latitude.size == 640
-    ), "expected invariant fields on Gaussian grid like ds"
+    assert invariant.latitude.size == 640, (
+        "expected invariant fields on Gaussian grid like ds"
+    )
     invariant = quantify_invariant(invariant)
     ds = ds.merge(invariant)
 
@@ -354,6 +357,13 @@ def pressure_level(
     invariant = quantify_invariant(invariant)
     ds = ds_pl.merge(ds_sfc).merge(invariant)
 
+    # Combine all source file lists into one master list
+    all_sources = []
+    for component in [ds_pl, ds_sfc, invariant]:
+        if "source_files" in component.attrs:
+            all_sources.extend(component.attrs["source_files"])
+    ds.attrs["history_sources"] = all_sources
+
     return ds
 
 
@@ -456,3 +466,56 @@ def aws(time: pd.Timestamp) -> xr.Dataset:
     ds = ds_pl.merge(ds_sfc).merge(invariant)
 
     return ds
+
+
+def nearest_grid_block_sel(
+    dataset: xr.Dataset, lat: Quantity, lon: Quantity, n: int = 3, **kwargs
+) -> dict:
+    """
+    Returns a dictionary to select nearest nxn slice
+    to a specified lat/lon, to be used with xr.Dataset.sel.
+
+    Parameters:
+        dataset (xr.Dataset): ERA5 dataset with 'latitude' and 'longitude' coordinates.
+        lat (Quantity): Target latitude with units (must be in degrees, e.g., degrees_north).
+        lon (Quantity): Target longitude with units (must be in degrees, e.g., degrees_east).
+        n (int): Size of the square slice (must be positive odd integer).
+
+    Returns:
+        dict: Dictionary with 'latitude' and 'longitude' slices for use in .sel()
+    """
+
+    if n < 1 or n % 2 != 1:
+        raise ValueError("n must be a positive odd integer.")
+
+    # Convert lon to 0-360° if needed
+    lon = lon % (360 * units.degree)
+
+    # Ensure coords exist
+    if "latitude" not in dataset.coords or "longitude" not in dataset.coords:
+        raise ValueError("Dataset must contain 'latitude' and 'longitude' coordinates.")
+
+    # Snap to the nearest point
+    center = dataset.sel(latitude=lat, longitude=lon, method="nearest", **kwargs)
+    center_lat = center.latitude.values
+    center_lon = center.longitude.values
+
+    # Find lat/lon index of center
+    lat_vals = dataset.latitude.values
+    lon_vals = dataset.longitude.values
+    lat_idx = np.abs(lat_vals - center_lat).argmin()
+    lon_idx = np.abs(lon_vals - center_lon).argmin()
+
+    half = n // 2
+    # Latitude index range (handle edges)
+    lat_start = max(lat_idx - half, 0)
+    lat_end = min(lat_idx + half, len(lat_vals) - 1)
+    lat_sel_vals = lat_vals[lat_start : lat_end + 1]
+
+    # Longitude index range with wrapping
+    lon_size = len(lon_vals)
+    lon_sel_indices = [(lon_idx + i) % lon_size for i in range(-half, half + 1)]
+    lon_sel_vals = np.array([lon_vals[i] for i in lon_sel_indices])
+
+    # Return dictionary suitable for .sel()
+    return {"latitude": lat_sel_vals, "longitude": lon_sel_vals}
