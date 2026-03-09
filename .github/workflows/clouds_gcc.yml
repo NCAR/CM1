@@ -9,7 +9,7 @@ on:
 
 jobs:
   setup:
-    runs-on:  
+    runs-on:
       group: CIRRUS-4x8
     container:
       image: halehawk/gnu_io:latest

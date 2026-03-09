@@ -17,7 +17,7 @@ jobs:
         arch: [x86_64]
         netcdf: [true, false]
 
-    runs-on: 
+    runs-on:
       group: CIRRUS-4x8
     defaults:
       run:
