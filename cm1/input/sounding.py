@@ -354,99 +354,84 @@ def skewt(
 
     # Validate required variables in dataset
     assert "surface_geopotential_height" in ds, (
-        "skewt needs geopotential height at the surface surface_geopotential_height"
+        "skewt needs surface surface_geopotential_height"
     )
     assert "SP" in ds, "skewt needs surface pressure SP"
     # Load Dataset to avoid
     # plot_colormapped KeyError: 'Indexing with a boolean dask array is not allowed.
     # and allow .where function to check condition
-    logging.info("load dataset")
-    ds = ds.load()
+    logging.info("load dataset and sort by descending pressure")
+    ds = ds.sortby("P", ascending=False).load()
     old_nlevel = ds.level.size
     # Drop low pressure model levels to avoid ValueError: ODE Integration failed...
-    # Side effect of Dataset.where is that DataArrays without
-    # a level dimension like SP are broadcast to all levels.
-    # Apply mask only to variables with the 'level' dimension
     # Mask high pressure levels greater than surface pressure SP
-    ds = xr.Dataset(
-        {
-            var: (
-                ds[var].where((ds.P >= 10 * units.hPa) & (ds.P < ds.SP), drop=True)
-                if "level" in ds[var].dims
-                else ds[var]
-            )
-            for var in ds
-        }
-    )
-
+    mask = (ds.P >= 10 * units.hPa) & (ds.P < ds.SP)
+    ds = ds.sel(level=mask)
     logging.info(
         f"After dropping low pressure levels, {ds.level.size}/{old_nlevel} remain"
     )
 
     # if args.model_levels, ds["P"] is 3D DataArray with vertical dim = model level.
     # Otherwise pressure is ds.level, a 1-D array of pressure.
-    height = ds["Z"]
-    p = ds["P"]
-    T = ds["T"]
-    Td = mpcalc.dewpoint_from_specific_humidity(p, ds.Q)
+    p = ds.P.data
+    T = ds.T.data
+    Td = mpcalc.dewpoint_from_specific_humidity(p, ds.Q.data)
     if any(Td > T):
         logging.warning("some Td > T")
 
+    u = ds.U.data
+    v = ds.V.data
+    height = ds.Z.data
+    sfc_hgt = ds.surface_geopotential_height.data
+    agl = (height - sfc_hgt).to("m")  # So agl has .min() and .max() methods
+    sp = ds.SP.data
+
     barb_increments = {"flag": 25, "full": 5, "half": 2.5}
     plot_barbs_units = "m/s"
-    u = ds.U.metpy.convert_units(plot_barbs_units)
-    v = ds.V.metpy.convert_units(plot_barbs_units)
 
     skew = SkewT(fig, subplot=subplot, rotation=rotation)
-    # Add the relevant special lines
     skew.plot_dry_adiabats(lw=0.75, alpha=0.5)
     skew.plot_moist_adiabats(lw=0.75, alpha=0.25)
     skew.plot_mixing_lines(alpha=0.5)
-    # Slanted line on 0 isotherm
+    # 0-degC isotherm
     skew.ax.axvline(0, color="c", linestyle="--", linewidth=1.5, alpha=0.5)
 
     # Get parcel potential temperature and mixing ratio from
     # "surface_potential_temperature" and/or "surface_mixing_ratio" DataArray.
-    # Otherwise, assume the value(s) at the level with the highest pressure.
-    parcel_level = ds.level.sel(level=ds.P.compute().idxmax())
+    # Otherwise, assume the value(s) at the first level.
     if "surface_potential_temperature" in ds:
         T_parcel = mpcalc.temperature_from_potential_temperature(
-            ds.SP, ds.surface_potential_temperature
+            sp, ds.surface_potential_temperature.data
         )
         logging.info(
-            f"got T_parcel {T_parcel.metpy.convert_units('degC').item():~.2f} from SP {ds.SP.item():~.1f} "
-            f"and surface_potential_temperature {ds.surface_potential_temperature.metpy.convert_units('degC').item():~.2f}"
+            f"got T_parcel {T_parcel.to('degC'):~.2f} from SP {sp:~.1f} "
+            f"and surface_potential_temperature {ds.surface_potential_temperature.data.to('degC'):~.2f}"
         )
     else:
-        T_parcel = ds.T.sel(level=parcel_level)
-        logging.info(
-            f"got T_parcel {T_parcel.item():~.2f} from "
-            f"level with highest pressure {parcel_level.item()}"
-        )
+        T_parcel = T[0]
+        logging.info(f"got T_parcel {T_parcel:~.2f} from first level")
     if "surface_mixing_ratio" in ds:
-        parcel_mixing_ratio = ds.surface_mixing_ratio
+        parcel_mixing_ratio = ds.surface_mixing_ratio.data
         logging.info(
             f"got parcel_mixing_ratio "
-            f"{parcel_mixing_ratio.item().to('g/kg'):~.3f} "
+            f"{parcel_mixing_ratio.to('g/kg'):~.3f} "
             f"from surface_mixing_ratio"
         )
     else:
-        parcel_mixing_ratio = mpcalc.mixing_ratio_from_specific_humidity(
-            ds.Q.sel(level=parcel_level)
-        )
+        parcel_mixing_ratio = mpcalc.mixing_ratio_from_specific_humidity(ds.Q.data[0])
         logging.info(
-            f"got parcel_mixing_ratio {parcel_mixing_ratio.item().to('g/kg'):~.3f} "
-            f"level with highest pressure {parcel_level.item()}"
+            f"got parcel_mixing_ratio {parcel_mixing_ratio.to('g/kg'):~.3f} "
+            "from first level"
         )
-    Td_parcel = mpcalc.dewpoint(mpcalc.vapor_pressure(ds.SP, parcel_mixing_ratio))
+    Td_parcel = mpcalc.dewpoint(mpcalc.vapor_pressure(sp, parcel_mixing_ratio))
     logging.info(
-        f"p_parcel {ds.SP.item():~.1f} T_parcel {T_parcel.item().to('degC'):~.2f} "
-        f"Td_parcel {Td_parcel.item():~.2f} "
-        f"parcel_mixing_ratio {parcel_mixing_ratio.item().to('g/kg'):~.3f}"
+        f"p_parcel {sp:~.1f} T_parcel {T_parcel.to('degC'):~.2f} "
+        f"Td_parcel {Td_parcel:~.2f} "
+        f"parcel_mixing_ratio {parcel_mixing_ratio.to('g/kg'):~.3f}"
     )
 
     # Calculate LCL pressure and label level on SkewT.
-    lcl_pressure, lcl_temperature = mpcalc.lcl(ds.SP, T_parcel, Td_parcel)
+    lcl_pressure, lcl_temperature = mpcalc.lcl(sp, T_parcel, Td_parcel)
     logging.info(f"lcl_p {lcl_pressure:~.1f} lcl_t {lcl_temperature:~.2f}")
 
     trans = transforms.blended_transform_factory(skew.ax.transAxes, skew.ax.transData)
@@ -462,61 +447,32 @@ def skewt(
         fontsize="x-small",
     )
 
-    # Calculate full parcel profile with LCL
-    p_without_lcl = p  # remember so we can interpolate other variables later
-    if min(p) <= lcl_pressure < max(p):
-        # Append LCL to pressure array.
-        p = np.append(p.data, lcl_pressure)
+    # Draw virtual temperature like temperature, but thin and dashed.
+    if "Tv" in ds:
+        Tv = ds["Tv"]
     else:
-        # Averaging temperature, pressure, and mixing ratio along levels can
-        # make mixing ratio above saturation, making LCL below profile.
-        # Don't bother adding lcl_pressure point in that case.
-        logging.warning(
-            f"lcl outside range of p {p.min().item():~.1f} {p.max().item():~.1f}"
-        )
-        p = p.data  # convert to Quantity array (with units) so we can sort it
-    # Create reverse sorted array of pressure. mpcalc assumes bottom-up arrays.
-    p = np.sort(p)[::-1]
-    # Interpolate other variables to p array (which now includes LCL).
-    T, Td, u, v, height = interpolate_1d(
-        p,
-        p_without_lcl,
-        T,
-        Td,
-        u,
-        v,
-        height,
-    )
-    profT = mpcalc.parcel_profile(p, T_parcel, Td_parcel)
-    prof_mixing_ratio = mpcalc.saturation_mixing_ratio(p, profT)
-    prof_mixing_ratio[p >= lcl_pressure] = (
-        parcel_mixing_ratio.item()
-    )  # unsaturated mixing ratio (constant up to LCL)
-    # parcel virtual temperature
-    profTv = mpcalc.virtual_temperature(profT, prof_mixing_ratio)
+        logging.warning("Derive Tv from p, T, Td")
+        Tv = mpcalc.virtual_temperature_from_dewpoint(p, T, Td)
 
     # Plot temperature and dewpoint.
     skew.plot(p, T, "r")
-    skew.plot(p, Td, "g")
-    # Draw virtual temperature like temperature, but thin and dashed.
-    if "Tv" in ds:
-        logging.warning("ignoring input Tv. Derive from T, qv(p,Td(p,Q))")
-
-    Tv = mpcalc.virtual_temperature(T, mpcalc.saturation_mixing_ratio(p, Td))
-
-    # Environment virtual temperature
     skew.plot(p, Tv, "r", lw=0.5, linestyle="dashed")
-    skew.plot(p, profT, "k", linewidth=1.5, linestyle="dashed")
-    # Parcel virtual temperature
-    skew.plot(p, profTv, "k", linewidth=0.5, linestyle="dashed")
+    skew.plot(p, Td, "g")
+
+    p_wLCL, T_wLCL, Td_wLCL, profT_wLCL = mpcalc.parcel_profile_with_lcl(p, T, Td)
+    # parcel T and Tv virtual temperature
+    profTv_wLCL = mpcalc.virtual_temperature_from_dewpoint(p_wLCL, profT_wLCL, Td_wLCL)
+    skew.plot(p_wLCL, profT_wLCL, "k", linewidth=1.5, linestyle="dashed")
+    skew.plot(p_wLCL, profTv_wLCL, "k", linewidth=0.5, linestyle="dashed")
 
     # Don't feed cape_cin virtual temperature. It assumes prof
     # is regular temperature, not virtual. It converts to virtual
     # temperature on its own.
-    cape, cin = mpcalc.cape_cin(p, T, Td, profT)
+    cape, cin = mpcalc.surface_based_cape_cin(p, T, Td)
     # Shade areas of CAPE and CIN
-    skew.shade_cin(p, Tv, profTv)
-    skew.shade_cape(p, Tv, profTv)
+    Tv_wLCL = mpcalc.virtual_temperature_from_dewpoint(p_wLCL, T_wLCL, Td_wLCL)
+    skew.shade_cin(p_wLCL, Tv_wLCL, profTv_wLCL)
+    skew.shade_cape(p_wLCL, Tv_wLCL, profTv_wLCL)
 
     # Good bounds for aspect ratio
     skew.ax.set_xlim(xlim)
@@ -533,16 +489,14 @@ def skewt(
         title += f"\ncape={cape:~.0f}   cin={cin:~.0f}   "
     skew.ax.set_title(title, fontsize="x-small")
 
-    agl = height - ds.surface_geopotential_height.item()
-
-    label_hgts = [0, 1, 3, 6, 9, 12, 15] * units("km")
+    label_hgts = np.array([0, 1, 3, 6, 9, 12, 15]) * units.km
     # Label AGL intervals along the y-axis of the skewT.
     for label_hgt in label_hgts:
         if label_hgt >= agl.min() and label_hgt <= agl.max():
             (agl2p,) = interpolate_1d(label_hgt, agl, p)
         s = f"{label_hgt:~.0f}"
         if label_hgt == 0 * units.km:
-            agl2p = ds.SP.item()
+            agl2p = sp.item()
             s = f"SFC {ds.surface_geopotential_height.item():~.0f}"
         skew.ax.plot([0, 0.01], 2 * [agl2p.m_as("hPa")], transform=trans, color="k")
         skew.ax.text(
@@ -573,18 +527,16 @@ def skewt(
     title += f"\n0-3km srh+={srh03_pos:~.0f}   srh-={srh03_neg:~.0f}   srh(tot)={srh03_tot:~.0f}"
 
     agl_colors = ["red", "red", "lime", "green", "blueviolet", "cyan"]
-    # Find corresponding colors
+    # Find corresponding indices
+    indices = np.digitize(agl.m_as("m"), label_hgts.m_as("m"))
     barbcolor = []
-    for h in agl:
-        # Find the appropriate interval
-        index = np.searchsorted(label_hgts, h, side="right") - 1
-        if index == -1:
-            # AGL below zero
-            barbcolor.append("#00000050")
-        elif index < len(agl_colors):
-            barbcolor.append(agl_colors[index])
+    for idx in indices:
+        if idx < 0:
+            barbcolor.append("#00000050")  # AGL below zero
+        elif idx < len(agl_colors):
+            barbcolor.append(agl_colors[idx])
         else:
-            barbcolor.append("none")
+            barbcolor.append("none")  # above max label
 
     skew.plot_barbs(
         p,
