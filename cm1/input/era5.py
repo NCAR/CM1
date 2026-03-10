@@ -124,7 +124,7 @@ def compute_z_level(
         # alphaIFS = 1.0 - ((ph_lev / (ph_levplusone - ph_lev)) * dlog_p)
         # @ahijevyc formulation
         alpha = np.log(ph_levplusone / pf_lev)
-        # Make sure official and @ahijevyc values are close to each other.
+        # Assert official and @ahijevyc values are close to each other.
         # assert np.allclose(
         #    alphaIFS.load(), alpha.load(), atol=1e-2
         # ), f"{np.abs((alphaIFS-alpha)).max()}"
@@ -173,7 +173,7 @@ def quantify_invariant(invariant: xr.Dataset) -> xr.Dataset:
     for var in invariant:
         u = invariant[var].attrs["units"]
         if u in ["(0-1)", "-", "index"]:
-            logging.info(f"can't quantify {var} unit string '{u}'")
+            logging.debug(f"can't quantify {var} unit string '{u}'")
             invariant[var].attrs["units"] = "1"
     invariant = invariant.metpy.quantify()
     invariant["surface_geopotential_height"] = invariant["surface_geopotential"] / g
@@ -251,7 +251,7 @@ def model_level(
     invariant = quantify_invariant(invariant)
     ds = ds.merge(invariant)
 
-    logging.warning("filling height using hypsometric equation")
+    logging.info("fill height using hypsometric equation")
     ds["Tv"] = mcalc.thermo.virtual_temperature(ds.T, ds.Q)
     z_h = ds.surface_geopotential.assign_coords(half_level=ds.half_level.max())
     Z = []  # geopotential on full levels
@@ -269,7 +269,6 @@ def model_level(
     ds["surface_geopotential_height"].attrs["long_name"] = (
         "geopotential height at surface"
     )
-    # ds = ds.drop_dims("half_level") # why drop this?
 
     return ds
 
