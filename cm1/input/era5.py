@@ -241,15 +241,18 @@ def model_level(
         # "/glade/u/home/davestep/ds633.6-ERA5ML/e5.oper.invariant"
         "/glade/work/ahijevyc/share/ds633.6-ERA5ML/e5.oper.invariant"
     )
-    invariant = xr.open_mfdataset(
-        list(invariant_path.glob("*.nc")),
-        drop_variables=["utc_date", "time"],
-    )
+    invariant_files = list(invariant_path.glob("*.nc"))
+    logging.debug(f"invariant files: {invariant_files}")
+    invariant = xr.open_mfdataset(invariant_files, drop_variables=["utc_date", "time"])
+    invariant.attrs["source_files"] = [str(p) for p in invariant_files]
     assert invariant.latitude.size == 640, (
         "expected invariant fields on Gaussian grid like ds"
     )
     invariant = quantify_invariant(invariant)
-    ds = ds.merge(invariant)
+    # Tried "no_conflicts" but invariant long_name is 'latitude' and other sources
+    # 'gaussian latitude'
+    ds = ds.merge(invariant, combine_attrs="drop_conflicts")
+    # TODO: merge attrs.source_files like pressure_level does.
 
     logging.info("fill height using hypsometric equation")
     ds["Tv"] = mcalc.thermo.virtual_temperature(ds.T, ds.Q)

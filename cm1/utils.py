@@ -14,6 +14,16 @@ from metpy.units import units
 TMPDIR = Path(os.getenv("TMPDIR"))
 
 
+def get_ofile(args: argparse.Namespace) -> Path:
+    """Generates a temporary file path for caching the dataset."""
+    time_obj = pd.Timestamp(args.time)
+    time_str = time_obj.strftime("%Y%m%dT%H%M%S")
+    lat_str = f"{args.lat.m:+06.2f}{args.lat.units}".replace(" ", "")
+    lon_str = f"{args.lon.m:+07.2f}{args.lon.units}".replace(" ", "")
+    ofile = TMPDIR / f"{time_str}.{lat_str}.{lon_str}.nc"
+    return ofile
+
+
 def parse_args() -> argparse.Namespace:
     """
     Parse command-line arguments for ERA5 data retrieval.

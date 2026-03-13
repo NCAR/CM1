@@ -1,9 +1,8 @@
-import argparse
 import io
 import logging
 import os
 from pathlib import Path
-from typing import Optional, TextIO, Tuple, Union
+from typing import Optional, TextIO, Tuple, Callable
 
 from matplotlib.figure import Figure
 import matplotlib.transforms as transforms
@@ -19,7 +18,7 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from pint import Quantity
 
 import cm1.input.era5
-from cm1.utils import TMPDIR, parse_args
+from cm1.utils import get_ofile, parse_args
 
 # Assuming this script is located in a subdirectory of the repository
 repo_base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -57,6 +56,10 @@ class Sounding(xr.Dataset):
 
         if isinstance(ds, (xr.Dataset, xr.DataArray)):
             quantified_ds = ds.metpy.quantify()
+
+            # Ensure pressure is descending (Sfc -> Top)
+            quantified_ds = quantified_ds.sortby("P", ascending=False)
+
             super().__init__(quantified_ds, *args, **kwargs)
             if source_file:
                 self.attrs["source_file"] = source_file
@@ -220,7 +223,7 @@ def _parse_cm1_txt_stream(
     return sounding_obj
 
 
-def from_txt(source: Union[str, os.PathLike]) -> Sounding:
+def from_txt(source: str | os.PathLike) -> Sounding:
     """
     Creates a Sounding instance by parsing a special CM1 text file or string.
     """
@@ -244,46 +247,56 @@ def get_case(case: str) -> Sounding:
     return from_txt(file_path)
 
 
-def era5_aws(
-    time: pd.Timestamp | np.datetime64 | str, lat: Quantity, lon: Quantity, **kwargs
+def ensure_quantity(val: float | Quantity, default_unit) -> Quantity:
+    """
+    Ensures a value is a Pint Quantity. If a raw float is passed,
+    wraps it in default_unit and logs a warning.
+    """
+    if not hasattr(val, "units"):
+        logging.warning(f"Input {val} missing units. Assuming {default_unit}.")
+        return val * default_unit
+    return val
+
+
+def _fetch_era5_sounding(
+    fetch_func: Callable,
+    time: pd.Timestamp | np.datetime64 | str,
+    lat: Quantity,
+    lon: Quantity,
+    **kwargs,
 ) -> Sounding:
+    """
+    Private helper to handle repeated ERA5 retrieval logic:
+    unit validation, longitude normalization, and spatial selection.
+    """
+    lat = ensure_quantity(lat, units.degreeN)
+    lon = ensure_quantity(lon, units.degreeE)
+
+    valid_time = pd.Timestamp(time)
+    ds = fetch_func(valid_time, **kwargs)
+
+    # Ensure longitude is in 0-360 range for ERA5
+    lon = lon % (360 * units.degreeE)
+
+    ds = ds.sel(longitude=lon, latitude=lat, method="nearest", tolerance=5 * units.deg)
+    ds = ds.sortby("P", ascending=False)
+
+    return Sounding(ds)
+
+
+def era5_aws(time, lat, lon, **kwargs) -> Sounding:
     """Retrieves ERA5 dataset for a specific time and location from AWS."""
-    valid_time = pd.Timestamp(time)
-    ds = cm1.input.era5.aws(valid_time, **kwargs)
-    lon = lon % (360 * units.degreeE)
-    ds = ds.sel(longitude=lon, latitude=lat, method="nearest", tolerance=5 * units.deg)
-    return Sounding(ds)
+    return _fetch_era5_sounding(cm1.input.era5.aws, time, lat, lon, **kwargs)
 
 
-def era5_model_level(
-    time: pd.Timestamp | np.datetime64 | str, lat: Quantity, lon: Quantity, **kwargs
-) -> Sounding:
+def era5_model_level(time, lat, lon, **kwargs) -> Sounding:
     """Retrieves ERA5 model-level dataset for a specific time and location."""
-    valid_time = pd.Timestamp(time)
-    ds = cm1.input.era5.model_level(valid_time, **kwargs)
-    lon = lon % (360 * units.degreeE)
-    ds = ds.sel(longitude=lon, latitude=lat, method="nearest", tolerance=5 * units.deg)
-    return Sounding(ds)
+    return _fetch_era5_sounding(cm1.input.era5.model_level, time, lat, lon, **kwargs)
 
 
-def era5_pressure_level(
-    time: pd.Timestamp | np.datetime64 | str, lat: Quantity, lon: Quantity, **kwargs
-) -> Sounding:
+def era5_pressure_level(time, lat, lon, **kwargs) -> Sounding:
     """Retrieves ERA5 pressure-level dataset for a specific time and location."""
-    ds = cm1.input.era5.pressure_level(time, **kwargs)
-    lon = lon % (360 * units.degreeE)
-    ds = ds.sel(longitude=lon, latitude=lat, method="nearest", tolerance=5 * units.deg)
-    return Sounding(ds)
-
-
-def get_ofile(args: argparse.Namespace) -> Path:
-    """Generates a temporary file path for caching the dataset."""
-    time_obj = pd.Timestamp(args.time)
-    time_str = time_obj.strftime("%Y%m%dT%H%M%S")
-    lat_str = f"{args.lat.m:+06.2f}{args.lat.units}".replace(" ", "")
-    lon_str = f"{args.lon.m:+07.2f}{args.lon.units}".replace(" ", "")
-    ofile = TMPDIR / f"{time_str}.{lat_str}.{lon_str}.nc"
-    return ofile
+    return _fetch_era5_sounding(cm1.input.era5.pressure_level, time, lat, lon, **kwargs)
 
 
 def main() -> None:
@@ -314,7 +327,7 @@ def skewt(
     ds: xr.Dataset,
     fig: Optional[Figure] = None,
     subplot: Optional[Tuple[int, int, int]] = None,
-    rotation: int = 40,
+    rotation: int = 35,
     ptop: Quantity = 100 * units.hPa,
     xlim: Optional[Tuple[float, float]] = (-40, 55),
 ) -> SkewT:
@@ -376,8 +389,24 @@ def skewt(
     p = ds.P.data
     T = ds.T.data
     Td = mpcalc.dewpoint_from_specific_humidity(p, ds.Q.data)
-    if any(Td > T):
-        logging.warning("some Td > T")
+    diff = Td - T
+
+    # Identify and count exceedances
+    exceedance = diff > 0
+    num_affected = exceedance.sum()
+
+    if num_affected > 0:
+        max_exceedance = diff.max()
+
+        logging.warning(
+            f"Supersaturation detected in {num_affected} levels. "
+            f"Max Td > T by {max_exceedance:.2f} °C. Clipping Td to T."
+        )
+
+        # "Where Td <= T, keep Td; otherwise, use T"
+        Td = np.where(~exceedance, Td, T)
+    else:
+        logging.info("All levels are physically consistent (Td <= T).")
 
     u = ds.U.data
     v = ds.V.data
@@ -392,64 +421,35 @@ def skewt(
     skew = SkewT(fig, subplot=subplot, rotation=rotation)
     skew.plot_dry_adiabats(lw=0.75, alpha=0.5)
     skew.plot_moist_adiabats(lw=0.75, alpha=0.25)
-    skew.plot_mixing_lines(alpha=0.5)
+    # mixing_ratio_values from metpy default
+    mixing_ratio = np.array([0.001, 0.002, 0.004, 0.007, 0.01, 0.016, 0.024, 0.032])
+    lines = skew.plot_mixing_lines(mixing_ratio=mixing_ratio, alpha=0.5)
+    segments = lines.get_segments()
+    for i, seg in enumerate(segments):
+        # seg is an array of [[temp, press], [temp, press], ...]
+        # Find point with lowest pressure (top of line)
+        top_idx = np.argmin(seg[:, 1])
+        x_pos, y_pos = seg[top_idx]
+        # kg/kg to g/kg
+        label_val = f"{mixing_ratio[i] * 1000:.0f}"
+        skew.ax.text(
+            x_pos,
+            y_pos,
+            label_val,
+            fontsize="xx-small",
+            color="green",
+            ha="center",
+            va="bottom",
+            alpha=0.5,
+            clip_on=True,
+        )
+
     # 0-degC isotherm
     skew.ax.axvline(0, color="c", linestyle="--", linewidth=1.5, alpha=0.5)
 
-    # Get parcel potential temperature and mixing ratio from
-    # "surface_potential_temperature" and/or "surface_mixing_ratio" DataArray.
-    # Otherwise, assume the value(s) at the first level.
-    if "surface_potential_temperature" in ds:
-        T_parcel = mpcalc.temperature_from_potential_temperature(
-            sp, ds.surface_potential_temperature.data
-        )
-        logging.info(
-            f"got T_parcel {T_parcel.to('degC'):~.2f} from SP {sp:~.1f} "
-            f"and surface_potential_temperature {ds.surface_potential_temperature.data.to('degC'):~.2f}"
-        )
-    else:
-        T_parcel = T[0]
-        logging.info(f"got T_parcel {T_parcel:~.2f} from first level")
-    if "surface_mixing_ratio" in ds:
-        parcel_mixing_ratio = ds.surface_mixing_ratio.data
-        logging.info(
-            f"got parcel_mixing_ratio "
-            f"{parcel_mixing_ratio.to('g/kg'):~.3f} "
-            f"from surface_mixing_ratio"
-        )
-    else:
-        parcel_mixing_ratio = mpcalc.mixing_ratio_from_specific_humidity(ds.Q.data[0])
-        logging.info(
-            f"got parcel_mixing_ratio {parcel_mixing_ratio.to('g/kg'):~.3f} "
-            "from first level"
-        )
-    Td_parcel = mpcalc.dewpoint(mpcalc.vapor_pressure(sp, parcel_mixing_ratio))
-    logging.info(
-        f"p_parcel {sp:~.1f} T_parcel {T_parcel.to('degC'):~.2f} "
-        f"Td_parcel {Td_parcel:~.2f} "
-        f"parcel_mixing_ratio {parcel_mixing_ratio.to('g/kg'):~.3f}"
-    )
-
-    # Calculate LCL pressure and label level on SkewT.
-    lcl_pressure, lcl_temperature = mpcalc.lcl(sp, T_parcel, Td_parcel)
-    logging.info(f"lcl_p {lcl_pressure:~.1f} lcl_t {lcl_temperature:~.2f}")
-
-    trans = transforms.blended_transform_factory(skew.ax.transAxes, skew.ax.transData)
-    hpos = 0.82
-    skew.ax.plot([hpos, hpos + 0.03], 2 * [lcl_pressure.m_as("hPa")], transform=trans)
-    skew.ax.text(
-        hpos + 0.035,
-        lcl_pressure,
-        f" LCL {lcl_pressure.to('hPa').item():~.0f}",
-        transform=trans,
-        horizontalalignment="left",
-        verticalalignment="center",
-        fontsize="x-small",
-    )
-
     # Draw virtual temperature like temperature, but thin and dashed.
     if "Tv" in ds:
-        Tv = ds["Tv"]
+        Tv = ds["Tv"].data
     else:
         logging.warning("Derive Tv from p, T, Td")
         Tv = mpcalc.virtual_temperature_from_dewpoint(p, T, Td)
@@ -459,22 +459,52 @@ def skewt(
     skew.plot(p, Tv, "r", lw=0.5, linestyle="dashed")
     skew.plot(p, Td, "g")
 
-    p_wLCL, T_wLCL, Td_wLCL, profT_wLCL = mpcalc.parcel_profile_with_lcl(p, T, Td)
-    # parcel T and Tv virtual temperature
-    profTv_wLCL = mpcalc.virtual_temperature_from_dewpoint(p_wLCL, profT_wLCL, Td_wLCL)
-    skew.plot(p_wLCL, profT_wLCL, "k", linewidth=1.5, linestyle="dashed")
-    skew.plot(p_wLCL, profTv_wLCL, "k", linewidth=0.5, linestyle="dashed")
+    # Plot parcel T and Tv
+    p_mu, t_mu, td_mu, idx_mu = mpcalc.most_unstable_parcel(p, T, Td)
+    logging.info(
+        f"most unstable parcel {p_mu:~.1f} {t_mu.to('degC'):~.2f} {td_mu:~.2f} i={idx_mu}"
+    )
+    # Calculate LCL pressure and label level on SkewT.
+    lcl_p, lcl_temperature = mpcalc.lcl(p_mu, t_mu, td_mu)
+    logging.info(f"lcl_p {lcl_p:~.1f} lcl_t {lcl_temperature:~.2f}")
 
-    # Don't feed cape_cin virtual temperature. It assumes prof
-    # is regular temperature, not virtual. It converts to virtual
-    # temperature on its own.
-    cape, cin = mpcalc.surface_based_cape_cin(p, T, Td)
-    # Shade areas of CAPE and CIN
-    Tv_wLCL = mpcalc.virtual_temperature_from_dewpoint(p_wLCL, T_wLCL, Td_wLCL)
-    skew.shade_cin(p_wLCL, Tv_wLCL, profTv_wLCL)
-    skew.shade_cape(p_wLCL, Tv_wLCL, profTv_wLCL)
+    trans = transforms.blended_transform_factory(skew.ax.transAxes, skew.ax.transData)
+    hpos = 0.82
+    skew.ax.plot([hpos, hpos + 0.03], 2 * [lcl_p.m_as("hPa")], transform=trans)
+    skew.ax.text(
+        hpos + 0.035,
+        lcl_p,
+        f" LCL {lcl_p.to('hPa').item():~.0f}",
+        transform=trans,
+        horizontalalignment="left",
+        verticalalignment="center",
+        fontsize="x-small",
+    )
 
-    # Good bounds for aspect ratio
+    # Slice environment arrays to start at the MU level (the "Path" range)
+    p_path = p[idx_mu:]
+    Tv_env_path = Tv[idx_mu:]
+
+    # Calculate Parcel Thermodynamic Path
+    T_parcel_path = mpcalc.parcel_profile(p_path, t_mu, td_mu)
+
+    # Moisture logic
+    e_mu = mpcalc.saturation_vapor_pressure(td_mu)
+    w_parcel_start = mpcalc.mixing_ratio(e_mu, p_mu)
+    w_parcel_path = mpcalc.saturation_mixing_ratio(p_path, T_parcel_path)
+
+    # Below LCL, mixing ratio is constant
+    w_parcel_path[p_path >= lcl_p] = w_parcel_start
+    Tv_parcel_path = mpcalc.virtual_temperature(T_parcel_path, w_parcel_path)
+
+    # Plotting and Shading
+    skew.plot(p_path, T_parcel_path, "k", ls="--")
+    skew.plot(p_path, Tv_parcel_path, "k", lw=0.5, ls="--")
+
+    # Shading (using the identical-length path arrays)
+    skew.shade_cin(p_path, Tv_env_path, Tv_parcel_path)
+    skew.shade_cape(p_path, Tv_env_path, Tv_parcel_path)
+
     skew.ax.set_xlim(xlim)
     skew.ax.set_ylim(None, ptop)
 
@@ -485,8 +515,8 @@ def skewt(
         logging.warning("no 'time' variable in sounding")
     if "longitude" in ds:
         title += f"{ds.longitude.item():.3f} {ds.latitude.item():.3f}"
-    if cape is not None:
-        title += f"\ncape={cape:~.0f}   cin={cin:~.0f}   "
+    cape, cin = mpcalc.most_unstable_cape_cin(p, T, Td)
+    title += f"\nmucape={cape:~.0f}   mucin={cin:~.0f}   "
     skew.ax.set_title(title, fontsize="x-small")
 
     label_hgts = np.array([0, 1, 3, 6, 9, 12, 15]) * units.km

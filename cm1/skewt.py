@@ -12,8 +12,8 @@ import os
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from cm1.input.sounding import era5_aws, era5_model_level, Sounding, get_ofile
-from cm1.utils import parse_args
+from cm1.input.sounding import era5_aws, era5_model_level, Sounding
+from cm1.utils import parse_args, get_ofile
 
 
 def main() -> None:
