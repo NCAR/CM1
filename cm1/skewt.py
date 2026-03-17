@@ -11,6 +11,7 @@ import os
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import xarray as xr
 
 from cm1.input.sounding import era5_aws, era5_model_level, Sounding
 from cm1.utils import parse_args, get_ofile
@@ -30,7 +31,7 @@ def main() -> None:
     logging.debug(f"ofile: {ofile}")
     if os.path.exists(ofile):
         logging.info(f"read cached data from: {ofile}")
-        ds = Sounding(ofile)
+        ds = Sounding(xr.open_dataset(ofile))
     else:
         if os.path.exists("/glade/campaign"):
             ds = era5_model_level(
