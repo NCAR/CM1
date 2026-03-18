@@ -2,6 +2,7 @@ import io
 import logging
 import os
 from pathlib import Path
+import textwrap
 from typing import Optional, TextIO, Tuple, Callable
 
 from matplotlib.figure import Figure
@@ -482,16 +483,16 @@ def skewt(
     Td = mpcalc.dewpoint_from_specific_humidity(p, ds.Q.data)
 
     # Clip supersaturated levels using the unit-safe xarray .where()
-    exceedance = (Td - T) > 0 * units.degC
+    exceedance = (Td - T) > 0 * units.delta_degC
     num_affected = int(exceedance.sum())
     if num_affected > 0:
         max_excess = (Td - T).max()
         logging.warning(
             f"Supersaturation in {num_affected} levels; max Td–T = {max_excess:.2f}. Clipping."
         )
-        Td = Td.where(~exceedance, T)  # unit-safe: no np.where stripping
+        Td = np.minimum(Td, T)
     else:
-        logging.info("All levels physically consistent (Td ≤ T).")
+        logging.info("All levels Td ≤ T.")
 
     u = ds.U.data
     v = ds.V.data
@@ -531,7 +532,7 @@ def skewt(
     if "Tv" in ds:
         Tv = ds["Tv"].data
     else:
-        logging.warning("Deriving Tv from p, T, Td")
+        logging.info("Deriving Tv from p, T, Td")
         Tv = mpcalc.virtual_temperature_from_dewpoint(p, T, Td)
 
     skew.plot(p, T, "r")
@@ -602,13 +603,15 @@ def skewt(
     # --- Build title once; set it once at the end ---
     cape, cin = mpcalc.most_unstable_cape_cin(p, T, Td)
     title_parts = []
+    if "case" in ds.attrs:
+        title_parts.append(ds.attrs["case"])
     if "time" in ds:
         title_parts.append(ds.time.dt.strftime("%Y-%m-%d %H:%M:%S").item())
     else:
-        logging.warning("No 'time' variable in sounding")
+        logging.info("No 'time' variable in sounding")
     if "longitude" in ds:
-        title_parts.append(f"{ds.longitude.item():.3f} {ds.latitude.item():.3f}")
-    title_parts.append(f"mucape={cape:~.0f}   mucin={cin:~.0f}")
+        title_parts.append(f"{ds.longitude.item():.3f} E {ds.latitude.item():.3f} N")
+    title_parts.append(f"mucape: {cape:~.0f}   mucin: {cin:~.0f}")
 
     skip_winds = not u.any() and not v.any()
     if not skip_winds:
@@ -620,13 +623,13 @@ def skewt(
         srh03_pos, srh03_neg, srh03_tot = mpcalc.storm_relative_helicity(
             height, u, v, 3 * units.km, storm_u=storm_u, storm_v=storm_v
         )
-        title_parts.append(f"storm_u={storm_u:~.1f}   storm_v={storm_v:~.1f}")
         title_parts.append(
-            f"0-3km srh+={srh03_pos:~.0f}   srh-={srh03_neg:~.0f}   srh(tot)={srh03_tot:~.0f}"
+            f"0-3km srh+: {srh03_pos:~.0f}   srh-: {srh03_neg:~.0f}   srh(tot): {srh03_tot:~.0f}"
         )
 
-    # Single set_title call
-    skew.ax.set_title("\n".join(title_parts), fontsize="x-small")
+    full_title_str = " | ".join(title_parts)
+    wrapped_title = textwrap.fill(full_title_str, width=75)
+    skew.ax.set_title(wrapped_title, fontsize="x-small", loc="center")
 
     if skip_winds:
         return skew
