@@ -55,6 +55,7 @@ class Sounding:
 
         ds = ds.metpy.quantify()
         ds = ds.sortby("P", ascending=False)
+        ds = ds.load()  # always a single profile. Just load eagerly.
         ds.attrs.update(attrs)
         self._ds = ds
 
@@ -100,7 +101,9 @@ class Sounding:
         lines = []
 
         if "time" in ds:
-            lines.append(("time", str(ds.time.values)))
+            lines.append(
+                ("time", pd.Timestamp(ds.time.values).strftime("%Y-%m-%d %H:%M"))
+            )
         if "latitude" in ds:
             lines.append(
                 ("lat/lon", f"{ds.latitude.item():.3f} / {ds.longitude.item():.3f}")
@@ -120,16 +123,15 @@ class Sounding:
         if "source_file" in ds.attrs:
             lines.append(("source", ds.attrs["source_file"]))
 
-        # CAPE/CIN — only if we have the needed variables
-        try:
-            p = ds.P.data
-            T = ds.T.data
-            Td = mpcalc.dewpoint_from_specific_humidity(p, ds.Q.data)
-            cape, cin = mpcalc.most_unstable_cape_cin(p, T, Td)
-            lines.append(("mucape", f"{cape:~.0f}"))
-            lines.append(("mucin", f"{cin:~.0f}"))
-        except Exception:
-            pass
+        # CAPE/CIN
+        # prepare for sharplib (needs plain loaded float32)
+        p_pa = ds.P.data.m_as("Pa").astype(np.float32)
+        t_k = ds.T.data.m_as("K").astype(np.float32)
+        q = ds.Q.data.m_as("kg/kg").astype(np.float32)
+        hght = ds.Z.data.m_as("m").astype(np.float32)
+        cape, cin = _sharp_mucape_cin(p_pa, t_k, q, hght)
+        lines.append(("mucape", f"{cape:.0f} J/kg"))
+        lines.append(("mucin", f"{cin:.0f} J/kg"))
 
         return lines
 
@@ -149,10 +151,8 @@ class Sounding:
     def to_txt(self) -> str:
         """
         Convert the sounding to a CM1 input_sounding text string.
-
-        Does NOT mutate ``self``; all derived quantities are computed locally.
         """
-        ds = self._ds.load()
+        ds = self._ds
         sfc = ds.level.sel(level=ds.P.idxmax())
         sfc_pres = ds.SP if "SP" in ds else ds.P.sel(level=sfc)
 
@@ -204,6 +204,26 @@ class Sounding:
             )
         )
         return header + body
+
+
+def _sharp_mucape_cin(p_pa, t_k, q, hght):
+    """Fast CAPE/CIN via SHARPlib. Inputs are plain float32 numpy arrays in MKS."""
+    from nwsspc.sharp.calc import layer, parcel, thermo
+
+    mixr = (q / (1.0 - q)).astype(np.float32)
+    td_k = thermo.temperature_at_mixratio(mixr, p_pa)
+    td_k = np.minimum(td_k, t_k)  # clamp supersaturation
+    mixr = thermo.mixratio(p_pa, td_k).astype(np.float32)
+    vtmp = thermo.virtual_temperature(t_k, mixr)
+    lft = parcel.lifter_cm1()
+    mu_lyr = layer.PressureLayer(p_pa[0], p_pa[0] - 30000.0)
+    mu_pcl = parcel.Parcel.most_unstable_parcel(
+        mu_lyr, lft, p_pa, hght, t_k, vtmp, td_k
+    )
+    pcl_vtmp = mu_pcl.lift_parcel(lft, p_pa)
+    buoy = thermo.buoyancy(pcl_vtmp, vtmp)
+    mu_pcl.find_lfc_el(p_pa, hght, buoy)
+    return mu_pcl.cape_cinh(p_pa, hght, buoy)
 
 
 # ---------------------------------------------------------------------------
@@ -367,7 +387,7 @@ def _fetch_era5_sounding(
     **kwargs,
 ) -> Sounding:
     """
-    Shared ERA5 retrieval logic: unit validation, longitude normalisation,
+    Shared ERA5 retrieval logic: unit validation, longitude normalization,
     spatial selection, and Sounding construction.
     """
     lat = ensure_quantity(lat, units.degreeN)
@@ -470,8 +490,8 @@ def skewt(
     if fig is not None and (not subplot or subplot == (1, 1, 1)):
         fig.clear()
 
-    logging.info("Loading dataset and sorting by descending pressure")
-    ds = ds.sortby("P", ascending=False).load()
+    logging.info("sorting by descending pressure")
+    ds = ds.sortby("P", ascending=False)
     old_nlevel = ds.level.size
 
     mask = (ds.P >= 10 * units.hPa) & (ds.P < ds.SP)
@@ -601,7 +621,11 @@ def skewt(
         )
 
     # --- Build title once; set it once at the end ---
-    cape, cin = mpcalc.most_unstable_cape_cin(p, T, Td)
+    p_pa = p.m_as("Pa").astype(np.float32)
+    t_k = T.m_as("K").astype(np.float32)
+    q = ds.Q.data.m_as("kg/kg").astype(np.float32)
+    hght = ds.Z.data.m_as("m").astype(np.float32)
+    cape, cin = _sharp_mucape_cin(p_pa, t_k, q, hght)
     title_parts = []
     if "case" in ds.attrs:
         title_parts.append(ds.attrs["case"])
@@ -611,7 +635,7 @@ def skewt(
         logging.info("No 'time' variable in sounding")
     if "longitude" in ds:
         title_parts.append(f"{ds.longitude.item():.3f} E {ds.latitude.item():.3f} N")
-    title_parts.append(f"mucape: {cape:~.0f}   mucin: {cin:~.0f}")
+    title_parts.append(f"mucape: {cape:.0f} J/kg  mucin: {cin:.0f} J/kg")
 
     skip_winds = not u.any() and not v.any()
     if not skip_winds:
