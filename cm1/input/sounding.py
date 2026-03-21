@@ -124,12 +124,7 @@ class Sounding:
             lines.append(("source", ds.attrs["source_file"]))
 
         # CAPE/CIN
-        # prepare for sharplib (needs plain loaded float32)
-        p_pa = ds.P.data.m_as("Pa").astype(np.float32)
-        t_k = ds.T.data.m_as("K").astype(np.float32)
-        q = ds.Q.data.m_as("kg/kg").astype(np.float32)
-        hght = ds.Z.data.m_as("m").astype(np.float32)
-        cape, cin = _sharp_mucape_cin(p_pa, t_k, q, hght)
+        cape, cin = _sharp_mucape_cin(ds.P.data, ds.T.data, ds.Q.data, ds.Z.data)
         lines.append(("mucape", f"{cape:.0f} J/kg"))
         lines.append(("mucin", f"{cin:.0f} J/kg"))
 
@@ -206,9 +201,14 @@ class Sounding:
         return header + body
 
 
-def _sharp_mucape_cin(p_pa, t_k, q, hght):
+def _sharp_mucape_cin(p, t, q, z):
     """Fast CAPE/CIN via SHARPlib. Inputs are plain float32 numpy arrays in MKS."""
     from nwsspc.sharp.calc import layer, parcel, thermo
+
+    p_pa = np.ascontiguousarray(p.m_as("Pa"), dtype=np.float32)
+    t_k = np.ascontiguousarray(t.m_as("K"), dtype=np.float32)
+    q = np.ascontiguousarray(q.m_as("kg/kg"), dtype=np.float32)
+    hght = np.ascontiguousarray(z.m_as("m"), dtype=np.float32)
 
     mixr = (q / (1.0 - q)).astype(np.float32)
     td_k = thermo.temperature_at_mixratio(mixr, p_pa)
@@ -621,11 +621,7 @@ def skewt(
         )
 
     # --- Build title once; set it once at the end ---
-    p_pa = p.m_as("Pa").astype(np.float32)
-    t_k = T.m_as("K").astype(np.float32)
-    q = ds.Q.data.m_as("kg/kg").astype(np.float32)
-    hght = ds.Z.data.m_as("m").astype(np.float32)
-    cape, cin = _sharp_mucape_cin(p_pa, t_k, q, hght)
+    cape, cin = _sharp_mucape_cin(p, T, ds.Q.data, height)
     title_parts = []
     if "case" in ds.attrs:
         title_parts.append(ds.attrs["case"])
