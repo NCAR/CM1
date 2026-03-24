@@ -21,6 +21,7 @@ dependencies = [
     "s3fs",
     "scikit-learn",
     "xarray",
+    # nwsspc-sharplib: conda-only, install via environment.yml
 ]
 classifiers = [
                "Intended Audience :: Science/Research",

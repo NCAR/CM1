@@ -1,8 +1,11 @@
 # `cm1` Python Library
 
-## Requirements
-- Install Python modules in `environment.yml`
-- Install cm1 (`pip install -e .` from CM1 directory).
+## Installation and Setup
+- Create and Activate Conda environment from `environment.yml`
+```csh
+conda env create -f environment.yml
+conda activate cm1
+```
 
 ## Development Setup
 
@@ -12,7 +15,7 @@ This project uses pre-commit to maintain code quality. Please install it before 
 - Install the hooks: Run `pre-commit install` in the root of the repo.
 
 
-### Get ERA5 sounding for CM1.
+### Get ERA5 sounding for CM1
 
 ```csh
 python input/sounding.py 20240518T18 -97.5 35
@@ -36,4 +39,4 @@ Plot a skew-T diagram.
 python skewt.py 20240518T18 -97.5 35
 ```
 
-<img src="images/skewt.png">
+![Skew-T Diagram](images/skewt.png)
