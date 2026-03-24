@@ -1,7 +1,7 @@
 # `cm1` Python Library
 
 ## Installation and Setup
-- Create and Activate Conda environment from `environment.yml`
+- Create and activate Conda environment from `environment.yml`
 ```csh
 conda env create -f environment.yml
 conda activate cm1
