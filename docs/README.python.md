@@ -15,6 +15,8 @@ This project uses pre-commit to maintain code quality. Please install it before 
 - Install the hooks: Run `pre-commit install` in the root of the repo.
 
 
+## Command Line Usage
+
 ### Get ERA5 sounding for CM1
 
 ```csh
