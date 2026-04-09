@@ -12,7 +12,7 @@ jobs:
     runs-on:
       group: CIRRUS-4x8
     container:
-      image: halehawk/gnu_io:latest
+      image: hub.k8s.ucar.edu/halehawk/gnu_io:latest
     steps:
       - uses: actions/checkout@v3
 
