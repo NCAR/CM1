@@ -602,6 +602,9 @@ def skewt(
     # --- AGL height labels on y-axis ---
     label_hgts = np.array([0, 1, 3, 6, 9, 12, 15]) * units.km
     for label_hgt in label_hgts:
+        if label_hgt > agl.max():
+            logging.info(f"label_hgt {label_hgt} too high. Skip label.")
+            continue
         if label_hgt >= agl.min() and label_hgt <= agl.max():
             (agl2p,) = interpolate_1d(label_hgt, agl, p)
         s = f"{label_hgt:~.0f}"
