@@ -597,7 +597,8 @@ def skewt(
     skew.shade_cape(p_path, Tv_env_path, Tv_parcel_path)
 
     skew.ax.set_xlim(xlim)
-    skew.ax.set_ylim(None, ptop)
+    pbot = p.max() + 50 * units.hPa
+    skew.ax.set_ylim(pbot, ptop)
 
     # --- AGL height labels on y-axis ---
     label_hgts = np.array([0, 1, 3, 6, 9, 12, 15]) * units.km
