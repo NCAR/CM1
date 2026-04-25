@@ -70,7 +70,9 @@ def load_from_campaign(
         base / year_month_dir / f"{level_type}.{v}.{start_end_str}.nc" for v in varnames
     ]
 
-    ds = xr.open_mfdataset(local_files, drop_variables=drop_variables)
+    ds = xr.open_mfdataset(
+        local_files, compat="override", drop_variables=drop_variables
+    )
     ds.attrs["source_files"] = [str(p) for p in local_files]
     logging.info(
         f"Opened {len(local_files)} local {level_type} files; selecting {time}"
@@ -366,7 +368,9 @@ def pressure_level(time: pd.Timestamp) -> xr.Dataset:
     ).drop_vars("time")
     invariant = quantify_invariant(invariant)
 
-    ds = ds_pl.merge(ds_sfc).merge(invariant)
+    ds = ds_pl.merge(ds_sfc, compat="no_conflicts").merge(
+        invariant, compat="no_conflicts"
+    )
 
     # Consolidate source file lists from all components
     ds.attrs["history_sources"] = [
@@ -434,7 +438,11 @@ def aws(time: pd.Timestamp) -> xr.Dataset:
             "128_129_z.ll025sc",
         ]
     ]
-    ds_pl = xr.open_mfdataset(pl_paths).drop_vars("utc_date").sel(time=time)
+    ds_pl = (
+        xr.open_mfdataset(pl_paths, compat="override")
+        .drop_vars("utc_date")
+        .sel(time=time)
+    )
     ds_pl = ds_pl.metpy.quantify()
     ds_pl["P"] = ds_pl.level * ds_pl.level.metpy.units
     ds_pl["Z"] /= g
@@ -454,7 +462,11 @@ def aws(time: pd.Timestamp) -> xr.Dataset:
             "128_168_2d.ll025sc",
         ]
     ]
-    ds_sfc = xr.open_mfdataset(sfc_paths).drop_vars("utc_date").sel(time=time)
+    ds_sfc = (
+        xr.open_mfdataset(sfc_paths, compat="override")
+        .drop_vars("utc_date")
+        .sel(time=time)
+    )
     ds_sfc = ds_sfc.metpy.quantify()
     ds_sfc["surface_potential_temperature"] = mcalc.potential_temperature(
         ds_sfc.SP, ds_sfc.VAR_2T
@@ -470,7 +482,9 @@ def aws(time: pd.Timestamp) -> xr.Dataset:
     invariant = xr.open_mfdataset(invariant_paths, drop_variables=["utc_date", "time"])
     invariant = quantify_invariant(invariant)
 
-    return ds_pl.merge(ds_sfc).merge(invariant)
+    return ds_pl.merge(ds_sfc, compat="no_conflicts").merge(
+        invariant, compat="no_conflicts"
+    )
 
 
 # ---------------------------------------------------------------------------
