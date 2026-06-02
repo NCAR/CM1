@@ -456,6 +456,7 @@ def skewt(
     fig: Optional[Figure] = None,
     subplot: Optional[Tuple[int, int, int]] = None,
     rotation: int = 35,
+    pbot: Optional[Quantity] = None,
     ptop: Quantity = 100 * units.hPa,
     xlim: Optional[Tuple[float, float]] = (-40, 55),
 ) -> SkewT:
@@ -473,6 +474,9 @@ def skewt(
         Subplot spec; passed directly to :class:`~metpy.plots.SkewT`.
     rotation : int
         Skew-T rotation angle (degrees).
+    pbot : Quantity, optional
+        Lower pressure limit for the plot. If unspecified,
+        set to 50 hPa below bottom of sounding
     ptop : Quantity
         Upper pressure limit for the plot.
     xlim : (float, float), optional
@@ -597,7 +601,8 @@ def skewt(
     skew.shade_cape(p_path, Tv_env_path, Tv_parcel_path)
 
     skew.ax.set_xlim(xlim)
-    pbot = p.max() + 50 * units.hPa
+    if pbot is None:
+        pbot = p.max() + 50 * units.hPa
     skew.ax.set_ylim(pbot, ptop)
 
     # --- AGL height labels on y-axis ---
