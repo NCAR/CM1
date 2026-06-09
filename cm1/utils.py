@@ -5,7 +5,6 @@ from pathlib import Path
 
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import xarray as xr
 from IPython.display import HTML
@@ -110,45 +109,3 @@ def animate_cm1out_nc(
     anim_html = HTML(ani.to_jshtml())
     plt.close(img.figure)  # close figure to prevent static image display
     return anim_html
-
-
-def mean_lat_lon(lats_deg, lons_deg):
-    """
-    Calculates the mean latitude and longitude of a set of points on a sphere.
-
-    Args:
-        lats (list): List of latitudes in degrees.
-        lons (list): List of longitudes in degrees.
-
-    Returns:
-        tuple: Mean latitude and longitude in degrees.
-    """
-
-    # Convert to radians
-    lats = np.radians(lats_deg)
-    lons = np.radians(lons_deg)
-
-    # Calculate Cartesian coordinates
-    x = np.cos(lats) * np.cos(lons)
-    y = np.cos(lats) * np.sin(lons)
-    z = np.sin(lats)
-
-    # Calculate mean Cartesian coordinates
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
-    z_mean = np.mean(z)
-
-    # Convert back to spherical coordinates
-    lon_mean = np.arctan2(y_mean, x_mean)
-    hyp = np.sqrt(x_mean**2 + y_mean**2)
-    lat_mean = np.arctan2(z_mean, hyp)
-
-    # Convert back to degrees
-    lat_mean = np.degrees(lat_mean)
-    lon_mean = np.degrees(lon_mean)
-
-    # Transfer attributes of inputs to outputs lat_mean and lon_mean.
-    lat_mean = lat_mean * units.degrees_N
-    lon_mean = lon_mean * units.degrees_E
-
-    return lat_mean, lon_mean
