@@ -100,15 +100,19 @@ ifeq (${FC},nvfortran)
                 OPTS += -acc -gpu=cc70,lineinfo,nofma,autocompare,math_uniform
             endif
         else
-            # Potentially interesting non-default compiler flags:: 
+            # Potentially interesting non-default compiler flags::
             #     -Minfo=accel    Provides verbose output for accelerator compilation phase
             #     -Mpcast         Enables the use of PCAST functionality
             ifeq (${GPU_TYPE_L},a100)
-                OPTS += -acc -gpu=cc80,lineinfo,nofma,math_uniform -Minfo=accel -cudalib=cutensor 
+                OPTS += -acc -gpu=cc80,lineinfo,nofma,math_uniform -Minfo=accel
             else
                 OPTS += -acc -gpu=cc70,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
             endif
         endif
+        # comm_droplet.F and droplet.F use the cutensorex module (GPU-accelerated
+        # COUNT/PACK prefix-sum intrinsics) whenever _OPENACC is defined, so cutensor
+        # must be linked for every OpenACC build, not just the non-debug a100 case.
+        OPTS     += -cudalib=cutensor
         DM       += -D_OPENACC
     endif
     ifeq (${USE_CUDAMEM_L},true)
