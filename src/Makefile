@@ -97,7 +97,11 @@ ifeq (${FC},nvfortran)
             ifeq (${GPU_TYPE_L},a100)
                 OPTS += -acc -gpu=cc80,lineinfo,nofma,autocompare,math_uniform
             else
-                OPTS += -acc -gpu=cc70,lineinfo,nofma,autocompare,math_uniform
+                ifeq (${GPU_TYPE_L},l40)
+                    OPTS += -acc -gpu=cc89,lineinfo,nofma,autocompare,math_uniform
+                else
+                    OPTS += -acc -gpu=cc70,lineinfo,nofma,autocompare,math_uniform
+                endif
             endif
         else
             # Potentially interesting non-default compiler flags::
@@ -106,13 +110,26 @@ ifeq (${FC},nvfortran)
             ifeq (${GPU_TYPE_L},a100)
                 OPTS += -acc -gpu=cc80,lineinfo,nofma,math_uniform -Minfo=accel
             else
-                OPTS += -acc -gpu=cc70,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
+                ifeq (${GPU_TYPE_L},l40)
+                    OPTS += -acc -gpu=cc89,lineinfo,nofma,math_uniform -Minfo=accel
+                else
+                    OPTS += -acc -gpu=cc70,lineinfo,nofma,math_uniform -Mpcast -Minfo=accel
+                endif
             endif
         endif
         # comm_droplet.F and droplet.F use the cutensorex module (GPU-accelerated
         # COUNT/PACK prefix-sum intrinsics) whenever _OPENACC is defined, so cutensor
         # must be linked for every OpenACC build, not just the non-debug a100 case.
         OPTS     += -cudalib=cutensor
+        # -cudalib=cutensor resolves its -L path from the CUDA toolkit pointed to by
+        # -cudaroot. On systems (e.g. Casper) where that CUDA toolkit is a separate
+        # module without cuTENSOR bundled in it, the linker fails with "cannot find
+        # -lcutensor". The actual libcutensor.so/libcutensorMg.so ship inside the
+        # NVHPC installation itself, so locate them there explicitly.
+        CUTENSOR_LIBDIR := $(shell find $(NCAR_ROOT_NVHPC)/Linux_x86_64 -type d -path '*/REDIST/math_libs/*/cutensor_*/targets/*/lib' 2>/dev/null | sort -V | tail -1)
+        ifneq ($(strip $(CUTENSOR_LIBDIR)),)
+            OPTS += -L$(CUTENSOR_LIBDIR) -Wl,-rpath,$(CUTENSOR_LIBDIR)
+        endif
         DM       += -D_OPENACC
     endif
     ifeq (${USE_CUDAMEM_L},true)

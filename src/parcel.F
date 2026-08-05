@@ -1766,12 +1766,12 @@
 
       integer :: i
 
-#ifdef MPI
-      integer :: nparcels_per_mpi(numprocs)
       integer(i8) :: nparcelstot
       integer :: nparcelsout     ! this number must be able to be represented
                                  ! by an integer type to reduce memory
                                  ! pressure on I/O
+#ifdef MPI
+      integer :: nparcels_per_mpi(numprocs)
       real, dimension(:,:), allocatable :: rbuf
 #endif
 
@@ -1790,6 +1790,9 @@
        allocate(rbuf(nparcelsout,npvals))
     end if
     call CollectDropInfo ( pdata, rbuf, nparcels_per_mpi, nparcelsout )
+#else
+    nparcelstot = int(nparcelsLocalActive, i8)
+    nparcelsout = nparcelsLocalActive
 #endif
 
     IF(myid.eq.0)THEN

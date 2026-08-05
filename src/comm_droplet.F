@@ -624,6 +624,7 @@ contains
      enddo
 
   end subroutine packDroplets
+#endif
 
     subroutine setupIndexPointers(Cnt,ptrCnt)
 
@@ -820,6 +821,7 @@ contains
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
+#ifdef MPI
      subroutine update_new_droplet ( dir_idx, Arrive, ptrArrive, holes_ind, pdata, droplet_buffer)
 
      ! this subroutine is used to update the new droplet information

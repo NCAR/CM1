@@ -82,7 +82,13 @@
  npt       =  1,
  pdtra     =  1,
  iprcl     =  1,
- nparcels  =  8000000,
+ nparcelsInit = 8000000,
+ nparcelsMax  = 8000000,
+ injectHMax   =   0.0,
+ drop_mult    =   1.0,
+ drop_inject_elapse = 1.0e9,
+ drop_inject_time   = 1.0e9,
+ drop_w_init        =    0.0,
  /
 
  &param3
@@ -341,7 +347,7 @@
  /
 
  &param14
- dodomaindiag   =    .true.,
+ dodomaindiag   =    .false.,
  diagfrq        =     60.0,
  /
 
@@ -360,4 +366,3 @@
    cnor    = 8.e6,  ! for single moment only
    cnoh    = 4.e4,  ! for single moment only
  /
-

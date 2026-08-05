@@ -230,14 +230,16 @@
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-      subroutine bcs_tend_halo(s)
+      subroutine bcs_tend_halo(s,device)
       use input, only : ib,ie,jb,je,kb,ke,ni,nj,nk,wbc,ebc,sbc,nbc, &
           time_bcst,timestats,mytime
       implicit none
 
       double precision, dimension(ib:ie,jb:je,kb:ke) :: s
+      logical, optional, intent(in) :: device
 
       integer i,j,k
+      logical :: openacc
 
       ! For periodic lateral boundary conditions only:  
       ! account for tendencies from halo zones. 

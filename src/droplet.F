@@ -161,17 +161,17 @@
                  numDepartSW,numDepartSE,numDepartNE,numDepartNW
       integer, dimension(:), allocatable :: holes_fallout_ind  !their location index in pdata prior to removal
 
-#ifdef MPI 
       integer, dimension(:), allocatable :: holes_ind      ! location index in "pdata" that can add a new droplet
       integer, dimension(:), allocatable :: Depart_ind     ! Index location in "pdata" of a point that is departing
-      integer :: Depart(num_nn)                            ! Number of droplets that will enter each nearest 
+      integer :: Depart(num_nn)                            ! Number of droplets that will enter each nearest
                                                            ! neighbor at different directions
-      integer :: Arrive(num_nn)                            ! Number of droplets that will enter the current
-                                                           ! MPI region from each nearest neighbor
       integer :: ptrDepart(num_nn)                         ! Points to the begining of Depart_ind for various departure buffers
-      integer :: ptrArrive(num_nn)                         ! Points to the begining of holes_ind for various arrival buffers
       integer, dimension(nparcelsLocal) :: pdata_neighbor  ! array to store the new MPI region info for all the droplets
       integer(i8) :: np_tmp
+#ifdef MPI
+      integer :: Arrive(num_nn)                            ! Number of droplets that will enter the current
+                                                           ! MPI region from each nearest neighbor
+      integer :: ptrArrive(num_nn)                         ! Points to the begining of holes_ind for various arrival buffers
 #endif
       integer :: neighbor                                  ! indicate which MPI region a droplet stays after this time step 
 
@@ -219,16 +219,13 @@
 !  [Note:  for u,v the array index (i,j,0) means the surface, ie z=0]
 !     (for the parcel subroutines only!)
 
-#ifdef MPI
       !$acc data create(pdata_neighbor,msk)
-
+#ifdef MPI
       !$acc parallel loop gang vector default(present)
       do np = 1, nparcelsLocalActive
          pdata_neighbor(np) = undefined_index
       end do
       !$acc end parallel
-#else
-      !$acc data copyin (randomNumbers,randomNumbers%state)
 #endif
 
     IF(bbc.eq.1)THEN
@@ -540,8 +537,10 @@
     Depart(ise)    = numDepartSE
 
     numDepart=SUM(Depart)
-    if(numDepart .gt. 0) allocate(Depart_ind(numDepart))
-    !$acc enter data create(Depart_ind)
+    if(numDepart .gt. 0) then
+       allocate(Depart_ind(numDepart))
+       !$acc enter data create(Depart_ind)
+    end if
 
     numHoles = numDepart + num_fallout + (nparcelsLocal-nparcelsLocalActive)
 
@@ -556,14 +555,15 @@
      ! Step 1: Allocate and assign the "hole" index array and initialize it !
      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-     allocate(holes_ind(numHoles))
-     !$acc enter data create(holes_ind)
-
-     !$acc parallel loop gang vector default(present) 
+     !$acc parallel loop gang vector default(present)
      do np=1,nparcelsLocal
        msk(np) = (pdata_locind(np,1) .eq. undefined_index) .and. &
                  (pdata_locind(np,2) .eq. undefined_index)
      enddo
+
+     if (numHoles .gt. 0) then
+     allocate(holes_ind(numHoles))
+     !$acc enter data create(holes_ind)
 
 #if (defined(_COUNTPREFIX) && defined(_OPENACC))
 
@@ -616,6 +616,7 @@
      end do
      !$acc update device(holes_ind)
 #endif
+     end if
 
      if(timestats.ge.1) time_dropC1=time_dropC1+mytime()
 
@@ -753,10 +754,12 @@
 
     ! free up the memory for temporary variables
 
-     !$acc exit data delete(holes_ind)
-     deallocate(holes_ind)
+     if (allocated(holes_ind)) then
+        !$acc exit data delete(holes_ind)
+        deallocate(holes_ind)
+     end if
 
-     if(allocated(Depart_ind)) then 
+     if(allocated(Depart_ind)) then
         !$acc exit data delete(Depart_ind)
         deallocate(Depart_ind)
      endif
@@ -882,6 +885,8 @@
 #ifdef MPI
       call mpi_allreduce(nparcelsLocalActive,np_tmp,1,mpi_integer8, &
                          mpi_sum,mpi_comm_world,ierr)
+#else
+      np_tmp = int(nparcelsLocalActive, i8)
 #endif
       if (myid==0) then 
          write(*,'(a8,3i)')  'DHR1:',myid,np_tmp,nparcelsLocalActive
@@ -911,7 +916,6 @@
       use constants , only : rhow,rhow_dp,undefined_index,cpl
       use comm_module
       use parcel_module
-      use mpi
 
       implicit none
 
@@ -3114,7 +3118,6 @@
       !$acc routine seq
       use constants
       use input
-      use mpi
       implicit none
 
       integer :: i,maxidx

@@ -143,11 +143,11 @@
       integer :: i,j,k,n,np,nvar,reqs,orecs,orecu,orecv,orecw,ndum
       integer :: ncid,time_index
       real, dimension(:), allocatable :: dumx,dumy
+      integer :: nparcels_per_mpi(numprocs)
 #ifdef MPI
       integer :: proc,index,count,req1,req2,req3,reqp
       double precision, dimension(nbudget) :: cfoo
       double precision, dimension(numq) :: afoo,bfoo
-      integer :: nparcels_per_mpi(numprocs)
       integer :: nparcelstot
       real, dimension(:,:), allocatable :: rbuf
 #endif
@@ -2253,11 +2253,11 @@
       real, dimension(:,:), allocatable :: pfoo
       real, dimension(:), allocatable :: dumx,dumy
       real, dimension(:,:), allocatable :: rbuf, tmp_buf
+      integer :: nparcels_per_mpi(numprocs)       ! number of active droplets per MPI rank
+                                                  ! that is read in from the restart file
 #ifdef MPI
       integer :: proc,index,count,req1,req2,req3,reqp,tag
       integer :: beg_loc,end_loc
-      integer :: nparcels_per_mpi(numprocs)       ! number of active droplets per MPI rank
-                                                  ! that is read in from the restart file
 #endif
 #ifdef NETCDF
       integer :: varid,ncstatus

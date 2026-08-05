@@ -30,12 +30,17 @@
 
   CONTAINS
 
-! Synchronization routine 
+! Synchronization routine
+#ifdef MPI
      subroutine sync()
       use mpi
       integer :: ierr
       call MPI_BARRIER (MPI_COMM_WORLD,ierr)
      end subroutine
+#else
+     subroutine sync()
+     end subroutine
+#endif
 
 !-----------------------------------------------------------------------
 !  message passing routines
