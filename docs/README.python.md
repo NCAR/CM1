@@ -11,13 +11,13 @@ conda activate cm1
 
 This project uses pre-commit to maintain code quality. Please install it before making your first commit:
 
-- Install the tool: `pip install pre-commit` (or `brew install pre-commit` on macOS).
+- Install the tool: `pip install pre-commit`
 - Install the hooks: Run `pre-commit install` in the root of the repo.
 
 
 ## Command Line Usage
 
-### Get ERA5 sounding for CM1
+### Get ERA5 sounding in text format suitable for CM1
 
 ```csh
 python input/sounding.py 20240518T18 -97.5 35
@@ -35,10 +35,10 @@ python input/sounding.py 20240518T18 -97.5 35
 
 ```
 
-Plot a skew-T diagram.
+Plot a skew-T of ERA5 sounding.
 
 ```csh
-python skewt.py 20240518T18 -97.5 35
+python input/era5_skewt.py 20240518T18 -97.5 35
 ```
 
 ![Skew-T Diagram](images/skewt.png)
