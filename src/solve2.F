@@ -1647,8 +1647,10 @@
         ENDIF
 
 #ifdef MPI
+        IF ( numprocs > 1 ) THEN
         call MPI_IALLREDUCE(mpi_in_place,dumk3,nk,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,reqp1,ierr)
         call MPI_IALLREDUCE(mpi_in_place,dumk4,nk,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,reqp2,ierr)
+        ENDIF
 #endif
 
         dopf = .true.
