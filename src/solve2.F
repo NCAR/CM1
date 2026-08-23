@@ -1647,7 +1647,7 @@
         ENDIF
 
 #ifdef MPI
-        IF ( numprocs > 1 ) THEN
+        IF ( numprocs > 1 ) THEN ! Conditional because might not work correctly with numprocs=1
         call MPI_IALLREDUCE(mpi_in_place,dumk3,nk,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,reqp1,ierr)
         call MPI_IALLREDUCE(mpi_in_place,dumk4,nk,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,reqp2,ierr)
         ENDIF
@@ -1979,8 +1979,10 @@
       IF( dopf )THEN
 
 #ifdef MPI
+        IF ( numprocs > 1 ) THEN
         call mpi_wait(reqp1,mpi_status_ignore,ierr)
         call mpi_wait(reqp2,mpi_status_ignore,ierr)
+        ENDIF
 #endif
 
         temq1 = 0.0

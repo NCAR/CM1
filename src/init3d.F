@@ -192,14 +192,12 @@
         shs(i,j,n)=0.0
         ! for sps, we want to get a MINIMUM value at the surface, so...
         ! set sps to an absurdly large number:
-        ! But it will be zero on the first time step, so set to zero
-        sps(i,j,n)=0.0
+        sps(i,j,n)=200000.0
         ! svs and sus can be negative or positive, 
         ! but we want to get a MAXIMUM value, so...
         ! set svs and sus to an absurdly low (negative) number:
-        ! Set to zero because that is what they will become on the first time step....
-        svs(i,j,n)= 0.0
-        sus(i,j,n)= 0.0
+        svs(i,j,n)=-1000.0
+        sus(i,j,n)=-1000.0
       enddo
       enddo
       enddo
