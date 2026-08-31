@@ -1,5 +1,5 @@
 !COMMAS/1:MODEL_LAYER:PHYSICS
-! prepocessed on "Aug 31 2026" at "11:19:25"
+! prepocessed on "Aug 31 2026" at "11:38:42"
 
 !---------------------------------------------------------------------
 ! IMPORTANT (WRF ONLY): Best results are attained using the 5th-order WENO (Weighted Essentially Non-Oscillatory) advection option (4) for scalars:
@@ -11720,17 +11720,7 @@ END SUBROUTINE nssl_2mom_driver
        dqvii = 0.0
        dqvis = 0.0
        
-       IF ( icondlimit == 1 .or. (dtp > dtcond .and. wvel(mgs) > 30. ) THEN ! 200. -> SS=ssf/100.+1.=3
-       ! conditions of large dt and large W (and supersat) can exist where the RK2 condensation 
-       ! integration can fail, so this is a backstop for such extremes
-         ssmx =  0.001
-         limiter = .true.
-
-         CALL QVEXCESS(ngs,mgs,qwvp,qv0,qx(1,lc),pres,thetap,theta0,dcloudmx, & 
-     &      pi0,tabqvs,nqsat,fqsat,cbw,fcqv1,felvcp,ssmx,pk,ngscnt)
-       ELSE
          limiter = .false.
-       ENDIF
 
        RK2c: DO WHILE ( dt1 .lt. dtp )
           nc = 0
