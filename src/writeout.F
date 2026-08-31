@@ -23,7 +23,7 @@
                         xh,xf,uf,yh,yf,vf,xfref,yfref,                                         &
                         rds,sigma,rdsf,sigmaf,zh,zf,mf,gx,gy,wprof,                            &
                         pi0,prs0,rho0,rr0,rf0,rrf0,th0,qv0,u0,v0,thv0,rth0,qc0,qi0,            &
-                        zs,rgzu,rgzv,rain,raincv,sws,svs,sps,srs,sgs,sus,shs,thflux,qvflux,psfc,      &
+                        zs,rgzu,rgzv,rain,raincv,hail,sws,svs,sps,srs,sgs,sus,shs,thflux,qvflux,psfc,      &
                         rxh,arh1,arh2,uh,ruh,rxf,arf1,arf2,vh,rvh,mh,rmh,rmf,rr,rf,            &
                         gz,rgz,gzu,gzv,gxu,gyv,dzdx,dzdy,c1,c2,                                &
                         cd,ch,cq,tlh,f2d,psmth,prate,ustt,cm0,                                 &
@@ -103,7 +103,7 @@
       real, dimension(ib:ie,jb:je,kb:ke), intent(in) :: pi0,prs0,rho0,rr0,rf0,rrf0,th0,qv0,thv0,rth0,qc0,qi0
       real, dimension(ib:ie,jb:je), intent(in) :: zs
       real, dimension(itb:ite,jtb:jte), intent(in) :: rgzu,rgzv
-      real, dimension(ib:ie,jb:je,nrain), intent(in) :: rain,raincv,sws,svs,sps,srs,sgs,sus,shs
+      real, dimension(ib:ie,jb:je,nrain), intent(in) :: rain,raincv,hail,sws,svs,sps,srs,sgs,sus,shs
       real, dimension(ib:ie,jb:je), intent(in) :: xland,psfc,psmth,thflux,qvflux,cd,ch,cq,tlh,f2d,prate,ustt,cm0
       real, intent(in), dimension(ib:ie) :: rxh,arh1,arh2,uh,ruh
       real, intent(in), dimension(ib:ie+1) :: rxf,arf1,arf2
@@ -208,7 +208,7 @@
       integer :: reqs
 #endif
       real, dimension(:), allocatable :: pfoo,tfoo,qfoo
-      real :: zlcl, zlfc, zel , psource , tsource , qvsource
+      real :: zlcl, zlfc, zel , psource , tsource , qvsource, qvs
 
       integer :: hloop
       real :: bri,uavg,vavg,thvflux,tmpprt,thf1,thf2,gamfac,ws
@@ -234,7 +234,7 @@
 !--------------------------------------------------------------
 !  writeout data
 
-      levs_output = maxk
+      levs_output(:) = maxk
 
 211   format(i1.1)
 212   format(i2.2)
@@ -380,6 +380,19 @@
       cmpr_output(n_out) = .true.
 
         call   write2d(raincv(ib,jb,1),fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
+    endif
+
+  !.............................................
+
+    if(output_hail   .eq.1)then
+      n_out = n_out + 1
+      name_output(n_out) = 'hail    '
+      desc_output(n_out) = 'accumulated surface hailfall'
+      unit_output(n_out) = 'cm'
+      grid_output(n_out) = '2'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
+      cmpr_output(n_out) = .true.
+
+         call   write2d(hail(ib,jb,1),fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
     endif
 
   !.............................................
@@ -562,6 +575,22 @@
           enddo
 
         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
+      endif
+
+      if(output_hail   .eq.1)then
+        n_out = n_out + 1
+        name_output(n_out) = 'hail2   '
+        desc_output(n_out) = 'translated surface hailfall'
+        unit_output(n_out) = 'cm'
+        grid_output(n_out) = '2'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
+
+          do j=1,nj
+          do i=1,ni
+            dum2d(i,j) = hail(i,j,2)
+          enddo
+          enddo
+
+         call   write2d(dum2d,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
       endif
     endif
 
@@ -3229,6 +3258,56 @@
 
   !.............................................
 
+    if(output_temperature .eq.1)then
+      n_out = n_out + 1
+      name_output(n_out) = 't       '
+      desc_output(n_out) = 'air temperature'
+      unit_output(n_out) = 'K'
+      grid_output(n_out) = 's'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
+
+          !$omp parallel do default(shared)  &
+          !$omp private(i,j,k)
+          do k=1,maxk
+          do j=1,nj
+          do i=1,ni
+            if ( psolver.eq.6 ) then
+              dum1(i,j,k) = (th0(i,j,k)+tha(i,j,k))*(prs(i,j,k)*rp00)**rovcp
+            else
+              dum1(i,j,k) = (th0(i,j,k)+tha(i,j,k))*(pi0(i,j,k)+ppi(i,j,k))
+            endif
+          enddo
+          enddo
+          enddo
+
+        call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
+    endif
+
+  !.............................................
+
+    if(imoist == 1 .and. output_rh == 1)then
+      n_out = n_out + 1
+      name_output(n_out) = 'rh      '
+      desc_output(n_out) = 'relative humidity'
+      unit_output(n_out) = 'none'
+      grid_output(n_out) = 's'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
+
+!$omp parallel do default(shared)  &
+!$omp private(i,j,k,qvs)
+          do k=1,maxk
+          do j=1,nj
+          do i=1,ni
+            qvs=rslf( prs(i,j,k) , (th0(i,j,k)+tha(i,j,k))*(pi0(i,j,k)+ppi(i,j,k)) )
+            dum1(i,j,k)=qa(i,j,k,nqv)*(1.0+qvs*reps)    &
+                       /(qvs*(1.0+qa(i,j,k,nqv)*reps))
+          enddo
+          enddo
+          enddo
+
+        call   writes(dum1,fnum,srec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out),sigma,zs,zh,dum9)
+    endif
+
+  !.............................................
+
     IF( dotimeavg .and. ttav.ge.1 )THEN
       n_out = n_out + 1
       name_output(n_out) = 'thtavg'
@@ -3593,6 +3672,23 @@
                 enddo
                 enddo
                 enddo
+
+                IF ( output_n_as_m3 > 0 ) THEN
+                ! convert output to number per m^3
+                IF ( trim(qunit(n)) == '#/kg' ) THEN
+                  unit_output(n_out) = '#/m3'
+
+                !$omp parallel do default(shared)  &
+                !$omp private(i,j,k)
+                do k=1,maxk
+                do j=1,nj
+                do i=1,ni
+                  dum1(i,j,k) = qa(i,j,k,n)*rho(i,j,k)
+                enddo
+                enddo
+                enddo
+                ENDIF
+                ENDIF
 
                 ! for NSSL microphysics:
                 IF( ptype.ge.26 .and. ptype.le.28 )THEN
@@ -6831,7 +6927,23 @@
       unit_output(n_out) = 'm/s'
       grid_output(n_out) = 'u'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
 
+        IF ( output_uv_ground == 0 ) THEN
+
         call   writeu( ua ,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
+
+        ELSE
+
+          do k=1,maxk
+          do j=1,nj
+          do i=1,ni+1
+            dumu(i,j,k) = ua(i,j,k) + umove
+          enddo
+          enddo
+          enddo
+
+        call   writeu(dumu,unum,urec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
+
+        ENDIF
     endif
 
   !.............................................
@@ -7292,7 +7404,23 @@
       unit_output(n_out) = 'm/s'
       grid_output(n_out) = 'v'     ! s=scalar pts (3d) ; u=u pts (3d) ; v=v pts (3d) ; w=w pts (3d) ; 2=2d scalar pts
 
+        IF ( output_uv_ground == 0 ) THEN
+
         call   writev( va ,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
+
+        ELSE
+
+          do k=1,maxk
+          do j=1,nj+1
+          do i=1,ni
+            dumv(i,j,k) = va(i,j,k) + vmove
+          enddo
+          enddo
+          enddo
+
+        call   writev(dumv,vnum,vrec,nwrite,nloop,dat1,dat2,dat3,reqt,myi1p,myi2p,myj1p,myj2p,ncid,time_index,name_output(n_out),levs_output(n_out))
+
+        ENDIF
     endif
 
   !.............................................
@@ -8814,6 +8942,7 @@
 
   IF(output_filetype.eq.1.or.output_filetype.eq.2)THEN
 
+
       IF(myid.ne.nodeleader)THEN
         call     writeocomm1(numi,numj,numk1,numk2,ngxy,d3i,d3j,nodeleader,dat1,var)
       ELSE
@@ -8823,6 +8952,7 @@
           call   writeocomm3(numi,numj,numk1,numk2,ngxy,d2i,d2j,d3i,d3j,d3n,d3t,nodeleader,myid,mynode,ppnode,nodes,numprocs,ni,nj,nxr,nyr,output_format,fileunit,irec,myi1p,myi2p,myj1p,myj2p,reqt,dat1,dat2,dat3,var,ncid,aname,time_index)
         ENDIF
       ENDIF
+
 
 !!!#ifdef MPI
 !!!    ! can help with memory:

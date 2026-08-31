@@ -83,7 +83,7 @@
                    pi0,rho0,prs0,thv0,th0,rth0,qv0,qc0,              &
                    qi0,rr0,rf0,rrf0,                                 &
                    zs,gz,rgz,gzu,rgzu,gzv,rgzv,dzdx,dzdy,            &
-                   rain,raincv,sws,svs,sps,srs,sgs,sus,shs,          &
+                   rain,raincv,hail,sws,svs,sps,srs,sgs,sus,shs,          &
                    dum1,dum2,dum3,dum4,dum5,dum6,dum7,dum8,          &
                    divx,rho,rr,rf,prs,                               &
                    u0,rru,ua,u3d,uten,uten1,                         &
@@ -153,7 +153,7 @@
       real, intent(in), dimension(ib:ie,jb:je,kb:ke) :: qi0,rr0,rf0,rrf0
       real, intent(in), dimension(ib:ie,jb:je) :: zs
       real, intent(in), dimension(itb:ite,jtb:jte) :: gz,rgz,gzu,rgzu,gzv,rgzv,dzdx,dzdy
-      real, intent(inout), dimension(ib:ie,jb:je,nrain) :: rain,raincv,sws,svs,sps,srs,sgs,sus,shs
+      real, intent(inout), dimension(ib:ie,jb:je,nrain) :: rain,raincv,hail,sws,svs,sps,srs,sgs,sus,shs
       real, intent(inout), dimension(ib:ie,jb:je,kb:ke) :: dum1,dum2,dum3,dum4,dum5,dum6,dum7,dum8
       real, intent(inout), dimension(ib:ie,jb:je,kb:ke) :: divx,rho,rr,rf,prs
       real, intent(inout), dimension(ib:ie+1,jb:je,kb:ke) :: u0,rru,ua,u3d,uten,uten1
@@ -845,6 +845,17 @@
       if(imove.eq.1.and.imoist.eq.1)then
         weps = 10.0*epsilon
         call movesfc(0.0,dt,weps,uh,vh,raincv(ib,jb,2),dum1(ib,jb,1),dum1(ib,jb,2),dum1(ib,jb,3), &
+                     reqs_s,sw31(1,1,1),sw32(1,1,1),se31(1,1,1),se32(1,1,1),               &
+                            ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
+      endif
+
+    ENDIF
+
+    IF( output_hail.eq.1 )THEN
+
+      if(imove.eq.1.and.imoist.eq.1)then
+        weps = 10.0*epsilon
+        call movesfc(0.0,dt,weps,uh,vh,hail(ib,jb,2),dum1(ib,jb,1),dum1(ib,jb,2),dum1(ib,jb,3), &
                      reqs_s,sw31(1,1,1),sw32(1,1,1),se31(1,1,1),se32(1,1,1),               &
                             ss31(1,1,1),ss32(1,1,1),sn31(1,1,1),sn32(1,1,1))
       endif

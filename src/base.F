@@ -113,7 +113,7 @@
       real :: qv1,qv2,qv3,qv4,qv5,qv6,qv7,qv8,qv9
       real :: pilast,thvlast,zlast,qt,thl,z_inv,th0last,lwp
       real :: qsfc,zq1,zq2,tv0,tsfc,tvsfc,psfc,lr,tvtrop,ptrop
-      real :: rhval
+      real :: rhval,qvfac
 
 !------------------------------------------------------------------
 
@@ -365,13 +365,14 @@
         if(dowr) write(outfile,*)
         if(dowr) write(outfile,*) '  WK sounding'
 
-!  variables related to Weisman-Klemp analytic sounding
-        z_trop   = 12000.0      ! height of tropopause (m)
-        th_trop  = 343.0        ! theta at tropopause (K)
-        t_trop   = 213.0        ! temp at tropopause (K)
-        th_sfc   = 300.0        ! theta at surface (K)
-        prs_sfc  = 100000.0     ! pressure at surface (Pa)
-        qv_pbl   = 0.014        ! constant value of mixing ratio in PBL
+!  variables related to Weisman-Klemp analytic sounding 
+! These are set by the wksounding namelist; default values are in input.F
+        z_trop   = z_trop_wk  ! 12000.0      ! height of tropopause (m)
+        th_trop  = th_trop_wk ! 343.0        ! theta at tropopause (K)
+        t_trop   = t_trop_wk  ! 213.0        ! temp at tropopause (K)
+        th_sfc   = th_sfc_wk  ! 300.0        ! theta at surface (K)
+        prs_sfc  = prs_sfc_wk ! 100000.0     ! pressure at surface (Pa)
+        qv_pbl   = qv_pbl_wk  ! 0.014        ! constant value of mixing ratio in PBL
 
 !--------------
 
@@ -544,6 +545,13 @@
 
         ! read surface parameters:
         read(40,*,err=9008) p_sfc, th_sfc, qv_sfc
+        IF( p_sfc > 1.0e4 ) p_sfc = p_sfc/100.
+        IF ( qv_sfc < 0.03 ) THEN
+            qvfac = 1.
+            qv_sfc = 1000.*qv_sfc
+        ELSE
+            qvfac = 1000.0
+        ENDIF
         if(dowr) write(outfile,*) ' p_sfc, th_sfc, qv_sfc = ',p_sfc, th_sfc, qv_sfc
 
         ! now, read entire sounding until end of file is discovered
@@ -558,7 +566,7 @@
             call stopcm1
           endif
           ! put qv in g/g
-          qvsnd(k+1) = qvsnd(k+1)/1000.0
+          qvsnd(k+1) = qvsnd(k+1)/qvfac
           nsnd=nsnd+1
         enddo
 445     continue

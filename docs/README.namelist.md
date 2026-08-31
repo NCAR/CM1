@@ -1209,7 +1209,7 @@
 
  Example: A user wants to change the location, size, and amplitude of the
  initial thermal bubble.  Using the flex vars, the code could be modified in
- this manner:
+ this manner: (see also the 'bubble' section below for direct control)
         ric     =    var1
         rjc     =    var2
         zc      =    var3
@@ -1287,6 +1287,9 @@
                    rainfall pattern, assuming a lower surface is moving at
                    umove and vmove.
 
+ output_hail     - surface hail accumulation (liquid equivalent). As for 
+                   output_rain. (Currently only useable with NSSL microphysics (26,27)
+
  output_sws      - maximum surface wind speed (aka, surface wind swath, sws)
                    If imove = 1, two output fields are generated.  The first
                    (sws) is the max sws at model grid points.  The second
@@ -1335,6 +1338,10 @@
  output_basestate - output the base-state arrays?
 
  output_th       - potential temperature?
+
+ output_temperature - air temperature?
+
+ output_rh       - relative humidity (w.r.t. liquid; RHw)
 
  output_thpert   - potential temperature perturbation?
 
@@ -1958,6 +1965,52 @@
 
                  (Note: Nothern hemisphere is assumed.)
 
+-------------------------------------------------------------------------
+                        --- NEW ---
+
+ wksounding section: Options for Weisman-Klemp thermodynamic profile
+       namelist /wksounding/ z_trop, th_trop,t_trop,th_sfc,prs_sfc,qv_pbl 
+! default values
+        z_trop_wk   = 12000.0      ! height of tropopause (m)
+        th_trop_wk  = 343.0        ! theta at tropopause (K)
+        t_trop_wk   = 213.0        ! temp at tropopause (K)
+        th_sfc_wk   = 300.0        ! theta at surface (K)
+        prs_sfc_wk  = 100000.0     ! pressure at surface (Pa)
+        qv_pbl_wk   = 0.014        ! constant value of mixing ratio in boundary layer
+
+-------------------------------------------------------------------------
+                        --- NEW ---
+
+  Warm bubble control parameters. Specify up to 10 warm bubbles (iinit=1)
+      namelist /bubble/ numbub,tbub,tbubrandpert,xcbub,ycbub,zcbub,           &
+                         xradbub,yradbub,zradbub
+
+      integer, parameter :: maxbubble = 10
+      integer :: numbub = 0 ! If 0, then uses hardwired default values
+      real    :: tbubrandpert = 0
+      real, dimension(maxbubble) :: tbub = 1.0, xcbub,ycbub,zcbub,            &
+                                    xradbub,yradbub,zradbub
+      
+      xcbub,ycbub,zcbub : x,y,z location(s) of bubble(s) (meters)
+      xradbub,yradbub,zradbub: bubble radii
+      tbub: center temperature pert. (K)
+      tbubrandpert: If > 0, add random temperature perturbations in the range of 
+                    [-tbubrandpert, tbubrandpert]; helps encourage entrainment in the 
+                    initial thermal for more realistic growth
+
+Example with 2 bubbles (3rd values are ignored):
+
+&bubble
+  numbub = 2
+  xcbub  =  35000., 35000., 25000.,
+  ycbub  =  20000., 60000., 60000.,
+  zcbub  =   1400., 1400., 1400.,
+  xradbub = 10000., 7000., 7000.,
+  yradbub = 10000., 7000., 7000.,
+  zradbub =  1400., 1400., 1400.,
+  tbub    = 3.0, 1.5, 1.5,
+  tbubrandpert = 0.1, 
+/
 
 -------------------------------------------------------------------------
 

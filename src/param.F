@@ -278,6 +278,18 @@
 721   continue
       rewind(20)
 
+! namelists that all threads read so they don't have to be passed
+!      open(unit=20,file='namelist.input',form='formatted',status='old',    &
+!           access='sequential',err=8000)
+!       read(20,nml=forcing,end=722)
+! 722   continue
+      read(20,nml=bubble,end=723)
+723   continue
+      rewind(20)
+      read(20,nml=wksounding,end=724)
+724   continue
+      rewind(20)
+
       close(unit=20)
 
 #ifdef MPI
@@ -427,6 +439,7 @@
       call MPI_BCAST(output_filetype,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_interp ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_rain   ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(output_hail   ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_sws    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_svs    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_sps    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
@@ -443,6 +456,8 @@
       call MPI_BCAST(output_zh     ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_basestate,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_th     ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(output_temperature,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(output_rh,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_thpert ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_prs    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_prspert,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
@@ -457,6 +472,7 @@
       call MPI_BCAST(output_qvpert ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_q      ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_n_as_m3,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(output_uv_ground,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_dbz    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_buoyancy,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_u      ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
@@ -637,6 +653,23 @@
       call MPI_BCAST( hurr_vgpl       ,1,MPI_REAL   ,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST( hurr_rotate     ,1,MPI_REAL   ,0,MPI_COMM_WORLD,ierr)
 
+      call MPI_BCAST(z_trop_wk  ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(th_trop_wk ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(t_trop_wk  ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(th_sfc_wk  ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(prs_sfc_wk ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(qv_pbl_wk  ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+
+      call MPI_BCAST(numbub    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(tbub   ,maxbubble,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(tbubrandpert,maxbubble,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(xcbub  ,maxbubble,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(ycbub  ,maxbubble,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(zcbub  ,maxbubble,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(xradbub,maxbubble,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(yradbub,maxbubble,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(zradbub,maxbubble,MPI_REAL,0,MPI_COMM_WORLD,ierr)
+
       IF ( ptype.eq.26 .or. ptype.eq.27 .or. ptype.eq.28 ) THEN
       call MPI_BCAST(ccn       ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(rho_qr    ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
@@ -668,6 +701,7 @@
       call MPI_BCAST(nssl_density_on,1,MPI_LOGICAL,0,MPI_COMM_WORLD,ierr)
       ENDIF
 #endif
+
 
 !-----------------------------------------------------------------------
 !  Set constants:
@@ -3724,6 +3758,8 @@
           lccn = 7
           lvh = 0
 
+          IF ( output_rain > 0 ) output_hail = 1 ! graupel+hail accumulation
+
           IF ( ptype .eq. 26 ) THEN
             nssl_hail_on = .false.
             lhab = lgh
@@ -3869,7 +3905,7 @@
             qunit(nvl1:nvl2) = 'm^3/kg'
           ENDIF
           IF ( nssl_3moment ) THEN
-            qunit(nzl1:nzl2) = 'Z/m^3/kg'
+            qunit(nzl1:nzl2) = 'Z/kg'
           ENDIF
 
           rhovar(lv:lhab) = .false.
@@ -4633,6 +4669,7 @@
 
       output_interp  = max(0,min(1,output_interp))*iterrain
       output_rain    = max(0,min(1,output_rain))
+      output_hail    = max(0,min(1,output_hail))
       output_sws     = max(0,min(1,output_sws))
       output_svs     = max(0,min(1,output_svs))
       output_sps     = max(0,min(1,output_sps))
@@ -4649,6 +4686,8 @@
       output_zh      = max(0,min(1,output_zh))
       output_basestate = max(0,min(1,output_basestate))
       output_th      = max(0,min(1,output_th))
+      output_temperature = max(0,min(1,output_temperature))
+      output_rh      = max(0,min(1,output_rh))
       output_thpert  = max(0,min(1,output_thpert))
       output_prs     = max(0,min(1,output_prs))
       output_prspert = max(0,min(1,output_prspert))
@@ -4710,6 +4749,7 @@
 !!!      endif
       if(imoist.eq.0)then
         output_rain=0
+        output_hail=0
         output_srs=0
         output_sgs=0
         output_qv=0
@@ -4772,6 +4812,7 @@
       if(dowr) write(outfile,*) 'output_filetype  =',output_filetype
       if(dowr) write(outfile,*) 'output_interp    =',output_interp
       if(dowr) write(outfile,*) 'output_rain      =',output_rain
+      if(dowr) write(outfile,*) 'output_hail      =',output_hail
       if(dowr) write(outfile,*) 'output_sws       =',output_sws
       if(dowr) write(outfile,*) 'output_svs       =',output_svs
       if(dowr) write(outfile,*) 'output_sps       =',output_sps
@@ -4789,6 +4830,8 @@
       if(dowr) write(outfile,*) 'output_basestate =',output_basestate
       if(dowr) write(outfile,*) 'output_th        =',output_th
       if(dowr) write(outfile,*) 'output_thpert    =',output_thpert
+      if(dowr) write(outfile,*) 'output_temperature =',output_temperature
+      if(dowr) write(outfile,*) 'output_rh        =',output_rh
       if(dowr) write(outfile,*) 'output_prs       =',output_prs
       if(dowr) write(outfile,*) 'output_prspert   =',output_prspert
       if(dowr) write(outfile,*) 'output_pi        =',output_pi
