@@ -1,5 +1,5 @@
 !COMMAS/1:MODEL_LAYER:PHYSICS
-! prepocessed on "Aug 23 2026" at "17:55:13"
+! prepocessed on "Aug 31 2026" at "11:19:25"
 
 !---------------------------------------------------------------------
 ! IMPORTANT (WRF ONLY): Best results are attained using the 5th-order WENO (Weighted Essentially Non-Oscillatory) advection option (4) for scalars:
@@ -360,7 +360,7 @@ MODULE module_mp_nssl_2mom
   real   , private :: dcritcheck = 2.*3.17e-6 ! diameter of newly nucleated droplets (isscheck = 1)
   integer, public :: icnuclimit = 0  ! limit droplet nucleation based on Konwar et al. (2012) and Chandrakar et al. (2016)
   integer, public :: icondlimit = 0  ! Check if condensation exceeds sat adj. (1=on, 0 = off unless dt>dtcond)
-  real   , private :: dtcond = 10.    ! timestep above which icondlimit is enabled
+  real   , private :: dtcond = 20.    ! timestep above which icondlimit is enabled
   integer, public :: irenuc = 5      ! =1 to always allow renucleation of droplets within the cloud (do no use, obsolete)
                                       ! =2 renucleation following Twomey/Cohard&Pinty
                                       ! =5 Similar to 7 but can produce extra activated nuclei from the 'smaller' CCN at higher SS
@@ -507,6 +507,7 @@ MODULE module_mp_nssl_2mom
   real   , public :: dmlt = 3.0e-3  ! maximum diameter for rain melting from graupel and hail
   real   , public :: dshd = 1.0e-3  ! nominal diameter for rain drops shed from graupel/hail
   integer, public :: ivshdgs   = 1  ! 0 = use 1mm for all shedding (non-mixedphase); 1 = use vshdgs with sheddiam
+  real   , public :: fshed2cld = 1.0 ! fraction reduction with ished2cld=2
   integer, private :: ished2cld = 0  ! 1: Send shed liquid (from wet growth) to cloud droplets
 
   integer, public :: ihmlt = 2      ! 1=old melting with vmlt; 2=new melting using mean volume diam of graupel/hail
@@ -1214,6 +1215,7 @@ MODULE module_mp_nssl_2mom
                         qhacidn,            &
                         sheddiam,sheddiamlg, &
                         sheddiam0,           &
+                        takshedsize1,takshedsize2,takshedsize3, &
                         mltdiam1,mltdiam2,mltdiam3,mltdiam4,mltdiam05, &
                         imaxdiaopt,          &
                         ithompsoncnoh,       &
@@ -1648,10 +1650,12 @@ MODULE module_mp_nssl_2mom
       do l = 1,nqsat
       temq = 163.15 + (l-1)*fqsat
       IF ( iqvsopt == 0 ) THEN
+      ! former default
       tabqvs(l) = exp(caw*(temq-273.15)/(temq-cbw))
       dtabqvs(l) = ((-caw*(-273.15 + temq))/(temq - cbw)**2 + &
      &                 caw/(temq - cbw))*tabqvs(l)
       ELSE
+      ! Bolton formula (new default)
       tabqvs(l) = exp(cawbolton*(temq-273.15)/(temq-cbwbolton))
       dtabqvs(l) = ((-cawbolton*(-273.15 + temq))/(temq - cbwbolton)**2 + &
      &                 cawbolton/(temq - cbwbolton))*tabqvs(l)
@@ -6654,7 +6658,7 @@ END SUBROUTINE nssl_2mom_driver
 !
 !  iterate  adjustment
 !
-      do itertd = 1,2
+      do itertd = 1,5
 !
 !
 !  calculate super-saturation
@@ -10875,15 +10879,15 @@ END SUBROUTINE nssl_2mom_driver
           IF ( lf > 1 ) tmp = tmp + qx(mgs,lf)
           cvm = cv+cvv*qx(mgs,lv)+cpl*(qx(mgs,lc)+qx(mgs,lr))   &
                                   +cpigb*(tmp)
-          cpm = cp+cpv*qx(mgs,lv)+cpl*(qx(mgs,lc)+qx(mgs,lr))   &
-                                  +cpigb*(tmp)
-          rmm=rd+rw*qx(mgs,lv)
-          
           IF ( eqtset == 2 ) THEN
 
            felvcp(mgs) = (felv(mgs)-rw*temg(mgs))/cvm
 
           ELSE
+            cpm = cp+cpv*qx(mgs,lv)+cpl*(qx(mgs,lc)+qx(mgs,lr))   &
+                                  +cpigb*(tmp)
+            rmm=rd+rw*qx(mgs,lv)
+          
             felvcp(mgs) = (felv(mgs)*cv/(cp) - rw*temg(mgs)*(1.0-rovcp*cpm/rmm))/cvm
             felvpi(mgs) = pi0(mgs)*rovcp*(felv(mgs)/(temg(mgs)) - rw*cpm/rmm)/cvm
           ENDIF
@@ -11716,8 +11720,8 @@ END SUBROUTINE nssl_2mom_driver
        dqvii = 0.0
        dqvis = 0.0
        
-       IF ( icondlimit == 1 .or. dtp > dtcond .or. wvel(mgs) > 10. ) THEN
-       ! conditions of large dt and large wvel can exist where the RK2 condensation 
+       IF ( icondlimit == 1 .or. (dtp > dtcond .and. wvel(mgs) > 30. ) THEN ! 200. -> SS=ssf/100.+1.=3
+       ! conditions of large dt and large W (and supersat) can exist where the RK2 condensation 
        ! integration can fail, so this is a backstop for such extremes
          ssmx =  0.001
          limiter = .true.
@@ -22899,7 +22903,7 @@ END SUBROUTINE nssl_2mom_driver
 !
       do mgs = 1,ngscnt
       
-      IF ( tfrdry < temg(mgs) .and. temg(mgs) < tfr ) THEN ! {
+      IF ( tfrdry < temg(mgs) .and. temg(mgs) < tfr .and. ished2cld /= 5 ) THEN ! {
 !
 !      qswet(mgs) =
 !     >  ( xdia(mgs,ls,1)*swvent(mgs)*cx(mgs,ls)*fwet1(mgs)
@@ -23118,6 +23122,14 @@ END SUBROUTINE nssl_2mom_driver
         !   ELSE
         !     qhlwet(mgs) = qhldry(mgs)
         !   ENDIF
+
+         IF ( ished2cld == 6 ) THEN
+         ! effectively eliminate wet growth but still leave wet surface for soaking, etc.
+           qhwet(mgs) = Max( qhwet(mgs), qhdry(mgs) - qxmin(lh) )
+           IF ( lhl > 0 ) THEN
+             qhlwet(mgs) = Max( qhlwet(mgs), qhldry(mgs) - qxmin(lhl) )
+           ENDIF
+         ENDIF
          ENDIF ! incwet
        ENDIF
        
