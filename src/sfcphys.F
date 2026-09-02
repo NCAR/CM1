@@ -1100,7 +1100,7 @@
       endif
 
       ! save delta-T and delta-q (used for use_avg_sfc only)
-      delt = t1(i,j)/pisfc-tsk(i,j)
+      delt = t1(i,j)-tsk(i,j)/pisfc
       delq = q1(i,j)-qsfc(i,j)
 
     enddo
