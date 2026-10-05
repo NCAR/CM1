@@ -852,6 +852,10 @@
       call disp_err( nf90_put_att(ncid,varid,"long_name","accumulated surface rainfall") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","cm") , .true. )
 
+      call disp_err( nf90_def_var(ncid,"hail"    ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
+      call disp_err( nf90_put_att(ncid,varid,"long_name","accumulated surface hailfall") , .true. )
+      call disp_err( nf90_put_att(ncid,varid,"units","cm") , .true. )
+
       call disp_err( nf90_def_var(ncid,"sws"     ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","max windspeed at lowest level") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","m/s") , .true. )
@@ -884,6 +888,10 @@
 
       call disp_err( nf90_def_var(ncid,"rain2"   ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
       call disp_err( nf90_put_att(ncid,varid,"long_name","accumulated surface rainfall (translated)") , .true. )
+      call disp_err( nf90_put_att(ncid,varid,"units","cm") , .true. )
+
+      call disp_err( nf90_def_var(ncid,"hail2"   ,nf90_float,(/niid,njid,timeid/),varid) , .true. )
+      call disp_err( nf90_put_att(ncid,varid,"long_name","accumulated surface hailfall (translated)") , .true. )
       call disp_err( nf90_put_att(ncid,varid,"units","cm") , .true. )
 
       call disp_err( nf90_def_var(ncid,"sws2"    ,nf90_float,(/niid,njid,timeid/),varid) , .true. )

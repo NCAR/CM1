@@ -45,7 +45,7 @@
 
 !-----------------------------------------------------------------------
 
-      integer nx,ny,nz,nodex,nodey,ppnode,timeformat,timestats,outunits,      &
+      integer :: nx,ny,nz,nodex,nodey,ppnode,timeformat,timestats,outunits,   &
               ni,nj,nk,nkp1,ngxy,ngz,                                         &
               ib,ie,jb,je,kb,ke,                                              &
               ibm,iem,jbm,jem,kbm,kem,                                        &
@@ -108,6 +108,7 @@
               output_format,output_filetype,output_interp,                    &
               restart_format,restart_filetype,                                &
               output_rain,output_sws,output_svs,output_sps,output_srs,        &
+              output_hail=0,                                                  &
               output_sgs,output_sus,output_shs,output_coldpool,output_zs,     &
               output_psfc,                                                    &
               output_basestate,output_sfcflx,output_sfcparams,output_sfcdiags,&
@@ -166,6 +167,10 @@
               ntim,ntavr,utav,vtav,wtav,ttav,qtav,etav,uutav,vvtav,           &
               nsfctavr,les_subdomain_shape,ib_init
 
+      integer :: output_n_as_m3 = 0   ! convert number conc from #/kg to #/m3
+      integer :: output_uv_ground = 0  ! output u,v, as ground relative
+      integer :: output_temperature = 0 ! output air temperature
+      integer :: output_rh = 0 ! output relative humidity (0-1)
 !-----------------------------------------------------------------------
 
       real dx,dy,dz,dtl,timax,run_time,                                       &
@@ -209,6 +214,24 @@
 
 !-----------------------------------------------------------------------
 
+      integer, parameter :: maxbubble = 10
+      integer :: numbub = 0
+      real    :: tbubrandpert = 0
+      real, dimension(maxbubble) :: tbub = 1.0, xcbub,ycbub,zcbub,            &
+                                    xradbub,yradbub,zradbub
+
+!-----------------------------------------------------------------------
+!      namelist /wksounding/ z_trop, th_trop,t_trop,th_sfc,prs_sfc,qv_pbl 
+! default values
+        real :: z_trop_wk   = 12000.0      ! height of tropopause (m)
+        real :: th_trop_wk  = 343.0        ! theta at tropopause (K)
+        real :: t_trop_wk   = 213.0        ! temp at tropopause (K)
+        real :: th_sfc_wk   = 300.0        ! theta at surface (K)
+        real :: prs_sfc_wk  = 100000.0     ! pressure at surface (Pa)
+        real :: qv_pbl_wk   = 0.014        ! constant value of mixing ratio in PBL
+
+!-----------------------------------------------------------------------
+
       double precision ::                                                     &
            tapfrq,rstfrq,statfrq,prclfrq,diagfrq,azimavgfrq,hifrqfrq
 
@@ -234,8 +257,6 @@
       logical :: nssl_3moment = .false.
       logical :: nssl_density_on = .true.
 
-      integer :: output_n_as_m3 = 0   ! convert number conc from #/kg to #/m3
-      integer :: output_uv_ground = 0  ! output u,v, as ground relative
 
 !-----------------------------------------------------------------------
 !  timestats:
@@ -269,7 +290,8 @@
           advwenos,advwenov,weno_order,                                 &
           apmasscon,idiff,mdiff,difforder,imoist,                       &
           ipbl,sgsmodel,tconfig,bcturbs,horizturb,doimpl,               &
-          irdamp,hrdamp,psolver,ptype,ihail,iautoc,cuparam,             &
+          irdamp,hrdamp,psolver,ptype,nssl_3moment,nssl_density_on,     &
+          ihail,iautoc,cuparam,                                         &
           icor,betaplane,lspgrad,eqtset,idiss,efall,rterm,              &
           wbc,ebc,sbc,nbc,bbc,tbc,irbc,roflux,nudgeobc,                 &
           isnd,iwnd,itern,iinit,                                        &
@@ -284,16 +306,19 @@
       namelist /param7/ bc_temp,ptc_top,ptc_bot,viscosity,pr_num
       namelist /param8/ var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,   &
                         var11,var12,var13,var14,var15,var16,var17,var18,var19,var20
+      namelist /bubble/ numbub,tbub,tbubrandpert,xcbub,ycbub,zcbub,           &
+                         xradbub,yradbub,zradbub
+      namelist /wksounding/ z_trop_wk, th_trop_wk,t_trop_wk,th_sfc_wk,prs_sfc_wk,qv_pbl_wk
       namelist /param9/                                                       &
               output_format,output_filetype,                                  &
-              output_interp,                                                  &
+              output_interp,output_hail,                                      &
               output_rain,output_sws,output_svs,output_sps,output_srs,        &
               output_sgs,output_sus,output_shs,output_coldpool,               &
               output_sfcflx,output_sfcparams,output_sfcdiags,                 &
               output_psfc,output_zs,output_zh,output_basestate,               &
               output_th,output_thpert,output_prs,output_prspert,              &
               output_pi,output_pipert,output_rho,output_rhopert,output_tke,   &
-              output_km,output_kh,                                            &
+              output_km,output_kh,output_temperature,output_rh,               &
               output_qv,output_qvpert,output_q,output_dbz,output_buoyancy,    &
               output_u,output_upert,output_uinterp,                           &
               output_v,output_vpert,output_vinterp,output_w,output_winterp,   &
@@ -302,7 +327,8 @@
               output_radten,output_cape,output_cin,output_lcl,output_lfc,     &
               output_pwat,output_lwp,                                         &
               output_thbudget,output_qvbudget,                                &
-              output_ubudget,output_vbudget,output_wbudget,output_pdcomp
+              output_ubudget,output_vbudget,output_wbudget,output_pdcomp,     &
+              output_n_as_m3, output_uv_ground
       namelist /param16/                                                      &
               restart_format,restart_filetype,restart_reset_frqtim,           &
               restart_file_theta,restart_file_dbz,restart_file_th0,           &
