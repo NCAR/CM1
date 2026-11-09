@@ -1,0 +1,68 @@
+name: Regression test
+
+# Runs a few short CM1 cases and compares their domain statistics
+# (cm1out_stats) with reference values in tests/regression/reference/.
+# A PR that changes model answers fails here until it updates the reference.
+#
+# To create or update the references, run this workflow by hand from the
+# Actions tab with "write_reference" checked, download the
+# "regression-reference" artifact, and commit the CSV files.
+
+on:
+  push:
+    branches:
+      - "develop"
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      write_reference:
+        description: "Write new reference stats (uploaded as an artifact) instead of comparing"
+        type: boolean
+        default: false
+
+jobs:
+  regression:
+    runs-on:
+      group: CIRRUS-4x8
+    container:
+      image: docker.io/halehawk/gnu_io:latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build CM1
+        run: |
+          cd src/
+          make -j 4 FC=gfortran USE_MPI=true
+
+      - name: Install numpy
+        run: pip install numpy
+
+      - name: Run cases
+        run: |
+          # Run every case even if one fails, then fail if any did.
+          status=0
+          for c in supercell_morrison supercell_nssl les_stable; do
+            tests/regression/run_case.sh "$c" ${{ inputs.write_reference && '--write' || '' }} || status=1
+          done
+          exit $status
+
+      - name: Upload new reference stats
+        if: inputs.write_reference
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-reference
+          path: tests/regression/reference/*.csv
+
+      - name: Upload run output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-runs
+          path: |
+            regression_runs/*/cm1out_stats.*
+            regression_runs/*/cm1.log
+            regression_runs/*/namelist.input
