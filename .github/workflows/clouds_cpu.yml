@@ -8,15 +8,33 @@ on:
 
 jobs:
   run-matrix:
-    strategy:
+    strategy: 
       fail-fast: false
-      matrix:
-        compiler: [oneapi, gcc12, gcc13]
-        mpi: [openmpi, mpich3]
-        gpu: [nogpu]
-        arch: [x86_64]
-        netcdf: [true, false]
+      include:
+        - compiler: gcc13
+          mpi: openmpi
+          gpu: nogpu
+          arch: x86_64
+          netcdf: true
+          
+        - compiler: gcc13
+          mpi: mpich3
+          gpu: nogpu
+          arch: x86_64
+          netcdf: false
 
+        - compiler: oneapi
+          mpi: openmpi
+          gpu: nogpu
+          arch: x86_64
+          netcdf: false
+
+        - compiler: oneapi
+          mpi: mpich3
+          gpu: nogpu
+          arch: x86_64
+          netcdf: true
+      
     runs-on: 
       group: CIRRUS-4x8
     defaults:
