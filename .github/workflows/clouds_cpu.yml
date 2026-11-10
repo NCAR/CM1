@@ -74,13 +74,14 @@ jobs:
              pip install gcovr
              NETCDFBASE=$NETCDF make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
            else 
-             NETCDFBASE=$NETCDF make -j 4 FC=ifort CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
+             NETCDFBASE=$NETCDF make -j 4 FC=ifx CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
            fi
 
       - name: Run CM1 w/o code coverage
         run: |
            conda activate
            cd run/
+           sed -i 's/timax  =  7200.0/timax  =  360.0/g' namelist.input
            if [ "${{ matrix.netcdf }}" = "true" ]; then
              sed -i 's/output_format    = 1/output_format    = 2/g' namelist.input
            fi
