@@ -10,7 +10,8 @@ jobs:
   run-matrix:
     strategy: 
       fail-fast: false
-      include:
+      matrix:
+       include:
         - compiler: gcc13
           mpi: openmpi
           gpu: nogpu
