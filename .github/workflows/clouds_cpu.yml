@@ -81,7 +81,7 @@ jobs:
         run: |
            conda activate
            cd run/
-           sed -i 's/timax  =  7200.0/timax  =  360.0/g' namelist.input
+           sed -i 's/timax  =  7200.0/timax  =  720.0/g' namelist.input
            if [ "${{ matrix.netcdf }}" = "true" ]; then
              sed -i 's/output_format    = 1/output_format    = 2/g' namelist.input
            fi
