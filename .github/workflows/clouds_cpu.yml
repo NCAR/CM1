@@ -1,4 +1,7 @@
 name: Cirrus clouds CPU with Linux
+permissions:
+  contents: read
+
 on:
   push:
     branches:
