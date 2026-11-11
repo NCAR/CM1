@@ -1,4 +1,7 @@
 name: Cirrus clouds CPU with Linux
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -8,40 +11,40 @@ on:
 
 jobs:
   run-matrix:
-    strategy: 
+    strategy:
       fail-fast: false
       matrix:
-       include:
-        - compiler: gcc13
-          mpi: openmpi
-          gpu: nogpu
-          arch: x86_64
-          netcdf: true
-          
-        - compiler: gcc13
-          mpi: mpich3
-          gpu: nogpu
-          arch: x86_64
-          netcdf: false
+        include:
+          - compiler: gcc13
+            mpi: openmpi
+            gpu: nogpu
+            arch: x86_64
+            netcdf: true
 
-        - compiler: oneapi
-          mpi: openmpi
-          gpu: nogpu
-          arch: x86_64
-          netcdf: false
+          - compiler: gcc13
+            mpi: mpich3
+            gpu: nogpu
+            arch: x86_64
+            netcdf: false
 
-        - compiler: oneapi
-          mpi: mpich3
-          gpu: nogpu
-          arch: x86_64
-          netcdf: true
-      
-    runs-on: 
+          - compiler: oneapi
+            mpi: openmpi
+            gpu: nogpu
+            arch: x86_64
+            netcdf: false
+
+          - compiler: oneapi
+            mpi: mpich3
+            gpu: nogpu
+            arch: x86_64
+            netcdf: true
+
+    runs-on:
       group: CIRRUS-4x8
     defaults:
       run:
         shell: bash -elo pipefail {0}
-        
+
     container:
       image: docker.io/ncarcisl/cisldev-${{ matrix.arch }}-almalinux9-${{ matrix.compiler }}-${{ matrix.mpi }}${{ matrix.gpu == 'cuda' && '-cuda' || '' }}:devel
       options: --gpus all
@@ -68,31 +71,30 @@ jobs:
 
       - name: Build CM1 w/o code coverage
         run: |
-           cd src/
-           if [ "${{ matrix.compiler }}" != "oneapi" ]; then
-             conda activate
-             pip install gcovr
-             NETCDFBASE=$NETCDF make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
-           else 
-             NETCDFBASE=$NETCDF make -j 4 FC=ifx CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
-           fi
+          cd src/
+          if [ "${{ matrix.compiler }}" != "oneapi" ]; then
+            conda activate
+            pip install gcovr
+            NETCDFBASE=$NETCDF make -j 4 FC=gfortran CODE_COVERAGE=true USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
+          else
+            NETCDFBASE=$NETCDF make -j 4 FC=ifx CODE_COVERAGE=false USE_OPENMP=true USE_MPI=true USE_NETCDF=${{ matrix.netcdf }}
+          fi
 
       - name: Run CM1 w/o code coverage
         run: |
-           conda activate
-           cd run/
-           sed -i 's/timax  =  7200.0/timax  =  720.0/g' namelist.input
-           if [ "${{ matrix.netcdf }}" = "true" ]; then
-             sed -i 's/output_format    = 1/output_format    = 2/g' namelist.input
-           fi
-           if [ "${{ matrix.mpi }}" = "openmpi" ]; then
-             OMP_NUM_THREADS=1 mpiexec --allow-run-as-root -n 4 ./cm1.exe 
-           else
-             OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe
-           fi
-           ls cm1out*
-           if [ "${{ matrix.compiler }}" != "oneapi" ]; then
-             cd ../src
-             make coverage         
-           fi
-
+          conda activate
+          cd run/
+          sed -i 's/timax  =  7200.0/timax  =  720.0/g' namelist.input
+          if [ "${{ matrix.netcdf }}" = "true" ]; then
+            sed -i 's/output_format    = 1/output_format    = 2/g' namelist.input
+          fi
+          if [ "${{ matrix.mpi }}" = "openmpi" ]; then
+            OMP_NUM_THREADS=1 mpiexec --allow-run-as-root -n 4 ./cm1.exe
+          else
+            OMP_NUM_THREADS=1 mpiexec -n 4 ./cm1.exe
+          fi
+          ls cm1out*
+          if [ "${{ matrix.compiler }}" != "oneapi" ]; then
+            cd ../src
+            make coverage
+          fi
