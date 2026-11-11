@@ -2,21 +2,10 @@ name: cm1
 channels:
   - conda-forge
   - defaults
-  - r
 dependencies:
-  - f90nml
-  - pandas
-  - s3fs
-  - xarray
-  - ipython
-  - ca-certificates
-  - openssl
-  - ipykernel
-  - h5netcdf
-  - cftime
-  - dask
-  - matplotlib
-  - metpy
-  - certifi
-  - scikit-learn
+  - python
+  - pip
+  - conda-forge::nwsspc-sharplib  # not on PyPI, must stay here
+  - pip:
+    - -e ..  # installs pyproject.toml dependencies
 prefix: /glade/work/ahijevyc/conda-envs/cm1

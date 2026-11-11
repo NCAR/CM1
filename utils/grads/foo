@@ -5,7 +5,7 @@
 117a118
 > say result
 143,145c144,147
-< * Bob Hart 
+< * Bob Hart
 < * Penn State University / Dept of Meteorology
 < * Last Update:  August 28, 2002
 ---
@@ -14,13 +14,13 @@
 > * Last Update:  August 29, 2009  ** IMPORTANT UPDATE **
 > * http://moe.met.fsu.edu/~rhart/software.php
 148a151,172
-> * 08/29/09 - Fixed a rare bug related to plotting the wind profile 
+> * 08/29/09 - Fixed a rare bug related to plotting the wind profile
 > *
 > * 08/08/09 - Changed defines such that no adjustment is needed for projected data (e.g. lcc).
 > *
 > * 08/08/09 - Fixed typo in CAPE/CIN calculation.
 > *
-> * 08/07/09 - Changed math_int to math_nint in a few places to correct the 
+> * 08/07/09 - Changed math_int to math_nint in a few places to correct the
 > *            rounding for isotherm drawing.   Also fixed DrawPrcl=0 with DrawPmax=1
 > *            interaction problem.   Also fixed mb to Pa conversion for MAscentI.
 > *
@@ -30,14 +30,14 @@
 > *            are strongly encouraged to update to this version of plotskew
 > *            based upon the improvement in this routine.   Note additional
 > *            options for user regarding CAPE/CIN calculation:  MAscentT and MAscentI.
-> * 
+> *
 > * 08/05/09 - Finally converted all hack-coded math functions (abs/int/pow)
 > *            to the intrinsic math_* equivalents.  Results in improved speed, but
 > *            now requires GrADS v1.8 or higher.  Users should not be using anything
-> *            less than 1.9 anyway by now...      
+> *            less than 1.9 anyway by now...
 > *
 199d222
-< * 
+< *
 203c226
 < *            http://www.ems.psu.edu/~hart/skew.html
 ---
@@ -52,8 +52,8 @@
 < * George Bryan (PSU), Davide Sacchetti (CMIRL), and Enrico Minguzzi (CMIRL).
 ---
 > * fine tune the script from the horrible mess from which it began back in 1996.
-> * In particular, thanks go out to George Bryan (NCAR), Paul Markowski (PSU), 
-> * Steve Lord (NCEP), Mike Fiorino (NOAA/ESRL), Davide Sacchetti (CMIRL), and 
+> * In particular, thanks go out to George Bryan (NCAR), Paul Markowski (PSU),
+> * Steve Lord (NCEP), Mike Fiorino (NOAA/ESRL), Davide Sacchetti (CMIRL), and
 > * Enrico Minguzzi (CMIRL).
 212a237,238
 > * PLEASE NOTE THAT THIS CODE COMES WITH NO WARRANTY.
@@ -84,25 +84,25 @@
 > MAscentT= 1
 > MAscentI= 10
 471a507
-> * SVectCol= Color of storm motion vector arrow in hodograph 
+> * SVectCol= Color of storm motion vector arrow in hodograph
 482c518,519
 < HodoCol = 1
 ---
 > HodoCol = 3
 > SVectCol= 2
 632,637c669,674
-< _C4= 0.43884187/pow(10,8) 
+< _C4= 0.43884187/pow(10,8)
 < _C5=-0.29883885/pow(10,10)
 < _C6= 0.21874425/pow(10,12)
 < _C7=-0.17892321/pow(10,14)
-< _C8= 0.11112018/pow(10,16)          
+< _C8= 0.11112018/pow(10,16)
 < _C9=-0.30994571/pow(10,19)
 ---
-> _C4= 0.43884187/math_pow(10,8) 
+> _C4= 0.43884187/math_pow(10,8)
 > _C5=-0.29883885/math_pow(10,10)
 > _C6= 0.21874425/math_pow(10,12)
 > _C7=-0.17892321/math_pow(10,14)
-> _C8= 0.11112018/math_pow(10,16)          
+> _C8= 0.11112018/math_pow(10,16)
 > _C9=-0.30994571/math_pow(10,19)
 645c682
 <     _powpres.subscr=pow(zz,0.286)
@@ -194,11 +194,11 @@
 >        "define dd="snddewp
 >        "d dd"
 1194c1237
-<        If (abs(tt) < 130 & abs(dd) < 130) 
+<        If (abs(tt) < 130 & abs(dd) < 130)
 ---
->        If (math_abs(tt) < 130 & math_abs(dd) < 130) 
+>        If (math_abs(tt) < 130 & math_abs(dd) < 130)
 1212,1215c1255,1256
-<    If (SfcPlev != PMaxThee) 
+<    If (SfcPlev != PMaxThee)
 <       TLclMax=Templcl(TMaxThee,DMaxThee)
 <       PLclMax=Preslcl(TMaxThee,DMaxThee,PMaxThee)
 <    Endif
@@ -206,7 +206,7 @@
 >    TLclMax=Templcl(TMaxThee,DMaxThee)
 >    PLclMax=Preslcl(TMaxThee,DMaxThee,PMaxThee)
 1217a1259
-> 
+>
 1223c1265
 < If (DrawPMax = 1 & SfcPlev != PMaxThee)
 ---
@@ -232,9 +232,9 @@
 ---
 >          Text1YC=tyloc-2.75
 1343c1385
-<    "draw string "Text1XC+0.25 " " Text1YC+0.10" " int(K)      
+<    "draw string "Text1XC+0.25 " " Text1YC+0.10" " int(K)
 ---
->    "draw string "Text1XC+0.25 " " Text1YC+0.10" " math_int(K)      
+>    "draw string "Text1XC+0.25 " " Text1YC+0.10" " math_int(K)
 1345c1387
 <    "draw string "Text1XC+0.25 " " Text1YC-0.10 " " int(tt)
 ---
@@ -253,7 +253,7 @@
 ---
 >    "draw rec  "Text2XC-0.75 " " Text2YC-0.60 " " Text2XC+0.75 " " Text2YC+0.85
 >    "draw string "Text2XC-0.45 " " Text2YC+0.70 " Lowest level"
->    "draw string "Text2XC-0.70 " " Text2YC+0.45 "  Press(mb)" 
+>    "draw string "Text2XC-0.70 " " Text2YC+0.45 "  Press(mb)"
 >    "draw string "Text2XC+0.25 " " Text2YC+0.45 " " math_int(SfcPlev)
 1354c1398
 <    "draw string "Text2XC+0.25 " " Text2YC+0.30 " " int(Sfctemp*10)/10
@@ -264,50 +264,50 @@
 ---
 >    "draw string "Text2XC+0.25 " " Text2YC+0.15 " " math_int(Sfcdewp*10)/10
 1358,1364c1402,1408
-<    "draw string "Text2XC+0.25 " " Text2YC " " int(SfcThee) 
+<    "draw string "Text2XC+0.25 " " Text2YC " " int(SfcThee)
 <    "draw string "Text2XC-0.70 " " Text2YC-0.15 "  LI"
 <    "draw string "Text2XC+0.25 " " Text2YC-0.15 " " round(SLI)
 <    "draw string "Text2XC-0.70 " " Text2YC-0.30 "  CAPE(J)"
-<    "draw string "Text2XC+0.25 " " Text2YC-0.30 " " int(Pos)   
+<    "draw string "Text2XC+0.25 " " Text2YC-0.30 " " int(Pos)
 <    "draw string "Text2XC-0.70 " " Text2YC-0.45 "  CIN(J)"
-<    "draw string "Text2XC+0.25 " " Text2YC-0.45 " " int(CIN)      
+<    "draw string "Text2XC+0.25 " " Text2YC-0.45 " " int(CIN)
 ---
->    "draw string "Text2XC+0.25 " " Text2YC " " math_int(SfcThee) 
+>    "draw string "Text2XC+0.25 " " Text2YC " " math_int(SfcThee)
 >    "draw string "Text2XC-0.70 " " Text2YC-0.15 "  LI (`3.`0C)"
 >    "draw string "Text2XC+0.25 " " Text2YC-0.15 " " math_nint(SLI)
 >    "draw string "Text2XC-0.70 " " Text2YC-0.30 "  CAPE(Jkg`a-1`n)"
->    "draw string "Text2XC+0.25 " " Text2YC-0.30 " " math_int(Pos)   
+>    "draw string "Text2XC+0.25 " " Text2YC-0.30 " " math_int(Pos)
 >    "draw string "Text2XC-0.70 " " Text2YC-0.45 "  CIN(Jkg`a-1`n)"
->    "draw string "Text2XC+0.25 " " Text2YC-0.45 " " math_int(CIN)      
+>    "draw string "Text2XC+0.25 " " Text2YC-0.45 " " math_int(CIN)
 1371c1415
 <    "draw string "Text3XC+0.25 " " Text3YC+0.20 " " int(PMaxThee)
 ---
 >    "draw string "Text3XC+0.25 " " Text3YC+0.20 " " math_int(PMaxThee)
 1373,1379c1417,1423
 <    "draw string "Text3XC+0.25 " " Text3YC+0.05 " " int(MaxThee)
-<    "draw string "Text3XC-0.70 " " Text3YC-0.10 " LI" 
+<    "draw string "Text3XC-0.70 " " Text3YC-0.10 " LI"
 <    "draw string "Text3XC+0.25 " " Text3YC-0.10 " "round(LIMax)
-<    "draw string "Text3XC-0.70 " " Text3YC-0.25 " CAPE(J)" 
-<    "draw string "Text3XC+0.25 " " Text3YC-0.25 " "int(PosMax) 
+<    "draw string "Text3XC-0.70 " " Text3YC-0.25 " CAPE(J)"
+<    "draw string "Text3XC+0.25 " " Text3YC-0.25 " "int(PosMax)
 <    "draw string "Text3XC-0.70 " " Text3YC-0.40 " CIN(J)"
-<    "draw string "Text3XC+0.25 " " Text3YC-0.40 " " int(CINMax) 
+<    "draw string "Text3XC+0.25 " " Text3YC-0.40 " " int(CINMax)
 ---
 >    "draw string "Text3XC+0.25 " " Text3YC+0.05 " " math_int(MaxThee)
->    "draw string "Text3XC-0.70 " " Text3YC-0.10 " LI (`3.`0C)" 
+>    "draw string "Text3XC-0.70 " " Text3YC-0.10 " LI (`3.`0C)"
 >    "draw string "Text3XC+0.25 " " Text3YC-0.10 " "math_nint(LIMax)
->    "draw string "Text3XC-0.70 " " Text3YC-0.25 " CAPE(Jkg`a-1`n)" 
->    "draw string "Text3XC+0.25 " " Text3YC-0.25 " "math_int(PosMax) 
+>    "draw string "Text3XC-0.70 " " Text3YC-0.25 " CAPE(Jkg`a-1`n)"
+>    "draw string "Text3XC+0.25 " " Text3YC-0.25 " "math_int(PosMax)
 >    "draw string "Text3XC-0.70 " " Text3YC-0.40 " CIN(Jkg`a-1`n)"
->    "draw string "Text3XC+0.25 " " Text3YC-0.40 " " math_int(CINMax) 
+>    "draw string "Text3XC+0.25 " " Text3YC-0.40 " " math_int(CINMax)
 1457c1501,1502
 <       "d "sndspd
 ---
 >       "define dd="sndspd
 >       "d dd"
 1460c1505
-<       if (wspd < 0 | pres > _pmax) 
+<       if (wspd < 0 | pres > _pmax)
 ---
->       if (math_abs(wspd) > 500 | pres > _pmax) 
+>       if (math_abs(wspd) > 500 | pres > _pmax)
 1467c1512,1514
 <       "d "sndspd"(z="zz")"
 ---
@@ -320,9 +320,9 @@
 >       "define dd="snddir
 >       "d dd"
 1486c1534
-<       if (wspd > 0) 
+<       if (wspd > 0)
 ---
->       if (math_abs(wspd) < 500) 
+>       if (math_abs(wspd) < 500)
 1501,1502c1549,1550
 <         dx=cos((180-wdir)*_dtr)
 <         dy=sin((180-wdir)*_dtr)
@@ -396,13 +396,13 @@
 1952,1998d2001
 < **************************************************************************
 < function CAPE(startt,startp,endp,sndtemp,snddewp)
-< 
+<
 < *---------------------------------------------------------------------
 < * Returns all postive area and convective inhibition above LCL.
 < * Parcel is lifted from LCL at startt,startp and is halted
 < * at endp.   Integration method used is trapezoid method.
 < *---------------------------------------------------------------------
-< 
+<
 < pres=startp
 < PclTemp=startt
 < PclTempV=virtual2(PclTemp+273.15,PclTemp+273.15,pres)-273.15
@@ -410,7 +410,7 @@
 < Pos=0
 < Neg=0
 < Neg2=0
-< 
+<
 < count=0
 < While (pres >= endp)
 <    EnvTemp=interp(sndtemp,pres)
@@ -419,8 +419,8 @@
 <    DelT=PclTempV-EnvTempV
 <    If (abs(EnvTempV) < 130 & abs(PclTempV) < 130)
 <      count=count+1
-<      If (count > 1) 
-<        Val=DelT/pres+Prev 
+<      If (count > 1)
+<        Val=DelT/pres+Prev
 <        If (Val > 0)
 <           Pos=Pos+Val
 <           Neg2=0
@@ -435,12 +435,12 @@
 <    PclTemp=PclTemp-100*delp*gammaw(PclTemp,pres,100)
 <    PclTempV=virtual2(PclTemp+273.15,PclTemp+273.15,pres)-273.15
 < Endwhile
-< 
+<
 < Pos=0.5*Pos*287*delp
 < CIN=0.5*(Neg-Neg2)*287*delp
-< 
+<
 < return(Pos" "CIN)
-< 
+<
 2047,2048c2050,2051
 < logpp=log(pres)
 < logppm=log(pres-delp)
@@ -499,9 +499,9 @@
 ---
 >   If (math_abs(VBelow) > 130 & zlev > 1 & zlev < _zmaxfile)
 2207c2213
-<       While (abs(VBelow) > 130 & zz > 1) 
+<       While (abs(VBelow) > 130 & zz > 1)
 ---
->       While (math_abs(VBelow) > 130 & zz > 1) 
+>       While (math_abs(VBelow) > 130 & zz > 1)
 2211c2217,2218
 <         "d "array"(lev="PBelow")"
 ---
@@ -552,7 +552,7 @@
 ---
 > *-----------------------------------------------------------------------
 > *
-> *  GHBcape - A GrADS routine converted from a Fortran90 subroutine to 
+> *  GHBcape - A GrADS routine converted from a Fortran90 subroutine to
 > *            calculate Convective Available Potential Energy (CAPE) and
 > *            Convective Inhibition (CIN) from a sounding.
 > *
@@ -623,16 +623,16 @@
 <       break
 ---
 >    say "Start calculating CAPE & CIN."
-> 
-> * Get max k with legit temp data 
-> 
+>
+> * Get max k with legit temp data
+>
 >    "q file"
 >    rec=sublin(result,5)
 >    nk1=subwrd(rec,9)
-> 
+>
 >    "set gxout value"
 >    "set grads off"
->  
+>
 >    found=0
 >    m=0
 >    k=nk1
@@ -641,22 +641,22 @@
 >       "define dd="sndtemp
 >       "d dd"
 >       temp=subwrd(result,4)
->       if (math_abs(temp) < 130) 
+>       if (math_abs(temp) < 130)
 >            found=1
 >            nk=k
 >       endif
 >       k=k-1
 >    endwhile
-> 
-> 
+>
+>
 > * Create script arrays of variables matching expectations of original Fortran
 > * Allow for missing data by:
-> * Data is only included at a level if 
+> * Data is only included at a level if
 > *     - Temperature and dewpoint exist with a pressure at or above 500mb
-> *     - Temperature data exists with a pressure below 500mb 
-> * 
+> *     - Temperature data exists with a pressure below 500mb
+> *
 > * If only temperature data exists at pressures below 500mb, insert Td=T-50C
-> 
+>
 >     k=1
 >     m=0
 >     while (k <= nk)
@@ -668,14 +668,14 @@
 >       "define dd="snddewp
 >       "d dd"
 >       dewp=subwrd(result,4)
->       if (math_abs(temp) < 130 ) 
->          if (math_abs(dewp) < 130) 
+>       if (math_abs(temp) < 130 )
+>          if (math_abs(dewp) < 130)
 >              m=m+1
 >              pin.m=pres
 >              tin.m=temp
 >              tdin.m=dewp
 >          endif
->          if (math_abs(dewp) > 130 & pres <= 500) 
+>          if (math_abs(dewp) > 130 & pres <= 500)
 >              m=m+1
 >              pin.m=pres
 >              tin.m=temp
@@ -684,12 +684,12 @@
 >       endif
 >       k=k+1
 >     endwhile
-> 
+>
 >     nk=m
-> 
+>
 > * Conversion of George Bryan's Fortran begins here
 > *-----------------------------------------------------------------------
-> 
+>
 >     g     = 9.81
 >     p00   = 100000
 >     cp    = 1005.7
@@ -699,7 +699,7 @@
 >     xls   = 2836017
 >     t0    = 273.15
 > *-----------------------------------------------------------------------
-> 
+>
 >     g     = 9.81
 >     p00   = 100000
 >     cp    = 1005.7
@@ -715,22 +715,22 @@
 >     lv2   = cpl-cpv
 >     ls1   = xls+(cpi-cpv)*t0
 >     ls2   = cpi-cpv
-> 
+>
 >     rp00  = 1/p00
 >     eps   = rd/rv
 >     reps  = rv/rd
 >     rddcp = rd/cp
 >     cpdrd = cp/rd
 >     cpdg  = cp/g
-> 
+>
 >     converge = 0.0002
-> 
+>
 >     debug_level =  0
-> 
+>
 > *-----------------------------------------------------------------------
-> 
+>
 > *---- convert p,t,td to mks units; get pi,q,th,thv ----!
-> 
+>
 >     k=1
 >     while (k <= nk)
 >         p.k = 100.0*pin.k
@@ -742,10 +742,10 @@
 >       thv.k = th.k*(1+reps*q.k)/(1.0+q.k)
 >       k=k+1
 >     endwhile
-> 
+>
 > *---- get height using the hydrostatic equation ----!
 >     say "   Calculating height of levels"
-> 
+>
 >     z.1 = 0
 >     k=2
 >     while (k <= nk)
@@ -754,19 +754,19 @@
 >       z.k = z.km + dz
 >       k=k+1
 >     endwhile
-> 
+>
 > *---- find source parcel ----!
-> 
+>
 >   say "   Finding/calculating source parcel"
-> 
+>
 >   if (source = 1)
 > *     use surface parcel
 >     kmax = 1
 >   endif
-> 
->   if (source = 2) 
+>
+>   if (source = 2)
 > *     use most unstable parcel (max theta-e)
->     if (p.1 < 50000) 
+>     if (p.1 < 50000)
 > *     first report is above 500mb... just use the first level reported
 >       kmax = 1
 >       maxthe = GHBgetthe(p.1,t.1,td.1,q.1)
@@ -788,14 +788,14 @@
 <   endwhile
 < return(i0)
 ---
->     if(debug_level >= 100) 
+>     if(debug_level >= 100)
 >           say '  kmax,maxthe = ' kmax' 'maxthe
 >     endif
 >    endif
 2383c2606,2610
 < *************************************************************************
 ---
->    if  (source = 3) 
+>    if  (source = 3)
 > *     use mixed layer
 >     if ( z.2-z.1 > ml_depth )
 > *     the second level is above the mixed-layer depth:  just use the
@@ -803,10 +803,10 @@
 2385c2612,2631
 < function abs(i)
 ---
->       avgth = th.1 
->       avgqv = q.1 
+>       avgth = th.1
+>       avgqv = q.1
 >       kmax = 1
->     else 
+>     else
 >        if( z.nk < ml_depth )
 > *     the top-most level is within the mixed layer:  just use the
 > *     upper-most level
@@ -818,7 +818,7 @@
 >           avgth = 0.0
 >           avgqv = 0.0
 >           k = 2
->           if(debug_level >= 100) 
+>           if(debug_level >= 100)
 >               say '  ml_depth = 'ml_depth
 >               say '  k,z,th,q:'
 >               say 1" "z.1" "th.1" "q.1
@@ -829,7 +829,7 @@
 < *----------------------------
 ---
 >           while (z.k <= ml_depth & k<=nk)
->                if(debug_level >= 100)  
+>                if(debug_level >= 100)
 >                   say k" "z.k" "th.k" "q.k
 >                endif
 >                km=k-1
@@ -838,46 +838,46 @@
 >                k = k + 1
 >           endwhile
 2391,2394c2643,2685
-<   if (i < 0) 
+<   if (i < 0)
 <      absval=-i
-<   else 
+<   else
 <      absval=i
 ---
 >           km=k-1
 >           th2 = th.km+(th.k-th.km)*(ml_depth-z.km)/(z.k-z.km)
 >           qv2 = q.km+(q.k - q.km)*(ml_depth-z.km)/(z.k-z.km)
-> 
->           if(debug_level >= 100) 
+>
+>           if(debug_level >= 100)
 >               say 999" "ml_depth" "th2" "qv2
 >           endif
-> 
+>
 >           avgth = avgth + 0.5*(ml_depth-z.km)*(th2+th.km)
 >           avgqv = avgqv + 0.5*(ml_depth-z.km)*(qv2+q.km)
-> 
->           if(debug_level >= 100) 
+>
+>           if(debug_level >= 100)
 >             say k" "z.k" "th.k" "q.k
 >           endif
 >           avgth = avgth/ml_depth
 >           avgqv = avgqv/ml_depth
-> 
+>
 >           kmax = 1
 >         endif
 >       endif
 >      else
->          if (source != 1 & source != 2 & source != 3) 
->             say 
+>          if (source != 1 & source != 2 & source != 3)
+>             say
 >             say '  Unknown value for source'
 >             say
 >             say ' source = ' source
->             say 
+>             say
 >             "quit"
 >          endif
 >      endif
-> 
+>
 > *---- define parcel properties at initial location ----!
 >     narea = 0.0
-> 
->   if( source = 1 | source = 2) 
+>
+>   if( source = 1 | source = 2)
 >     k    = kmax
 >     th2  = th.kmax
 >     pi2  = pi.kmax
@@ -912,10 +912,10 @@
 2401c2706,2712
 < function log(i)
 ---
->     doit = 1     
->     cloud = 0      
+>     doit = 1
+>     cloud = 0
 >     if(adiabat = 1 | adiabat = 2)
->       ice = 0 
+>       ice = 0
 >     else
 >       ice = 1
 >     endif
@@ -931,7 +931,7 @@
 < return(val)
 ---
 >      the = GHBgetthe(p2,t2,t2,qv2)
->      if(debug_level >= 100) 
+>      if(debug_level >= 100)
 >         say '  the = 'the
 >      endif
 2413c2720,2721
@@ -955,7 +955,7 @@
 >         k = k+1
 >         km=k-1
 >        b1 =  b2
->        dp = p.km-p.k 
+>        dp = p.km-p.k
 >        if( dp < pinc )
 >         nloop = 1
 >       else
@@ -1036,15 +1036,15 @@
 >           rm=rd+rv*qvbar
 >           cpm=cp+cpv*qvbar+cpl*qlbar+cpi*qibar
 >           th2=th1*math_exp(lhv*(ql2-ql1)/(cpm*tbar)+lhs*(qi2-qi1)/(cpm*tbar)+(rm/cpm-rd/cp)*math_log(p2/p1) )
->           if(i > 90) 
+>           if(i > 90)
 >              say i" "th2" "thlast" "th2-thlast
 >           endif
 >           if(i >  100)
->             say 
+>             say
 >             say '  Error:  lack of convergence'
->             say 
+>             say
 >             say '  ... stopping iteration '
->             say 
+>             say
 >             "quit"
 >           endif
 >           if( math_abs(th2-thlast) > converge )
@@ -1067,17 +1067,17 @@
 < val=subwrd(rec,4)
 < return(val)
 ---
->         if (ql2 >= 1.0e-10) 
+>         if (ql2 >= 1.0e-10)
 >             cloud=1
 >         endif
->         
->         if (adiabat = 1 | adiabat = 3) 
+>
+>         if (adiabat = 1 | adiabat = 3)
 >              qt=qv2
 >              ql2=0
 >              qi2=0
 >         endif
->         if (adiabat <= 0 | adiabat >= 5) 
->              say 
+>         if (adiabat <= 0 | adiabat >= 5)
+>              say
 >              say "Undefined adiabat."
 >              say
 >              "quit"
@@ -1114,7 +1114,7 @@
 < function exp(i)
 ---
 >       chk=0
->       if( b2 >= 0 & b1 < 0) 
+>       if( b2 >= 0 & b1 < 0)
 >         chk=1
 >         ps = p.km+(p.k-p.km)*(0-b1)/(b2-b1)
 >         frac = b2/(b2-b1)
@@ -1130,7 +1130,7 @@
 >         cin  = cin  + narea
 >         narea = 0.0
 >       endif
->       if (chk = 0 & b2 < 0 &  b1 > 0) 
+>       if (chk = 0 & b2 < 0 &  b1 > 0)
 >           chk=2
 >           km=k-1
 >           ps = p.km+(p.k-p.km)*(0.0-b1)/(b2-b1)
@@ -1150,7 +1150,7 @@
 >         parea =  0.0
 >         narea = narea-0.5*dz*(b1+b2)
 >       endif
->       if (chk = 0) 
+>       if (chk = 0)
 >         parea =  0.5*dz*(b1+b2)
 >         narea =  0.0
 >       endif
@@ -1171,43 +1171,43 @@
 < val=subwrd(rec,4)
 ---
 > *---- All done ----!
-> 
+>
 > say "Done calculating CAPE & CIN."
-> 
+>
 > return(cape" "cin)
-> 
+>
 > *-----------------------------------------------------------------------
 > *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 > *-----------------------------------------------------------------------
-> 
+>
 > function GHBmax(val1,val2)
-> 
-> if (val1 > val2) 
+>
+> if (val1 > val2)
 >     maxval=val1
 > else
 >     maxval=val2
 > endif
 > return(maxval)
-> 
+>
 > *-----------------------------------------------------------------------
 > *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 > *-----------------------------------------------------------------------
-> 
+>
 > function GHBmin(val1,val2)
-> 
-> if (val1 < val2) 
+>
+> if (val1 < val2)
 >     minval=val1
 > else
 >     minval=val2
 > endif
 > return(minval)
-> 
+>
 > *-----------------------------------------------------------------------
 > *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 > *-----------------------------------------------------------------------
-> 
+>
 > function GHBgetqvs(p,t)
-> 
+>
 > eps=287.04/461.5
 > es = 611.2*math_exp(17.67*(t-273.15)/(t-29.65))
 > val = eps*es/(p-es)
@@ -1222,21 +1222,21 @@
 < rr=abs(1.0*i)
 < rr=int(rr+0.5)
 < if (i < 0)
-<    rr=-1*rr      
+<    rr=-1*rr
 ---
 > function GHBgetqvi(p,t)
-> 
+>
 > eps=287.04/461.5
 > es = 611.2*math_exp(21.8745584*(t-273.15)/(t-7.66))
 > val = eps*es/(p-es)
 > return(val)
-> 
+>
 > *-----------------------------------------------------------------------
 > *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 > *-----------------------------------------------------------------------
-> 
+>
 > function GHBgetthe(p,t,td,q)
-> 
+>
 > if( td-t >= -0.1 )
 >       tlcl = t
 > else
@@ -1244,12 +1244,12 @@
 2491c2953,2961
 < return(rr)
 ---
-> 
+>
 > tthe=t*math_pow(100000.0/p,(0.2854*(1.0-0.28*q)))*math_exp(((3376.0/tlcl)-2.54)*q*(1.0+0.81*q))
-> 
+>
 > return(tthe)
-> 
-> 
+>
+>
 > *-----------------------------------------------------------------------
 > *ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 > *-----------------------------------------------------------------------

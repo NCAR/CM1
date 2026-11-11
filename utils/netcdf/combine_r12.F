@@ -3,7 +3,7 @@
 ! George Bryan's cm1 numerical model.
 !
 ! Provided by:  Daniel Kirshbaum, University of Reading
-! 
+!
 ! Last modified:  2 April 2008
 !
 ! Updated:  Early Sept 2008 by Lou Wicker, National Severe Storms Lab
@@ -20,7 +20,7 @@
 
   implicit none
 
-  include '/usr/local/netcdf3-32/include/netcdf.inc' 
+  include '/usr/local/netcdf3-32/include/netcdf.inc'
 
 !-----------------------------------------
 ! input and auxiliary variables
@@ -61,7 +61,7 @@
   integer :: VarID, VarID1, nDimsVar, nAttsVar, VarType
   integer, dimension(4) :: VarDim
   integer, dimension(nf_max_var_dims) :: VarDimIDs
- 
+
   character(nf_max_name) :: TimeDimName
   integer :: TimeDimLength, TimeDimID
 
@@ -153,7 +153,7 @@
    mxp1=mx+1
    my=(y_max1-y_min1)/dx
    myp1=my+1
-          
+
 ! times
    allocate(time(nt))
    time(:)=0.0
@@ -201,9 +201,9 @@
 !-----------------------------------------------------------------------
 ! Write output, necessary variables
 
-   write(*,"(/,'Input name of the new netCDF file (name.nc):')") 
+   write(*,"(/,'Input name of the new netCDF file (name.nc):')")
    read(*,*) fname1
-        
+
    call disp_err( nf_create(fname1,nf_clobber,ncid1), .true. )
 
    status = nf_def_dim(ncid1,"nx",mx,DimID)
@@ -262,42 +262,42 @@
 
    status = nf_def_var(ncid1,"xh",nf_float,1,1,varid)
    status = nf_put_att_text(ncid1,varid,"units",2,"km")
-   status = nf_put_att_text(ncid1,varid,"def",11,"staggered x") 
+   status = nf_put_att_text(ncid1,varid,"def",11,"staggered x")
    status = nf_enddef(ncid1)
    status = nf_put_vara_real(ncid1,varid,1,mx,sgx)
    status = nf_redef(ncid1)
 
    status = nf_def_var(ncid1,"xf",nf_float,1,4,varid)
    status = nf_put_att_text(ncid1,varid,"units",2,"km")
-   status = nf_put_att_text(ncid1,varid,"def",13,"unstaggered x") 
+   status = nf_put_att_text(ncid1,varid,"def",13,"unstaggered x")
    status = nf_enddef(ncid1)
    status = nf_put_vara_real(ncid1,varid,1,mxp1,ugx)
    status = nf_redef(ncid1)
 
    status = nf_def_var(ncid1,"yh",nf_float,1,2,varid)
    status = nf_put_att_text(ncid1,varid,"units",2,"km")
-   status = nf_put_att_text(ncid1,varid,"def",11,"staggered y") 
+   status = nf_put_att_text(ncid1,varid,"def",11,"staggered y")
    status = nf_enddef(ncid1)
    status = nf_put_vara_real(ncid1,varid,1,my,sgy)
    status = nf_redef(ncid1)
 
    status = nf_def_var(ncid1,"yf",nf_float,1,5,varid)
    status = nf_put_att_text(ncid1,varid,"units",2,"km")
-   status = nf_put_att_text(ncid1,varid,"def",13,"unstaggered y") 
+   status = nf_put_att_text(ncid1,varid,"def",13,"unstaggered y")
    status = nf_enddef(ncid1)
    status = nf_put_vara_real(ncid1,varid,1,myp1,vgy)
    status = nf_redef(ncid1)
 
    status = nf_def_var(ncid1,"zh",nf_float,1,3,varid)
    status = nf_put_att_text(ncid1,varid,"units",2,"km")
-   status = nf_put_att_text(ncid1,varid,"def",11,"staggered z") 
+   status = nf_put_att_text(ncid1,varid,"def",11,"staggered z")
    status = nf_enddef(ncid1)
    status = nf_put_vara_real(ncid1,varid,1,nz,sgz)
    status = nf_redef(ncid1)
 
    status = nf_def_var(ncid1,"zf",nf_float,1,6,varid)
    status = nf_put_att_text(ncid1,varid,"units",2,"km")
-   status = nf_put_att_text(ncid1,varid,"def",13,"unstaggered z") 
+   status = nf_put_att_text(ncid1,varid,"def",13,"unstaggered z")
    status = nf_enddef(ncid1)
    status = nf_put_vara_real(ncid1,varid,1,nzp1,wgz)
    status = nf_redef(ncid1)
@@ -314,7 +314,7 @@
 
 !-----------------------------------------------------------------------
 !  Read/Write 3D variables
-! 
+!
 ! LJW:  I created a subroutine to handle to do the read/write to create
 !       code that was a bit more manageable
 
@@ -471,7 +471,7 @@
 
    integer, intent (in) :: status
    logical, intent (in) :: die_on_error
-  
+
    IF (status /= nf_noerr) THEN
      print *, trim(nf_strerror(status))
     IF( die_on_error) THEN

@@ -15,15 +15,15 @@ Bryan Cloud Model, Version 1, Release 9
 
     NOTE:
        The variables dx,dy,dz are only used when stretch=0.  When stretch=1,
-       these variables should be set to an approximately average value 
+       these variables should be set to an approximately average value
        (to minimize truncation errors).  See README.stretch for more
        information.
 
  dtl - Large time step (s).
 
-       For psolver = 2,3,or 4, this time step is limited by the fastest 
-       nonacoustic speed.  For thunderstorm simulations, this is usually 
-       the maximum vertical velocity.  Otherwise, this would be the 
+       For psolver = 2,3,or 4, this time step is limited by the fastest
+       nonacoustic speed.  For thunderstorm simulations, this is usually
+       the maximum vertical velocity.  Otherwise, this would be the
        propagation speed of gravity waves.  The following usually works well:
            dtl = min(dx,dy,dz)/67  (rounded to an appropriate value, of course)
 
@@ -66,7 +66,7 @@ Bryan Cloud Model, Version 1, Release 9
  pdscheme - Scheme to ensure positive definiteness of moisture:
              0 = set negative values back to zero (default)
                  (not mass conserving)
-             1 = simple, nearly mass-conserving scheme 
+             1 = simple, nearly mass-conserving scheme
                  (new ... relatively untested.  Use with caution.)
 
  advweno - Advect scalars (except pressure) with WENO scheme?
@@ -232,8 +232,8 @@ Bryan Cloud Model, Version 1, Release 9
 
           0 = no balance (initial pressure perturbation is zero everywhere)
           1 = hydrostatic balance (appropriate for small aspect ratios)
-          2 = anelastic balance (initial pressure perturbation is the 
-              buoyancy pressure perturbation field for an anelastic 
+          2 = anelastic balance (initial pressure perturbation is the
+              buoyancy pressure perturbation field for an anelastic
               atmosphere).  (required for iinit = 6, the TC init scheme)
 
  imove - Move domain at constant speed (0=no, 1=yes)
@@ -257,7 +257,7 @@ Bryan Cloud Model, Version 1, Release 9
 
  kdiff2 - Diffusion coefficient for difforder=2.  Specified in m^2/s.
 
- kdiff6 - Diffusion coefficient for difforder=6.  Specified as a 
+ kdiff6 - Diffusion coefficient for difforder=6.  Specified as a
           fraction of one-dimensional stability.  A value between
           0.02-0.12 is recommended.
 
@@ -351,5 +351,3 @@ Bryan Cloud Model, Version 1, Release 9
  viscosity - value for kinematic viscosity (m^2/s)
 
  pr_num - value for Prandtl number (unitless)
-
-

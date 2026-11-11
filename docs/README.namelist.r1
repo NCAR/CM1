@@ -12,8 +12,8 @@ Bryan Cloud Model, Version 1, Release 1
 
  dtl - Large time step (s).
 
-       For kwss=1, this time step is limited by the fastest nonacoustic 
-       speed.  For thunderstorm simulations, this is usually the maximum 
+       For kwss=1, this time step is limited by the fastest nonacoustic
+       speed.  For thunderstorm simulations, this is usually the maximum
        vertical velocity.  Otherwise, this would be the propagation speed
        of gravity waves.
        The following usually works well:
@@ -31,7 +31,7 @@ Bryan Cloud Model, Version 1, Release 1
 
        NOTE!  dtl/dts must be an EVEN integer (exactly) for the
        split time steps to work properly.  There is no check for
-       this ... so please remember.  Typically, dtl/dts of 
+       this ... so please remember.  Typically, dtl/dts of
        4,6,8,10,12 is appropriate.  For dtl/dts less than 4,
        you should probably use kwss=0 instead.  A value of
        dtl/dts greater than 12 is not recommended.
@@ -72,7 +72,7 @@ Bryan Cloud Model, Version 1, Release 1
                  (Only used if kwss = 1)
               1 = vertical implicit sound (only horizontal terms are explicit,
                   as in MM5, ARPS, WRF)
-              2 = explicit treament of acoustic terms in both vertical 
+              2 = explicit treament of acoustic terms in both vertical
                   and horizontal directions
 
  kwss - Use Klemp-Wilhelmson split time steps?  (0=no,  1=YES)
@@ -138,6 +138,3 @@ Bryan Cloud Model, Version 1, Release 1
            (1/s).  Value of about 1/300 is recommended.
 
  zd - Height above which Rayleigh damping is applied (m).
-
-
-

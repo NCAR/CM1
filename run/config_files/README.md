@@ -1,22 +1,21 @@
 
- For more information on each case, please see the README file in each 
- subdirectory.  
+ For more information on each case, please see the README file in each
+ subdirectory.
 
 
 
  Acronyms:
 
- CPM  -  Convection-Permitting Model 
+ CPM  -  Convection-Permitting Model
 
- DNS  -  Direct Numerical Simulation 
+ DNS  -  Direct Numerical Simulation
 
- IB  -  Immersed Boundaries 
+ IB  -  Immersed Boundaries
 
- LES  -  Large-Eddy Simulation 
+ LES  -  Large-Eddy Simulation
 
- MM  -  Mesoscale Model 
+ MM  -  Mesoscale Model
 
- NH  - Nonhydrostatic 
+ NH  - Nonhydrostatic
 
- SCM  -  Single-Column Model 
-
+ SCM  -  Single-Column Model

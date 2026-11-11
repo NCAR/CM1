@@ -21,9 +21,19 @@ dependencies = [
     "s3fs",
     "scikit-learn",
     "xarray",
+    # nwsspc-sharplib: conda-only, install via environment.yml
 ]
 classifiers = [
                "Intended Audience :: Science/Research",
                "License :: OSI Approved :: MIT License",
                ]
 keywords = ["weather", "meteorology", "model"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::pint.UnitStrippedWarning",
+]
+markers = [
+    "slow: tests that hit the network or campaign storage",
+]

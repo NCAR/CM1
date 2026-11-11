@@ -6,7 +6,7 @@
 # 64 tasks/threads because bluefire uses Simultaneous Multi-Threading (SMT);
 # see http://www.cisl.ucar.edu/docs/bluefire/be_quickstart.html#running
 # for more information.  Always use SMT, because runs will finish ~20%
-# faster.  Thus, always leave the "span[ptile=64]" line unmodified (i.e., 
+# faster.  Thus, always leave the "span[ptile=64]" line unmodified (i.e.,
 # always request 64 tasks per node).
 #
 #   To use  64 processors (2 nodes), use #BSUB -n 128
@@ -33,4 +33,3 @@
 ldedit -btextpsize=64K -bdatapsize=64K -bstackpsize=64K cm1.exe
 setenv TARGET_CPU_LIST "-1"
 mpirun.lsf /usr/local/bin/launch ./cm1.exe >&! cm1.print.out
-

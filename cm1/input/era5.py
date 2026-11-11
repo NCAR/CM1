@@ -1,198 +1,119 @@
 import logging
 import os
 from pathlib import Path
-from typing import Tuple
+from typing import Optional, Tuple
 
-import metpy
 import metpy.calc as mcalc
 import numpy as np
 import pandas as pd
 import s3fs
-import xarray
-from matplotlib import pyplot as plt
+import xarray as xr
+from metpy.constants import Rd, g
 from metpy.units import units
 from pint import Quantity
-from sklearn.neighbors import BallTree
 
-from cm1.utils import CAMPAIGNDIR, TMPDIR, mean_lat_lon
+from cm1.utils import TMPDIR
+
+# ---------------------------------------------------------------------------
+# Configurable paths
+# ---------------------------------------------------------------------------
+
+# Override by setting the environment variable CM1_ERA5_INVARIANT_DIR, e.g.:
+#   export CM1_ERA5_INVARIANT_DIR=/my/local/copy/of/invariant
+_DEFAULT_INVARIANT_DIR = "/glade/work/ahijevyc/share/ds633.6-ERA5ML/e5.oper.invariant"
+ERA5_INVARIANT_DIR: str = os.environ.get(
+    "CM1_ERA5_INVARIANT_DIR", _DEFAULT_INVARIANT_DIR
+)
+
+
+# ---------------------------------------------------------------------------
+# Campaign storage loader
+# ---------------------------------------------------------------------------
 
 
 def load_from_campaign(
     time: pd.Timestamp,
-    glade: Path,
     rdaindex: str,
     level_type: str,
     varnames: list,
     start_end_str: str,
-    drop_variables: list = ["utc_date"],
-) -> xarray.Dataset:
+    drop_variables: list = None,
+) -> xr.Dataset:
     """
-    Load ERA5 dataset for specified time from
-    campaign storage
+    Load an ERA5 dataset for *time* from GLADE campaign storage.
 
     Parameters
     ----------
     time : pd.Timestamp
-        Desired timestamp for data retrieval.
-    glade : Path
-        Base path to the glade directory.
+        Desired timestamp.
+    rdaindex : str
+        RDA dataset index (e.g. ``"d633006"``).
     level_type : str
-        Type of ERA5 data (e.g., 'e5.oper.an.pl', 'e5.oper.an.sfc').
-    varnames : list
-        List of variable names to load.
+        ERA5 level type string (e.g. ``"e5.oper.an.pl"``).
+    varnames : list[str]
+        Variable file-name suffixes to open.
     start_end_str : str
-        start and end time part of filename
-    drop_variables : list, optional
-        List of variables to drop from the dataset (default is ["utc_date"]).
+        ``YYYYMMDDHHH_YYYYMMDDHHH`` portion of each filename.
+    drop_variables : list[str], optional
+        Variables to drop on open (default: ``["utc_date"]``).
 
     Returns
     -------
-    xarray.Dataset
-        Dataset containing ERA5 data for the specified time and configuration.
+    xr.Dataset
     """
-    rdapath = Path(glade) / CAMPAIGNDIR
+    if drop_variables is None:
+        drop_variables = ["utc_date"]
 
-    # model level invariant files don't have no year_month_dir.
-    year_month_dir = (
-        "" if rdaindex == "d633006" and level_type == "e5.oper.invariant" else time.strftime("%Y%m")
-    )
+    base = Path("/glade/campaign/collections/rda/data") / rdaindex / level_type
+    year_month_dir = time.strftime("%Y%m")
     local_files = [
-        rdapath
-        / rdaindex
-        / level_type
-        / year_month_dir
-        / f"{level_type}.{varname}.{start_end_str}.nc"
-        for varname in varnames
+        base / year_month_dir / f"{level_type}.{v}.{start_end_str}.nc" for v in varnames
     ]
 
-    ds = xarray.open_mfdataset(local_files, drop_variables=drop_variables)
-    logging.info(f"opened {len(local_files)} local {level_type} files")
-    logging.debug(local_files)
-    logging.info(f"selected {time}")
-    ds = ds.sel(time=time)
-
-    return ds
-
-
-def circle_neighborhood(ds, lat, lon, neighbors, debug=True):
-    """
-    mean in neighborhood of
-    of lat, lon
-    Average args.neighbor points.
-    """
-    if neighbors > 100:
-        logging.warning(
-            f"averaging {neighbors} neighbors along model levels may include wildly different pressures and heights"
-        )
-    # indexing="ij" allows Dataset.stack dims order to be "latitude", "longitude"
-    lat2d, lon2d = np.meshgrid(ds.latitude, ds.longitude, indexing="ij")
-    latlon = np.deg2rad(np.vstack([lat2d.ravel(), lon2d.ravel()]).T)
-    X = [[lat.m_as("radian"), lon.m_as("radian")]]
-
-    (idx,) = BallTree(latlon, metric="haversine").query(X, return_distance=False, k=neighbors)
-    ds = ds.stack(z=("latitude", "longitude")).isel(z=idx).load()
-    lat_mean, lon_mean = mean_lat_lon(ds.latitude, ds.longitude)
-    sfc_pressure_range = ds.SP.max() - ds.SP.min()
-    if sfc_pressure_range > 1 * units.hPa:
-        logging.warning(f"sfc_pressure_range: {sfc_pressure_range:~}")
-    sfc_height_range = ds.surface_geopotential_height.max() - ds.surface_geopotential_height.min()
-    if sfc_height_range > 10 * units.m:
-        logging.warning(f"sfc_height_range: {sfc_height_range:~}")
-
-    # Plot requested sounding location and nearest neighbors used for averaging.
-    if debug:
-        logging.warning(f"plotting {lat_mean} {lon_mean}")
-        import cartopy.crs as ccrs
-        import cartopy.feature as cfeature
-
-        fig, ax = plt.subplots(
-            figsize=(10, 5),
-            subplot_kw={"projection": ccrs.PlateCarree(central_longitude=lon_mean.data)},
-        )
-
-        # Add features to the map
-        ax.add_feature(cfeature.COASTLINE)
-        ax.add_feature(cfeature.BORDERS, linestyle=":")
-        ax.add_feature(cfeature.LAND, edgecolor="black")
-        ax.add_feature(cfeature.OCEAN)
-
-        # Plot the points
-        ax.plot(
-            lon_mean,
-            lat_mean,
-            marker="o",
-            transform=ccrs.PlateCarree(),
-            label="mean",
-            linestyle="none",
-        )
-        ax.plot(
-            lon.m_as("degrees_E"),
-            lat.m_as("degrees_N"),
-            marker=".",
-            transform=ccrs.PlateCarree(),
-            label="request",
-            linestyle="none",
-        )
-        ax.scatter(ds.longitude, ds.latitude, marker=".", transform=ccrs.PlateCarree())
-        ax.set_title(f"{lat_mean.data} {lon_mean.data}")
-        ax.gridlines(draw_labels=True)
-        ax.legend()
-        plt.show()
-        # TODO: remove assertions after function is bug-free
-        # assert mean location is close to what was requested.
-        assert abs(lat_mean - lat) < 1, f"meanlat {lat_mean} lat {lat}"
-        assert (
-            np.cos(np.radians(lon_mean)) - np.cos(np.radians(lon))
-        ) < 0.01, (
-            f"meanlon {lon_mean} lon {lon} {np.cos(np.radians(lon_mean)) - np.cos(np.radians(lon))}"
-        )
-        assert (
-            np.sin(np.radians(lon_mean)) - np.sin(np.radians(lon))
-        ) < 0.01, (
-            f"meanlon {lon_mean} lon {lon} {np.sin(np.radians(lon_mean)) - np.sin(np.radians(lon))}"
-        )
-
-    ds = ds.mean(dim="z")  # drop `z` `latitude` `longitude` dimensions
-    ds = ds.assign_coords(latitude=lat_mean, longitude=lon_mean)
-    ds.attrs["neighbors"] = neighbors
-    return ds
+    ds = xr.open_mfdataset(
+        local_files, compat="override", drop_variables=drop_variables
+    )
+    ds.attrs["source_files"] = [str(p) for p in local_files]
+    logging.info(
+        f"Opened {len(local_files)} local {level_type} files; selecting {time}"
+    )
+    return ds.sel(time=time)
 
 
-def compute_z_level(ds: xarray.Dataset, lev: int, z_h: float) -> Tuple[float, float]:
+# ---------------------------------------------------------------------------
+# Geopotential helpers
+# ---------------------------------------------------------------------------
+
+
+def compute_z_level(
+    ds: xr.Dataset, lev: int, z_h: xr.DataArray
+) -> Tuple[xr.DataArray, xr.DataArray]:
     r"""
-    Compute the geopotential at a full level and the overlying half-level.
+    Compute the geopotential at full level *lev* and the overlying half-level.
 
-    This function calculates the geopotential \( z_f \) at a specified full level
-    (given by `lev`) and updates the geopotential at the overlying half-level
-    \( z_h \). The calculation is based on the virtual temperature at full level
-    and pressure at half-levels.
-
-    Parameters:
+    Parameters
     ----------
-    ds : xarray.Dataset
-        The dataset containing the variables required for computation,
-        specifically "Tv" (virtual temperature) and "P_half" (pressure on half-levels).
+    ds : xr.Dataset
+        Must contain ``"Tv"`` (virtual temperature) and ``"P_half"``.
     lev : int
-        The level index for the desired full-level geopotential calculation.
-    z_h : float
-        The initial geopotential height at the lower half-level.
+        Full-level index.
+    z_h : xr.DataArray
+        Geopotential at the lower half-level.
 
-    Returns:
+    Returns
     -------
-    Tuple[float, float]
-        A tuple containing:
-            - `z_h`: The updated geopotential at the overlying half-level.
-            - `z_f`: The computed geopotential at the specified full level.
+    z_h : xr.DataArray
+        Updated geopotential at the overlying half-level.
+    z_f : xr.DataArray
+        Geopotential at the full level.
 
     References
     ----------
-    ERA5: Compute pressure and geopotential on model levels, geopotential height, and geometric height.
-    ECMWF Confluence: https://confluence.ecmwf.int/display/CKB/ERA5%3A+compute+pressure+and+geopotential+on+model+levels%2C+geopotential+height+and+geometric+height
+    ERA5: Compute pressure and geopotential on model levels, geopotential height,
+    and geometric height.  ECMWF Confluence.
+    https://confluence.ecmwf.int/display/CKB/ERA5%3A+compute+pressure+and+geopotential+on+model+levels%2C+geopotential+height+and+geometric+height
     """
-    # Virtual temperature at the specified level
     t_level = ds["Tv"].sel(level=lev)
-
-    # Pressures at the half-levels above and below
     ph_lev = ds["P_half"].sel(half_level=lev)
     ph_levplusone = ds["P_half"].sel(half_level=lev + 1)
     pf_lev = ds["P"].sel(level=lev)
@@ -202,24 +123,12 @@ def compute_z_level(ds: xarray.Dataset, lev: int, z_h: float) -> Tuple[float, fl
         alpha = np.log(2)
     else:
         dlog_p = np.log(ph_levplusone / ph_lev)
-        # TODO: understand IFS formulation for alpha. See IFS-documentation-cy47r3 eqn 2.23
-        # alphaIFS = 1.0 - ((ph_lev / (ph_levplusone - ph_lev)) * dlog_p)
-        # @ahijevyc formulation
         alpha = np.log(ph_levplusone / pf_lev)
-        # Make sure official and @ahijevyc values are close to each other.
-        # assert np.allclose(
-        #    alphaIFS.load(), alpha.load(), atol=1e-2
-        # ), f"{np.abs((alphaIFS-alpha)).max()}"
 
-    # Calculate the full-level geopotential `z_f`
-    # Integrate from previous (lower) half-level `z_h` to the
-    # full level
-    z_f = z_h + (t_level * metpy.constants.Rd * alpha)
-    z_f = z_f.drop_vars("half_level")
-    z_f = z_f.assign_coords(level=lev)
+    z_f = z_h + (t_level * Rd * alpha)
+    z_f = z_f.drop_vars("half_level").assign_coords(level=lev)
 
-    # Update the half-level geopotential `z_h`
-    z_h = z_h + (t_level * metpy.constants.Rd * dlog_p)
+    z_h = z_h + (t_level * Rd * dlog_p)
     z_h = z_h.assign_coords(half_level=lev).drop_vars("level")
 
     return z_h, z_f
@@ -243,47 +152,77 @@ INVARIANT_VARNAMES = [
 ]
 
 
-def quantify_invariant(invariant: xarray.Dataset) -> xarray.Dataset:
+def quantify_invariant(invariant: xr.Dataset) -> xr.Dataset:
     """
-    Quantify invariant Dataset
-    Squeeze time dimension if present
-    rename Z surface geopotential
-    remove units that metpy doesn't handle
-    convert surface geopotential to height
+    Quantify an ERA5 invariant dataset.
+
+    Squeezes any residual time dimension, renames the ``Z`` geopotential,
+    replaces unit strings that MetPy cannot handle, and derives
+    ``surface_geopotential_height``.
     """
-    invariant = invariant.squeeze()  # squeeze time, if present
+    invariant = invariant.squeeze()
     invariant = invariant.rename_vars({"Z": "surface_geopotential"})
     for var in invariant:
-        u = invariant[var].attrs["units"]
-        if u in ["(0-1)", "-", "index"]:
-            logging.info(f"can't quantify {var} unit string '{u}'")
-            del invariant[var].attrs["units"]
+        u_str = invariant[var].attrs.get("units", "")
+        if u_str in {"(0-1)", "-", "index"}:
+            logging.debug(
+                f"Replacing unquantifiable unit '{u_str}' on {var!r} with '1'"
+            )
+            invariant[var].attrs["units"] = "1"
     invariant = invariant.metpy.quantify()
-    invariant["surface_geopotential_height"] = invariant["surface_geopotential"] / metpy.constants.g
-    
+    invariant["surface_geopotential_height"] = invariant["surface_geopotential"] / g
     return invariant
 
 
-def model_level(
-    time: pd.Timestamp,
-    glade: Path = Path("/"),
-) -> xarray.Dataset:
+# ---------------------------------------------------------------------------
+# S3 singleton  (module-level, resettable)
+# ---------------------------------------------------------------------------
+
+_s3_instance: Optional[s3fs.S3FileSystem] = None
+
+
+def get_s3(reset: bool = False) -> s3fs.S3FileSystem:
     """
-    Load native model levels ERA5 dataset for specified time
-    from campaign storage.
+    Return a (cached) anonymous S3FileSystem.
 
     Parameters
     ----------
-    time : pd.Timestamp
-        Desired timestamp for data retrieval.
+    reset : bool
+        If *True*, discard any cached instance and create a fresh one.
+        Useful when a previous connection has gone stale.
+    """
+    global _s3_instance
+    if reset or _s3_instance is None:
+        _s3_instance = s3fs.S3FileSystem(anon=True)
+    return _s3_instance
+
+
+# ---------------------------------------------------------------------------
+# Model-level ERA5 (campaign storage)
+# ---------------------------------------------------------------------------
+
+
+def model_level(time: pd.Timestamp | np.datetime64 | str) -> xr.Dataset:
+    """
+    Load native model-level ERA5 data from GLADE campaign storage.
+
+    The invariant surface geopotential directory is controlled by the
+    ``CM1_ERA5_INVARIANT_DIR`` environment variable (default:
+    ``/glade/work/ahijevyc/share/ds633.6-ERA5ML/e5.oper.invariant``).
+
+    Parameters
+    ----------
+    time : timestamp-like
+        Desired valid time.
 
     Returns
     -------
-    xarray.Dataset
-        Dataset containing ERA5 data for the specified time.
+    xr.Dataset
+        Model-level dataset on the Gaussian lat-lon grid with derived
+        ``P``, ``P_half``, ``Z``, ``Z_half``, ``Tv``, and
+        ``surface_geopotential_height``.
     """
-    # get from campaign storage
-    rdapath = Path(glade) / CAMPAIGNDIR
+    time = pd.Timestamp(time)
     rdaindex = "d633006"
 
     start_hour = time.floor("6h")
@@ -292,7 +231,6 @@ def model_level(
 
     ds = load_from_campaign(
         time,
-        glade,
         rdaindex,
         "e5.oper.an.ml",
         [
@@ -304,72 +242,71 @@ def model_level(
             "128_134_sp.regn320sc",
         ],
         start_end_str,
-        ["zero", "utc_date"],
+        drop_variables=["zero", "utc_date"],
     )
     ds = ds.metpy.quantify()
 
-    # Derive pressure from a and b coefficients
-    ds["P"] = ds.a_model + ds.b_model * ds.SP
-    ds["P"].attrs.update(dict(long_name="pressure"))
-    ds["P"] = ds["P"].transpose(*ds.U.dims)  # keep dim order consistent with U
+    ds["P"] = (ds.a_model + ds.b_model * ds.SP).transpose(*ds.U.dims)
+    ds["P"].attrs["long_name"] = "pressure"
     ds["P_half"] = ds.a_half + ds.b_half * ds.SP
-    ds["P_half"].attrs.update(dict(long_name="pressure"))
+    ds["P_half"].attrs["long_name"] = "pressure"
 
-    # rdahelp says /gpfs/csfs1/collections/rda/decsdata/ds630.0/P/e5.oper.invariant/201601/
-    # has same resolution as the invariant surface geopotential you refer to in d633006.
-
-    invariant = (
-        xarray.open_mfdataset(
-            Path("/gpfs/csfs1/collections/rda/decsdata/ds630.0/P/e5.oper.invariant/201601").glob(
-                "*.nc"
-            ),
-            drop_variables=["utc_date", "time"],
+    # Load invariant fields from the configurable directory
+    invariant_path = Path(ERA5_INVARIANT_DIR)
+    if not invariant_path.exists():
+        raise FileNotFoundError(
+            f"ERA5 invariant directory not found: {invariant_path}\n"
+            "Set the CM1_ERA5_INVARIANT_DIR environment variable to override."
         )
+    invariant_files = list(invariant_path.glob("*.nc"))
+    logging.debug(f"Invariant files: {invariant_files}")
+
+    invariant = xr.open_mfdataset(invariant_files, drop_variables=["utc_date", "time"])
+    invariant.attrs["source_files"] = [str(p) for p in invariant_files]
+    assert invariant.latitude.size == 640, (
+        "Expected invariant fields on the N320 Gaussian grid (640 latitudes)"
     )
     invariant = quantify_invariant(invariant)
-    ds = ds.merge(invariant)
+    ds = ds.merge(invariant, combine_attrs="drop_conflicts")
 
-    logging.warning("filling height using hypsometric equation")
+    logging.info("Computing geopotential height via hypsometric equation")
     ds["Tv"] = mcalc.thermo.virtual_temperature(ds.T, ds.Q)
     z_h = ds.surface_geopotential.assign_coords(half_level=ds.half_level.max())
-    Z = []  # geopotential on full levels
-    Z_h = [z_h]  # geopotential on half levels
-    # Loop from last to first level (sfc upward)
-    for level in ds.level[::-1]:  # accumulate geopotential in z_h upward from sfc
+    Z, Z_h = [], [z_h]
+    for level in ds.level[::-1]:
         z_h, z_f = compute_z_level(ds, level, z_h)
         Z.append(z_f)
         Z_h.append(z_h)
 
-    ds["Z_half"] = xarray.concat(Z_h, dim="half_level") / metpy.constants.g
+    ds["Z_half"] = xr.concat(Z_h, dim="half_level") / g
     ds["Z_half"].attrs["long_name"] = "geopotential height"
-    ds["Z"] = xarray.concat(Z, dim="level") / metpy.constants.g
+    ds["Z"] = xr.concat(Z, dim="level") / g
     ds["Z"].attrs["long_name"] = "geopotential height"
-    ds["surface_geopotential_height"] = ds["surface_geopotential"] / metpy.constants.g
-    ds["surface_geopotential_height"].attrs["long_name"] = "geopotential height at surface"
-    # ds = ds.drop_dims("half_level") # why drop this?
+    ds["surface_geopotential_height"] = ds["surface_geopotential"] / g
+    ds["surface_geopotential_height"].attrs["long_name"] = (
+        "geopotential height at surface"
+    )
 
     return ds
 
 
-def pressure_level(
-    time: pd.Timestamp,
-    glade: Path = Path("/"),
-) -> xarray.Dataset:
+# ---------------------------------------------------------------------------
+# Pressure-level ERA5 (campaign storage)
+# ---------------------------------------------------------------------------
+
+
+def pressure_level(time: pd.Timestamp) -> xr.Dataset:
     """
-    Load ERA5 dataset for specified time and configuration.
-    Comes from campaign storage.
+    Load pressure-level ERA5 data from GLADE campaign storage.
 
     Parameters
     ----------
     time : pd.Timestamp
-        Desired timestamp for data retrieval.
-    glade : Path, optional
-        Base path to the glade directory (default is Path("/")).
+        Desired valid time.
 
     Returns
     -------
-    xarray.Dataset
-        Dataset containing ERA5 data for the specified time and configuration.
+    xr.Dataset
     """
     rdaindex = "d633000"
     start = time.floor("1d")
@@ -378,7 +315,6 @@ def pressure_level(
 
     ds_pl = load_from_campaign(
         time,
-        glade,
         rdaindex,
         "e5.oper.an.pl",
         [
@@ -391,19 +327,18 @@ def pressure_level(
         ],
         start_end_str,
     )
-
     ds_pl = ds_pl.metpy.quantify()
-    ds_pl["P"] = ds_pl.level * ds_pl.level.metpy.units
-    ds_pl["Z"] /= metpy.constants.g
+    ds_pl["P"] = ds_pl.level
+    ds_pl["Z"] /= g
 
     lastdayofmonth = time + pd.offsets.MonthEnd(0)
-    start_end_str = (
-        f"{time.strftime('%Y%m')}0100_{time.strftime('%Y%m')}{lastdayofmonth.strftime('%d')}23"
+    sfc_start_end = (
+        f"{time.strftime('%Y%m')}0100_"
+        f"{time.strftime('%Y%m')}{lastdayofmonth.strftime('%d')}23"
     )
 
     ds_sfc = load_from_campaign(
         time,
-        glade,
         rdaindex,
         "e5.oper.an.sfc",
         [
@@ -414,79 +349,87 @@ def pressure_level(
             "128_167_2t.ll025sc",
             "128_168_2d.ll025sc",
         ],
-        start_end_str,
+        sfc_start_end,
     )
-
     ds_sfc = ds_sfc.metpy.quantify()
     ds_sfc["surface_potential_temperature"] = mcalc.potential_temperature(
-        ds_sfc.SP,
-        ds_sfc.VAR_2T,
+        ds_sfc.SP, ds_sfc.VAR_2T
     )
     ds_sfc["surface_mixing_ratio"] = mcalc.mixing_ratio_from_specific_humidity(
         mcalc.specific_humidity_from_dewpoint(ds_sfc.SP, ds_sfc.VAR_2D)
     )
 
-    invariant = (
-        load_from_campaign(
-            pd.to_datetime("19790101"),
-            glade,
-            rdaindex,
-            "e5.oper.invariant",
-            INVARIANT_VARNAMES,
-            "1979010100_1979010100",
-        )
-        .drop_vars("time")
-    )
+    invariant = load_from_campaign(
+        pd.to_datetime("19790101"),
+        rdaindex,
+        "e5.oper.invariant",
+        INVARIANT_VARNAMES,
+        "1979010100_1979010100",
+    ).drop_vars("time")
     invariant = quantify_invariant(invariant)
-    ds = ds_pl.merge(ds_sfc).merge(invariant)
 
+    ds = ds_pl.merge(ds_sfc, compat="no_conflicts").merge(
+        invariant, compat="no_conflicts"
+    )
+
+    # Consolidate source file lists from all components
+    ds.attrs["history_sources"] = [
+        f
+        for component in [ds_pl, ds_sfc, invariant]
+        for f in component.attrs.get("source_files", [])
+    ]
     return ds
 
 
-def aws(time: pd.Timestamp) -> xarray.Dataset:
+# ---------------------------------------------------------------------------
+# AWS / S3 ERA5
+# ---------------------------------------------------------------------------
+
+
+def aws(time: pd.Timestamp) -> xr.Dataset:
     """
-    Retrieve ERA5 data from an S3 bucket and cache it locally.
+    Retrieve ERA5 pressure-level and surface data from the NSF NCAR S3 bucket.
+
+    Files are cached locally under ``$TMPDIR/era5_cache/`` to avoid repeated
+    downloads.
 
     Parameters
     ----------
     time : pd.Timestamp
-        Desired timestamp for data retrieval.
+        Desired valid time.
 
     Returns
     -------
-    xarray.Dataset
-        Dataset containing ERA5 data for the specified time, downloaded from S3.
+    xr.Dataset
     """
     S3_BUCKET = "nsf-ncar-era5"
     CACHE_DIR = TMPDIR / "era5_cache"
-    if not os.path.exists(CACHE_DIR):
-        os.makedirs(CACHE_DIR)
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-    def download_from_s3(var, level_type, start_end_str):
+    def download_from_s3(var: str, level_type: str, start_end_str: str) -> Path:
+        """Download *var* from S3 if not already cached; return local path."""
         file_name = f"e5.oper.{level_type}.{var}.{start_end_str}.nc"
-        cache_file_path = CACHE_DIR / file_name
-        if os.path.exists(cache_file_path):
-            logging.warning(f"Found cached s3 {var} {time}")
-            return cache_file_path
+        cache_path = CACHE_DIR / file_name
+        if cache_path.exists():
+            logging.info(f"Cache hit: {var} {time}")
+            return cache_path
 
-        if "s3" not in globals():
-            s3 = s3fs.S3FileSystem(anon=True)
+        s3 = get_s3()
+        year_month = start_end_str[:6]
+        s3_path = f"{S3_BUCKET}/e5.oper.{level_type}/{year_month}/{file_name}"
+        if not s3.exists(s3_path):
+            raise FileNotFoundError(f"Not found in S3: {s3_path}")
 
-        year_month_dir = start_end_str[0:6]
-        s3_file_path = S3_BUCKET + f"/e5.oper.{level_type}/{year_month_dir}/{file_name}"
-        if not s3.exists(s3_file_path):
-            raise FileNotFoundError(f"{s3_file_path} not found in S3 bucket")
+        logging.warning(f"Downloading {s3_path} …")
+        with s3.open(s3_path, "rb") as f:
+            xr.open_dataset(f).to_netcdf(cache_path)
+        logging.warning(f"Cached to {cache_path}")
+        return cache_path
 
-        logging.warning(f"Downloading {s3_file_path} from S3...")
-        with s3.open(s3_file_path, "rb") as f:
-            xarray.open_dataset(f).to_netcdf(cache_file_path)
-        logging.warning(f"Downloaded and cached: {cache_file_path}")
-        return cache_file_path
-
-    start_end_str = f"{time.strftime('%Y%m%d00')}_{time.strftime('%Y%m%d23')}"
-    cache_file_paths = [
-        download_from_s3(var, "an.pl", start_end_str)
-        for var in [
+    daily_str = f"{time.strftime('%Y%m%d00')}_{time.strftime('%Y%m%d23')}"
+    pl_paths = [
+        download_from_s3(v, "an.pl", daily_str)
+        for v in [
             "128_133_q.ll025sc",
             "128_130_t.ll025sc",
             "128_131_u.ll025uv",
@@ -495,20 +438,23 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
             "128_129_z.ll025sc",
         ]
     ]
-
-    ds_pl = xarray.open_mfdataset(cache_file_paths).drop_vars("utc_date")
-    ds_pl = ds_pl.sel(time=time)
+    ds_pl = (
+        xr.open_mfdataset(pl_paths, compat="override")
+        .drop_vars("utc_date")
+        .sel(time=time)
+    )
     ds_pl = ds_pl.metpy.quantify()
     ds_pl["P"] = ds_pl.level * ds_pl.level.metpy.units
-    ds_pl["Z"] /= metpy.constants.g
+    ds_pl["Z"] /= g
 
     lastdayofmonth = time + pd.offsets.MonthEnd(0)
-    start_end_str = (
-        f"{time.strftime('%Y%m')}0100_{time.strftime('%Y%m')}{lastdayofmonth.strftime('%d')}23"
+    monthly_str = (
+        f"{time.strftime('%Y%m')}0100_"
+        f"{time.strftime('%Y%m')}{lastdayofmonth.strftime('%d')}23"
     )
-    cache_file_paths = [
-        download_from_s3(var, "an.sfc", start_end_str)
-        for var in [
+    sfc_paths = [
+        download_from_s3(v, "an.sfc", monthly_str)
+        for v in [
             "128_134_sp.ll025sc",
             "128_165_10u.ll025sc",
             "128_166_10v.ll025sc",
@@ -516,102 +462,83 @@ def aws(time: pd.Timestamp) -> xarray.Dataset:
             "128_168_2d.ll025sc",
         ]
     ]
-
-    ds_sfc = xarray.open_mfdataset(cache_file_paths).drop_vars("utc_date")
-    ds_sfc = ds_sfc.sel(time=time)
+    ds_sfc = (
+        xr.open_mfdataset(sfc_paths, compat="override")
+        .drop_vars("utc_date")
+        .sel(time=time)
+    )
     ds_sfc = ds_sfc.metpy.quantify()
-
     ds_sfc["surface_potential_temperature"] = mcalc.potential_temperature(
-        ds_sfc.SP,
-        ds_sfc.VAR_2T,
+        ds_sfc.SP, ds_sfc.VAR_2T
     )
     ds_sfc["surface_mixing_ratio"] = mcalc.mixing_ratio_from_specific_humidity(
         mcalc.specific_humidity_from_dewpoint(ds_sfc.SP, ds_sfc.VAR_2D)
     )
 
-    cache_file_paths = [
-        download_from_s3(var, "invariant", "1979010100_1979010100") for var in INVARIANT_VARNAMES
+    invariant_paths = [
+        download_from_s3(v, "invariant", "1979010100_1979010100")
+        for v in INVARIANT_VARNAMES
     ]
-
-    invariant = (
-        xarray.open_mfdataset(cache_file_paths, drop_variables=["utc_date", "time"])
-    )
+    invariant = xr.open_mfdataset(invariant_paths, drop_variables=["utc_date", "time"])
     invariant = quantify_invariant(invariant)
-    
-    ds = ds_pl.merge(ds_sfc).merge(invariant)
 
-    return ds
+    return ds_pl.merge(ds_sfc, compat="no_conflicts").merge(
+        invariant, compat="no_conflicts"
+    )
 
 
-def nearest_grid_neighbors(dataset: xarray.Dataset, lat: Quantity, lon: Quantity):
+# ---------------------------------------------------------------------------
+# Spatial selection helper
+# ---------------------------------------------------------------------------
+
+
+def nearest_grid_block_sel(
+    dataset: xr.Dataset,
+    lat: Quantity,
+    lon: Quantity,
+    n: int = 3,
+    **kwargs,
+) -> dict:
     """
-    Find the nearest grid point and its immediate neighbors in a dataset with latitude and longitude coordinates.
-    Handles longitude wrapping for east and west neighbors, and supports latitude coordinates increasing from north to south.
+    Build a ``.sel()`` dict that selects the nearest *n* × *n* grid block.
 
-    Parameters:
-        dataset (xarray.Dataset): ERA5 dataset.
-        lat (float): The target latitude.
-        lon (float): The target longitude.
-        **kwargs: Additional arguments to pass to the data retrieval function.
+    Parameters
+    ----------
+    dataset : xr.Dataset
+        ERA5 dataset with ``latitude`` and ``longitude`` coordinates.
+    lat, lon : Quantity
+        Target location (units: degrees).
+    n : int
+        Side length of the square block; must be a positive odd integer.
 
-    Returns:
-        dict: A dictionary with:
-              - 'G': The nearest grid point as {"latitude": lat_idx, "longitude": lon_idx}.
-              - 'north': The grid point immediately north of G.
-              - 'south': The grid point immediately south of G.
-              - 'west': The grid point immediately west of G.
-              - 'east': The grid point immediately east of G.
-              If a neighbor is not available (e.g., at the boundary), it is set to None.
+    Returns
+    -------
+    dict
+        ``{"latitude": ..., "longitude": ...}`` suitable for ``ds.sel(**result)``.
     """
-    # map negative longitude to 0-360 degreeE
-    lon = lon % (360 * units.degreeE)
-
-    # Ensure the dataset has latitude and longitude coordinates
+    if n < 1 or n % 2 != 1:
+        raise ValueError("n must be a positive odd integer.")
     if "latitude" not in dataset.coords or "longitude" not in dataset.coords:
         raise ValueError("Dataset must contain 'latitude' and 'longitude' coordinates.")
 
-    # Check if latitude is increasing from north to south
-    lat_increasing = dataset.latitude[1] < dataset.latitude[0]
+    lon = lon % (360 * units.degree)
+    center = dataset.sel(latitude=lat, longitude=lon, method="nearest", **kwargs)
+    center_lat = center.latitude.values
+    center_lon = center.longitude.values
 
-    center = dataset.sel(latitude=lat, longitude=lon, method="nearest")
-    # Find the index of the nearest grid point
-    nearest_idx = (
-        np.abs(dataset.latitude - center.latitude).argmin().item(),
-        np.abs(dataset.longitude - center.longitude).argmin().item(),
+    lat_vals = dataset.latitude.values
+    lon_vals = dataset.longitude.values
+    lat_idx = int(np.abs(lat_vals - center_lat).argmin())
+    lon_idx = int(np.abs(lon_vals - center_lon).argmin())
+
+    half = n // 2
+    lat_start = max(lat_idx - half, 0)
+    lat_end = min(lat_idx + half, len(lat_vals) - 1)
+    lat_sel = lat_vals[lat_start : lat_end + 1]
+
+    lon_size = len(lon_vals)
+    lon_sel = np.array(
+        [lon_vals[(lon_idx + i) % lon_size] for i in range(-half, half + 1)]
     )
-    lat_idx, lon_idx = nearest_idx
 
-    # Define neighbors
-    if lat_increasing:
-        # Latitude increasing from north to south
-        north = {"latitude": lat_idx - 1, "longitude": lon_idx} if lat_idx - 1 >= 0 else None
-        south = (
-            {"latitude": lat_idx + 1, "longitude": lon_idx}
-            if lat_idx + 1 < dataset.latitude.size
-            else None
-        )
-    else:
-        # Latitude increasing from south to north
-        north = (
-            {"latitude": lat_idx + 1, "longitude": lon_idx}
-            if lat_idx + 1 < dataset.latitude.size
-            else None
-        )
-        south = {"latitude": lat_idx - 1, "longitude": lon_idx} if lat_idx - 1 >= 0 else None
-
-    # Handle longitude wrapping
-    lon_size = dataset.longitude.size
-    west_idx = (lon_idx - 1) % lon_size
-    east_idx = (lon_idx + 1) % lon_size
-
-    west = {"latitude": lat_idx, "longitude": west_idx}
-    east = {"latitude": lat_idx, "longitude": east_idx}
-
-    # Return the dictionary of results
-    return {
-        "G": {"latitude": lat_idx, "longitude": lon_idx},
-        "north": north,
-        "south": south,
-        "west": west,
-        "east": east,
-    }
+    return {"latitude": lat_sel, "longitude": lon_sel}

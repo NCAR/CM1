@@ -31,4 +31,3 @@
 
 setenv MPI_DSM_DISTRIBUTE yes
 mpiexec_mpt ./cm1.exe >&! cm1.print.out
-

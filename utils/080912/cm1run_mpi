@@ -15,4 +15,3 @@
 
 cd /ptmp/gbryan/testit/run/run16
 mpirun.lsf ./cm1.exe >&! cm1.print.out
-

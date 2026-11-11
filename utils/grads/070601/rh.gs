@@ -1,4 +1,4 @@
-* Script to calculate relative humidity wrt water (rh) from 
+* Script to calculate relative humidity wrt water (rh) from
 * cm1 GrADS-format output
 * Last modified:  31 May 2007
 

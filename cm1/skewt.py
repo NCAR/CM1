@@ -1,21 +1,20 @@
 """
 Plot ERA5 Skew-T and hodograph for a specified time and location.
 
-This script generates a Skew-T diagram and a hodograph for ERA5 model data at 
+This script generates a Skew-T diagram and a hodograph for ERA5 model data at
 a user-specified time and location. It includes temperature, dewpoint, and wind
 data, as well as dry adiabats, moist adiabats, and mixing lines on the Skew-T diagram.
 """
 
 import logging
 import os
-import pickle
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import xarray as xr
 
-import cm1.input.era5
-from cm1.input.sounding import get_ofile
-from cm1.utils import CAMPAIGNDIR, parse_args, skewt
+from cm1.input.sounding import era5_aws, era5_model_level, Sounding
+from cm1.utils import parse_args, get_ofile
 
 
 def main() -> None:
@@ -27,33 +26,27 @@ def main() -> None:
     """
 
     args = parse_args()
-
+    valid_time = pd.to_datetime(args.time)
     ofile = get_ofile(args)
+    logging.debug(f"ofile: {ofile}")
     if os.path.exists(ofile):
-        logging.warning(f"read {ofile}")
-        with open(ofile, "rb") as file:
-            ds = pickle.load(file)
+        logging.info(f"read cached data from: {ofile}")
+        ds = Sounding(xr.open_dataset(ofile))
     else:
-        if not os.path.exists("/"+CAMPAIGNDIR):
-            ds = cm1.input.era5.aws(
-                pd.to_datetime(args.time)
+        if os.path.exists("/glade/campaign"):
+            ds = era5_model_level(
+                valid_time,
+                args.lat,
+                args.lon,
             )
         else:
-            ds = cm1.input.era5.model_level(
-                pd.to_datetime(args.time),
-                glade=args.glade,
-            )
-    with open(ofile, "wb") as file:
-        pickle.dump(ds, file)
+            logging.warning("No campaign storage. Fetching pres lvl data from AWS")
+            ds = era5_aws(valid_time, args.lat, args.lon)
 
-    logging.warning(f"select {args}")
+        logging.info(f"Caching data to: {ofile}")
+        ds.metpy.dequantify().to_netcdf(ofile)
 
-    ds = ds.sel(
-        longitude=args.lon,
-        latitude=args.lat,
-        method="nearest",
-    )
-    skewt(ds)
+    ds.plot()
     plt.show()
 
 

@@ -17,4 +17,3 @@ while(zz <= nz)
   "define cref=const(maskout(cref,cref-dbz),0.0,-u)+const(maskout(dbz,dbz-cref),0.0,-u)"
   zz=zz+1
 endwhile
-

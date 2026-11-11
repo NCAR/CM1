@@ -15,4 +15,3 @@ setenv OMP_NUM_THREADS 4
 
 cd /ptmp/gbryan/testit/run/omp4
 ./cm1.exe >&! cm1.print.out
-

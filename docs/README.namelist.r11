@@ -19,7 +19,7 @@ Bryan Cloud Model, Version 1, Release 11
 
  timestats - 0 = Do not provide provide timing statistics
              1 = Provide timing statistics at end of simulation
-             2 = The same as 1, but include time required to complete 
+             2 = The same as 1, but include time required to complete
                  each time step
 
  terrain_flag -  .true.  = With terrain
@@ -36,15 +36,15 @@ Bryan Cloud Model, Version 1, Release 11
 
     NOTE:
        The variables dx,dy,dz are only used when stretch=0.  When stretch=1,
-       these variables should be set to an approximately average value 
+       these variables should be set to an approximately average value
        (to minimize truncation errors).  See README.stretch for more
        information.
 
  dtl - Large time step (s).
 
-       For psolver = 2,3,4, or 5, this time step is limited by the fastest 
-       nonacoustic speed.  For thunderstorm simulations, this is usually 
-       the maximum vertical velocity.  Otherwise, this would be the 
+       For psolver = 2,3,4, or 5, this time step is limited by the fastest
+       nonacoustic speed.  For thunderstorm simulations, this is usually
+       the maximum vertical velocity.  Otherwise, this would be the
        propagation speed of gravity waves.  The following usually works well:
            dtl = min(dx,dy,dz)/67  (rounded to an appropriate value, of course)
 
@@ -59,10 +59,10 @@ Bryan Cloud Model, Version 1, Release 11
  rstfrq - Frequency to save model restart files (s).  Set to a negative
           number if restart files are not desired.
 
- prclfrq - Frequency to output parcel data (s).  Note ... this does not 
-           affect the parcel calculations themselves, which are always 
-           updated every timestep;  it merely tells the model how 
-           frequently to output the information.  Set equal to dtl to 
+ prclfrq - Frequency to output parcel data (s).  Note ... this does not
+           affect the parcel calculations themselves, which are always
+           updated every timestep;  it merely tells the model how
+           frequently to output the information.  Set equal to dtl to
            output parcel data every time step.
 
 -------------------------------------------------------------------------
@@ -160,7 +160,7 @@ Bryan Cloud Model, Version 1, Release 11
                               explicit calculations (as in MM5, ARPS, WRF).
        4 = Anelastic solver:  Uses the anelastic mass continuity equation.
                               Pressure is retrieved diagnostically.
-       5 = Incomprssible solver:  Uses the incompressible mass continuity 
+       5 = Incomprssible solver:  Uses the incompressible mass continuity
                               equation.  Pressure is retrieved diagnostically.
 
        NOTE:  psolver = 4 and 5 are only recommended for simulations
@@ -274,8 +274,8 @@ Bryan Cloud Model, Version 1, Release 11
 
           0 = no balance (initial pressure perturbation is zero everywhere)
           1 = hydrostatic balance (appropriate for small aspect ratios)
-          2 = anelastic balance (initial pressure perturbation is the 
-              buoyancy pressure perturbation field for an anelastic 
+          2 = anelastic balance (initial pressure perturbation is the
+              buoyancy pressure perturbation field for an anelastic
               atmosphere).
 
  iorigin - Specifies location of the origin in horizontal space
@@ -308,7 +308,7 @@ Bryan Cloud Model, Version 1, Release 11
 
  kdiff2 - Diffusion coefficient for difforder=2.  Specified in m^2/s.
 
- kdiff6 - Diffusion coefficient for difforder=6.  Specified as a 
+ kdiff6 - Diffusion coefficient for difforder=6.  Specified as a
           fraction of one-dimensional stability.  A value between
           0.02-0.12 is recommended.
 
@@ -320,7 +320,7 @@ Bryan Cloud Model, Version 1, Release 11
         an artificial term designed to diffuse acoustic waves.
 
  alph - Off-centering coefficient for vertically implicit acoustic
-        solver.  A value of 0.5 is centered-in-time.  Slight forward-in-time 
+        solver.  A value of 0.5 is centered-in-time.  Slight forward-in-time
         bias is recommended.  Default value is 0.60.
         (only used for psolver=3)
 
@@ -409,5 +409,3 @@ Bryan Cloud Model, Version 1, Release 11
  viscosity - value for kinematic viscosity (m^2/s)
 
  pr_num - value for Prandtl number (unitless)
-
-

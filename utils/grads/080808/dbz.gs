@@ -43,4 +43,3 @@ rhos = 100.0
 
 "define dbz=10.0*log10("eps"+(zer+zeg+zes)*1e18)"
 "define dbz=const(maskout(dbz,dbz),0.,-u)"
-

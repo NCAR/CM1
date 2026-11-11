@@ -1,27 +1,11 @@
 #-----------------------------------------------------------------------------
 #
-#  To compile the CM1 codes with this Makefile, use the following command:
+#  Cloud Model 1 (CM1) Makefile
 #
-#        make [argu_list]
+#  For complete compilation instructions, options, and examples,
+#  please see the official documentation file here:
 #
-#  where the optional argument list includes:
-#  - USE_OPENMP: turn on OpenMP (default=false)
-#  - USE_MPI: turn on MPI (default=false)
-#  - USE_DOUBLE: turn on double precision calculation (for PGI/NVHPC only, default=false)
-#  - USE_OPENACC: turn on OpenACC (for PGI/NVHPC only, default=false)
-#  - USE_NETCDF: turn on netCDF output (default=false)
-#  - DEBUG: turn on DEBUG mode (default=false)
-#  - CODE_COVERAGE: turn on code coverage mode (default=false)
-#
-#  Some example usages are:
-#    make USE_OPENMP=true                 # shared memory only
-#    make USE_OPENMP=true USE_MPI=true    # shared + distributed memory
-#    make USE_OPENACC=true USE_MPI=true   # distributed memory + GPU offloading
-#
-#  Note that the logical values set to the argument variables are case insensitive.
-#
-#  If the "FC" env variable is not set on your system, you could also specify it through:
-#    make FC=ifort                        # use Intel compiler
+#  CM1/docs/README.compile.md
 #
 #-----------------------------------------------------------------------------
 

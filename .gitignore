@@ -11,3 +11,4 @@ run_*/
 src/*.f90
 src/*.o
 src/*.mod
+.vscode/settings.json

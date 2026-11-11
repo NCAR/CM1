@@ -12,4 +12,3 @@
 
 cd /ptmp/gbryan/testit/run/sp
 ./cm1.exe >&! cm1.print.out
-

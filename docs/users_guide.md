@@ -21,7 +21,7 @@ Valid for `cm1r18` and later versions
 3.  **Edit `init3d.F` (if necessary):** In `init3d.F,` you can add perturbations to the base state. Several default options are available.
 4.  **Edit `init_terrain.F` (if necessary):** If you are using terrain, you will have to specify the terrain via the "zs" array in the file `init_terrain.F`.
 5.  **Edit `init_surface.F` (if necessary):** If you are using surface fluxes of heat/moisture/momentum, then you might have to specify the horizontal distribution of several variables in the file `init_surface.F`. See the param12 section in [`README.namelist`](README.namelist.md) for more information.
-6.  **Choose arguments for `make`** based on operating system and parallelization method appropriate for your hardware. See [`README.compile.md`](README.compile.md). 
+6.  **Choose arguments for `make`** based on operating system and parallelization method appropriate for your hardware. See [`README.compile.md`](README.compile.md).
 7.  **Compile the code:** Type `make [argu_list]` within the "src" directory. On some machines, you may need to use "gmake" instead.
 
 For example, to compile on NCAR's [derecho](https://www.cisl.ucar.edu/capabilities/derecho) (compile with 4 parallel threads, use shared + distributed memory + netCDF)

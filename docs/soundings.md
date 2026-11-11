@@ -9,16 +9,16 @@
 - `input_sounding_seabreeze_test`:  sounding for sea breeze test case
 
 ### Description of input_sounding files:
-  The format is the same as that for the WRF Model. 
+  The format is the same as that for the WRF Model.
 
 <pre>
   One-line header containing:   sfc pres (mb)    sfc theta (K)    sfc qv (g/kg)
 
-   (Note1: here, "sfc" refers to near-surface atmospheric conditions. 
-    Technically, this should be z = 0, but in practice is obtained from the 
+   (Note1: here, "sfc" refers to near-surface atmospheric conditions.
+    Technically, this should be z = 0, but in practice is obtained from the
     standard reporting height of 2 m AGL/ASL from observations)
-   (Note2: land-surface temperature and/or sea-surface temperature (SST) are 
-    specified elsewhere: see tsk0 in namelist.input and/or tsk array in 
+   (Note2: land-surface temperature and/or sea-surface temperature (SST) are
+    specified elsewhere: see tsk0 in namelist.input and/or tsk array in
     init_surface.F)
 
  Then, the following lines are:   z (m)    theta (K)   qv (g/kg)    u (m/s)    v (m/s)
@@ -33,5 +33,5 @@
               u      =  west-east component of velocity
               v      =  south-north component of velocity
 
- Note4:  For final line of input_sounding file, z (m) must be greater than the model top 
+ Note4:  For final line of input_sounding file, z (m) must be greater than the model top
          (which is nz * dz when stretch_z=0, or ztop when stretch_z=1,  etc)
