@@ -155,7 +155,7 @@ endif
 #-----------------------------------------------------------------------------
 #  Intel compiler
 #-----------------------------------------------------------------------------
-ifeq (${FC},ifort)
+ifneq (,$(filter ${FC},ifort ifx))
     # replace -xHost with -march=core-avx2 to make sure the same code builds on
     # both Intel and AMD CPUs 
     OPTS         += -O1 -assume byterecl -fp-model precise -ftz -no-fma -diag-disable=10448
