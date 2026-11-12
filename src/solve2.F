@@ -2079,9 +2079,11 @@
 #ifdef MPI
       ! finish comms for cflquick:
       call mpi_wait(reqc,mpi_status_ignore,ierr)
-      if(cflmax.ge.1.50) stopit=.true.
       if(timestats.ge.1) time_cflq=time_cflq+mytime()
 #endif
+
+if( cflmax.ge.1.50 .or. cflmax.ne.cflmax ) stopit=.true.
+! .ne. is because of nan test
 
 !--------------------------------------------------------------------
 
