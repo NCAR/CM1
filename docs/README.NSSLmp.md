@@ -8,6 +8,22 @@ Some background information and usage tips for the NSSL microphysics scheme.
 NOTE TO OpenMP USERS: If a segmentation fault occurs, try setting the environment variable OMP_STACKSIZE to 8M or 16M (default is 4M, where M=MB). Note that this does not increase the shell stacksize limit [use 'ulimit -a unlimited' (bash) or 'unlimit stacksize' (tcsh)]
 
 CHANGES:
+August 2026: 
+  2025 WRF updates:
+  - More accurate saturation mixing ratio calculation (iqvsopt=1)
+  - Changed default droplet renucleation to irenuc=5, which allows extra nucleation at high supersaturation
+  - Default explicit rain breakup for 3-moment (irainbreak=2)
+  - Imposed reflectivity conservation in graupel->hail conversion (ihlcnh=3) and Bigg 
+    freezing (both 2- and 3-moment)
+  - Option (nsplinter=1001) for ice crystal production by drop freezing/shattering (Sullivan et al. 2018)
+  - Option (incwet = 1) to treat wet growth only for D > Dwet rather than all or nothing; results in slightly greater hail production due to maintaining dry growth at D < Dwet
+  - Improved logic for sedimentation
+  - Separated flushing of small masses into its own subroutine (smallvalues)
+  - Some syntax fixes for issues with old versions of gfortran
+  Other updates:
+  - Fixed reflectivity conservation for graupel->hail and rain->graupel conversions, which previously could generate spurious large number concentrations of hail and graupel
+  - Logic fix in sedimentation for snow
+
 May 2023: Main default option change is for graupel/hail fall speed options (icdx, icdxhl; changed from 3 to 6, see below), and default maximum gr/hail droplet collection efficiencies (ehw0/ehlw0 changed from 0.5/0.75 to 0.9/0.9, see below)
 
 DESCRIPTION:
@@ -43,10 +59,10 @@ Cloud concentration nuclei (CCN) concentration is predicted as in Mansell et al.
 
 Droplet activation option is controlled by the 'irenuc' option. Old option (2) depletes CCN from unactivated CCN field. New option (7) instead counts the number of activated CCN (nucleated droplets) with the assumption of an initial constant CCN number mixing ratio. Option 7 better handles supersaturation at low CCN (e.g., maritime) concentrations by allowing extra droplet activation at high SS.
 
-  irenuc (new option) : 2 = ccn field is UNactivated aerosol (previous default; old droplet activation)
-                        7 = ccn field is ACTVIATED aerosol (new default 2023) (new droplet activation)
+  irenuc : 2 = ccn field is UNactivated aerosol (previous default; old droplet activation)
+           5 = ccn field is ACTVIATED aerosol (new default 2026) (new droplet activation)
 
-Excessive size sorting (common in 2-moment schemes) is effectively controlled by an adaptive breakup method that prevents reflectivity growth by sedimentation (Mansell 2010). For 2-moment, infall=4 (default) is recommended. For 3-moment, infall only really applies to droplets, cloud ice, and snow.
+Excessive size sorting (common in 2-moment schemes) is effectively controlled by an adaptive breakup method that prevents reflectivity growth by sedimentation (Mansell 2010). For 2-moment, infall=4 (default) is recommended. For 3-moment, infall only really applies to 2-moment species (droplets, cloud ice, and snow).
 
 Graupel -> hail conversion: The parameter ihlcnh selects the method of converting graupel (hail embryos) to the hail category. The default value is -1 for automatic setting. The original option (ihlcnh=1) is replaced by a new option (ihlcnh=3) as of May 2023. ihlcnh=3 converts from the graupel spectrum itself based on the wet growth diameter, which generally results in fewer initiated hailstones with larger diameters (and larger mean diameter at the ground).
 
@@ -57,7 +73,7 @@ May 2023 update introduces changes in the default options for graupel/hail fall 
   ehw0,ehlw0   - Maximim droplet collection efficiencies for graupel (ehw0=0.75, now 0.9)
                  and hail (ehlw0=0.75, now 0.9)
 
-In summary, to get something closer to previous behavior, use the following:
+In summary, to get something closer to pre-2023 behavior, use the following:
 
 &nssl2mom_params
   irenuc = 2
